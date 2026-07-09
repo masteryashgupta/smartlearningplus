@@ -192,7 +192,12 @@ router.post("/forgot-password", async (req, res) => {
       [token, expires, user.id]
     );
 
-    const frontendBase = process.env.FRONTEND_URL || "https://smartlearningplus.me";
+    let frontendBase = process.env.FRONTEND_URL || "https://smartlearningplus.me";
+    if (frontendBase.includes(",")) {
+      const urls = frontendBase.split(",").map((u) => u.trim());
+      const prodUrl = urls.find((u) => !u.includes("localhost"));
+      frontendBase = prodUrl || urls[0];
+    }
     const resetUrl = `${frontendBase}/index.html#/reset-password?token=${token}&role=${role}`;
 
     try {
