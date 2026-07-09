@@ -443,8 +443,8 @@ export default function Home() {
           </div>
           <div className="flex items-center gap-6">
             <div className="sl-nav-links flex items-center gap-6">
-              <a href="#subjects">Subjects</a>
-              <a href="#downloads">Downloads</a>
+              <a href="#subjects" onClick={(e) => { e.preventDefault(); document.getElementById('subjects')?.scrollIntoView({ behavior: 'smooth' }); }}>Subjects</a>
+              <a href="#downloads" onClick={(e) => { e.preventDefault(); document.getElementById('downloads')?.scrollIntoView({ behavior: 'smooth' }); }}>Downloads</a>
             </div>
             <Link
               to="/dashboard"
@@ -481,7 +481,7 @@ export default function Home() {
             >
               Attendance OS ➔
             </Link>
-            <a href="#subjects" className="sl-btn-ghost">
+            <a href="#subjects" className="sl-btn-ghost" onClick={(e) => { e.preventDefault(); document.getElementById('subjects')?.scrollIntoView({ behavior: 'smooth' }); }}>
               Browse all subjects
             </a>
           </div>
