@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Learning Plus // CD · Unit 3</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <main class="main-wrapper" style="width:100%;">
+    <div class="topbar">
+      <a href="index.html" class="back-btn">⬅ CD Hub</a>
+      <div class="brand">Smart<span>Learning</span>+ <span style="color:var(--muted);font-weight:400;font-size:14px;">// CD · Unit 3</span></div>
+      <div class="nav">
+        <a href="index.html">🏠 CD Hub</a>
+        <a href="#content">📖 Content</a>
+        <a href="#qa">❓ Q&amp;A</a>
+        <a href="unit2.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+        <a href="unit4.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="hero">
+        <h1>📙 Unit 3 — Parsing &amp; Context-Free Grammars</h1>
+        <p>CFG Ambiguity · Top-Down (LL, Recursive Descent) · Bottom-Up (LR, SLR, LALR) · Operator Precedence · YACC | Hours: 10</p>
+        <div class="badges" style="margin-top:14px;">
+          <a href="index.html" style="text-decoration:none;"><span class="badge b-teal">← Back to CD Hub</span></a>
+          <span class="badge b-gold">5CS4-02 · Compiler Design · RTU</span>
+        </div>
+      </div>
+      <div id="content">
+  <h1 class="unit-title" id="unit3">📙 UNIT 3 — Parsing &amp; Context-Free Grammars</h1>
+  <p class="unit-sub">Review of CFG · Ambiguity of Grammars · Top-Down Parsing (LL, Recursive Descent, Predictive) · Bottom-Up Parsing (Shift-Reduce, LR, SLR, Canonical LR, LALR) · Ambiguous Grammar Parsing · Operator Precedence Parsing · YACC &amp; Error Handling &nbsp;|&nbsp; Hours: 10</p>
+
+  <div class="progress-bar"></div>
+
+  <div class="card def">
+    <span class="tag">English</span>
+    <p><b>Parsing (Syntax Analysis)</b> is the compiler phase that takes the stream of tokens produced by the lexical analyzer and determines whether they form a syntactically valid program according to the language's grammar — represented as a <b>Context-Free Grammar (CFG)</b>. The parser builds a <b>parse tree</b> (or equivalent structure) representing this grammatical derivation. This is the heaviest, most numerical-intensive unit in the entire subject — RTU questions here are almost always parsing-table construction problems.</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Ye unit Compiler Design ka <b>sabse bada aur sabse important</b> unit hai (10 hours, sabse zyada weightage). Lexical analyzer ne tokens bana diye, ab <b>Parser</b> ka kaam hai check karna ki ye tokens grammar ke rules follow karte hain ya nahi. Do approaches hain — <b>Top-Down</b> (root se shuru karke leaves tak) aur <b>Bottom-Up</b> (leaves se shuru karke root tak). RTU mein har approach ke <b>numerical questions (parsing table banana)</b> bahut zyada poochhe jaate hain — isliye practice zaroor karo!</p>
+  </div>
+
+  <!-- 1. Review of CFG -->
+  <h2 class="topic">1. Review of Context-Free Grammar (CFG) <span class="imp h">High ⭐⭐⭐⭐</span></h2>
+
+  <div class="card def">
+    <span class="tag">English</span>
+    <p>A <b>Context-Free Grammar (CFG)</b> is a 4-tuple <code>G = (V, T, P, S)</code> where: <b>V</b> = set of non-terminals (variables), <b>T</b> = set of terminals (tokens), <b>P</b> = set of production rules of the form <code>A → α</code> (where A ∈ V and α is a string of terminals/non-terminals), and <b>S</b> = start symbol (S ∈ V).</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>CFG ek formal way hai language ki grammar define karne ka. <b>Non-terminals</b> = abstract symbols jo further expand ho sakte hain (jaise Expression, Statement). <b>Terminals</b> = actual tokens (id, +, *, num). <b>Productions</b> = rules batate hain ki ek non-terminal kis tarah expand hoga. <b>Start symbol</b> = jahan se derivation shuru hoti hai. Ye TOC subject se directly connect hota hai!</p>
+  </div>
+
+  <div class="card example">
+    <span class="tag">Example — Simple expression grammar</span>
+    <div class="formula" style="font-size:13px;">
+E → E + T | T
+T → T * F | F
+F → ( E ) | id
+    </div>
+    <p>Here: V = {E, T, F}, T = {+, *, (, ), id}, S = E.</p>
+  </div>
+
+  <h3 class="sub">Derivation: Leftmost &amp; Rightmost <span class="imp h">High ⭐⭐⭐⭐</span></h3>
+  <div class="card def">
+    <span class="tag">English</span>
+    <p>A <b>derivation</b> is a sequence of production applications starting from S, eventually producing a string of terminals. In a <b>Leftmost Derivation (LMD)</b>, the leftmost non-terminal is always expanded first. In a <b>Rightmost Derivation (RMD)</b>, the rightmost non-terminal is always expanded first.</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p><b>LMD</b> mein hamesha sabse <b>left wala</b> non-terminal expand karte hain. <b>RMD</b> mein hamesha sabse <b>right wala</b>. Same string ke liye dono derivations alag order mein steps lenge lekin end result same hoga. Top-down parsers LMD use karte hain, bottom-up parsers RMD ko reverse order mein follow karte hain.</p>
+  </div>
+
+  <div class="card example">
+    <span class="tag">Example — LMD vs RMD for id + id * id (using grammar above)</span>
+    <table style="margin:0;">
+      <tr><th>Leftmost Derivation (LMD)</th><th>Rightmost Derivation (RMD)</th></tr>
+      <tr><td>
+        E ⇒ E + T<br>
+        ⇒ T + T<br>
+        ⇒ F + T<br>
+        ⇒ id + T<br>
+        ⇒ id + T * F<br>
+        ⇒ id + F * F<br>
+        ⇒ id + id * F<br>
+        ⇒ id + id * id
+      </td><td>
+        E ⇒ E + T<br>
+        ⇒ E + T * F<br>
+        ⇒ E + T * id<br>
+        ⇒ E + F * id<br>
+        ⇒ E + id * id<br>
+        ⇒ T + id * id<br>
+        ⇒ F + id * id<br>
+        ⇒ id + id * id
+      </td></tr>
+    </table>
+  </div>
+
+  <h3 class="sub">Parse Tree <span class="imp m">Medium ⭐⭐⭐</span></h3>
+  <div class="card def">
+    <span class="tag">English</span>
+    <p>A <b>parse tree</b> is a graphical representation of a derivation. The root is labeled with the start symbol; each internal node represents a non-terminal being expanded; leaves (read left to right) form the derived string. Both LMD and RMD of the same string produce the <b>same parse tree</b> — only the order of expansion differs.</p>
+  </div>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 420 240" xmlns="http://www.w3.org/2000/svg">
+      <style>.ptn{fill:#141a20;stroke:#36e0c4;stroke-width:1.5;}.ptlbl{fill:#d7e1e8;font-size:13px;font-family:Consolas,monospace;text-anchor:middle;}.ptln{stroke:#36e0c4;stroke-width:1.3;}.pttit{fill:#d7e1e8;font-size:12px;font-family:Consolas,monospace;text-anchor:middle;}</style>
+      <text class="pttit" x="210" y="16">Parse Tree for: id + id * id</text>
+
+      <circle class="ptn" cx="210" cy="40" r="16"/><text class="ptlbl" x="210" y="45">E</text>
+
+      <line class="ptln" x1="200" y1="52" x2="120" y2="85"/>
+      <circle class="ptn" cx="110" cy="95" r="16"/><text class="ptlbl" x="110" y="100">E</text>
+
+      <line class="ptln" x1="210" y1="56" x2="210" y2="85"/>
+      <text class="ptlbl" x="210" y="100" style="font-size:15px;">+</text>
+
+      <line class="ptln" x1="222" y1="52" x2="300" y2="85"/>
+      <circle class="ptn" cx="310" cy="95" r="16"/><text class="ptlbl" x="310" y="100">T</text>
+
+      <!-- E -> T -->
+      <line class="ptln" x1="110" y1="111" x2="110" y2="140"/>
+      <circle class="ptn" cx="110" cy="150" r="16"/><text class="ptlbl" x="110" y="155">T</text>
+      <line class="ptln" x1="110" y1="166" x2="110" y2="195"/>
+      <circle class="ptn" cx="110" cy="205" r="16"/><text class="ptlbl" x="110" y="210">F</text>
+      <line class="ptln" x1="110" y1="221" x2="110" y2="232"/>
+      <text class="ptlbl" x="110" y="238">id</text>
+
+      <!-- T -> T * F -->
+      <line class="ptln" x1="298" y1="105" x2="270" y2="140"/>
+      <circle class="ptn" cx="260" cy="150" r="16"/><text class="ptlbl" x="260" y="155">T</text>
+      <line class="ptln" x1="310" y1="111" x2="310" y2="140"/>
+      <text class="ptlbl" x="310" y="153" style="font-size:15px;">*</text>
+      <line class="ptln" x1="322" y1="105" x2="360" y2="140"/>
+      <circle class="ptn" cx="365" cy="150" r="16"/><text class="ptlbl" x="365" y="155">F</text>
+
+      <line class="ptln" x1="260" y1="166" x2="260" y2="195"/>
+      <circle class="ptn" cx="260" cy="205" r="16"/><text class="ptlbl" x="260" y="210">F</text>
+      <line class="ptln" x1="260" y1="221" x2="260" y2="232"/>
+      <text class="ptlbl" x="260" y="238">id</text>
+
+      <line class="ptln" x1="365" y1="166" x2="365" y2="195"/>
+      <text class="ptlbl" x="365" y="208">id</text>
+    </svg>
+    <p class="cap">Fig 3.1 — Parse tree for "id + id * id". Both LMD and RMD shown above produce this exact same tree.</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- 2. AMBIGUITY -->
+  <h2 class="topic">2. Ambiguity of Grammars <span class="imp h">High ⭐⭐⭐⭐⭐ Most Asked</span></h2>
+
+  <div class="card def">
+    <span class="tag">English</span>
+    <p>A grammar is said to be <b>ambiguous</b> if there exists at least one string in the language for which more than one parse tree can be constructed — equivalently, if it has more than one leftmost derivation (or more than one rightmost derivation) for the same string.</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Agar ek hi string ke liye ek se zyada parse tree ban sakte hain, to grammar <b>ambiguous</b> kehlati hai. Yeh compiler ke liye problem create karta hai kyunki compiler ko nahi pata chalta ki kaunsa interpretation sahi hai. Classic example: <code>E → E+E | E*E | id</code> — string "id+id*id" ke liye 2 alag parse trees ban sakte hain (different precedence ke saath).</p>
+  </div>
+
+  <div class="card example">
+    <span class="tag">Example — Ambiguous grammar</span>
+    <div class="formula" style="font-size:13px;">E → E + E | E * E | id</div>
+    <p>For string "id+id*id", two different parse trees are possible — one which groups "+" first ((id+id)*id) and one which groups "*" first (id+(id*id)) — giving two different leftmost derivations, hence ambiguity.</p>
+  </div>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 420 200" xmlns="http://www.w3.org/2000/svg">
+      <style>.atn{fill:#141a20;stroke:#ffb454;stroke-width:1.5;}.atlbl{fill:#d7e1e8;font-size:12px;font-family:Consolas,monospace;text-anchor:middle;}.atln{stroke:#ffb454;stroke-width:1.2;}.attit{fill:#d7e1e8;font-size:11px;font-family:Consolas,monospace;text-anchor:middle;}</style>
+      <text class="attit" x="100" y="14">Tree 1: (id+id)*id</text>
+      <circle class="atn" cx="100" cy="35" r="14"/><text class="atlbl" x="100" y="40">E</text>
+      <line class="atln" x1="92" y1="46" x2="60" y2="75"/><circle class="atn" cx="50" cy="85" r="14"/><text class="atlbl" x="50" y="90">E</text>
+      <text class="atlbl" x="100" y="90" style="font-size:14px;">*</text>
+      <line class="atln" x1="108" y1="46" x2="140" y2="75"/><circle class="atn" cx="150" cy="85" r="14"/><text class="atlbl" x="150" y="90">E</text>
+      <line class="atln" x1="44" y1="96" x2="25" y2="125"/><text class="atlbl" x="20" y="140">id</text>
+      <text class="atlbl" x="50" y="140" style="font-size:14px;">+</text>
+      <line class="atln" x1="56" y1="96" x2="75" y2="125"/><text class="atlbl" x="80" y="140">id</text>
+      <line class="atln" x1="150" y1="99" x2="150" y2="125"/><text class="atlbl" x="150" y="140">id</text>
+
+      <text class="attit" x="320" y="14">Tree 2: id+(id*id)</text>
+      <circle class="atn" cx="320" cy="35" r="14"/><text class="atlbl" x="320" y="40">E</text>
+      <line class="atln" x1="312" y1="46" x2="270" y2="75"/><circle class="atn" cx="260" cy="85" r="14"/><text class="atlbl" x="260" y="90">E</text>
+      <text class="atlbl" x="320" y="90" style="font-size:14px;">+</text>
+      <line class="atln" x1="328" y1="46" x2="370" y2="75"/><circle class="atn" cx="380" cy="85" r="14"/><text class="atlbl" x="380" y="90">E</text>
+      <line class="atln" x1="260" y1="99" x2="260" y2="125"/><text class="atlbl" x="260" y="140">id</text>
+      <line class="atln" x1="372" y1="96" x2="350" y2="125"/><text class="atlbl" x="345" y="140">id</text>
+      <text class="atlbl" x="380" y="140" style="font-size:14px;">*</text>
+      <line class="atln" x1="386" y1="96" x2="410" y2="125"/><text class="atlbl" x="415" y="140">id</text>
+    </svg>
+    <p class="cap">Fig 3.2 — Two different parse trees for "id+id*id" using the same ambiguous grammar — proof of ambiguity</p>
+  </div>
+
+  <h3 class="sub">Removing Ambiguity <span class="imp h">High ⭐⭐⭐⭐ — Numerical/Conversion Question</span></h3>
+  <div class="card">
+    <p>Ambiguity is typically removed by <b>rewriting the grammar</b> to enforce precedence and associativity rules explicitly, using a layered (precedence-cascading) grammar:</p>
+    <div class="formula" style="font-size:13px;">
+E → E + T | T        (lowest precedence: +)
+T → T * F | F        (higher precedence: *)
+F → ( E ) | id        (highest precedence: parentheses/atoms)
+    </div>
+    <p>This forces "*" to bind tighter than "+", removing the ambiguity while generating the exact same language.</p>
+  </div>
+
+  <div class="card warn">
+    <span class="tag">⚠ Important</span>
+    <p>Ambiguity is a property of the <b>grammar</b>, not the language — the same language can often be described by both an ambiguous and an unambiguous grammar. The classic "dangling else" problem (<code>if-then-else</code> nesting) is another famous ambiguity example, frequently asked in RTU exams.</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- 3. INTRO TO PARSING -->
+  <h2 class="topic">3. Introduction to Parsing <span class="imp h">High ⭐⭐⭐⭐</span></h2>
+
+  <div class="card def">
+    <span class="tag">English</span>
+    <p><b>Parsing</b> is the process of analyzing a sequence of tokens to determine its grammatical structure with respect to a given CFG. There are two fundamental strategies: <b>Top-Down Parsing</b> (constructing the parse tree from the root/start symbol down to the leaves, attempting to derive the input string) and <b>Bottom-Up Parsing</b> (constructing the parse tree from the leaves up to the root, attempting to reduce the input string back to the start symbol).</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Parsing ka matlab hai input tokens ko grammar ke against verify karna aur unka structure (parse tree) banana. Do main strategies: <b>Top-Down</b> — start symbol se shuru karke input string derive karte hain. <b>Bottom-Up</b> — input tokens se shuru karke unhe reduce karte-karte start symbol tak pahunchte hain.</p>
+  </div>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 400 150" xmlns="http://www.w3.org/2000/svg">
+      <style>.ptxt{fill:#d7e1e8;font-size:12px;font-family:Consolas,monospace;text-anchor:middle;}.pbx{fill:#141a20;stroke:#36e0c4;stroke-width:1.5;}</style>
+      <rect class="pbx" x="20" y="20" width="160" height="110" rx="8"/>
+      <text class="ptxt" x="100" y="40" style="font-weight:bold;fill:#36e0c4;">TOP-DOWN</text>
+      <text class="ptxt" x="100" y="60">Start Symbol → leaves</text>
+      <text class="ptxt" x="100" y="80">LL(1), Recursive Descent,</text>
+      <text class="ptxt" x="100" y="98">Predictive Parsers</text>
+      <text class="ptxt" x="100" y="116">Uses LMD</text>
+
+      <rect class="pbx" x="220" y="20" width="160" height="110" rx="8" style="stroke:#ffb454;"/>
+      <text class="ptxt" x="300" y="40" style="font-weight:bold;fill:#ffb454;">BOTTOM-UP</text>
+      <text class="ptxt" x="300" y="60">leaves → Start Symbol</text>
+      <text class="ptxt" x="300" y="80">Shift-Reduce, LR, SLR,</text>
+      <text class="ptxt" x="300" y="98">CLR, LALR Parsers</text>
+      <text class="ptxt" x="300" y="116">Uses RMD (reverse)</text>
+    </svg>
+    <p class="cap">Fig 3.3 — Two fundamental parsing strategies</p>
+  </div>
+
+  <table>
+    <tr><th>Parameter</th><th>Top-Down Parsing</th><th>Bottom-Up Parsing</th></tr>
+    <tr><td>Tree Construction</td><td>Root → Leaves</td><td>Leaves → Root</td></tr>
+    <tr><td>Derivation Used</td><td>Leftmost (LMD)</td><td>Rightmost in reverse (RMD)</td></tr>
+    <tr><td>Examples</td><td>LL Parser, Recursive Descent, Predictive Parser</td><td>Shift-Reduce, LR, SLR, CLR, LALR</td></tr>
+    <tr><td>Left Recursion</td><td>Cannot handle — must eliminate</td><td>Can handle directly</td></tr>
+    <tr><td>Grammar Class Power</td><td>Less powerful (LL grammars only)</td><td>More powerful (LR grammars — superset of LL)</td></tr>
+  </table>
+
+  <hr class="sep">
+
+  <!-- 4. TOP DOWN PARSING -->
+  <h2 class="topic">4. Top-Down Parsing <span class="imp h">High ⭐⭐⭐⭐⭐</span></h2>
+
+  <div class="card def">
+    <span class="tag">English</span>
+    <p><b>Top-Down Parsing</b> builds the parse tree starting from the root (start symbol) and works downward, at each step trying to match the next input token by choosing the correct production to expand the current non-terminal — essentially attempting to find a leftmost derivation that produces the given input string.</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Top-down parsing start symbol se shuru hoti hai, aur step-by-step productions apply karke input string tak "derive" karne ki koshish karti hai. Har step pe yeh decide karna padta hai ki kaunsa production use karna hai — yahi sabse tricky part hai.</p>
+  </div>
+
+  <h3 class="sub">4.1 Left Recursion &amp; Its Elimination <span class="imp h">High ⭐⭐⭐⭐ — Numerical</span></h3>
+  <div class="card def">
+    <span class="tag">English</span>
+    <p>A grammar has <b>left recursion</b> if a non-terminal A has a production of the form <code>A → Aα</code> (direct) — meaning A appears as the leftmost symbol on the right side of its own production. Top-down parsers cannot handle left recursion since they would recurse infinitely trying to expand A before consuming any input.</p>
+  </div>
+  <div class="card example">
+    <span class="tag">Elimination Formula</span>
+    <div class="formula" style="font-size:13px;">
+Given:    A → Aα | β
+Rewrite as:
+          A  → β A'
+          A' → α A' | ε
+    </div>
+    <p><b>Example:</b> E → E+T | T becomes: E → T E' and E' → +T E' | ε</p>
+  </div>
+
+  <h3 class="sub">4.2 Left Factoring <span class="imp m">Medium ⭐⭐⭐</span></h3>
+  <div class="card def">
+    <span class="tag">English</span>
+    <p><b>Left Factoring</b> is a grammar transformation used when two or more productions for the same non-terminal share a common prefix, making it impossible for a predictive parser to decide which production to use by looking at only the next token. The common prefix is factored out into a new production.</p>
+  </div>
+  <div class="card example">
+    <span class="tag">Example</span>
+    <div class="formula" style="font-size:13px;">
+Before: S → if E then S else S | if E then S
+After:  S  → if E then S S'
+        S' → else S | ε
+    </div>
+  </div>
+
+  <h3 class="sub">4.3 FIRST and FOLLOW Sets <span class="imp h">High ⭐⭐⭐⭐⭐ — Always Asked</span></h3>
+  <div class="card def">
+    <span class="tag">English</span>
+    <p><b>FIRST(α)</b> = the set of terminals that begin the strings derivable from α (if α can derive ε, then ε ∈ FIRST(α)). <b>FOLLOW(A)</b> = the set of terminals that can appear immediately to the right of A in some sentential form (if A can be the rightmost symbol, $ ∈ FOLLOW(A)).</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>FIRST(A) batata hai ki A ko expand karne par sabse pehle kaunsa terminal aa sakta hai. FOLLOW(A) batata hai ki A ke baad kaunsa terminal aa sakta hai. Yeh dono LL(1) parsing table banane ke liye zaroori hain — RTU mein numerical question guaranteed hota hai.</p>
+  </div>
+
+  <div class="card">
+    <span class="tag">Rules for computing FIRST(X)</span>
+    <ul>
+      <li>If X is a terminal, FIRST(X) = {X}.</li>
+      <li>If X → ε is a production, add ε to FIRST(X).</li>
+      <li>If X → Y1Y2...Yk, add FIRST(Y1)−{ε}; if ε∈FIRST(Y1), add FIRST(Y2)−{ε}; continue until some Yi does not have ε in FIRST; if all Y1...Yk have ε, add ε to FIRST(X).</li>
+    </ul>
+    <span class="tag" style="margin-top:10px;display:block;">Rules for computing FOLLOW(A)</span>
+    <ul>
+      <li>Place $ in FOLLOW(S) where S is the start symbol.</li>
+      <li>If A → αBβ, everything in FIRST(β) except ε is in FOLLOW(B).</li>
+      <li>If A → αB, or A → αBβ where ε∈FIRST(β), then everything in FOLLOW(A) is in FOLLOW(B).</li>
+    </ul>
+  </div>
+
+  <div class="card example">
+    <span class="tag">Example — FIRST &amp; FOLLOW for E → TE' | E' → +TE'|ε | T → FT' | T' → *FT'|ε | F → (E)|id</span>
+    <table style="margin:0;">
+      <tr><th>Non-Terminal</th><th>FIRST</th><th>FOLLOW</th></tr>
+      <tr><td>E</td><td>{ (, id }</td><td>{ ), $ }</td></tr>
+      <tr><td>E'</td><td>{ +, ε }</td><td>{ ), $ }</td></tr>
+      <tr><td>T</td><td>{ (, id }</td><td>{ +, ), $ }</td></tr>
+      <tr><td>T'</td><td>{ *, ε }</td><td>{ +, ), $ }</td></tr>
+      <tr><td>F</td><td>{ (, id }</td><td>{ +, *, ), $ }</td></tr>
+    </table>
+  </div>
+
+  <hr class="sep">
+
+  <!-- 5. LL GRAMMARS -->
+  <h2 class="topic">5. LL Grammars &amp; LL Parser <span class="imp h">High ⭐⭐⭐⭐⭐</span></h2>
+
+  <div class="card def">
+    <span class="tag">English</span>
+    <p>An <b>LL(1) Parser</b> is a table-driven, non-backtracking top-down parser. "LL" stands for <b>L</b>eft-to-right scan of input, producing a <b>L</b>eftmost derivation, using <b>1</b> token of lookahead to decide which production to apply. It uses a <b>parsing table</b> M[A, a] that, for each non-terminal A and lookahead terminal a, specifies which production to use.</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>LL(1) parser ek table-based parser hai jo sirf 1 token aage dekh kar (lookahead) decide kar leta hai ki kaunsa production use karna hai — bina backtracking ke. "LL" naam isliye kyunki yeh Left-to-right scan karta hai aur Leftmost derivation produce karta hai.</p>
+  </div>
+
+  <h3 class="sub">Construction of LL(1) Parsing Table <span class="imp h">High ⭐⭐⭐⭐⭐ — Most Asked Numerical</span></h3>
+  <div class="card">
+    <span class="tag">Algorithm</span>
+    <ol>
+      <li>For each production A → α, for each terminal a in FIRST(α), add A → α to M[A, a].</li>
+      <li>If ε ∈ FIRST(α), for each terminal b in FOLLOW(A), add A → α to M[A, b]. If $ ∈ FOLLOW(A), also add A → α to M[A, $].</li>
+      <li>All undefined entries in M are marked as <b>error</b>.</li>
+    </ol>
+  </div>
+
+  <div class="card example">
+    <span class="tag">Example — LL(1) Parsing Table for the grammar above</span>
+    <table style="margin:0;">
+      <tr><th></th><th>id</th><th>+</th><th>*</th><th>(</th><th>)</th><th>$</th></tr>
+      <tr><td><b>E</b></td><td>E→TE'</td><td></td><td></td><td>E→TE'</td><td></td><td></td></tr>
+      <tr><td><b>E'</b></td><td></td><td>E'→+TE'</td><td></td><td></td><td>E'→ε</td><td>E'→ε</td></tr>
+      <tr><td><b>T</b></td><td>T→FT'</td><td></td><td></td><td>T→FT'</td><td></td><td></td></tr>
+      <tr><td><b>T'</b></td><td></td><td>T'→ε</td><td>T'→*FT'</td><td></td><td>T'→ε</td><td>T'→ε</td></tr>
+      <tr><td><b>F</b></td><td>F→id</td><td></td><td></td><td>F→(E)</td><td></td><td></td></tr>
+    </table>
+  </div>
+
+  <div class="card warn">
+    <span class="tag">⚠ A Grammar is LL(1) if and only if:</span>
+    <p>For every two productions A → α | β of the same non-terminal: (1) FIRST(α) ∩ FIRST(β) = ∅, and (2) if ε ∈ FIRST(β), then FIRST(α) ∩ FOLLOW(A) = ∅. If the same M[A,a] cell would receive two different productions, the grammar is <b>NOT LL(1)</b> (it has a multiply-defined entry).</p>
+  </div>
+
+  <h3 class="sub">5.1 Error Handling in LL Parsers <span class="imp m">Medium ⭐⭐⭐</span></h3>
+  <div class="card def">
+    <span class="tag">English</span>
+    <p>When the LL(1) parser encounters a blank/error entry in the parsing table M[A,a], or when the top of the stack is a terminal that doesn't match the input symbol, it signals a syntax error. Common recovery strategies include <b>Panic Mode Recovery</b> (skip input tokens until a "synchronizing" token from FOLLOW(A) is found, then pop A and resume) and <b>Phrase-Level Recovery</b> (fill the erroneous table entries with error-handling routines that perform local corrections like inserting a missing token).</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Jab parsing table mein blank entry mil jaaye ya stack ka terminal input se match na ho, to error signal hota hai. <b>Panic Mode</b> mein parser tab tak tokens skip karta hai jab tak koi "safe" (FOLLOW set ka) token na mile. <b>Phrase-Level Recovery</b> mein specific error routines define ki jaati hain jo missing token insert ya extra token delete kar sakti hain.</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- 6. RECURSIVE DESCENT & PREDICTIVE PARSING -->
+  <h2 class="topic">6. Recursive Descent Parsing &amp; Predictive Parsers <span class="imp h">High ⭐⭐⭐⭐</span></h2>
+
+  <div class="card def">
+    <span class="tag">English</span>
+    <p>A <b>Recursive Descent Parser</b> is a top-down parser implemented as a set of mutually recursive procedures, one for each non-terminal in the grammar; each procedure attempts to match a specific portion of the input. A <b>Predictive Parser</b> is a special, more efficient form of recursive descent parser that uses one token of lookahead to decide — without any backtracking — exactly which production/procedure call to use at each step.</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Recursive Descent Parser har non-terminal ke liye ek function banata hai, jo recursively ek dusre ko call karte hain. Predictive Parser is technique ka improved version hai jisme backtracking ki zaroorat nahi padti — sirf 1 token dekh kar hi sahi production choose ho jaata hai (LL(1) table use karke).</p>
+  </div>
+
+  <h3 class="sub">Recursive Descent vs Predictive Parser</h3>
+  <table>
+    <tr><th>Feature</th><th>Recursive Descent (General)</th><th>Predictive Parser</th></tr>
+    <tr><td>Backtracking</td><td>May require backtracking</td><td>No backtracking (1 lookahead is enough)</td></tr>
+    <tr><td>Implementation</td><td>One recursive procedure per non-terminal</td><td>Often table-driven (uses LL(1) table) or recursive with lookahead</td></tr>
+    <tr><td>Grammar Requirement</td><td>Works on any CFG (with backtracking, inefficient)</td><td>Requires LL(1) grammar</td></tr>
+    <tr><td>Efficiency</td><td>Can be exponential with backtracking</td><td>Linear time — O(n)</td></tr>
+  </table>
+
+  <div class="card example">
+    <span class="tag">Example — Recursive Descent procedure for E → TE'</span>
+    <div class="formula" style="font-size:12px;">
+procedure E() {
+   T();
+   Eprime();
+}
+procedure Eprime() {
+   if (lookahead == '+') {
+      match('+'); T(); Eprime();
+   }  // else: ε production, do nothing
+}
+    </div>
+  </div>
+
+  <h3 class="sub">Architecture of a Predictive Parser <span class="imp m">Medium ⭐⭐⭐</span></h3>
+  <div class="svgbox">
+    <svg viewBox="0 0 420 170" xmlns="http://www.w3.org/2000/svg">
+      <style>.pdt{fill:#d7e1e8;font-size:11px;font-family:Consolas,monospace;text-anchor:middle;}.pdb{fill:#141a20;stroke:#36e0c4;stroke-width:1.5;}</style>
+      <rect class="pdb" x="20" y="20" width="100" height="40" rx="6"/><text class="pdt" x="70" y="44">Input Buffer</text>
+      <rect class="pdb" x="160" y="55" width="100" height="40" rx="6" style="stroke:#ffb454;"/><text class="pdt" x="210" y="79" fill="#ffb454">Predictive Parsing Program</text>
+      <rect class="pdb" x="20" y="100" width="100" height="40" rx="6"/><text class="pdt" x="70" y="124">Stack</text>
+      <rect class="pdb" x="300" y="100" width="100" height="40" rx="6" style="stroke:#b18cff;"/><text class="pdt" x="350" y="124" fill="#b18cff">Parsing Table M</text>
+      <line x1="70" y1="60" x2="180" y2="58" stroke="#36e0c4"/>
+      <line x1="180" y1="92" x2="80" y2="100" stroke="#36e0c4"/>
+      <line x1="260" y1="80" x2="310" y2="100" stroke="#36e0c4"/>
+    </svg>
+    <p class="cap">Fig 3.4 — Predictive parser uses: Input Buffer, Stack, Parsing Table M, and a driver Program</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- 7. BOTTOM UP PARSING -->
+  <h2 class="topic">7. Bottom-Up Parsing <span class="imp h">High ⭐⭐⭐⭐⭐</span></h2>
+
+  <div class="card def">
+    <span class="tag">English</span>
+    <p><b>Bottom-Up Parsing</b> constructs the parse tree starting from the input string (leaves) and works upward toward the start symbol (root) by repeatedly identifying a substring matching the right side of a production and replacing it with the corresponding non-terminal (left side) — this process is called <b>reduction</b>, and it traces out a <b>rightmost derivation in reverse</b>.</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Bottom-up parsing input string se shuru hoti hai aur use reduce karte-karte start symbol tak le jaati hai. Har step pe ek "handle" (substring jo kisi production ke RHS se match karta hai) dhundha jaata hai aur use corresponding LHS se replace kiya jaata hai. Yeh process Rightmost Derivation ko reverse order mein follow karta hai.</p>
+  </div>
+
+  <h3 class="sub">7.1 Shift-Reduce Parsing <span class="imp h">High ⭐⭐⭐⭐⭐ — Numerical</span></h3>
+  <div class="card def">
+    <span class="tag">English</span>
+    <p><b>Shift-Reduce Parsing</b> is a form of bottom-up parsing that uses a stack and an input buffer, performing two main types of actions: <b>Shift</b> (push the next input symbol onto the stack) and <b>Reduce</b> (replace a handle on top of the stack with the non-terminal on the left side of the matching production). Parsing succeeds when the stack contains only the start symbol and the input is empty.</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Shift-Reduce parser stack aur input buffer use karta hai. <b>Shift</b> = input se ek symbol uthakar stack pe daal do. <b>Reduce</b> = stack ke top par jo handle (production ka RHS) match ho raha hai, use LHS se replace kar do. Jab stack mein sirf start symbol bache aur input khatam ho jaaye, to parsing successful.</p>
+  </div>
+
+  <div class="card example">
+    <span class="tag">Example — Shift Reduce trace for "id*id" using T → T*F|F, F→id</span>
+    <table style="margin:0;">
+      <tr><th>Stack</th><th>Input</th><th>Action</th></tr>
+      <tr><td>$</td><td>id*id$</td><td>shift</td></tr>
+      <tr><td>$id</td><td>*id$</td><td>reduce F→id</td></tr>
+      <tr><td>$F</td><td>*id$</td><td>reduce T→F</td></tr>
+      <tr><td>$T</td><td>*id$</td><td>shift</td></tr>
+      <tr><td>$T*</td><td>id$</td><td>shift</td></tr>
+      <tr><td>$T*id</td><td>$</td><td>reduce F→id</td></tr>
+      <tr><td>$T*F</td><td>$</td><td>reduce T→T*F</td></tr>
+      <tr><td>$T</td><td>$</td><td>accept</td></tr>
+    </table>
+  </div>
+
+  <h3 class="sub">7.2 Handle Pruning &amp; Conflicts <span class="imp m">Medium ⭐⭐⭐</span></h3>
+  <div class="card">
+    <p>A <b>handle</b> is a substring on the stack that matches the RHS of a production AND whose reduction is a valid step toward reducing the input back to the start symbol. Shift-Reduce parsers can face two types of conflicts:</p>
+    <ul>
+      <li><b>Shift-Reduce Conflict:</b> the parser cannot decide whether to shift the next token or reduce the current handle.</li>
+      <li><b>Reduce-Reduce Conflict:</b> the parser cannot decide which of two or more productions to use for reduction.</li>
+    </ul>
+  </div>
+
+  <hr class="sep">
+
+  <!-- 8. LR PARSERS -->
+  <h2 class="topic">8. LR Parsers <span class="imp h">High ⭐⭐⭐⭐⭐</span></h2>
+
+  <div class="card def">
+    <span class="tag">English</span>
+    <p>An <b>LR Parser</b> is a bottom-up, table-driven parser. "LR" stands for <b>L</b>eft-to-right scan of input, producing a <b>R</b>ightmost derivation in reverse. LR parsers are the most general/powerful class of efficient (linear-time) parsers, capable of handling a larger class of grammars than LL parsers, including most unambiguous CFGs used for programming languages.</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>LR parser bottom-up, table-driven parser hai jo input ko Left-to-right scan karta hai aur Rightmost derivation ko reverse order mein produce karta hai. LR parsers LL parsers se zyada powerful hote hain — yeh zyada grammars handle kar sakte hain. Inhe state machine (DFA of items) aur 2 tables — ACTION aur GOTO — use karke implement kiya jata hai.</p>
+  </div>
+
+  <h3 class="sub">LR Parser Architecture</h3>
+  <div class="card">
+    <p>An LR parser uses a stack containing alternating states and grammar symbols, an input buffer, and two tables:</p>
+    <ul>
+      <li><b>ACTION[s, a]:</b> tells the parser, given state s on top of stack and terminal a as lookahead, whether to shift, reduce, accept, or report error.</li>
+      <li><b>GOTO[s, A]:</b> tells the parser which state to go to after reducing and exposing non-terminal A on top of the stack.</li>
+    </ul>
+  </div>
+
+  <h3 class="sub">Types of LR Parsers — Increasing Power</h3>
+  <table>
+    <tr><th>Parser</th><th>Full Name</th><th>Power</th><th>Table Size</th></tr>
+    <tr><td><b>SLR(1)</b></td><td>Simple LR</td><td>Least powerful</td><td>Smallest</td></tr>
+    <tr><td><b>LALR(1)</b></td><td>Look-Ahead LR</td><td>Medium (used in YACC)</td><td>Same #states as SLR, smaller than CLR</td></tr>
+    <tr><td><b>CLR(1)</b></td><td>Canonical LR</td><td>Most powerful</td><td>Largest (many more states)</td></tr>
+  </table>
+  <p style="color:var(--muted);font-size:13px;margin-top:6px;">Power relationship: LL(1) ⊂ SLR(1) ⊂ LALR(1) ⊂ CLR(1)</p>
+
+  <hr class="sep">
+
+  <!-- 9. CONSTRUCTION OF SLR -->
+  <h2 class="topic">9. Construction of SLR Parsing Tables <span class="imp h">High ⭐⭐⭐⭐⭐ — Guaranteed Numerical (10 marks)</span></h2>
+
+  <div class="card def">
+    <span class="tag">English</span>
+    <p><b>SLR (Simple LR) parsing</b> constructs the ACTION/GOTO tables using <b>LR(0) items</b> (a production with a dot "•" marking how much of it has been seen) organized into <b>canonical collections</b> of item sets via the <b>closure</b> and <b>goto</b> functions, and resolves reduce actions using the <b>FOLLOW set</b> of the non-terminal being reduced.</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>SLR parsing table banane ke liye sabse pehle LR(0) items (production mein dot lagakar) ke states banaye jaate hain (closure aur goto functions use karke). Phir har state ke liye decide kiya jaata hai ki shift karna hai ya reduce — reduce ke liye FOLLOW set use hota hai. Isi liye ise "Simple" LR kehte hain — yeh sबसe seedha (simple) tarika hai.</p>
+  </div>
+
+  <h3 class="sub">Steps for SLR Table Construction <span class="imp h">EXAM HOT — Write step by step in exam</span></h3>
+  <div class="card">
+    <ol>
+      <li><b>Augment</b> the grammar: add new start production S' → S.</li>
+      <li>Compute the <b>canonical collection of LR(0) item sets</b> (I0, I1, ... In) using closure() and goto() functions.</li>
+      <li>Build the <b>DFA</b> of item sets — states are item sets, transitions are goto(Ii, X).</li>
+      <li>For each state Ii containing item A → α•aβ (a terminal), if goto(Ii,a)=Ij, set ACTION[i,a] = shift j.</li>
+      <li>For each state Ii containing a complete item A → α• (dot at end), for every a in FOLLOW(A), set ACTION[i,a] = reduce A→α.</li>
+      <li>If Ii contains S'→S•, set ACTION[i,$] = accept.</li>
+      <li>For each non-terminal A, if goto(Ii,A)=Ij, set GOTO[i,A] = j.</li>
+      <li>All undefined entries = error.</li>
+    </ol>
+  </div>
+
+  <div class="card example">
+    <span class="tag">Example — Closure &amp; Goto for grammar S→AA, A→aA|b</span>
+    <p>I0 = closure({S'→•S}) = { S'→•S, S→•AA, A→•aA, A→•b }</p>
+    <p>goto(I0, A) = closure({S→A•A}) = { S→A•A, A→•aA, A→•b }</p>
+    <p>goto(I0, a) = closure({A→a•A}) = { A→a•A, A→•aA, A→•b }</p>
+    <p>This process continues until no new states are generated, producing the full canonical collection used to build ACTION/GOTO.</p>
+  </div>
+
+  <div class="card warn">
+    <span class="tag">⚠ SLR Limitation</span>
+    <p>SLR can produce <b>reduce-reduce conflicts</b> for grammars where the FOLLOW set is "too broad" — i.e., FOLLOW(A) includes a terminal that should only trigger a reduction in some contexts, not all. Such grammars are not SLR(1) but may still be LALR(1) or CLR(1).</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- 10. CANONICAL LR & LALR -->
+  <h2 class="topic">10. Construction of Canonical LR (CLR) &amp; LALR Parsing Tables <span class="imp h">High ⭐⭐⭐⭐⭐ — Guaranteed Numerical (10 marks)</span></h2>
+
+  <div class="card def">
+    <span class="tag">English</span>
+    <p><b>Canonical LR (CLR/LR(1))</b> parsing uses <b>LR(1) items</b ​— each item carries an extra lookahead terminal (e.g. [A→α•β, a]) — making the reduce decision context-sensitive and removing the imprecision of SLR's FOLLOW-based approach, at the cost of significantly more states. <b>LALR (Look-Ahead LR)</b> parsing is a practical compromise: it builds the same number of states as SLR (by merging LR(1) states that have identical "core" items, differing only in lookaheads), giving more power than SLR with much less memory than CLR.</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>CLR (Canonical LR) mein har item ke saath ek lookahead terminal bhi attach hota hai — isse reduce decisions zyada accurate hote hain, lekin states bahut zyada ban jaate hain (memory-heavy). LALR in dono ka best balance hai — yeh CLR ke states ko merge kar deta hai (jinke "core" same hain, sirf lookahead alag hai), isse states ki sankhya SLR jitni hi rehti hai lekin power CLR ke kareeb hoti hai. Isiliye <b>YACC</b> jaise real-world tools LALR use karte hain.</p>
+  </div>
+
+  <h3 class="sub">LR(1) Item Format</h3>
+  <div class="formula">[ A → α • β , a ]</div>
+  <p style="color:var(--muted);font-size:13px;margin-top:4px;">Means: we are trying to parse A→αβ, having seen α already, and "a" is a terminal that could legally follow this entire production in the current parsing context.</p>
+
+  <h3 class="sub">Steps for CLR Table Construction <span class="imp h">EXAM HOT</span></h3>
+  <div class="card">
+    <ol>
+      <li>Augment grammar: add S' → S.</li>
+      <li>Compute canonical collection of <b>LR(1) item sets</b> using closure() (propagating lookaheads) and goto().</li>
+      <li>For item [A→α•aβ,b] in state Ii, if goto(Ii,a)=Ij, ACTION[i,a]=shift j.</li>
+      <li>For item [A→α•,a] in state Ii (complete item), ACTION[i,a] = reduce A→α (using the item's OWN lookahead, not FOLLOW(A)).</li>
+      <li>If [S'→S•,$] ∈ Ii, ACTION[i,$] = accept.</li>
+      <li>GOTO[i,A] computed same as SLR/LR(0).</li>
+    </ol>
+  </div>
+
+  <h3 class="sub">Construction of LALR Table</h3>
+  <div class="card">
+    <p>Build the full canonical LR(1) collection, then <b>merge all states whose "core"</b> (the item set ignoring lookaheads) is identical, combining their lookahead sets via union. This produces the same number of states as SLR/LR(0), but with item-specific lookaheads — more precise than SLR.</p>
+  </div>
+
+  <h3 class="sub">SLR vs LALR vs CLR — Comparison <span class="imp h">EXAM HOT — Comparison Guaranteed</span></h3>
+  <table>
+    <tr><th>Feature</th><th>SLR(1)</th><th>LALR(1)</th><th>CLR(1)</th></tr>
+    <tr><td>Item Type</td><td>LR(0) items</td><td>LR(1) items (merged)</td><td>LR(1) items</td></tr>
+    <tr><td>Reduce Decision Based On</td><td>FOLLOW(A) — context-free</td><td>Item-specific lookahead (merged)</td><td>Item-specific lookahead</td></tr>
+    <tr><td>Number of States</td><td>Fewest</td><td>Same as SLR (merged from CLR)</td><td>Most (no merging)</td></tr>
+    <tr><td>Power</td><td>Least powerful</td><td>More powerful than SLR</td><td>Most powerful</td></tr>
+    <tr><td>Used By</td><td>Theoretical / small parsers</td><td><b>YACC, Bison</b> (industry standard)</td><td>Rarely — too many states for practical use</td></tr>
+  </table>
+
+  <hr class="sep">
+
+  <!-- 11. AMBIGUOUS GRAMMAR PARSING -->
+  <h2 class="topic">11. Parsing with Ambiguous Grammars <span class="imp m">Medium ⭐⭐⭐</span></h2>
+
+  <div class="card def">
+    <span class="tag">English</span>
+    <p>Although ambiguous grammars cannot, by definition, have a conflict-free LR parsing table, many useful ambiguous grammars (e.g. for arithmetic expressions without precedence-cascaded rules) can still be parsed efficiently if shift-reduce/reduce-reduce conflicts are resolved using <b>disambiguating rules</b> — typically by specifying operator precedence and associativity directly to the parser generator instead of rewriting the grammar.</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Ambiguous grammars LR parsing table mein conflicts create karti hain. Lekin agar hum precedence aur associativity rules explicitly bata dein (jaise YACC mein %left, %right directives se), to parser generator khud hi conflicts resolve kar leta hai — bina grammar ko rewrite kiye. Isse grammar chhoti aur readable rehti hai.</p>
+  </div>
+
+  <div class="card example">
+    <span class="tag">Example — Resolving conflict using precedence</span>
+    <p>For grammar E→E+E|E*E|id with input "id+id*id" causing a shift-reduce conflict at state with E+E• and lookahead *: since * has higher precedence than +, the parser is told to <b>shift</b> (favoring tighter binding of *) rather than reduce.</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- 12. OPERATOR PRECEDENCE PARSING -->
+  <h2 class="topic">12. Operator Precedence Parsing <span class="imp h">High ⭐⭐⭐⭐</span></h2>
+
+  <div class="card def">
+    <span class="tag">English</span>
+    <p><b>Operator Precedence Parsing</b> is a simple, efficient bottom-up parsing technique applicable to a restricted class of grammars called <b>operator grammars</b> (no production has two adjacent non-terminals on the RHS, and no ε-productions). It defines a <b>precedence relation</b> between pairs of terminals — <code>&lt;•</code> (yields precedence), <code>•&gt;</code> (takes precedence), and <code>≐</code> (equal precedence) — stored in an Operator Precedence Table, used directly to find handles without building item sets.</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Operator Precedence Parsing ek simple bottom-up technique hai jo sirf "operator grammars" pe kaam karti hai (jahan RHS mein 2 consecutive non-terminals nahi hote). Yeh terminals ke beech precedence relations define karta hai aur in relations ko use karke directly handle dhundh leta hai — bina koi complex item-set state machine banaye.</p>
+  </div>
+
+  <h3 class="sub">Precedence Relations</h3>
+  <table>
+    <tr><th>Relation</th><th>Meaning</th></tr>
+    <tr><td><code>a &lt;• b</code></td><td>a "yields precedence to" b (a comes before, b binds tighter)</td></tr>
+    <tr><td><code>a •&gt; b</code></td><td>a "takes precedence over" b (a binds tighter, time to reduce)</td></tr>
+    <tr><td><code>a ≐ b</code></td><td>a and b have equal precedence (typically matching parens)</td></tr>
+  </table>
+
+  <div class="card example">
+    <span class="tag">Example — Operator Precedence Table (subset for +,*,id,$)</span>
+    <table style="margin:0;">
+      <tr><th></th><th>id</th><th>+</th><th>*</th><th>$</th></tr>
+      <tr><td><b>id</b></td><td></td><td>•&gt;</td><td>•&gt;</td><td>•&gt;</td></tr>
+      <tr><td><b>+</b></td><td>&lt;•</td><td>•&gt;</td><td>&lt;•</td><td>•&gt;</td></tr>
+      <tr><td><b>*</b></td><td>&lt;•</td><td>•&gt;</td><td>•&gt;</td><td>•&gt;</td></tr>
+      <tr><td><b>$</b></td><td>&lt;•</td><td>&lt;•</td><td>&lt;•</td><td></td></tr>
+    </table>
+  </div>
+
+  <div class="card warn">
+    <span class="tag">⚠ Limitation</span>
+    <p>Operator Precedence Parsing is fast and simple but works only for a small subset of grammars; it has mostly been superseded in practice by LALR(1) parsers (used by YACC), though it remains a popular RTU exam topic due to its simplicity for hand-tracing.</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- 13. YACC -->
+  <h2 class="topic">13. Automatic Parser Generator: YACC <span class="imp h">High ⭐⭐⭐⭐</span></h2>
+
+  <div class="card def">
+    <span class="tag">English</span>
+    <p><b>YACC (Yet Another Compiler-Compiler)</b> is a widely used <b>parser generator</b> tool that automatically constructs a LALR(1) parser from a grammar specification, given in a YACC input file containing grammar rules paired with semantic actions (C code) to be executed on each reduction. It is the standard companion tool to LEX (used for lexical analysis), forming a classic LEX+YACC compiler front-end pipeline.</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>YACC ek tool hai jo grammar rules diye jaane par automatically ek LALR(1) parser generate kar deta hai — hume khud se parsing table banane ki zaroorat nahi padti. YACC file mein grammar rules ke saath C code (semantic actions) likha jaata hai jo har reduction par execute hota hai. LEX (lexical analyzer generator) ke saath milkar yeh poora compiler front-end bana deta hai.</p>
+  </div>
+
+  <h3 class="sub">Structure of a YACC Specification File</h3>
+  <div class="card">
+    <div class="formula" style="font-size:13px;">
+%{
+   /* C declarations, header includes */
+%}
+%token ID NUM PLUS TIMES   /* token declarations */
+%%
+   /* grammar rules with embedded actions */
+expr : expr PLUS term  { $$ = $1 + $3; }
+     | term             { $$ = $1; }
+     ;
+%%
+   /* auxiliary C code, main() function */
+    </div>
+  </div>
+
+  <table>
+    <tr><th>Section</th><th>Purpose</th></tr>
+    <tr><td>Declarations</td><td>C code, token declarations (%token), precedence (%left, %right)</td></tr>
+    <tr><td>Rules</td><td>Grammar productions with associated semantic actions in C</td></tr>
+    <tr><td>Auxiliary Code</td><td>Supporting C functions, including main() and yyerror()</td></tr>
+  </table>
+
+  <h3 class="sub">13.1 Error Handling in LR Parsers (YACC) <span class="imp h">High ⭐⭐⭐⭐</span></h3>
+  <div class="card def">
+    <span class="tag">English</span>
+    <p>LR parsers detect a syntax error the moment an ACTION table entry is found to be blank/error for the current state and lookahead — this is a desirable property since LR parsers never perform a single reduction beyond a true syntax error (the "viable prefix" property). YACC provides a special <b>error</b> token that grammar rules can use to specify explicit error-recovery productions.</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>LR parsers error ko turant detect kar lete hain — jaise hi ACTION table mein blank entry milti hai. Yeh ek bahut achi property hai kyunki LR parser kabhi bhi galat reduction nahi karta. YACC mein ek special <code>error</code> token hota hai jise grammar rules mein use karke explicit error-recovery rules likhe ja sakte hain — jaise statement-level recovery jisme ek poora galat statement skip karke agle ";" tak pahunch jaaya jaaye.</p>
+  </div>
+
+  <div class="card example">
+    <span class="tag">Example — YACC error recovery rule</span>
+    <div class="formula" style="font-size:13px;">
+stmt : expr ';'
+     | error ';'   { yyerror("syntax error, statement skipped"); yyerrok; }
+     ;
+    </div>
+    <p>This rule says: "if a statement can't be parsed normally, skip tokens until a semicolon, report the error, and resume parsing from there."</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- Q&A SECTION -->
+  <div class="qsection" id="qa">
+    <h2 class="topic" style="border:none;">❓ RTU Exam Q&amp;A Bank — Unit 3 <span class="imp h">EXAM GOLD</span></h2>
+
+    <div class="qcard">
+      <div class="qlabel">Q1 · 10 MARKS</div>
+      <span class="marks m10">10 MARKS</span>
+      <div class="q">What is an ambiguous grammar? Show that the grammar E→E+E|E*E|id is ambiguous, and convert it to an unambiguous grammar.</div>
+      <div class="a">
+        <p>A grammar is ambiguous if some string in the language can be derived by more than one parse tree (equivalently, more than one leftmost derivation). For "id+id*id", two different parse trees exist — one grouping + first, one grouping * first — proving ambiguity. The unambiguous equivalent enforces precedence by cascading rules: E→E+T|T; T→T*F|F; F→(E)|id. This forces * to bind tighter than +, removing all ambiguity while generating the same language.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q2 · 10 MARKS</div>
+      <span class="marks m10">10 MARKS</span>
+      <div class="q">Compute FIRST and FOLLOW sets for the grammar E→TE', E'→+TE'|ε, T→FT', T'→*FT'|ε, F→(E)|id. Hence construct the LL(1) parsing table.</div>
+      <div class="a">
+        <p>FIRST(E)=FIRST(T)=FIRST(F)={(,id}; FIRST(E')={+,ε}; FIRST(T')={*,ε}. FOLLOW(E)=FOLLOW(E')={),$}; FOLLOW(T)=FOLLOW(T')={+,),$}; FOLLOW(F)={+,*,),$}. Using these, the LL(1) table is built by: for A→α, add to M[A,a] for each a∈FIRST(α); if ε∈FIRST(α), add to M[A,b] for each b∈FOLLOW(A). (Full table shown in the content section above — write the complete 5×6 table for full marks.)</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q3 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">Differentiate between Top-Down and Bottom-Up parsing.</div>
+      <div class="a">
+        <table>
+          <tr><th>Feature</th><th>Top-Down</th><th>Bottom-Up</th></tr>
+          <tr><td>Tree built</td><td>Root → Leaves</td><td>Leaves → Root</td></tr>
+          <tr><td>Derivation</td><td>Leftmost (LMD)</td><td>Rightmost in reverse</td></tr>
+          <tr><td>Examples</td><td>LL, Recursive Descent, Predictive</td><td>Shift-Reduce, LR, SLR, CLR, LALR</td></tr>
+          <tr><td>Left Recursion</td><td>Must be eliminated</td><td>Handled naturally</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q4 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">What is left recursion? Eliminate left recursion from E→E+T|T.</div>
+      <div class="a">
+        <p>Left recursion occurs when a non-terminal A has a production A→Aα — A appears as the leftmost symbol of its own RHS, causing infinite recursion in top-down parsers. Using the standard elimination formula (A→Aα|β becomes A→βA', A'→αA'|ε), E→E+T|T is rewritten as: E→TE', E'→+TE'|ε.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q5 · 10 MARKS</div>
+      <span class="marks m10">10 MARKS</span>
+      <div class="q">Explain the steps to construct an SLR parsing table. Construct the SLR table for the grammar S→AA, A→aA|b.</div>
+      <div class="a">
+        <p>Steps: (1) Augment the grammar with S'→S; (2) compute the canonical collection of LR(0) item sets using closure() and goto(); (3) build the DFA of states; (4) for items A→α•aβ, set ACTION[i,a]=shift to goto(i,a); (5) for complete items A→α•, set ACTION[i,b]=reduce A→α for every b∈FOLLOW(A); (6) accept on S'→S•; (7) GOTO[i,A]=goto(i,A) for non-terminals. Applying this to S→AA, A→aA|b: I0=closure({S'→•S})={S'→•S,S→•AA,A→•aA,A→•b}, and the construction proceeds by computing goto on each symbol (a, b, A, S) from each new state until no new states are generated, then filling ACTION/GOTO from the complete and incomplete items in each state.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q6 · 10 MARKS</div>
+      <span class="marks m10">10 MARKS</span>
+      <div class="q">Differentiate between SLR, CLR, and LALR parsers.</div>
+      <div class="a">
+        <table>
+          <tr><th>Feature</th><th>SLR(1)</th><th>LALR(1)</th><th>CLR(1)</th></tr>
+          <tr><td>Items</td><td>LR(0)</td><td>LR(1) merged by core</td><td>LR(1)</td></tr>
+          <tr><td>Reduce basis</td><td>FOLLOW(A)</td><td>Item-specific (merged) lookahead</td><td>Item-specific lookahead</td></tr>
+          <tr><td>States</td><td>Fewest</td><td>Same as SLR</td><td>Most (largest)</td></tr>
+          <tr><td>Power</td><td>Least</td><td>More than SLR, less than CLR</td><td>Most powerful</td></tr>
+          <tr><td>Practical use</td><td>Rare</td><td><b>YACC/Bison standard</b></td><td>Rare (too many states)</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q7 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">What is Operator Precedence Parsing? Explain the three precedence relations used.</div>
+      <div class="a">
+        <p>Operator Precedence Parsing is a simple bottom-up technique for "operator grammars" (no two adjacent non-terminals on any RHS), using a precedence relation table between terminal pairs to locate handles directly, without building parser states. Three relations: <code>a &lt;• b</code> (a yields precedence to b — b binds tighter), <code>a •&gt; b</code> (a takes precedence over b — time to reduce), and <code>a ≐ b</code> (equal precedence, typically used for matching delimiters like parentheses).</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q8 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">What is YACC? Explain the structure of a YACC specification file.</div>
+      <div class="a">
+        <p>YACC (Yet Another Compiler-Compiler) is a parser generator tool that automatically builds a LALR(1) parser from a grammar specification. A YACC file has three sections separated by %%: (1) <b>Declarations</b> — C code, token declarations, precedence directives; (2) <b>Rules</b> — grammar productions paired with semantic actions in C, executed on reduction; (3) <b>Auxiliary Code</b> — supporting functions including main() and yyerror(). YACC is typically paired with LEX to form a complete compiler front-end.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q9 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">Explain error recovery strategies used in LL and LR parsers.</div>
+      <div class="a">
+        <p><b>LL Parsers:</b> Panic Mode Recovery — skip input tokens until a synchronizing token from FOLLOW(A) is found, then resume; Phrase-Level Recovery — fill blank table entries with specific error routines that insert/delete tokens to correct common mistakes locally. <b>LR Parsers:</b> use a special <code>error</code> token in grammar rules (as in YACC) to define explicit recovery productions, e.g. <code>stmt: error ';'</code> skips tokens until a semicolon is found, reports the error, and resumes parsing — LR parsers detect errors immediately (viable-prefix property), never performing an incorrect reduction.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q10 · 10 MARKS</div>
+      <span class="marks m10">10 MARKS</span>
+      <div class="q">Trace the Shift-Reduce parsing steps (stack, input, action) for the string "id*id" using the grammar T→T*F|F, F→id.</div>
+      <div class="a">
+        <p>Stack/Input/Action trace: $ / id*id$ / shift → $id / *id$ / reduce F→id → $F / *id$ / reduce T→F → $T / *id$ / shift → $T* / id$ / shift → $T*id / $ / reduce F→id → $T*F / $ / reduce T→T*F → $T / $ / accept. The parser alternates shifting input symbols and reducing handles on the stack until only the start symbol remains and input is exhausted, confirming the string belongs to the language.</p>
+      </div>
+    </div>
+
+  </div><div style="margin-top:60px; padding:20px 24px; border:1px dashed var(--line); border-radius:10px; color:var(--muted); font-size:13px;">
+    <div style="color:var(--accent); font-family:'Consolas',monospace; font-weight:700; margin-bottom:6px;">ZYREX // CD_VAULT — UNIT 3 · Parsing &amp; Context-Free Grammars</div>
+    <p>RTU B.Tech CSE 5th Semester · 5CS4-02 Compiler Design · Unit 3 of 6</p>
+    <p style="margin-top:6px;">📌 Focus areas for exam: SLR/CLR/LALR table construction (10-mark guaranteed), FIRST &amp; FOLLOW computation, LL(1) table construction, Shift-Reduce trace, SLR vs LALR vs CLR comparison, Operator precedence table.</p>
+    <p style="margin-top:6px;">Key terms to memorize: LL = Left-to-right, Leftmost &nbsp;|&nbsp; LR = Left-to-right, Rightmost(reverse) &nbsp;|&nbsp; LL(1)⊂SLR(1)⊂LALR(1)⊂CLR(1) &nbsp;|&nbsp; SLR uses FOLLOW, CLR/LALR use item-lookahead &nbsp;|&nbsp; YACC builds LALR(1)</p>
+  </div>
+
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:center;padding:30px 20px;flex-wrap:wrap;">
+      <a href="unit2.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+      <a href="index.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">🏠 CD Hub</a>
+      <a href="unit4.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+    </div>
+  </main>
+  <div class="cursor-dot" data-cursor-dot></div>
+  <div class="cursor-outline" data-cursor-outline></div>
+  <script>
+    const cursorDot = document.querySelector("[data-cursor-dot]");
+    const cursorOutline = document.querySelector("[data-cursor-outline]");
+    window.addEventListener("mousemove", function(e){
+      cursorDot.style.left=e.clientX+"px"; cursorDot.style.top=e.clientY+"px";
+      cursorOutline.animate({left:e.clientX+"px",top:e.clientY+"px"},{duration:400,fill:"forwards"});
+    });
+    document.querySelectorAll("a,button").forEach(el=>{
+      el.addEventListener("mouseenter",()=>cursorOutline.classList.add("cursor-hovering"));
+      el.addEventListener("mouseleave",()=>cursorOutline.classList.remove("cursor-hovering"));
+    });
+  </script>
+<script src="../splash-cursor.js"></script>\n</body>
+</html>

@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Learning Plus // CG&M · Unit 3</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <main class="main-wrapper" style="width:100%;">
+    <div class="topbar">
+      <a href="index.html" class="back-btn">⬅ CG&M Hub</a>
+      <div class="brand">Smart<span>Learning</span>+ <span style="color:var(--muted);font-weight:400;font-size:14px;">// CG&M · Unit 3</span></div>
+      <div class="nav">
+        <a href="index.html">🏠 CG&M Hub</a>
+        <a href="#content">📖 Content</a>
+        <a href="#qa">❓ Q&amp;A</a>
+        <a href="unit2.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+        <a href="unit4.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="hero">
+        <h1>✏️ Unit 3 — Graphics Primitives</h1>
+        <p>Points, Lines, Circles &amp; Ellipses · Scan Conversion Algorithms · Fill Area Primitives · Scanline Polygon Fill · Inside-Outside Test · Boundary &amp; Flood Fill · Character Generation · Attributes · Aliasing &amp; Anti-Aliasing</p>
+        <div class="badges" style="margin-top:14px;">
+          <a href="index.html" style="text-decoration:none;"><span class="badge b-teal">← Back to CG&M Hub</span></a>
+          <span class="badge b-gold">5CS4-04 · Computer Graphics &amp; Multimedia · RTU</span>
+        </div>
+      </div>
+      <div id="content">
+<div id="unit3">
+<div class="unit-title">✏️ Unit 3 — Graphics Primitives</div>
+<div class="unit-sub">Points &amp; Lines &middot; DDA &amp; Bresenham's Line Algorithm &middot; Circle &amp; Ellipse Scan Conversion &middot; Fill Area Primitives &middot; Scanline Polygon Filling &middot; Inside-Outside (Even-Odd &amp; Winding Number) Test &middot; Boundary-Fill &amp; Flood-Fill &middot; Character Generation &middot; Line, Area-Fill &amp; Character Attributes &middot; Aliasing &amp; Anti-Aliasing</div>
+
+<div class="badge-row">
+  <span class="badge b-red">🔥 HIGH WEIGHT — 12-14 Marks Expected</span>
+  <span class="badge b-gold">⚠ 5-Mark: Bresenham's Algorithm, Flood vs Boundary Fill</span>
+  <span class="badge b-teal">✅ Most Numerical Questions Come From This Unit</span>
+</div>
+
+<div class="card" style="margin-bottom:28px;">
+  <div style="color:var(--accent2); font-weight:700; margin-bottom:10px;">📑 Unit 3 Quick Navigation</div>
+  <div class="toc" style="columns:2; column-gap:24px;">
+    <div><a href="#u3-points">3.1 Points &amp; Lines as Primitives</a></div>
+    <div><a href="#u3-dda">3.2 DDA Line Algorithm</a></div>
+    <div><a href="#u3-bresenham">3.3 Bresenham's Line Algorithm</a></div>
+    <div><a href="#u3-circle">3.4 Circle Scan Conversion</a></div>
+    <div><a href="#u3-ellipse">3.5 Ellipse Scan Conversion</a></div>
+    <div><a href="#u3-fillarea">3.6 Fill Area Primitives</a></div>
+    <div><a href="#u3-scanline">3.7 Scanline Polygon Filling</a></div>
+    <div><a href="#u3-inout">3.8 Inside-Outside Test</a></div>
+    <div><a href="#u3-boundflood">3.9 Boundary-Fill &amp; Flood-Fill</a></div>
+    <div><a href="#u3-char">3.10 Character Generation</a></div>
+    <div><a href="#u3-attr">3.11 Line, Area-Fill &amp; Character Attributes</a></div>
+    <div><a href="#u3-alias">3.12 Aliasing &amp; Anti-Aliasing</a></div>
+    <div><a href="#u3-tables">3.13 Comparison Tables</a></div>
+    <div><a href="#u3-qa">3.14 RTU Exam Q&amp;A</a></div>
+  </div>
+</div>
+
+<!-- 3.1 POINTS & LINES -->
+<h2 class="topic" id="u3-points">3.1 Points &amp; Lines as Primitives <span class="imp h">FOUNDATION</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;"><strong>Graphics primitives</strong> are the basic geometric building blocks — points, lines, circles, ellipses and fill areas — from which all complex pictures are constructed on a raster display, using <strong>scan conversion (rasterization)</strong> to map continuous geometry onto discrete pixel positions.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish Explanation</div>
+  <p style="margin-top:6px;">Screen pixels ki grid hoti hai (rows × columns). Koi bhi shape — line ho ya circle — usko hum mathematically continuous samajhte hain, lekin screen par usko discrete pixels (dots) se approximate karna padta hai. Isi process ko <strong>scan conversion</strong> ya <strong>rasterization</strong> kehte hain. Point sabse basic primitive hai (ek pixel), line do points ko jodhti hai.</p>
+</div>
+
+<h3 class="sub">Point &amp; Line Basics</h3>
+<div class="card">
+  <ul>
+    <li>📍 <strong>Point:</strong> Smallest addressable screen element — a single pixel turned ON with its (x,y) coordinate and intensity/color value stored in the <strong>frame buffer</strong>.</li>
+    <li>📏 <strong>Line:</strong> Defined by two endpoints (x1,y1) and (x2,y2); since pixels lie on an integer grid, a line drawing algorithm must select the nearest set of pixels that best approximates the straight path.</li>
+    <li>⚙️ <strong>Scan Conversion:</strong> Process of representing continuous graphics objects as a discrete collection of pixels suitable for display on a raster device.</li>
+  </ul>
+</div>
+
+<div class="keypoint">
+  <span class="icon">📌</span>
+  <span>The slope of a line is m = (y2&#x2212;y1)/(x2&#x2212;x1). Line drawing algorithms must work correctly for all slope cases (|m|&lt;1 and |m|&gt;1) and all directions (left-to-right and right-to-left).</span>
+</div>
+
+<!-- 3.2 DDA -->
+<h2 class="topic" id="u3-dda">3.2 Digital Differential Analyzer (DDA) Line Algorithm <span class="imp h">EXAM HOT</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">The <strong>DDA algorithm</strong> is an incremental scan-conversion line-drawing method that calculates pixel positions using the line's slope, by adding a constant increment of either 1 (along the dominant axis) or the slope value (along the other axis) at each step, then rounding to the nearest integer.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">DDA mein hum dx aur dy compare karte hain. Jo bada hota hai usi axis ko "steps" maana jaata hai (1-1 unit increment), aur dusre axis ki value slope (m ya 1/m) se increment hoti hai. Har step par round-off (floating point) karke nearest pixel choose kiya jaata hai. Simple hai but rounding ki wajah se thoda slow aur less accurate hota hai Bresenham ke comparison mein.</p>
+</div>
+
+<h3 class="sub">DDA Algorithm Steps</h3>
+<div class="card">
+  <div class="formula">1. dx = x2-x1,  dy = y2-y1
+2. steps = max(|dx|, |dy|)
+3. xinc = dx/steps,  yinc = dy/steps
+4. x = x1, y = y1; plot round(x), round(y)
+5. Repeat steps times: x = x+xinc; y = y+yinc; plot round(x), round(y)</div>
+</div>
+
+<div class="card example">
+  <div class="tag">💡 Example</div>
+  <p style="margin-top:8px;">Line from (2,3) to (8,9): dx=6, dy=6, steps=6, xinc=1, yinc=1 → pixels plotted at (2,3),(3,4),(4,5),(5,6),(6,7),(7,8),(8,9) — a perfect 45° diagonal.</p>
+</div>
+
+<div class="keypoint">
+  <span class="icon">📌</span>
+  <span><strong>Drawback of DDA:</strong> Uses floating-point arithmetic (round-off at every step) → accumulation of rounding error and slower performance compared to Bresenham's integer-only approach.</span>
+</div>
+
+<!-- 3.3 BRESENHAM LINE -->
+<h2 class="topic" id="u3-bresenham">3.3 Bresenham's Line Algorithm <span class="imp h">MOST IMPORTANT — NUMERICAL</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;"><strong>Bresenham's Line Algorithm</strong> is an efficient, integer-arithmetic-only scan-conversion algorithm that uses a <strong>decision parameter</strong> to determine, at each step along the dominant axis, which of the two candidate pixels lies closest to the true line path.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Bresenham ka algorithm sirf integer addition/subtraction use karta hai (no floating point, no rounding) — isliye yeh DDA se kaafi fast aur accurate hota hai. Har step par ek decision parameter "p" calculate hota hai jo batata hai ki next pixel upar wala lena hai ya seedha wala (for |m|&lt;1 case). Yeh exam mein numerical ke roop mein bahut common hai.</p>
+</div>
+
+<h3 class="sub">Algorithm Steps (for 0 &lt; m &lt; 1, x1&lt;x2)</h3>
+<div class="card">
+  <div class="formula">1. dx = x2-x1,  dy = y2-y1
+2. p0 = 2*dy - dx     (initial decision parameter)
+3. x = x1, y = y1; plot(x,y)
+4. For k = 0 to dx-1:
+     if pk < 0:  plot(x+1, y);     p(k+1) = pk + 2dy
+     else:       plot(x+1, y+1);   p(k+1) = pk + 2dy - 2dx
+     x = x+1</div>
+</div>
+
+<div class="card example">
+  <div class="tag">💡 Numerical Example: Line from (20,10) to (30,18)</div>
+  <p style="margin-top:6px;">dx=10, dy=8 → p0 = 2(8)&#x2212;10 = 6 (&ge;0 → plot upper pixel)</p>
+  <table style="margin-top:10px;">
+    <tr><th>k</th><th>pk</th><th>Decision</th><th>Next pixel (x+1,y)</th><th>p(k+1)</th></tr>
+    <tr><td>0</td><td>6</td><td>p&ge;0 → y+1</td><td>(21,11)</td><td>6+16&#x2212;20=2</td></tr>
+    <tr><td>1</td><td>2</td><td>p&ge;0 → y+1</td><td>(22,12)</td><td>2+16&#x2212;20=&#x2212;2</td></tr>
+    <tr><td>2</td><td>&#x2212;2</td><td>p&lt;0 → same y</td><td>(23,12)</td><td>&#x2212;2+16=14</td></tr>
+    <tr><td>3</td><td>14</td><td>p&ge;0 → y+1</td><td>(24,13)</td><td>14+16&#x2212;20=10</td></tr>
+  </table>
+  <p style="margin-top:8px;">Process continues until x=30; each row uses only integer addition (2dy, 2dy&#x2212;2dx are precomputed constants).</p>
+</div>
+
+<div class="keypoint">
+  <span class="icon">📌</span>
+  <span><strong>Why Bresenham over DDA?</strong> Uses only integer addition/subtraction (no multiplication, division, or rounding) → faster, no cumulative error, and easily implementable in hardware.</span>
+</div>
+
+<!-- 3.4 CIRCLE -->
+<h2 class="topic" id="u3-circle">3.4 Circle Scan Conversion (Midpoint/Bresenham Circle Algorithm) <span class="imp h">EXAM HOT</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">The <strong>Midpoint Circle Algorithm</strong> scan-converts a circle of radius r using integer arithmetic and <strong>8-way symmetry</strong> (octants), computing only one octant's pixels and reflecting them to the other seven, based on the circle equation x&sup2;+y&sup2;=r&sup2;.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Circle perfectly symmetric hota hai 8 octants mein, isliye sirf ek octant (45° tak) calculate karke baaki 7 octants automatically mirror kar diye jaate hain — yeh bahut computation bachata hai. Decision parameter dekhta hai ki next pixel boundary ke andar hai ya bahar (midpoint test).</p>
+</div>
+
+<h3 class="sub">Algorithm Steps</h3>
+<div class="card">
+  <div class="formula">1. p0 = 1 - r           (initial decision parameter)
+2. x=0, y=r; plot all 8 symmetric points
+3. While x < y:
+     if pk < 0:  x=x+1;        pk+1 = pk + 2x + 3
+     else:       x=x+1; y=y-1; pk+1 = pk + 2x - 2y + 5
+4. Plot 8 symmetric points: (±x,±y) and (±y,±x)</div>
+</div>
+
+<div class="card example">
+  <div class="tag">💡 Numerical Example: r = 10</div>
+  <p style="margin-top:6px;">p0 = 1&#x2212;10 = &#x2212;9. x=0,y=10.</p>
+  <table style="margin-top:10px;">
+    <tr><th>k</th><th>pk</th><th>Decision</th><th>(x,y)</th></tr>
+    <tr><td>0</td><td>&#x2212;9</td><td>p&lt;0</td><td>(1,10)</td></tr>
+    <tr><td>1</td><td>&#x2212;9+2(1)+3=&#x2212;4</td><td>p&lt;0</td><td>(2,10)</td></tr>
+    <tr><td>2</td><td>&#x2212;4+2(2)+3=3</td><td>p&ge;0</td><td>(3,9)</td></tr>
+    <tr><td>3</td><td>3+2(3)&#x2212;2(9)+5=2</td><td>p&ge;0</td><td>(4,8)</td></tr>
+  </table>
+  <p style="margin-top:8px;">Loop stops when x &ge; y (here near x=7,y=7 — the 45° boundary).</p>
+</div>
+
+<div class="svgbox">
+<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:320px;">
+  <circle cx="150" cy="150" r="110" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <line x1="150" y1="150" x2="260" y2="150" stroke="var(--muted)" stroke-width="1"/>
+  <line x1="150" y1="150" x2="150" y2="40" stroke="var(--muted)" stroke-width="1"/>
+  <line x1="150" y1="150" x2="227" y2="73" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="3,2"/>
+  <path d="M227,150 A77,77 0 0,0 150,73" fill="none" stroke="var(--accent2)" stroke-width="3"/>
+  <text x="232" y="115" font-size="12" fill="var(--accent2)">Octant computed</text>
+  <text x="150" y="20" font-size="12" text-anchor="middle">Other 7 octants mirrored</text>
+  <circle cx="150" cy="150" r="3" fill="var(--red)"/>
+</svg>
+<div class="cap">8-way symmetry: only one 45° octant is calculated, rest are reflected</div>
+</div>
+
+<!-- 3.5 ELLIPSE -->
+<h2 class="topic" id="u3-ellipse">3.5 Ellipse Scan Conversion (Midpoint Ellipse Algorithm) <span class="imp m">5-MARK</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">The <strong>Midpoint Ellipse Algorithm</strong> scan-converts an ellipse x&sup2;/r&#x2093;&sup2; + y&sup2;/r&#x1d67;&sup2; = 1 using <strong>4-way symmetry</strong> and two separate decision-parameter regions (Region 1 where slope &gt; &#x2212;1, and Region 2 where slope &lt; &#x2212;1), splitting at the point where the curve's slope equals &#x2212;1.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Ellipse circle se thoda complex hai kyunki yeh sirf 4 quadrants mein symmetric hota hai (8 nahi). Isliye curve ko 2 regions mein todha jaata hai — Region 1 (jahan curve zyada flat/horizontal hai) aur Region 2 (jahan curve zyada steep/vertical hai), boundary slope = &#x2212;1 par hoti hai.</p>
+</div>
+
+<h3 class="sub">Key Equations</h3>
+<div class="card">
+  <div class="formula">Ellipse function: f(x,y) = ry&sup2;x&sup2; + rx&sup2;y&sup2; &#x2212; rx&sup2;ry&sup2;
+Region 1 decision: p1(0) = ry&sup2; &#x2212; rx&sup2;ry + (1/4)rx&sup2;
+Region 2 decision: p2(0) = ry&sup2;(x+0.5)&sup2; + rx&sup2;(y&#x2212;1)&sup2; &#x2212; rx&sup2;ry&sup2;</div>
+  <p>Region 1 steps unit increments in x (and adjusts y); Region 2 steps unit increments in y (and adjusts x), ensuring pixels are never spaced more than one unit apart along the dominant direction.</p>
+</div>
+
+<div class="card example">
+  <div class="tag">💡 Example</div>
+  <p style="margin-top:8px;">An ellipse with rx=8, ry=6 is plotted starting at (0,6) using Region-1 steps until the slope reaches &#x2212;1 (around x≈5), then switches to Region-2 steps (incrementing y, decreasing x) until reaching (8,0); all 4 quadrants are filled by symmetry (±x,±y).</p>
+</div>
+
+<!-- 3.6 FILL AREA -->
+<h2 class="topic" id="u3-fillarea">3.6 Fill Area Primitives <span class="imp h">EXAM HOT</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;"><strong>Fill area primitives</strong> are closed boundaries (typically polygons) whose interior is set to a specified color or pattern; they are scan-converted using either <strong>scanline algorithms</strong> (for polygons with known vertices) or <strong>seed-fill algorithms</strong> (boundary-fill / flood-fill, for arbitrary regions starting from an interior seed point).</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Fill area ka matlab hai kisi closed shape ke andar ka pura area color se bharna — jaise paint bucket tool. Iske 2 main approach hote hain: (1) Polygon ke vertices known hain → scanline method use karo, (2) Sirf ek seed point andar diya gaya hai aur boundary defined hai → boundary-fill ya flood-fill use karo.</p>
+</div>
+
+<h3 class="sub">Approaches to Area Filling</h3>
+<div class="card">
+  <ul>
+    <li>🖍️ <strong>Scanline Polygon Fill:</strong> Uses polygon vertex/edge data and horizontal scanlines to find interior spans — most efficient for polygons.</li>
+    <li>🌱 <strong>Seed Fill (Boundary-Fill / Flood-Fill):</strong> Starts from a known interior pixel and spreads outward pixel-by-pixel until a boundary is reached — used for arbitrary, irregular shapes (e.g., paint-bucket tool).</li>
+  </ul>
+</div>
+
+<!-- 3.7 SCANLINE POLYGON FILL -->
+<h2 class="topic" id="u3-scanline">3.7 Scanline Polygon Filling Algorithm <span class="imp h">MUST KNOW — 10 MARK</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">The <strong>Scanline Polygon Fill Algorithm</strong> processes a polygon one horizontal scanline at a time: it finds all intersection points of the scanline with the polygon edges, sorts them in increasing x-order, and fills pixels between pairs of intersections (1st–2nd, 3rd–4th, …).</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Imagine karo ek horizontal line (scanline) polygon ko cut kar rahi hai. Yeh line jin edges ko cross karti hai, unke intersection x-coordinates nikalo, unhe sort karo, aur phir pairs banakar beech ka area fill kar do. Yeh process top se bottom tak har scanline ke liye repeat hota hai.</p>
+</div>
+
+<h3 class="sub">Algorithm Steps</h3>
+<div class="card">
+  <div class="formula">1. Find ymin and ymax of the polygon
+2. For each scanline y from ymin to ymax:
+     a. Find x-intersections with all polygon edges
+     b. Sort intersection x-values in increasing order
+     c. Fill pixels between pairs: (x1,x2), (x3,x4), ...
+3. Special handling: if scanline passes exactly through a vertex,
+   count it using the "min-vertex / max-vertex" rule to avoid double counting</div>
+</div>
+
+<div class="keypoint">
+  <span class="icon">📌</span>
+  <span><strong>Vertex Rule:</strong> If a scanline passes through a vertex, it is counted as TWO intersections only if both edges meeting at that vertex lie on the same side (both above or both below) of the scanline — otherwise it counts as one, avoiding errors at sharp corners.</span>
+</div>
+
+<h3 class="sub">Coherence Techniques (Efficiency)</h3>
+<div class="card">
+  <ul>
+    <li>🔁 <strong>Edge Coherence:</strong> x-intersection of an edge on the next scanline = previous x + (1/slope), avoiding full recomputation.</li>
+    <li>📋 <strong>Active Edge List:</strong> Maintains only edges that intersect the current scanline, updated incrementally as scanline moves up.</li>
+  </ul>
+</div>
+
+<!-- 3.8 INSIDE OUTSIDE TEST -->
+<h2 class="topic" id="u3-inout">3.8 Inside-Outside Test <span class="imp h">EXAM HOT</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">The <strong>Inside-Outside test</strong> determines whether a given point lies inside or outside a polygon. Two standard rules are used: the <strong>Odd-Even (Even-Odd) Rule</strong> and the <strong>Nonzero Winding Number Rule</strong> — both essential for correctly filling self-intersecting or concave polygons.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Simple polygons (jinke edges cross nahi karte) ke liye andar-bahar pata karna easy hai, lekin complex/self-intersecting polygons (jaise star shape) ke liye special rules chahiye. Odd-Even rule edges ko count karta hai, Winding Number rule direction (clockwise/counter-clockwise) ko track karta hai.</p>
+</div>
+
+<h3 class="sub">Odd-Even (Even-Odd) Rule</h3>
+<div class="card">
+  <p>Draw an imaginary line from the test point to a point far outside the polygon (e.g., infinity), and count the number of polygon edge crossings. If the count is <strong>odd</strong>, the point is <strong>inside</strong>; if <strong>even</strong>, it is <strong>outside</strong>.</p>
+</div>
+
+<h3 class="sub">Nonzero Winding Number Rule</h3>
+<div class="card">
+  <p>Treat the polygon boundary as a vector path. Draw a line from the test point to a far-away point, and for every edge crossed, add +1 if the edge crosses left-to-right (or per direction convention) and &#x2212;1 if right-to-left. If the total <strong>winding number ≠ 0</strong>, the point is <strong>inside</strong>; if it equals 0, it is <strong>outside</strong>.</p>
+</div>
+
+<div class="card example">
+  <div class="tag">💡 Example: Star Polygon</div>
+  <p style="margin-top:8px;">For a self-intersecting 5-point star, the Odd-Even rule leaves the very center un-filled (treated as "outside" since crossing count is even there), while the Nonzero Winding Number rule correctly fills the entire center region (winding number = 2, which is nonzero) — this is the key practical difference tested in exams.</p>
+</div>
+
+<div class="svgbox">
+<svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:360px;">
+  <polygon points="40,160 100,40 160,160 40,100 160,100" fill="rgba(34,211,238,0.15)" stroke="var(--accent)" stroke-width="2"/>
+  <text x="60" y="190" font-size="12">Self-intersecting polygon</text>
+  <circle cx="100" cy="110" r="4" fill="var(--red)"/>
+  <text x="108" y="115" font-size="11">test pt</text>
+</svg>
+<div class="cap">Odd-Even vs Winding Number rules disagree at self-intersection regions</div>
+</div>
+
+<!-- 3.9 BOUNDARY/FLOOD FILL -->
+<h2 class="topic" id="u3-boundflood">3.9 Boundary-Fill &amp; Flood-Fill Algorithms <span class="imp h">EXAM HOT — DIFFERENCE Q COMMON</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;"><strong>Boundary-Fill</strong> starts at an interior seed pixel and recursively fills neighboring pixels until a specified <strong>boundary color</strong> is reached. <strong>Flood-Fill</strong> starts at a seed pixel and recursively fills all connected neighboring pixels that match the <strong>original interior (fill) color</strong>, regardless of the boundary's actual color.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Boundary-Fill us area ke liye use hota hai jiska boundary ek single fixed color ka hota hai — fill tab tak hota hai jab tak boundary color na mil jaaye. Flood-Fill multi-colored boundary wale ya irregular regions ke liye use hota hai — yeh sirf original interior color match karne wale connected pixels ko replace karta hai, boundary color se kuch lena dena nahi.</p>
+</div>
+
+<h3 class="sub">4-Connected vs 8-Connected Region</h3>
+<div class="card">
+  <div class="formula">4-connected: checks UP, DOWN, LEFT, RIGHT neighbors only
+8-connected: checks UP, DOWN, LEFT, RIGHT + 4 DIAGONAL neighbors</div>
+  <p>8-connected fill can correctly fill regions that 4-connected fill might leave gaps in (e.g., diagonally touching boundary pixels).</p>
+</div>
+
+<div class="card example">
+  <div class="tag">💡 Boundary-Fill Algorithm (Recursive, 4-connected)</div>
+  <div class="formula">BoundaryFill4(x, y, fillColor, boundaryColor):
+  if getPixel(x,y) != boundaryColor AND getPixel(x,y) != fillColor:
+      setPixel(x, y, fillColor)
+      BoundaryFill4(x+1, y, fillColor, boundaryColor)
+      BoundaryFill4(x-1, y, fillColor, boundaryColor)
+      BoundaryFill4(x, y+1, fillColor, boundaryColor)
+      BoundaryFill4(x, y-1, fillColor, boundaryColor)</div>
+</div>
+
+<div class="keypoint">
+  <span class="icon">📌</span>
+  <span><strong>Stack Overflow Risk:</strong> Recursive seed-fill can run out of stack space for large areas; practical implementations use an explicit stack and fill spans of pixels per scanline rather than recursing pixel-by-pixel.</span>
+</div>
+
+<!-- 3.10 CHARACTER GENERATION -->
+<h2 class="topic" id="u3-char">3.10 Character Generation <span class="imp m">5-MARK</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;"><strong>Character generation</strong> is the process of creating displayable text characters, using either a <strong>bitmap (raster) representation</strong> stored as a pixel pattern, or an <strong>outline (stroke/vector) representation</strong> defined mathematically by line/curve segments.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Characters (letters/digits) ko screen par dikhaane ke 2 main tareeke hain. Bitmap method mein har character ek fixed grid (jaise 8×8) mein pixel-by-pixel pre-defined hota hai — fast hota hai but resize/rotate karna mushkil. Outline method mein character ko lines/curves se mathematically define karte hain (jaise fonts mein) — scale/rotate easily ho jaata hai but rendering thodi slow.</p>
+</div>
+
+<h3 class="sub">Bitmap (Bit-Mapped) Font</h3>
+<div class="card">
+  <p>Each character is stored as a rectangular grid of bits in a <strong>font cache/table</strong>; a bit value of 1 means "plot this pixel". Simple and fast to display but memory-heavy for multiple sizes and difficult to scale/rotate without distortion.</p>
+</div>
+
+<h3 class="sub">Outline (Stroke) Font</h3>
+<div class="card">
+  <p>Each character is defined as a sequence of line and curve segments (similar to drawing with a pen) describing its outline shape. Easily scaled, rotated, and styled (bold/italic) by transforming the defining segments, but requires scan-converting the outline at display time (slower than bitmap blit).</p>
+</div>
+
+<!-- 3.11 ATTRIBUTES -->
+<h2 class="topic" id="u3-attr">3.11 Line, Area-Fill &amp; Character Attributes <span class="imp m">5-MARK</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;"><strong>Attributes</strong> are parameters that control the appearance of a primitive when it is drawn — such as color, thickness, pattern, and style — without changing the underlying geometric data of the primitive itself.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Attributes batate hain ki ek primitive kaisa "dikhega" — uski shape change nahi hoti, sirf appearance change hoti hai. Jaise ek line ko thick/thin, solid/dashed, kisi bhi color mein draw kiya jaa sakta hai bina uske endpoints change kiye.</p>
+</div>
+
+<h3 class="sub">Line Attributes</h3>
+<div class="card">
+  <ul>
+    <li>🎨 <strong>Type:</strong> Solid, dashed, dotted, dash-dot</li>
+    <li>📏 <strong>Width (Thickness):</strong> Single-pixel or multi-pixel wide lines</li>
+    <li>🖌️ <strong>Color:</strong> Pixel intensity/RGB value used for the line</li>
+    <li>🔚 <strong>Pen/Brush style:</strong> Shape used at line caps and joins (round, flat, mitre)</li>
+  </ul>
+</div>
+
+<h3 class="sub">Area-Fill Attributes</h3>
+<div class="card">
+  <ul>
+    <li>🪣 <strong>Fill Style:</strong> Hollow (outline only), solid, or patterned (hatch)</li>
+    <li>🎯 <strong>Pattern:</strong> A defined bitmap pattern (e.g., brick, crosshatch) repeated across the area</li>
+    <li>🌈 <strong>Color/Soft-fill:</strong> Solid color fill, or blended/anti-aliased fill at edges</li>
+  </ul>
+</div>
+
+<h3 class="sub">Character Attributes</h3>
+<div class="card">
+  <ul>
+    <li>🔤 <strong>Font &amp; Typeface:</strong> Design style of characters (e.g., Times, Arial)</li>
+    <li>📐 <strong>Size:</strong> Height/scale of characters</li>
+    <li>🎨 <strong>Color:</strong> Text color</li>
+    <li>↗️ <strong>Orientation:</strong> Rotation angle of text along a baseline vector</li>
+    <li>🔧 <strong>Style:</strong> Bold, italic, underline</li>
+  </ul>
+</div>
+
+<!-- 3.12 ALIASING -->
+<h2 class="topic" id="u3-alias">3.12 Aliasing &amp; Introduction to Anti-Aliasing <span class="imp h">EXAM HOT</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;"><strong>Aliasing</strong> is the distortion (jagged, stair-step edges and loss of fine detail) that occurs when a continuous image is sampled at an insufficiently low resolution on a raster grid. <strong>Anti-aliasing</strong> refers to techniques that reduce this distortion by adjusting pixel intensities near edges, rather than just turning pixels fully ON or OFF.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Jab koi diagonal line ya curve ko pixel grid par approximate karte hain, toh edges "jagged" (staircase jaisi) dikhti hain — isi ko aliasing kehte hain, kyunki sampling rate (pixel resolution) continuous shape ke detail ke liye kaafi nahi hoti. Anti-aliasing isko fix karta hai — edge ke pixels ko poora ON/OFF na karke unko in-between (grey/blended) intensity dete hain, jisse edge zyada smooth dikhta hai.</p>
+</div>
+
+<h3 class="sub">Causes of Aliasing</h3>
+<div class="card">
+  <ul>
+    <li>⚠️ <strong>Low sampling/display resolution:</strong> Limited pixel density cannot capture fine detail.</li>
+    <li>⚠️ <strong>Stair-step (jaggy) effect:</strong> Diagonal and curved edges show visible "steps" instead of smooth lines.</li>
+    <li>⚠️ <strong>Thin objects disappearing or flickering:</strong> Small/thin features may be skipped entirely if they fall between sample points (especially in animation).</li>
+  </ul>
+</div>
+
+<h3 class="sub">Anti-Aliasing — Basic Idea</h3>
+<div class="card">
+  <p>Instead of sampling a single point per pixel (which gives a hard binary ON/OFF decision), anti-aliasing methods consider the <strong>fractional coverage/intensity</strong> of an edge within each pixel area and set the pixel to a proportional intensity value, producing visually smoother edges. (No specific anti-aliasing algorithm derivation is required per the RTU syllabus for this unit — conceptual understanding is sufficient.)</p>
+</div>
+
+<div class="svgbox">
+<svg viewBox="0 0 320 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:360px;">
+  <text x="20" y="20" font-size="12" fill="var(--muted)">Aliased (jaggy)</text>
+  <g stroke="var(--red)" stroke-width="1" fill="none">
+    <rect x="20" y="30" width="14" height="14"/><rect x="34" y="44" width="14" height="14"/>
+    <rect x="48" y="58" width="14" height="14"/><rect x="62" y="72" width="14" height="14"/>
+  </g>
+  <text x="180" y="20" font-size="12" fill="var(--muted)">Anti-aliased (smooth)</text>
+  <line x1="190" y1="30" x2="260" y2="100" stroke="var(--accent2)" stroke-width="4" stroke-linecap="round" opacity="0.85"/>
+</svg>
+<div class="cap">Hard-edged staircase pixels (aliased) vs blended-intensity smooth edge (anti-aliased)</div>
+</div>
+
+<!-- 3.13 COMPARISON TABLES -->
+<h2 class="topic" id="u3-tables">3.13 Important Comparison Tables <span class="imp h">RAPID REVISION</span></h2>
+
+<h3 class="sub">DDA vs Bresenham's Algorithm</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Basis</th><th>DDA Algorithm</th><th>Bresenham's Algorithm</th></tr>
+    <tr><td>Arithmetic used</td><td>Floating point (real numbers)</td><td>Integer only</td></tr>
+    <tr><td>Rounding</td><td>Required at every step</td><td>Not required</td></tr>
+    <tr><td>Speed</td><td>Slower</td><td>Faster</td></tr>
+    <tr><td>Accuracy</td><td>Accumulates rounding error</td><td>More accurate</td></tr>
+    <tr><td>Hardware implementation</td><td>Difficult</td><td>Easy (simple integer ops)</td></tr>
+  </table>
+</div>
+
+<h3 class="sub">Boundary-Fill vs Flood-Fill</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Basis</th><th>Boundary-Fill</th><th>Flood-Fill</th></tr>
+    <tr><td>Stopping condition</td><td>Stops at a specific boundary color</td><td>Stops when interior fill color no longer matches</td></tr>
+    <tr><td>Best suited for</td><td>Regions with a single uniform boundary color</td><td>Regions with multi-colored boundaries / irregular areas</td></tr>
+    <tr><td>Checks pixel against</td><td>Boundary color</td><td>Original interior color</td></tr>
+  </table>
+</div>
+
+<h3 class="sub">Odd-Even Rule vs Winding Number Rule</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Basis</th><th>Odd-Even Rule</th><th>Winding Number Rule</th></tr>
+    <tr><td>Method</td><td>Counts number of edge crossings</td><td>Tracks directional crossings (signed count)</td></tr>
+    <tr><td>Inside condition</td><td>Crossing count is odd</td><td>Winding number ≠ 0</td></tr>
+    <tr><td>Self-intersecting polygons</td><td>May leave overlap regions unfilled</td><td>Correctly fills overlap regions</td></tr>
+  </table>
+</div>
+
+<h3 class="sub">Aliasing vs Anti-Aliasing</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Basis</th><th>Aliasing</th><th>Anti-Aliasing</th></tr>
+    <tr><td>Pixel intensity</td><td>Binary (fully ON or fully OFF)</td><td>Proportional/blended based on edge coverage</td></tr>
+    <tr><td>Visual result</td><td>Jagged, stair-step edges</td><td>Smooth, soft edges</td></tr>
+    <tr><td>Computation cost</td><td>Low</td><td>Higher (extra intensity calculations)</td></tr>
+  </table>
+</div>
+
+<!-- 3.14 Q&A -->
+<h2 class="topic" id="u3-qa">3.14 RTU Exam Questions &amp; Answers (Importance-Wise)</h2>
+<div id="qsection">
+
+  <div class="qcard">
+    <div class="qlabel">Q1</div>
+    <div class="q">Derive and explain Bresenham's line drawing algorithm. Solve for the line from (20,10) to (30,18). <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>Bresenham's algorithm uses an integer decision parameter p, derived by comparing the vertical distances of the true line to the two candidate pixel positions, to choose the closer pixel at every step without using floating-point math. For dx=10, dy=8: p0=2dy&#x2212;dx=6 (&ge;0); successive decision parameters are updated using p(k+1)=pk+2dy (if pk&lt;0) or pk+2dy&#x2212;2dx (if pk&ge;0), generating the pixel sequence (20,10),(21,11),(22,12),(23,12),(24,13)... up to (30,18), as detailed in the worked table above.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q2</div>
+    <div class="q">Explain the midpoint circle drawing algorithm with its decision parameter derivation. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>The algorithm exploits 8-way symmetry of a circle, computing pixels for only one octant (45° arc). The decision parameter p tests whether the midpoint between two candidate pixels lies inside or outside the circle boundary (x&sup2;+y&sup2;=r&sup2;); starting with p0=1&#x2212;r, if pk&lt;0 the next pixel is (x+1,y) with pk+1=pk+2x+3, otherwise it's (x+1,y&#x2212;1) with pk+1=pk+2x&#x2212;2y+5. The computed (x,y) is then reflected into all 8 octants to plot the complete circle.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q3</div>
+    <div class="q">Explain the scanline polygon-fill algorithm, including the handling of vertices. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>For each scanline between the polygon's ymin and ymax, the algorithm computes x-intersections with every edge, sorts them in ascending order, and fills pixel spans between consecutive pairs of intersections. When a scanline passes exactly through a vertex, it is counted as one intersection if the two edges meeting there are on opposite sides of the scanline (and as two if both edges are on the same side), preventing fill errors at sharp corners. Edge and active-edge-list coherence are used to make the process efficient across consecutive scanlines.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q4</div>
+    <div class="q">Differentiate between Boundary-Fill and Flood-Fill algorithms with their recursive procedures. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>Boundary-Fill recursively fills connected pixels starting from a seed point until it encounters a specified boundary color, making it suitable for regions with a single uniform boundary color. Flood-Fill instead recursively fills all connected pixels that match the original interior color, regardless of the boundary's actual color, making it better for irregular regions with multi-colored boundaries. Both can use 4-connected (up/down/left/right) or 8-connected (plus diagonals) neighbor checking.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q5</div>
+    <div class="q">Explain the Odd-Even rule and Nonzero Winding Number rule for the inside-outside test with an example. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>The Odd-Even rule draws a line from the test point to infinity and counts edge crossings — an odd count means inside, even means outside. The Winding Number rule instead assigns a directional sign (+1 or &#x2212;1) to each crossing based on edge direction and sums them; a nonzero total means inside. For self-intersecting shapes like a five-pointed star, the two rules disagree at the overlapping center region — Odd-Even leaves it unfilled while Winding Number fills it.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q6</div>
+    <div class="q">What is aliasing? Explain its causes and the basic concept of anti-aliasing. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>Aliasing is the jagged, stair-step distortion that appears when continuous shapes (especially diagonal lines and curves) are approximated on a discrete pixel grid with insufficient sampling resolution; thin or fine details may also be lost or flicker. Anti-aliasing reduces this effect by giving edge pixels intensity values proportional to how much of the pixel area the actual edge covers, instead of a hard binary ON/OFF decision, producing visually smoother boundaries.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q7</div>
+    <div class="q">Compare DDA and Bresenham's line drawing algorithms. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>DDA uses floating-point increments and requires rounding at every step, making it simpler to understand but slower and prone to cumulative rounding errors. Bresenham's algorithm uses only integer addition and subtraction via a decision parameter, making it faster, more accurate, and easier to implement directly in hardware.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q8</div>
+    <div class="q">Explain character generation methods: bitmap fonts vs outline (stroke) fonts. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>Bitmap fonts store each character as a fixed pixel-grid pattern, allowing very fast display but making scaling or rotation difficult without distortion and requiring extra memory for each size/style. Outline (stroke) fonts define each character mathematically as line and curve segments, allowing easy, distortion-free scaling, rotation, and styling, though they require scan-converting the outline into pixels at display time, which is comparatively slower.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q9</div>
+    <div class="q">List and explain line, area-fill, and character attributes used in computer graphics. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>Line attributes include type (solid/dashed/dotted), width, and color. Area-fill attributes include fill style (hollow/solid/patterned), pattern design, and color. Character attributes include font/typeface, size, color, orientation, and style (bold/italic/underline). These attributes control appearance without altering the underlying geometric definition of the primitive.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q10</div>
+    <div class="q">Write the midpoint ellipse algorithm and explain why it is divided into two regions. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>The midpoint ellipse algorithm exploits 4-way symmetry and splits the curve into two regions because the ellipse's slope changes from greater than &#x2212;1 (flatter, near the major axis) to less than &#x2212;1 (steeper, near the minor axis). In Region 1, x is incremented by 1 each step (with y adjusted as needed) since the curve is relatively flat; in Region 2, y is incremented by 1 each step (with x adjusted) since the curve is steep — switching regions at the point where the slope equals &#x2212;1 ensures no pixel gaps appear along either axis.</p>
+    </div>
+  </div>
+
+</div><!-- end qsection -->
+
+<!-- CHEAT SHEET -->
+<div class="card" style="margin-top:40px; background:linear-gradient(135deg,#0a1525,#0b0d10); border:2px solid var(--accent);">
+  <div style="color:var(--accent); font-family:'Consolas',monospace; font-weight:700; font-size:15px; margin-bottom:14px;">📌 UNIT 3 — MASTER FORMULA CHEAT SHEET</div>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+    <div class="formula" style="margin:3px 0; font-size:12px;">DDA: steps=max(|dx|,|dy|); xinc=dx/steps; yinc=dy/steps</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Bresenham line p0 = 2dy&#x2212;dx</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">if pk&lt;0: pk+1=pk+2dy  else: pk+1=pk+2dy&#x2212;2dx</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Midpoint circle p0 = 1&#x2212;r</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Circle: if pk&lt;0: pk+1=pk+2x+3 else pk+1=pk+2x&#x2212;2y+5</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Ellipse: rx&sup2;y&sup2;+ry&sup2;x&sup2;=rx&sup2;ry&sup2;</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Odd-Even Rule: odd crossings = inside</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Winding Number: sum ≠ 0 = inside</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Boundary-Fill: stop at boundary color</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Flood-Fill: stop when interior color differs</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">4-connected: U,D,L,R neighbors</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">8-connected: U,D,L,R + 4 diagonals</div>
+  </div>
+</div>
+
+<!-- Unit 3 Footer -->
+<div style="margin-top:50px; padding:20px 24px; border:1px dashed var(--line); border-radius:10px; color:var(--muted); font-size:13px;">
+  <div style="color:var(--accent); font-family:'Consolas',monospace; font-weight:700; margin-bottom:6px;">ZYREX // CGM_VAULT — UNIT 3 · Graphics Primitives</div>
+  <p>RTU B.Tech CSE 5th Semester · 5CS4-04 Computer Graphics &amp; Multimedia · Unit 3 of 7</p>
+  <p style="margin-top:6px;">📌 Key formulas: Bresenham decision parameter · Midpoint circle/ellipse parameters · Odd-Even &amp; Winding Number rules · Boundary vs Flood Fill</p>
+  <p style="margin-top:6px;">⚡ Unit 4 can be appended directly below this section.</p>
+</div>
+
+</div><!-- end unit3 -->
+
+<hr class="sep">
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:center;padding:30px 20px;flex-wrap:wrap;">
+      <a href="unit2.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+      <a href="index.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">🏠 CG&M Hub</a>
+      <a href="unit4.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+    </div>
+  </main>
+  <div class="cursor-dot" data-cursor-dot></div>
+  <div class="cursor-outline" data-cursor-outline></div>
+  <script>
+    const cursorDot = document.querySelector("[data-cursor-dot]");
+    const cursorOutline = document.querySelector("[data-cursor-outline]");
+    window.addEventListener("mousemove", function(e){
+      cursorDot.style.left=e.clientX+"px"; cursorDot.style.top=e.clientY+"px";
+      cursorOutline.animate({left:e.clientX+"px",top:e.clientY+"px"},{duration:400,fill:"forwards"});
+    });
+    document.querySelectorAll("a,button").forEach(el=>{
+      el.addEventListener("mouseenter",()=>cursorOutline.classList.add("cursor-hovering"));
+      el.addEventListener("mouseleave",()=>cursorOutline.classList.remove("cursor-hovering"));
+    });
+  </script>
+<script src="../splash-cursor.js"></script>\n</body>
+</html>

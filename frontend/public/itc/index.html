@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Learning Plus // ITC Vault</title>
+<link rel="stylesheet" href="../style.css">
+<style>
+  :root { --mc: #4f46e5; --mc-light: #4f46e514; }
+
+  body { overflow-x: hidden; }
+  .sl-mod { position: relative; min-height: 100vh; }
+
+  .sl-mesh { position: fixed; inset: 0; z-index: -1; overflow: hidden; background: var(--bg); }
+  .sl-mesh span { position: absolute; border-radius: 50%; filter: blur(60px); opacity: .28; animation: sl-float 20s ease-in-out infinite; }
+  .sl-mesh span:nth-child(1) { width: 380px; height: 380px; background: var(--mc); top: -120px; left: -80px; animation-delay: 0s; }
+  .sl-mesh span:nth-child(2) { width: 300px; height: 300px; background: var(--accent2); top: 40%; right: -100px; animation-delay: -7s; }
+  .sl-mesh span:nth-child(3) { width: 260px; height: 260px; background: var(--mc); bottom: -100px; left: 25%; animation-delay: -13s; opacity:.18; }
+  @keyframes sl-float {
+    0%, 100% { transform: translate(0,0) scale(1); }
+    33% { transform: translate(35px,-25px) scale(1.07); }
+    66% { transform: translate(-25px,20px) scale(0.95); }
+  }
+  .sl-grid-overlay {
+    position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background-image: linear-gradient(rgba(79,70,229,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(79,70,229,0.03) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, black 35%, transparent 90%);
+  }
+
+  .sl-shell { max-width: 1180px; margin: 0 auto; padding: 0 24px 60px; }
+
+  /* ── TOPBAR ── */
+  .sl-topbar {
+    position: sticky; top:0; z-index:50; background: rgba(245,247,255,0.85); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border); padding: 14px 0; margin-bottom: 8px;
+  }
+  .sl-topbar-inner { display:flex; align-items:center; gap:16px; flex-wrap:wrap; max-width:1180px; margin:0 auto; padding:0 24px; }
+  .sl-back {
+    display:inline-flex; align-items:center; gap:6px; font-size:13.5px; font-weight:700; color: var(--mc);
+    background: var(--mc-light); border:1.5px solid var(--mc-light); padding:8px 14px; border-radius:10px; text-decoration:none; transition:.2s;
+  }
+  .sl-back:hover { background: var(--mc); color:#fff; border-color: var(--mc); }
+  .sl-topbar-brand { font-weight:800; font-size:15px; color: var(--text); display:flex; align-items:center; gap:6px; }
+  .sl-topbar-brand .sub { color: var(--muted); font-weight:500; font-size:13px; }
+  .sl-topbar-nav { display:flex; gap:6px; flex-wrap:wrap; margin-left:auto; font-size:13px; }
+  .sl-topbar-nav a {
+    color: var(--text2); text-decoration:none; font-weight:600; padding:7px 13px; border-radius:9px;
+    border:1px solid transparent; transition:.2s; background: transparent;
+  }
+  .sl-topbar-nav a:hover { background: var(--mc-light); color: var(--mc); }
+
+  /* ── HERO ── */
+  .sl-mhero { padding: 56px 0 40px; text-align:center; }
+  .sl-meyebrow {
+    display:inline-flex; align-items:center; gap:8px; background: var(--surface); border:1px solid var(--border);
+    padding:7px 16px; border-radius:999px; font-size:12px; font-weight:700; color: var(--mc); box-shadow: var(--shadow-sm);
+    margin-bottom:22px; font-family:'JetBrains Mono',monospace; animation: sl-pop .6s cubic-bezier(.2,.8,.2,1) both;
+  }
+  .sl-mtitle {
+    font-size: clamp(34px,6vw,56px); font-weight:800; letter-spacing:-0.03em; color: var(--text); margin-bottom:14px;
+    animation: sl-pop .7s cubic-bezier(.2,.8,.2,1) both; animation-delay:.05s;
+  }
+  .sl-mtitle .grad { background: linear-gradient(120deg, var(--mc), var(--accent2)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .sl-msub { font-size:16px; color: var(--muted); margin-bottom:6px; animation: sl-pop .7s cubic-bezier(.2,.8,.2,1) both; animation-delay:.1s; }
+  .sl-mmeta { font-size:13.5px; color: var(--muted); margin-bottom:30px; animation: sl-pop .7s cubic-bezier(.2,.8,.2,1) both; animation-delay:.12s; }
+
+  @keyframes sl-pop { from { opacity:0; transform: translateY(14px);} to { opacity:1; transform: translateY(0);} }
+
+  .sl-stats {
+    display:grid; grid-template-columns: repeat(4,1fr); gap:1px; background: var(--border); border:1px solid var(--border);
+    border-radius: var(--radius); overflow:hidden; max-width:640px; margin:0 auto; box-shadow: var(--shadow-sm);
+    animation: sl-pop .7s cubic-bezier(.2,.8,.2,1) both; animation-delay:.16s;
+  }
+  .sl-stat { background: var(--surface); padding:18px 8px; text-align:center; }
+  .sl-stat-num { font-size:22px; font-weight:800; color: var(--mc); letter-spacing:-0.02em; }
+  .sl-stat-label { font-size:10.5px; color: var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.4px; margin-top:3px; }
+  @media (max-width:520px){ .sl-stats{ grid-template-columns: repeat(2,1fr);} }
+
+  /* ── TIP BANNER ── */
+  .sl-tip {
+    display:flex; gap:14px; align-items:flex-start; background: var(--amber-light); border:1.5px solid #fcd34d;
+    border-radius: 14px; padding:18px 22px; margin: 36px 0 0; font-size:14px; color:#78350f; line-height:1.6;
+  }
+  .sl-tip .ic { font-size:20px; flex-shrink:0; }
+
+  /* ── SECTION ── */
+  .sl-section { padding: 46px 0 0; }
+  .sl-eyebrow-sm { font-size:12px; font-weight:800; letter-spacing:1.4px; text-transform:uppercase; color: var(--mc); margin-bottom:8px; }
+  .sl-section-title { font-size:26px; font-weight:800; color: var(--text); letter-spacing:-0.02em; margin-bottom:26px; }
+
+  /* ── RESOURCE CARDS ── */
+  .sl-res-grid { display:grid; grid-template-columns: repeat(2,1fr); gap:16px; }
+  @media (max-width:620px){ .sl-res-grid{ grid-template-columns:1fr; } }
+  .sl-res-card {
+    display:flex; align-items:center; gap:16px; background: var(--surface); border:1px solid var(--border);
+    border-radius:16px; padding:20px; text-decoration:none; transition:.25s;
+    opacity:0; transform: translateY(18px);
+  }
+  .sl-res-card.sl-in { opacity:1; transform: translateY(0); }
+  .sl-res-card:hover { border-color: var(--mc); box-shadow: var(--shadow); transform: translateY(-4px); }
+  .sl-res-icon { width:48px; height:48px; flex-shrink:0; border-radius:12px; background: var(--mc-light); display:flex; align-items:center; justify-content:center; font-size:22px; }
+  .sl-res-title { font-size:15.5px; font-weight:800; color: var(--text); margin-bottom:3px; }
+  .sl-res-desc { font-size:12.5px; color: var(--muted); }
+  .sl-res-status { margin-left:auto; flex-shrink:0; font-size:10.5px; font-weight:700; padding:4px 10px; border-radius:999px; background: var(--green-light); color: var(--green); }
+
+  /* ── UNIT BENTO ── */
+  .sl-ubento { display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; }
+  @media (max-width:880px){ .sl-ubento{ grid-template-columns: repeat(2,1fr);} }
+  @media (max-width:560px){ .sl-ubento{ grid-template-columns: 1fr;} }
+
+  .sl-ucard {
+    position:relative; background: var(--surface); border:1px solid var(--border); border-radius:18px; padding:24px;
+    text-decoration:none; overflow:hidden; display:flex; flex-direction:column; min-height:150px;
+    transition: transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s, border-color .3s;
+    opacity:0; transform: translateY(20px);
+  }
+  .sl-ucard.sl-in { opacity:1; transform: translateY(0); }
+  .sl-ucard:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); border-color: var(--uc, var(--mc)); }
+  .sl-ucard::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background: var(--uc, var(--mc)); transform:scaleX(0); transform-origin:left; transition: transform .35s ease; }
+  .sl-ucard:hover::before { transform: scaleX(1); }
+  .sl-ucard::after { content:''; position:absolute; width:120px; height:120px; border-radius:50%; background: var(--uc, var(--mc)); opacity:.06; top:-40px; right:-40px; transition: transform .4s ease; }
+  .sl-ucard:hover::after { transform: scale(1.3); }
+
+  .sl-ucard-top { display:flex; align-items:flex-start; justify-content:space-between; }
+  .sl-ucard-icon { width:42px; height:42px; border-radius:11px; display:flex; align-items:center; justify-content:center; font-size:19px; background: var(--uc-bg, var(--mc-light)); position:relative; z-index:1; }
+  .sl-ucard-arrow { width:30px; height:30px; border-radius:50%; border:1.5px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:13px; color: var(--muted); transition:.3s; position:relative; z-index:1; }
+  .sl-ucard:hover .sl-ucard-arrow { background: var(--uc, var(--mc)); border-color:transparent; color:#fff; transform: rotate(45deg); }
+
+  .sl-ucard-body { margin-top:18px; position:relative; z-index:1; }
+  .sl-ucard-title { font-size:15.5px; font-weight:800; color: var(--text); margin-bottom:6px; line-height:1.35; }
+  .sl-ucard-code { font-size:11.5px; color: var(--muted); margin-bottom:12px; line-height:1.4; }
+  .sl-ucard-status { display:inline-flex; align-items:center; gap:5px; font-size:10.5px; font-weight:700; padding:3px 9px; border-radius:999px; background: var(--green-light); color: var(--green); }
+  .sl-ucard-status .d { width:5px; height:5px; border-radius:50%; background: var(--green); }
+
+  /* ── PRIORITY TABLE ── */
+  .sl-ptable-card { background: var(--surface); border:1px solid var(--border); border-radius: var(--radius); padding:6px; box-shadow: var(--shadow-sm); overflow-x:auto; }
+  .sl-ptable-card table { margin:0; min-width:560px; }
+  .sl-ptable-card th { background: var(--surface2); }
+  .sl-w-low { color: var(--muted); font-weight:600; }
+  .sl-w-high { color: var(--green); font-weight:700; }
+  .sl-w-vhigh { color: #d97706; font-weight:700; }
+
+  /* ── QRS (QUICK REVISION SHEETS) ── */
+  .sl-qrs-grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; }
+  @media (max-width:880px){ .sl-qrs-grid{ grid-template-columns: repeat(2,1fr);} }
+  @media (max-width:560px){ .sl-qrs-grid{ grid-template-columns: 1fr;} }
+
+  .sl-qrs-card {
+    position:relative; background: var(--surface); border:1px solid var(--border); border-radius:18px; padding:24px;
+    overflow:hidden; display:flex; flex-direction:column; min-height:150px; cursor:pointer;
+    transition: transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s, border-color .3s;
+    opacity:0; transform: translateY(20px);
+  }
+  .sl-qrs-card.sl-in { opacity:1; transform: translateY(0); }
+  .sl-qrs-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); border-color: var(--uc, var(--mc)); }
+  .sl-qrs-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background: var(--uc, var(--mc)); transform:scaleX(0); transform-origin:left; transition: transform .35s ease; }
+  .sl-qrs-card:hover::before { transform: scaleX(1); }
+  .sl-qrs-card::after { content:''; position:absolute; width:120px; height:120px; border-radius:50%; background: var(--uc, var(--mc)); opacity:.06; top:-40px; right:-40px; transition: transform .4s ease; }
+  .sl-qrs-card:hover::after { transform: scale(1.3); }
+
+  .sl-qrs-top { display:flex; align-items:flex-start; justify-content:space-between; }
+  .sl-qrs-icon { width:42px; height:42px; border-radius:11px; display:flex; align-items:center; justify-content:center; font-size:19px; background: var(--uc-bg, var(--mc-light)); position:relative; z-index:1; }
+  .sl-qrs-arrow { width:30px; height:30px; border-radius:50%; border:1.5px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:13px; color: var(--muted); transition:.3s; position:relative; z-index:1; }
+  .sl-qrs-card:hover .sl-qrs-arrow { background: var(--uc, var(--mc)); border-color:transparent; color:#fff; transform: rotate(45deg); }
+
+  .sl-qrs-body { margin-top:18px; position:relative; z-index:1; }
+  .sl-qrs-title { font-size:15.5px; font-weight:800; color: var(--text); margin-bottom:6px; line-height:1.35; }
+  .sl-qrs-code { font-size:11.5px; color: var(--muted); margin-bottom:12px; line-height:1.4; }
+  .sl-qrs-status { display:inline-flex; align-items:center; gap:5px; font-size:10.5px; font-weight:700; padding:3px 9px; border-radius:999px; background: var(--green-light); color: var(--green); }
+  .sl-qrs-status .d { width:5px; height:5px; border-radius:50%; background: var(--green); }
+
+  /* ── QRS FULLSCREEN VIEWER ── */
+  .sl-qrs-viewer {
+    position:fixed; inset:0; z-index:1000; background:rgba(10,10,20,0.96);
+    display:none; flex-direction:column; align-items:center; justify-content:center;
+  }
+  .sl-qrs-viewer.open { display:flex; }
+  .sl-qrs-viewer-bar {
+    position:absolute; top:0; left:0; right:0; display:flex; align-items:center; justify-content:space-between;
+    padding:14px 18px; background:rgba(10,10,20,0.55); backdrop-filter: blur(8px); z-index:2;
+  }
+  .sl-qrs-viewer-title { color:#fff; font-weight:700; font-size:14.5px; }
+  .sl-qrs-viewer-actions { display:flex; gap:10px; }
+  .sl-qrs-viewer-btn {
+    display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:700; color:#fff;
+    background: rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.25); padding:9px 16px; border-radius:10px;
+    text-decoration:none; cursor:pointer; transition:.2s;
+  }
+  .sl-qrs-viewer-btn:hover { background: var(--mc); border-color: var(--mc); }
+  .sl-qrs-viewer-close { font-size:18px; padding:9px 13px; }
+  .sl-qrs-viewer-imgwrap { width:100%; height:100%; overflow:auto; display:flex; align-items:center; justify-content:center; padding:70px 12px 16px; box-sizing:border-box; }
+  .sl-qrs-viewer-imgwrap img { max-width:100%; max-height:100%; width:auto; height:auto; border-radius:6px; box-shadow:0 10px 40px rgba(0,0,0,0.5); }
+  .sl-qrs-nav {
+    position:absolute; top:50%; transform: translateY(-50%); z-index:3; width:48px; height:48px; border-radius:50%;
+    background: rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.25); color:#fff; font-size:26px; line-height:1;
+    display:flex; align-items:center; justify-content:center; cursor:pointer; transition:.2s;
+  }
+  .sl-qrs-nav:hover { background: var(--mc); border-color: var(--mc); }
+  .sl-qrs-nav:disabled { opacity:.25; cursor:default; }
+  .sl-qrs-nav:disabled:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.25); }
+  .sl-qrs-nav-prev { left:16px; }
+  .sl-qrs-nav-next { right:16px; }
+  @media (max-width:640px){
+    .sl-qrs-nav { width:40px; height:40px; font-size:22px; }
+    .sl-qrs-nav-prev { left:8px; }
+    .sl-qrs-nav-next { right:8px; }
+  }
+  @media (max-width:640px){
+    .sl-qrs-viewer-imgwrap { padding:64px 0 0; align-items:flex-start; }
+    .sl-qrs-viewer-imgwrap img { max-width:100%; max-height:none; width:100%; height:auto; border-radius:0; }
+    .sl-qrs-viewer-title { font-size:12.5px; }
+    .sl-qrs-viewer-btn { padding:8px 12px; font-size:12px; }
+  }
+
+  /* ── FOOTER ── */
+  .sl-mfooter { text-align:center; padding: 50px 0 10px; color: var(--muted); font-size:13.5px; }
+  .sl-mfooter a { color: var(--mc); font-weight:700; text-decoration:none; }
+
+  @media (max-width: 768px) {
+    .sl-topbar {
+      padding: 6px 0 !important;
+      position: sticky !important;
+      top: 0 !important;
+      background: rgba(245,247,255,0.92) !important;
+      backdrop-filter: blur(12px) !important;
+    }
+    .sl-topbar-inner {
+      display: grid !important;
+      grid-template-columns: auto 1fr !important;
+      grid-template-rows: auto auto !important;
+      gap: 6px 12px !important;
+      align-items: center !important;
+      padding: 0 16px !important;
+    }
+    .sl-back {
+      grid-column: 1 !important;
+      grid-row: 1 !important;
+      justify-self: start !important;
+      padding: 5px 10px !important;
+      font-size: 11.5px !important;
+      border-radius: 8px !important;
+    }
+    .sl-topbar-brand {
+      grid-column: 2 !important;
+      grid-row: 1 !important;
+      justify-self: end !important;
+      font-size: 12.5px !important;
+      text-align: right !important;
+    }
+    .sl-topbar-brand .sub {
+      display: none !important;
+    }
+    .sl-topbar-nav {
+      grid-column: 1 / span 2 !important;
+      grid-row: 2 !important;
+      display: flex !important;
+      flex-wrap: nowrap !important;
+      overflow-x: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+      width: 100% !important;
+      margin-left: 0 !important;
+      padding: 2px 0 6px 0 !important;
+      gap: 6px !important;
+      scrollbar-width: none !important;
+    }
+    .sl-topbar-nav::-webkit-scrollbar {
+      display: none !important;
+    }
+    .sl-topbar-nav a {
+      white-space: nowrap !important;
+      flex-shrink: 0 !important;
+      padding: 5px 9px !important;
+      font-size: 11.5px !important;
+      border-radius: 7px !important;
+    }
+  }
+</style>
+</head>
+<body class="sl-mod">
+
+  <div class="sl-mesh"><span></span><span></span><span></span></div>
+  <div class="sl-grid-overlay"></div>
+
+  <div class="sl-topbar">
+    <div class="sl-topbar-inner">
+      <a href="../index.html" class="sl-back">⬅ Main Hub</a>
+      <div class="sl-topbar-brand">Smart Learning+ <span class="sub">// ITC Vault</span></div>
+      <div class="sl-topbar-nav">
+        <a href="syllabus.html">📋 Syllabus</a>
+        <a href="nk.html">📄 NK PYQ</a>
+        <a href="#qrs-section">🧠 QRS</a>
+        <a href="unit1.html">Unit 1</a>
+        <a href="unit2.html">Unit 2</a>
+        <a href="unit3.html">Unit 3</a>
+        <a href="unit4.html">Unit 4</a>
+        <a href="unit5.html">Unit 5</a>
+        <a href="unit6.html">Unit 6</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="sl-shell">
+
+    <header class="sl-mhero">
+      <div class="sl-meyebrow">📘 5CS3-01</div>
+      <h1 class="sl-mtitle">ITC <span class="grad">Vault</span></h1>
+      <p class="sl-msub">Information Theory &amp; Coding · RTU B.Tech CSE 5th Semester</p>
+      <p class="sl-mmeta">Max Marks: 100 (IA: 30, ETE: 70) &nbsp;·&nbsp; Credit: 2 &nbsp;·&nbsp; 28 Hours &nbsp;·&nbsp; 6 Units</p>
+
+      <div class="sl-stats">
+        <div class="sl-stat"><div class="sl-stat-num">6</div><div class="sl-stat-label">Units</div></div>
+        <div class="sl-stat"><div class="sl-stat-num">28</div><div class="sl-stat-label">Hours</div></div>
+        <div class="sl-stat"><div class="sl-stat-num">100%</div><div class="sl-stat-label">RTU Pattern</div></div>
+        <div class="sl-stat"><div class="sl-stat-num">Hi+En</div><div class="sl-stat-label">Bilingual</div></div>
+      </div>
+
+      <div class="sl-tip"><span class="ic">💡</span><span><strong>Study tip:</strong> Start with Unit 2 (Entropy is the foundation), then Unit 3 (Huffman comes every year), then Units 4–6 (numerical heavy — practice them).</span></div>
+    </header>
+
+    <!-- RESOURCES -->
+    <section class="sl-section">
+      <div class="sl-eyebrow-sm">Resources</div>
+      <div class="sl-section-title">Syllabus &amp; PYQ</div>
+      <div class="sl-res-grid">
+        <a href="syllabus.html" class="sl-res-card">
+          <div class="sl-res-icon">📋</div>
+          <div>
+            <div class="sl-res-title">RTU Official Syllabus</div>
+            <div class="sl-res-desc">All 6 Units · 28 Hrs</div>
+          </div>
+          <span class="sl-res-status">Ready</span>
+        </a>
+        <a href="nk.html" class="sl-res-card">
+          <div class="sl-res-icon">📄</div>
+          <div>
+            <div class="sl-res-title">NK Previous Year Questions</div>
+            <div class="sl-res-desc">PDF Viewer + Download</div>
+          </div>
+          <span class="sl-res-status">Ready</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- UNITS -->
+    <section class="sl-section">
+      <div class="sl-eyebrow-sm">Units</div>
+      <div class="sl-section-title">Smart Notes</div>
+      <div class="sl-ubento">
+        <a href="unit1.html" class="sl-ucard" style="--uc:#4f46e5;--uc-bg:#eef2ff;">
+          <div class="sl-ucard-top">
+            <div class="sl-ucard-icon">📘</div>
+            <div class="sl-ucard-arrow">↗</div>
+          </div>
+          <div class="sl-ucard-body">
+            <div class="sl-ucard-title">Unit 1 — Introduction</div>
+            <div class="sl-ucard-code">Objective · Scope · Outcomes · 1 Hr</div>
+            <span class="sl-ucard-status"><span class="d"></span>Data Online</span>
+          </div>
+        </a>
+        <a href="unit2.html" class="sl-ucard" style="--uc:#e11d48;--uc-bg:#fff1f2;">
+          <div class="sl-ucard-top">
+            <div class="sl-ucard-icon">📗</div>
+            <div class="sl-ucard-arrow">↗</div>
+          </div>
+          <div class="sl-ucard-body">
+            <div class="sl-ucard-title">Unit 2 — Information Theory</div>
+            <div class="sl-ucard-code">Entropy · Mutual Info · DMC · 5 Hrs</div>
+            <span class="sl-ucard-status"><span class="d"></span>Data Online</span>
+          </div>
+        </a>
+        <a href="unit3.html" class="sl-ucard" style="--uc:#059669;--uc-bg:#ecfdf5;">
+          <div class="sl-ucard-top">
+            <div class="sl-ucard-icon">📙</div>
+            <div class="sl-ucard-arrow">↗</div>
+          </div>
+          <div class="sl-ucard-body">
+            <div class="sl-ucard-title">Unit 3 — Source Coding</div>
+            <div class="sl-ucard-code">Huffman · Shannon-Fano · LZ · 5 Hrs</div>
+            <span class="sl-ucard-status"><span class="d"></span>Data Online</span>
+          </div>
+        </a>
+        <a href="unit4.html" class="sl-ucard" style="--uc:#ea580c;--uc-bg:#fff7ed;">
+          <div class="sl-ucard-top">
+            <div class="sl-ucard-icon">📕</div>
+            <div class="sl-ucard-arrow">↗</div>
+          </div>
+          <div class="sl-ucard-body">
+            <div class="sl-ucard-title">Unit 4 — Linear Block Code</div>
+            <div class="sl-ucard-code">Error Correction · Matrix · 5 Hrs</div>
+            <span class="sl-ucard-status"><span class="d"></span>Data Online</span>
+          </div>
+        </a>
+        <a href="unit5.html" class="sl-ucard" style="--uc:#7c3aed;--uc-bg:#f5f3ff;">
+          <div class="sl-ucard-top">
+            <div class="sl-ucard-icon">🔄</div>
+            <div class="sl-ucard-arrow">↗</div>
+          </div>
+          <div class="sl-ucard-body">
+            <div class="sl-ucard-title">Unit 5 — Cyclic Codes</div>
+            <div class="sl-ucard-code">Galois Fields · Generator Poly · 6 Hrs</div>
+            <span class="sl-ucard-status"><span class="d"></span>Data Online</span>
+          </div>
+        </a>
+        <a href="unit6.html" class="sl-ucard" style="--uc:#0891b2;--uc-bg:#ecfeff;">
+          <div class="sl-ucard-top">
+            <div class="sl-ucard-icon">🔗</div>
+            <div class="sl-ucard-arrow">↗</div>
+          </div>
+          <div class="sl-ucard-body">
+            <div class="sl-ucard-title">Unit 6 — Convolutional Codes</div>
+            <div class="sl-ucard-code">Trellis · Viterbi · Free Distance · 6 Hrs</div>
+            <span class="sl-ucard-status"><span class="d"></span>Data Online</span>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- QUICK REVISION SHEETS -->
+    <section class="sl-section" id="qrs-section">
+      <div class="sl-eyebrow-sm">Quick Revision</div>
+      <div class="sl-section-title">QRS — Quick Revision Sheets</div>
+      <div class="sl-qrs-grid">
+        <div class="sl-qrs-card" style="--uc:#e11d48;--uc-bg:#fff1f2;" onclick="openQRS(0)">
+          <div class="sl-qrs-top">
+            <div class="sl-qrs-icon">📗</div>
+            <div class="sl-qrs-arrow">⤢</div>
+          </div>
+          <div class="sl-qrs-body">
+            <div class="sl-qrs-title">Unit 2 — QRS</div>
+            <div class="sl-qrs-code">Entropy · Mutual Info · DMC</div>
+            <span class="sl-qrs-status"><span class="d"></span>Data Online</span>
+          </div>
+        </div>
+        <div class="sl-qrs-card" style="--uc:#059669;--uc-bg:#ecfdf5;" onclick="openQRS(1)">
+          <div class="sl-qrs-top">
+            <div class="sl-qrs-icon">📙</div>
+            <div class="sl-qrs-arrow">⤢</div>
+          </div>
+          <div class="sl-qrs-body">
+            <div class="sl-qrs-title">Unit 3 — QRS</div>
+            <div class="sl-qrs-code">Huffman · Shannon-Fano · LZ</div>
+            <span class="sl-qrs-status"><span class="d"></span>Data Online</span>
+          </div>
+        </div>
+        <div class="sl-qrs-card" style="--uc:#ea580c;--uc-bg:#fff7ed;" onclick="openQRS(2)">
+          <div class="sl-qrs-top">
+            <div class="sl-qrs-icon">📕</div>
+            <div class="sl-qrs-arrow">⤢</div>
+          </div>
+          <div class="sl-qrs-body">
+            <div class="sl-qrs-title">Unit 4 — QRS</div>
+            <div class="sl-qrs-code">Error Correction · Matrix</div>
+            <span class="sl-qrs-status"><span class="d"></span>Data Online</span>
+          </div>
+        </div>
+        <div class="sl-qrs-card" style="--uc:#7c3aed;--uc-bg:#f5f3ff;" onclick="openQRS(3)">
+          <div class="sl-qrs-top">
+            <div class="sl-qrs-icon">🔄</div>
+            <div class="sl-qrs-arrow">⤢</div>
+          </div>
+          <div class="sl-qrs-body">
+            <div class="sl-qrs-title">Unit 5 — QRS</div>
+            <div class="sl-qrs-code">Galois Fields · Generator Poly</div>
+            <span class="sl-qrs-status"><span class="d"></span>Data Online</span>
+          </div>
+        </div>
+        <div class="sl-qrs-card" style="--uc:#0891b2;--uc-bg:#ecfeff;" onclick="openQRS(4)">
+          <div class="sl-qrs-top">
+            <div class="sl-qrs-icon">🔗</div>
+            <div class="sl-qrs-arrow">⤢</div>
+          </div>
+          <div class="sl-qrs-body">
+            <div class="sl-qrs-title">Unit 6 — QRS</div>
+            <div class="sl-qrs-code">Trellis · Viterbi · Free Distance</div>
+            <span class="sl-qrs-status"><span class="d"></span>Data Online</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRIORITY GUIDE -->
+    <section class="sl-section">
+      <div class="sl-eyebrow-sm">Priority Guide</div>
+      <div class="sl-section-title">ETE focus areas</div>
+      <div class="sl-ptable-card">
+        <table>
+          <thead><tr><th>Unit</th><th>Key Topics</th><th>ETE Weight</th></tr></thead>
+          <tbody>
+            <tr><td><a href="unit1.html" style="color:var(--mc);font-weight:700;">Unit 1</a></td><td>Objectives, Block diagram of comm. system</td><td><span class="sl-w-low">Low (1-2 marks)</span></td></tr>
+            <tr><td><a href="unit2.html" style="color:var(--mc);font-weight:700;">Unit 2</a></td><td>Entropy, Mutual Info, H(X|Y), H(X,Y), Channel Capacity</td><td><span class="sl-w-vhigh">★★★★★ Very High</span></td></tr>
+            <tr><td><a href="unit3.html" style="color:var(--mc);font-weight:700;">Unit 3</a></td><td>Huffman coding numerical, Shannon-Fano, LZ, Shannon Limit</td><td><span class="sl-w-vhigh">★★★★★ Very High</span></td></tr>
+            <tr><td><a href="unit4.html" style="color:var(--mc);font-weight:700;">Unit 4</a></td><td>Generator/Parity matrix, Syndrome decoding, d_min</td><td><span class="sl-w-high">★★★★ High</span></td></tr>
+            <tr><td><a href="unit5.html" style="color:var(--mc);font-weight:700;">Unit 5</a></td><td>GF properties, g(x) polynomial, cyclic code encoder</td><td><span class="sl-w-high">★★★★ High</span></td></tr>
+            <tr><td><a href="unit6.html" style="color:var(--mc);font-weight:700;">Unit 6</a></td><td>Viterbi algorithm numerical, Trellis diagram, d_free</td><td><span class="sl-w-vhigh">★★★★★ Very High</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer class="sl-mfooter">
+      <p>📘 ITC Vault · Smart Learning Plus · <a href="../index.html">← Back to Main Hub</a></p>
+    </footer>
+
+  </div>
+
+  <div class="sl-qrs-viewer" id="qrsViewer">
+    <div class="sl-qrs-viewer-bar">
+      <div class="sl-qrs-viewer-title" id="qrsViewerTitle">QRS</div>
+      <div class="sl-qrs-viewer-actions">
+        <a class="sl-qrs-viewer-btn" id="qrsDownloadBtn" href="#" download>⬇ Download</a>
+        <button class="sl-qrs-viewer-btn sl-qrs-viewer-close" onclick="closeQRS()">✕</button>
+      </div>
+    </div>
+    <button class="sl-qrs-nav sl-qrs-nav-prev" id="qrsPrevBtn" onclick="navQRS(-1)" aria-label="Previous unit">‹</button>
+    <button class="sl-qrs-nav sl-qrs-nav-next" id="qrsNextBtn" onclick="navQRS(1)" aria-label="Next unit">›</button>
+    <div class="sl-qrs-viewer-imgwrap" id="qrsImgWrap">>
+      <img id="qrsViewerImg" src="" alt="QRS Sheet">
+    </div>
+  </div>
+
+  <div class="cursor-dot" data-cursor-dot></div>
+  <div class="cursor-outline" data-cursor-outline></div>
+  <script>
+
+    const cursorDot = document.querySelector("[data-cursor-dot]");
+    const cursorOutline = document.querySelector("[data-cursor-outline]");
+    window.addEventListener("mousemove", function (e) {
+      cursorDot.style.left = `${e.clientX}px`;
+      cursorDot.style.top = `${e.clientY}px`;
+      cursorOutline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 180, fill: "forwards" });
+    });
+    document.querySelectorAll("a, button, .sl-res-card, .sl-ucard, .sl-qrs-card, .sl-qrs-nav").forEach(el => {
+      el.addEventListener("mouseenter", () => cursorOutline.classList.add("cursor-hovering"));
+      el.addEventListener("mouseleave", () => cursorOutline.classList.remove("cursor-hovering"));
+    });
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('sl-in'); });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.sl-res-card, .sl-ucard').forEach((el, i) => {
+      el.style.transitionDelay = `${(i % 6) * 0.05}s`;
+      io.observe(el);
+    });
+
+    document.querySelectorAll('.sl-qrs-card').forEach((el, i) => {
+      el.style.transitionDelay = `${(i % 6) * 0.05}s`;
+      io.observe(el);
+    });
+
+    const qrsList = [
+      { src: 'qrs/ICT_unit2_QRS.png', title: 'Unit 2 — QRS · Information Theory' },
+      { src: 'qrs/ICT_unit3_QRS.png', title: 'Unit 3 — QRS · Source Coding' },
+      { src: 'qrs/ICT_unit4_QRS.png', title: 'Unit 4 — QRS · Linear Block Code' },
+      { src: 'qrs/ICT_unit5_QRS.png', title: 'Unit 5 — QRS · Cyclic Codes' },
+      { src: 'qrs/ICT_unit6_QRS.png', title: 'Unit 6 — QRS · Convolutional Codes' }
+    ];
+    let qrsIndex = 0;
+
+    function renderQRS() {
+      const item = qrsList[qrsIndex];
+      document.getElementById('qrsViewerImg').src = item.src;
+      document.getElementById('qrsViewerTitle').textContent = item.title;
+      const dlBtn = document.getElementById('qrsDownloadBtn');
+      dlBtn.href = item.src;
+      dlBtn.setAttribute('download', item.src.split('/').pop());
+      document.getElementById('qrsPrevBtn').disabled = (qrsIndex === 0);
+      document.getElementById('qrsNextBtn').disabled = (qrsIndex === qrsList.length - 1);
+    }
+    function openQRS(index) {
+      qrsIndex = index;
+      renderQRS();
+      document.getElementById('qrsViewer').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function navQRS(dir) {
+      const next = qrsIndex + dir;
+      if (next < 0 || next >= qrsList.length) return;
+      qrsIndex = next;
+      renderQRS();
+    }
+    function closeQRS() {
+      document.getElementById('qrsViewer').classList.remove('open');
+      document.getElementById('qrsViewerImg').src = '';
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', (e) => {
+      if (!document.getElementById('qrsViewer').classList.contains('open')) return;
+      if (e.key === 'Escape') closeQRS();
+      if (e.key === 'ArrowLeft') navQRS(-1);
+      if (e.key === 'ArrowRight') navQRS(1);
+    });
+    (function () {
+      const wrap = document.getElementById('qrsImgWrap');
+      let touchStartX = null;
+      wrap.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].clientX; }, { passive: true });
+      wrap.addEventListener('touchend', (e) => {
+        if (touchStartX === null) return;
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        if (Math.abs(dx) > 50) navQRS(dx < 0 ? 1 : -1);
+        touchStartX = null;
+      }, { passive: true });
+    })();
+
+  </script>
+<script src="../splash-cursor.js"></script>\n</body>
+</html>

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Learning Plus // OS · Unit 2</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <main class="main-wrapper" style="width:100%;">
+    <div class="topbar">
+      <a href="index.html" class="back-btn">⬅ OS Hub</a>
+      <div class="brand">Smart<span>Learning</span>+ <span style="color:var(--muted);font-weight:400;font-size:14px;">// OS · Unit 2</span></div>
+      <div class="nav">
+        <a href="index.html">🏠 OS Hub</a>
+        <a href="#content">📖 Content</a>
+        <a href="#qa2">❓ Q&amp;A</a>
+        <a href="unit3.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="hero">
+        <h1>📗 UNIT 2 — Introduction & History of OS, Processor Management</h1>
+        <p>Structure & Operations · Processes & Files · IPC · Mutual Exclusion · Semaphores · Scheduling · Critical Sections · Threads · Multithreading | Hours: 04</p>
+        <div class="badges" style="margin-top:14px;">
+          <a href="index.html" style="text-decoration:none;"><span class="badge b-teal">← Back to OS Hub</span></a>
+          <span class="badge b-gold">5CS4-03 · OS · RTU</span>
+        </div>
+      </div>
+      <div id="content">
+      <h1 class="unit-title" id="unit2">📗 UNIT 2 — Introduction &amp; History of OS, Processor Management</h1>
+      <p class="unit-sub">Structure &amp; Operations · Processes &amp; Files · IPC · Mutual Exclusion · Semaphores · Scheduling · Critical Sections · Threads · Multithreading &nbsp;|&nbsp; Hours: 04</p>
+
+      <div class="keypoint"><span class="icon">🔥</span><span>HIGH WEIGHT — Scheduling numerical + Semaphores + Critical Section guaranteed in ETE every year.</span></div>
+
+      <h2 class="topic">1. Introduction to Operating System <span class="imp h">High ⭐⭐⭐</span></h2>
+      <div class="card def">
+        <span class="tag">English</span>
+        <p>An <b>Operating System</b> is a control program that manages the execution of user programs, operates computer hardware, and acts as a <b>resource manager</b> (allocating CPU, memory, I/O devices among competing processes) and an <b>extended/virtual machine</b> (hiding hardware complexity behind a simple interface).</p>
+      </div>
+      <div class="hin">
+        <span class="tag">Hinglish</span>
+        <p>OS do roles play karta hai: (1) <b>Resource Manager</b> — CPU time, memory, disk space jaise limited resources ko fairly aur efficiently allocate karta hai multiple programs ke beech. (2) <b>Extended Machine</b> — hardware ki complexity (registers, interrupts, disk sectors) ko chhupa ke simple commands/APIs deta hai (jaise file ko "save" karna — tumhe disk sector ka pata nahi karna padta).</p>
+      </div>
+
+      <h3 class="sub">Functions / Goals of OS <span class="imp m">Medium</span></h3>
+      <div class="card">
+        <ul>
+          <li><b>Process Management</b> — creation, scheduling, termination of processes.</li>
+          <li><b>Memory Management</b> — allocation/deallocation of memory to processes.</li>
+          <li><b>File Management</b> — creation, deletion, organization of files &amp; directories.</li>
+          <li><b>Device Management</b> — managing I/O devices via drivers.</li>
+          <li><b>Security &amp; Protection</b> — controlling access to resources, user authentication.</li>
+          <li><b>User Interface</b> — CLI (Command Line Interface) or GUI (Graphical User Interface).</li>
+        </ul>
+      </div>
+
+      <h2 class="topic">2. History &amp; Evolution of Operating Systems <span class="imp m">Medium ⭐⭐⭐</span></h2>
+      <div class="card def">
+        <span class="tag">English</span>
+        <p>Operating systems evolved through several <b>generations</b>, each driven by hardware advances and the need for better resource utilization and user convenience.</p>
+      </div>
+      <table>
+        <tr><th>Generation</th><th>Key Feature</th><th>Example/Era</th></tr>
+        <tr><td><b>1. Serial Processing</b></td><td>No OS; manual operation, one job at a time, plugboards</td><td>1940s vacuum-tube machines</td></tr>
+        <tr><td><b>2. Batch Systems</b></td><td>Jobs collected &amp; processed in batches; reduces idle CPU time vs manual</td><td>1950s-60s (punch cards)</td></tr>
+        <tr><td><b>3. Multiprogrammed Batch</b></td><td>Multiple jobs kept in memory; CPU switches between jobs when one waits for I/O</td><td>1960s</td></tr>
+        <tr><td><b>4. Time-Sharing Systems</b></td><td>CPU time divided into time-slices; multiple interactive users feel they have dedicated CPU</td><td>1970s (CTSS, Multics, UNIX)</td></tr>
+        <tr><td><b>5. Personal Computer OS</b></td><td>Single-user, GUI-based, designed for ease of use</td><td>1980s (MS-DOS, early Mac OS)</td></tr>
+        <tr><td><b>6. Distributed/Network OS</b></td><td>Multiple computers connected, resource sharing over network</td><td>1990s onward</td></tr>
+        <tr><td><b>7. Modern/Mobile OS</b></td><td>Multi-core support, virtualization, touch-based mobile OS</td><td>2000s-present (Linux, Windows, Android, iOS)</td></tr>
+      </table>
+      <div class="hin">
+        <span class="tag">Hinglish</span>
+        <p>Simple memory trick: <b>Serial → Batch → Multiprogrammed → Time-sharing → PC → Distributed → Modern</b>. Har step pe goal yahi tha — CPU ka idle time kam karo aur users ko better experience do. Time-sharing sabse important hai exam ke liye — isi se modern multitasking OS ka concept aaya.</p>
+      </div>
+
+      <h2 class="topic">3. Structure &amp; Operations of OS <span class="imp h">High ⭐⭐⭐⭐</span></h2>
+
+      <h3 class="sub">Dual-Mode Operation <span class="imp h">High</span></h3>
+      <div class="card def">
+        <span class="tag">English</span>
+        <p>Modern OS run in two modes to protect system resources: <b>User Mode</b> (restricted, application programs run here, cannot directly access hardware) and <b>Kernel Mode</b> (privileged, OS core runs here, full hardware access). A <b>mode bit</b> in hardware indicates the current mode; switching happens via <b>system calls</b> or interrupts.</p>
+      </div>
+      <div class="hin">
+        <span class="tag">Hinglish</span>
+        <p>User mode mein apps "limited power" ke saath chalte hain (security ke liye) — agar koi app crash ho bhi jaaye, to poora system crash nahi hota. Jab app ko hardware access chahiye (file read/write, etc.), to <b>system call</b> ke through kernel mode mein switch hota hai temporarily.</p>
+      </div>
+
+      <h3 class="sub">OS Structures <span class="imp m">Medium ⭐⭐⭐</span></h3>
+      <table>
+        <tr><th>Structure</th><th>Description</th><th>Example</th></tr>
+        <tr><td><b>Simple/Monolithic</b></td><td>Entire OS as one large program; no internal structure/protection between components</td><td>MS-DOS</td></tr>
+        <tr><td><b>Layered</b></td><td>OS divided into layers, each layer uses services of layer below only</td><td>THE OS</td></tr>
+        <tr><td><b>Microkernel</b></td><td>Minimal core (IPC, scheduling) in kernel; most services run as user-space processes</td><td>Mach, QNX</td></tr>
+        <tr><td><b>Client-Server (Modular)</b></td><td>OS services provided by separate server processes; kernel just routes requests</td><td>Windows NT (partially)</td></tr>
+      </table>
+
+      <div class="svgbox">
+        <svg viewBox="0 0 500 200" xmlns="http://www.w3.org/2000/svg">
+          <defs><marker id="ar2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#4f46e5"/></marker></defs>
+          <rect x="150" y="10" width="200" height="35" rx="6" fill="#fff1f2" stroke="#ef4444" stroke-width="1.5"/>
+          <text x="250" y="32" text-anchor="middle" fill="#0f172a" font-size="12" font-family="Consolas">User Interface</text>
+          <rect x="150" y="50" width="200" height="35" rx="6" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5"/>
+          <text x="250" y="72" text-anchor="middle" fill="#0f172a" font-size="12" font-family="Consolas">File / Device Mgmt</text>
+          <rect x="150" y="90" width="200" height="35" rx="6" fill="#ecfeff" stroke="#06b6d4" stroke-width="1.5"/>
+          <text x="250" y="112" text-anchor="middle" fill="#0f172a" font-size="12" font-family="Consolas">Memory Management</text>
+          <rect x="150" y="130" width="200" height="35" rx="6" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.5"/>
+          <text x="250" y="152" text-anchor="middle" fill="#0f172a" font-size="12" font-family="Consolas">Process Mgmt (Kernel core)</text>
+          <rect x="150" y="170" width="200" height="25" rx="6" fill="#f0fdf4" stroke="#10b981" stroke-width="1.5"/>
+          <text x="250" y="187" text-anchor="middle" fill="#0f172a" font-size="11" font-family="Consolas">Hardware</text>
+        </svg>
+        <p class="cap">Fig 2.1 — Layered OS Structure: each layer only depends on the layer directly below it</p>
+      </div>
+
+      <h2 class="topic">4. Processes and Files <span class="imp h">High ⭐⭐⭐⭐</span></h2>
+      <div class="card def">
+        <span class="tag">English</span>
+        <p>A <b>Process</b> is a program in execution — it includes the program code, current activity (program counter, registers), stack, and a data section. Each process is represented in the OS by a <b>Process Control Block (PCB)</b> containing all information needed to manage it.</p>
+      </div>
+      <div class="hin">
+        <span class="tag">Hinglish</span>
+        <p>Process = "running" program. Jab tak program disk pe hai (jaise .exe file), wo passive hai. Jaise hi run hota hai, OS use memory mein laata hai, resources deta hai, aur ek "process" ban jaata hai jiske paas khud ka state (registers, stack, program counter) hota hai.</p>
+      </div>
+
+      <h3 class="sub">Process States <span class="imp h">High — diagram-based question</span></h3>
+      <div class="svgbox">
+        <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+          <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#4f46e5"/></marker></defs>
+          <circle cx="50" cy="100" r="35" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.5"/>
+          <text x="50" y="104" text-anchor="middle" fill="#0f172a" font-size="11">New</text>
+          <line x1="85" y1="100" x2="145" y2="100" stroke="#4f46e5" marker-end="url(#ar)"/>
+          <circle cx="180" cy="100" r="35" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5"/>
+          <text x="180" y="104" text-anchor="middle" fill="#0f172a" font-size="11">Ready</text>
+          <line x1="215" y1="100" x2="275" y2="100" stroke="#4f46e5" marker-end="url(#ar)"/>
+          <text x="245" y="90" fill="#64748b" font-size="9">dispatch</text>
+          <circle cx="310" cy="100" r="35" fill="#fff1f2" stroke="#ef4444" stroke-width="1.5"/>
+          <text x="310" y="104" text-anchor="middle" fill="#0f172a" font-size="11">Running</text>
+          <path d="M290,75 Q245,30 215,75" stroke="#64748b" fill="none" marker-end="url(#ar)"/>
+          <text x="230" y="35" fill="#64748b" font-size="9">interrupt</text>
+          <line x1="310" y1="135" x2="310" y2="170" stroke="#4f46e5" marker-end="url(#ar)"/>
+          <text x="320" y="155" fill="#64748b" font-size="9">I/O wait</text>
+          <circle cx="180" cy="170" r="35" fill="#ecfeff" stroke="#06b6d4" stroke-width="1.5"/>
+          <text x="180" y="174" text-anchor="middle" fill="#0f172a" font-size="10">Waiting</text>
+          <line x1="280" y1="170" x2="215" y2="170" stroke="#4f46e5" marker-end="url(#ar)"/>
+          <text x="245" y="160" fill="#64748b" font-size="9">I/O done</text>
+          <line x1="345" y1="100" x2="395" y2="100" stroke="#4f46e5" marker-end="url(#ar)"/>
+          <circle cx="430" cy="100" r="35" fill="#f8fafc" stroke="#334155" stroke-width="1.5"/>
+          <text x="430" y="104" text-anchor="middle" fill="#0f172a" font-size="10">Terminated</text>
+        </svg>
+        <p class="cap">Fig 2.2 — Process State Diagram: New → Ready → Running → (Waiting ⇄ Ready) → Terminated</p>
+      </div>
+
+      <h3 class="sub">Process Control Block (PCB) Fields <span class="imp m">Medium</span></h3>
+      <div class="card">
+        <ul>
+          <li>Process ID (PID), Process State</li>
+          <li>Program Counter, CPU Registers</li>
+          <li>CPU Scheduling Information (priority, queue pointers)</li>
+          <li>Memory Management Information (base/limit registers, page tables)</li>
+          <li>Accounting Information (CPU used, time limits)</li>
+          <li>I/O Status Information (allocated devices, open file list)</li>
+        </ul>
+      </div>
+
+      <h2 class="topic">5. Inter-Process Communication (IPC) <span class="imp h">High ⭐⭐⭐</span></h2>
+      <div class="card def">
+        <span class="tag">English</span>
+        <p><b>Inter-Process Communication</b> refers to mechanisms that allow processes to exchange data and synchronize their actions, mainly via two models: <b>Shared Memory</b> (processes share a region of memory and read/write directly) and <b>Message Passing</b> (processes exchange messages via the OS, using send()/receive()).</p>
+      </div>
+      <div class="hin">
+        <span class="tag">Hinglish</span>
+        <p>Shared memory mein dono process ek common memory area use karte hain (fast, but synchronization khud karna padta hai). Message passing mein OS ke through messages bheje jaate hain (slower but safer) — jaise do logon ke beech letter bhejna (message passing) vs ek common notice-board use karna (shared memory).</p>
+      </div>
+      <table>
+        <tr><th>Aspect</th><th>Shared Memory</th><th>Message Passing</th></tr>
+        <tr><td>Speed</td><td>Faster (direct memory access)</td><td>Slower (via OS kernel calls)</td></tr>
+        <tr><td>Synchronization</td><td>Must be handled by programmer</td><td>Handled implicitly by OS</td></tr>
+        <tr><td>Best for</td><td>Large data transfer, same machine</td><td>Distributed systems, small messages</td></tr>
+        <tr><td>Example</td><td>POSIX shared memory segments</td><td>Pipes, sockets, message queues</td></tr>
+      </table>
+
+      <h2 class="topic">6. Critical Section Problem <span class="imp h">High ⭐⭐⭐⭐⭐</span></h2>
+      <div class="card def">
+        <span class="tag">English</span>
+        <p>A <b>Critical Section</b> is a segment of code where a process accesses shared resources (variables, files, data structures) that must not be concurrently accessed by more than one process. A valid solution must satisfy:</p>
+      </div>
+      <div class="card">
+        <ol>
+          <li><b>Mutual Exclusion:</b> Only one process may execute in its critical section at a time.</li>
+          <li><b>Progress:</b> If no process is in its critical section, one of the waiting processes must be allowed to enter without indefinite delay.</li>
+          <li><b>Bounded Waiting:</b> There must be a limit on the number of times other processes are allowed to enter their critical section before a waiting process's request is granted.</li>
+        </ol>
+      </div>
+      <div class="hin">
+        <span class="tag">Hinglish</span>
+        <p>Critical section = wo code jahan shared data ko modify kiya jaata hai. Agar 2 processes ek saath isi section mein chale jaayen (bina coordination ke), to data corrupt ho sakta hai ("race condition"). Teeno conditions (mutual exclusion, progress, bounded waiting) ek "fair aur safe" solution define karti hain.</p>
+      </div>
+
+      <h2 class="topic">7. Mutual Exclusion <span class="imp h">High ⭐⭐⭐</span></h2>
+      <div class="card def">
+        <span class="tag">English</span>
+        <p><b>Mutual Exclusion</b> is a property ensuring that when one process is executing in its critical section, no other process is allowed to execute in its own critical section, thereby preventing race conditions on shared data.</p>
+      </div>
+      <div class="hin">
+        <span class="tag">Hinglish</span>
+        <p>Mutual exclusion ka matlab — ek time pe sirf <b>ek hi process</b> shared resource use kar sake, baaki sab "wait" karein. Ye lock/key jaisa concept hai — jab tak ek process "key" hold kar rahi hai, doosri process andar nahi jaa sakti.</p>
+      </div>
+
+      <h2 class="topic">8. Semaphores, Wait &amp; Signal Procedures <span class="imp h">High ⭐⭐⭐⭐⭐ — guaranteed</span></h2>
+      <div class="card def">
+        <span class="tag">English</span>
+        <p>A <b>Semaphore</b> is an integer synchronization variable accessed only via two atomic operations: <b>wait() (P)</b> and <b>signal() (V)</b>. A <b>Binary Semaphore</b> takes values 0 or 1 (used for mutual exclusion). A <b>Counting Semaphore</b> can take any non-negative integer value (used to control access to a resource pool with multiple instances).</p>
+      </div>
+      <div class="formula">
+wait(S):           signal(S):
+  while (S &lt;= 0)      S = S + 1;
+    ;  // busy wait
+  S = S - 1;
+      </div>
+      <div class="hin">
+        <span class="tag">Hinglish</span>
+        <p>Semaphore ek "counter" hai. <b>wait() / P()</b> = resource use karne se pehle counter ghatao (agar counter 0 hai, to process wait karegi). <b>signal() / V()</b> = resource use karne ke baad counter badhao. Binary semaphore = simple lock (0/1). Counting semaphore = jaise parking lot mein "kitni spots khaali hain" track karna.</p>
+      </div>
+
+      <h3 class="sub">Producer-Consumer Problem using Semaphores <span class="imp h">High ⭐⭐⭐⭐⭐ — classic RTU question</span></h3>
+      <div class="card example">
+        <span class="tag">Example</span>
+        <p>Producer adds items to a shared buffer of size n; Consumer removes items. Using semaphores <code>empty</code> (counting, init=n), <code>full</code> (counting, init=0), and <code>mutex</code> (binary, init=1):</p>
+        <div class="formula">
+Producer:                    Consumer:
+do {                          do {
+  wait(empty);                  wait(full);
+  wait(mutex);                  wait(mutex);
+  // add item to buffer         // remove item from buffer
+  signal(mutex);                signal(mutex);
+  signal(full);                 signal(empty);
+} while(true);                } while(true);
+        </div>
+        <p><code>empty</code> tracks free slots, <code>full</code> tracks filled slots, <code>mutex</code> ensures only one process touches the buffer at a time.</p>
+      </div>
+
+      <h2 class="topic">9. Process Scheduling &amp; Algorithms <span class="imp h">High ⭐⭐⭐⭐⭐ — Numerical guaranteed</span></h2>
+      <div class="card def">
+        <span class="tag">English</span>
+        <p><b>Process Scheduling</b> is the OS activity of selecting which process runs on the CPU at a given time, aiming to maximize CPU utilization and throughput while minimizing waiting time, response time, and turnaround time.</p>
+      </div>
+      <table>
+        <tr><th>Algorithm</th><th>Type</th><th>Key Idea</th></tr>
+        <tr><td><b>FCFS</b> (First Come First Serve)</td><td>Non-preemptive</td><td>Process executed in arrival order</td></tr>
+        <tr><td><b>SJF</b> (Shortest Job First)</td><td>Preemptive or Non-preemptive</td><td>Process with shortest burst time runs first</td></tr>
+        <tr><td><b>Priority Scheduling</b></td><td>Preemptive or Non-preemptive</td><td>Highest priority process runs first</td></tr>
+        <tr><td><b>Round Robin (RR)</b></td><td>Preemptive</td><td>Each process gets a fixed time quantum in cyclic order</td></tr>
+      </table>
+
+      <div class="card example">
+        <span class="tag">Full Worked Numerical — FCFS (classic RTU pattern)</span>
+        <p>Processes P1,P2,P3,P4 with burst times 24,3,3,5 ms (arrival order same). Find average waiting time (FCFS).</p>
+        <table>
+          <tr><th>Process</th><th>Burst Time</th><th>Waiting Time</th></tr>
+          <tr><td>P1</td><td>24</td><td>0</td></tr>
+          <tr><td>P2</td><td>3</td><td>24</td></tr>
+          <tr><td>P3</td><td>3</td><td>27</td></tr>
+          <tr><td>P4</td><td>5</td><td>30</td></tr>
+        </table>
+        <p><b>Average Waiting Time = (0+24+27+30)/4 = 20.25 ms</b></p>
+        <p style="color:var(--muted);font-size:13px;">💡 Same pattern applies for SJF/Priority/RR — just change the execution order or add time-quantum cycling.</p>
+      </div>
+
+      <h2 class="topic">10. Threads &amp; Multithreading <span class="imp h">High ⭐⭐⭐⭐</span></h2>
+      <div class="card def">
+        <span class="tag">English</span>
+        <p>A <b>Thread</b> is the basic unit of CPU utilization — a lightweight process with its own program counter, register set, and stack, but sharing code, data, and resources (memory, files) with other threads of the same process. <b>Multithreading</b> is the ability of an OS to support multiple threads of execution within a single process.</p>
+      </div>
+      <div class="hin">
+        <span class="tag">Hinglish</span>
+        <p>Thread = process ke andar ek "lightweight sub-task". Jaise ek browser process mein alag-alag threads chal rahe hote hain — ek tab loading kar raha, doosra video play kar raha, teesra download kar raha — sab same process ke andar, memory share karte hue, lekin independently execute hote hain.</p>
+      </div>
+      <table>
+        <tr><th>Aspect</th><th>Process</th><th>Thread</th></tr>
+        <tr><td>Memory</td><td>Separate address space</td><td>Shares address space with parent process</td></tr>
+        <tr><td>Creation overhead</td><td>High (heavyweight)</td><td>Low (lightweight)</td></tr>
+        <tr><td>Communication</td><td>Needs IPC (slow)</td><td>Direct (shared memory, fast)</td></tr>
+        <tr><td>Crash impact</td><td>Doesn't affect other processes</td><td>Can affect other threads in same process</td></tr>
+      </table>
+
+      <div class="compare">
+        <div class="compare-card"><h4>Many-to-One</h4><p>Many user-level threads mapped to one kernel thread. Fast thread management, but only one thread can access kernel at a time (no true parallelism).</p></div>
+        <div class="compare-card"><h4>One-to-One</h4><p>Each user thread maps to a kernel thread. Allows true parallelism, but creating a user thread requires creating a kernel thread (overhead).</p></div>
+      </div>
+      <div class="compare">
+        <div class="compare-card"><h4>Many-to-Many</h4><p>Many user threads multiplexed onto a smaller/equal number of kernel threads. Best of both — flexibility + parallelism.</p></div>
+        <div class="compare-card"><h4>Benefits of Multithreading</h4><p>Responsiveness, resource sharing, economy (cheaper than processes), scalability on multi-core systems.</p></div>
+      </div>
+
+      <!-- Q&A UNIT 2 -->
+      <div class="qsection scroll-anchor" id="qa2">
+        <h1 class="unit-title">❓ Unit 2 — Q&amp;A (RTU Exam Pattern)</h1>
+
+        <div class="qcard">
+          <div class="qlabel">RTU EXAM Q&amp;A</div>
+          <div class="q">Q1. Define Operating System. Explain its functions/goals. <span class="imp h">★★★★ 7 Marks</span></div>
+          <span class="marks m10">7 Marks</span>
+          <div class="a"><p>OS = resource manager + extended machine, manages CPU/memory/files/devices/security/UI. Full function list: Process Mgmt, Memory Mgmt, File Mgmt, Device Mgmt, Security &amp; Protection, User Interface.</p></div>
+        </div>
+
+        <div class="qcard">
+          <div class="qlabel">RTU EXAM Q&amp;A</div>
+          <div class="q">Q2. Explain the history/evolution of operating systems with generations. <span class="imp m">★★★ 5 Marks</span></div>
+          <span class="marks m5">5 Marks</span>
+          <div class="a"><p>Serial → Batch → Multiprogrammed Batch → Time-sharing → PC OS → Distributed → Modern/Mobile. Full table above with key features per generation.</p></div>
+        </div>
+
+        <div class="qcard">
+          <div class="qlabel">RTU EXAM Q&amp;A</div>
+          <div class="q">Q3. Explain dual-mode operation in OS. Why is it needed? <span class="imp h">★★★ 5 Marks</span></div>
+          <span class="marks m5">5 Marks</span>
+          <div class="a"><p>User mode (restricted) vs Kernel mode (privileged); mode bit indicates current mode; switching via system calls. Needed for protection — prevents user programs from directly damaging hardware/OS.</p></div>
+        </div>
+
+        <div class="qcard">
+          <div class="qlabel">RTU EXAM Q&amp;A</div>
+          <div class="q">Q4. Define process. Draw and explain the process state diagram. <span class="imp h">★★★★★ 7-10 Marks — very frequently asked</span></div>
+          <span class="marks m10">10 Marks</span>
+          <div class="a"><p>Process = program in execution. States: New→Ready→Running→(Waiting⇄Ready)→Terminated. Full diagram (Fig 2.2) and explanation of each transition above. PCB stores PID, state, PC, registers, memory info.</p></div>
+        </div>
+
+        <div class="qcard">
+          <div class="qlabel">RTU EXAM Q&amp;A</div>
+          <div class="q">Q5. Define semaphore. Differentiate binary and counting semaphores. Write wait() and signal() operations. <span class="imp h">★★★★★ 7-10 Marks — guaranteed</span></div>
+          <span class="marks m10">10 Marks</span>
+          <div class="a"><p>Semaphore = integer sync variable with atomic wait()/signal(). Binary = 0/1 (lock-like). Counting = any non-negative int (resource pool). Pseudocode given above. Producer-Consumer full solution uses empty, full, mutex semaphores.</p></div>
+        </div>
+
+        <div class="qcard">
+          <div class="qlabel">RTU EXAM Q&amp;A</div>
+          <div class="q">Q6. What is the critical section problem? State its three requirements. <span class="imp h">★★★★★ 5-7 Marks — almost guaranteed</span></div>
+          <span class="marks m5">5 Marks</span>
+          <div class="a"><p>Mutual Exclusion, Progress, Bounded Waiting — full definitions above. Critical section = shared code section that must not be concurrently accessed by more than one process.</p></div>
+        </div>
+
+        <div class="qcard">
+          <div class="qlabel">RTU EXAM Q&amp;A</div>
+          <div class="q">Q7. Explain CPU scheduling algorithms (FCFS, SJF, Priority, Round Robin) with example. <span class="imp h">★★★★★ 10 Marks numerical — guaranteed every year</span></div>
+          <span class="marks m10">10 Marks</span>
+          <div class="a"><p>Algorithm definitions in table above + full FCFS numerical (avg waiting time = 20.25ms for given burst times). Practice same style for SJF/Priority/RR by reordering execution per algorithm rule.</p></div>
+        </div>
+
+        <div class="qcard">
+          <div class="qlabel">RTU EXAM Q&amp;A</div>
+          <div class="q">Q8. Define thread. Differentiate process and thread. Explain multithreading models. <span class="imp h">★★★★ 7 Marks</span></div>
+          <span class="marks m10">7 Marks</span>
+          <div class="a"><p>Thread = lightweight unit of CPU execution sharing process resources. Full process vs thread table above. Models: Many-to-One (simple, no parallelism), One-to-One (parallelism, overhead), Many-to-Many (best balance).</p></div>
+        </div>
+      </div>
+
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:center;padding:30px 20px;flex-wrap:wrap;">
+      <a href="index.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">🏠 OS Hub</a>
+      <a href="unit3.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+    </div>
+  </main>
+  <div class="cursor-dot" data-cursor-dot></div>
+  <div class="cursor-outline" data-cursor-outline></div>
+  <script>
+    const cursorDot = document.querySelector("[data-cursor-dot]");
+    const cursorOutline = document.querySelector("[data-cursor-outline]");
+    window.addEventListener("mousemove", function(e){
+      cursorDot.style.left=e.clientX+"px"; cursorDot.style.top=e.clientY+"px";
+      cursorOutline.animate({left:e.clientX+"px",top:e.clientY+"px"},{duration:400,fill:"forwards"});
+    });
+    document.querySelectorAll("a,button").forEach(el=>{
+      el.addEventListener("mouseenter",()=>cursorOutline.classList.add("cursor-hovering"));
+      el.addEventListener("mouseleave",()=>cursorOutline.classList.remove("cursor-hovering"));
+    });
+  </script>
+<script src="../splash-cursor.js"></script>\n</body>
+</html>

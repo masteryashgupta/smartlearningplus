@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Learning Plus // CG · Unit 2</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <main class="main-wrapper" style="width:100%;">
+    <div class="topbar">
+      <a href="index.html" class="back-btn">⬅ CG Hub</a>
+      <div class="brand">Smart<span>Learning</span>+ <span style="color:var(--muted);font-weight:400;font-size:14px;">// CG · Unit 2</span></div>
+      <div class="nav">
+        <a href="index.html">🏠 CG Hub</a>
+        <a href="#content">📖 Content</a>
+        <a href="#qa">❓ Q&amp;A</a>
+        <a href="unit1.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+        <a href="unit3.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="hero">
+        <h1>📗 Unit 2 — Basics of Computer Graphics</h1>
+        <p>Applications · Display Devices · Random &amp; Raster Scan Systems · Graphics Input Devices · Graphics Software &amp; Standards | Hours: 06</p>
+        <div class="badges" style="margin-top:14px;">
+          <a href="index.html" style="text-decoration:none;"><span class="badge b-teal">← Back to CG Hub</span></a>
+          <span class="badge b-gold">5CS4-04 · CG&amp;M · RTU</span>
+        </div>
+      </div>
+      <div id="content">
+  <h1 class="unit-title" id="unit2">📗 UNIT 2 — Basics of Computer Graphics</h1>
+  <p class="unit-sub">Applications · Display Devices · Random &amp; Raster Scan Systems · Graphics Input Devices · Graphics Software &amp; Standards &nbsp;|&nbsp; Hours: 06</p>
+
+  <div class="progress-bar"></div>
+
+  <div class="card def">
+    <span class="tag">English</span>
+    <p>The <b>basics of computer graphics</b> cover the fundamental hardware (display devices, input devices) and software (graphics libraries, standards) that form the infrastructure for all graphics applications. Understanding how images are physically displayed on screen — pixel grids, scan lines, refresh rates — is essential before studying any rendering algorithm.</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Pehle ye samajhna zaroori hai ki screen pe actually image kaise banta hai — screen pe lakhon chhote-chhote dots (pixels) hote hain, inhe sahi colour dene se image banta hai. Display hardware (monitor) aur input hardware (mouse, tablet) ke concepts + graphics software/APIs samajhe bina algorithms samajhna mushkil hai.</p>
+  </div>
+
+  <!-- 2.1 Applications -->
+  <h2 class="topic">1. Applications of Computer Graphics <span class="imp m">Medium ⭐⭐⭐</span></h2>
+  <div class="card">
+    <table style="margin:0;">
+      <thead><tr><th>Domain</th><th>Application</th><th>CG Technique Used</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Entertainment</strong></td><td>Video games, animated movies, VFX</td><td>Real-time 3D rendering, ray tracing, morphing</td></tr>
+        <tr><td><strong>CAD/CAM</strong></td><td>Engineering &amp; architectural design (AutoCAD)</td><td>Geometric modeling, 2D/3D transformations</td></tr>
+        <tr><td><strong>Medical</strong></td><td>MRI/CT visualization, surgical simulation</td><td>Volume rendering, 3D reconstruction</td></tr>
+        <tr><td><strong>Education</strong></td><td>Simulation, virtual labs, e-learning</td><td>Animation, 3D visualization</td></tr>
+        <tr><td><strong>UI/Web</strong></td><td>App &amp; web interfaces, icons, charts</td><td>2D rasterization, anti-aliasing</td></tr>
+        <tr><td><strong>AR / VR</strong></td><td>Augmented &amp; virtual reality experiences</td><td>Real-time rendering, stereoscopic projection</td></tr>
+        <tr><td><strong>Scientific Visualization</strong></td><td>Weather maps, fluid dynamics, molecular models</td><td>Data visualization, 3D surface rendering</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 2.2 Display Devices -->
+  <h2 class="topic">2. Display Devices <span class="imp h">High ⭐⭐⭐⭐</span></h2>
+  <div class="card def">
+    <span class="tag">English</span>
+    <p>A <b>display device</b> converts digital image data (stored in a frame buffer) into visible light patterns on a screen. Key characteristics: <b>resolution</b> (total pixel count), <b>refresh rate</b> (how many times per second the screen redraws, in Hz), <b>dot pitch</b> (distance between adjacent same-colour phosphor dots — smaller = sharper), and <b>aspect ratio</b> (width:height ratio).</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Display device wo hardware hai jo computer ke numbers (pixel colour data) ko screen pe visible light mein convert karta hai. <b>Resolution</b> = kitne pixels hain (1920×1080 = Full HD). <b>Refresh rate</b> = ek second mein screen kitni baar dubara draw hoti hai (60Hz, 144Hz). <b>Dot pitch</b> = pixels ke beech ki doori (jitni kam, utni sharp image).</p>
+  </div>
+
+  <h3 class="sub">Types of Display Technologies <span class="imp h">High ⭐⭐⭐⭐ — frequently asked comparison</span></h3>
+  <table>
+    <tr><th>Type</th><th>Working Principle</th><th>Pros</th><th>Cons</th></tr>
+    <tr><td><strong>CRT</strong> (Cathode Ray Tube)</td><td>Electron beam excites phosphor coating on screen; beam scanned across screen</td><td>Accurate colours, high refresh rate</td><td>Bulky, heavy, high power consumption</td></tr>
+    <tr><td><strong>LCD</strong> (Liquid Crystal Display)</td><td>Backlight passes through liquid crystals that rotate to control light amount per pixel</td><td>Thin, light, energy efficient</td><td>Limited viewing angles (older TN panels), slower response</td></tr>
+    <tr><td><strong>LED</strong></td><td>LCD with LED backlight (or OLED where each pixel is its own LED)</td><td>Bright, thin, efficient</td><td>Higher cost (OLED)</td></tr>
+    <tr><td><strong>OLED</strong></td><td>Organic compounds emit light per pixel; no backlight needed</td><td>True blacks, perfect contrast, flexible</td><td>Burn-in risk, expensive</td></tr>
+    <tr><td><strong>Plasma</strong></td><td>Each pixel is a tiny gas cell excited by electricity to emit UV light</td><td>Excellent contrast, wide viewing angles</td><td>Heavy, high power; largely obsolete</td></tr>
+  </table>
+
+  <!-- 2.3 Raster vs Random Scan -->
+  <h2 class="topic">3. Raster Scan vs Random Scan Systems <span class="imp h">High ⭐⭐⭐⭐⭐ (Most Important — comparison guaranteed every year)</span></h2>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="20" y="20" width="300" height="160" rx="10" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.5"/>
+      <text x="170" y="45" text-anchor="middle" fill="#4f46e5" font-size="13" font-family="Inter,sans-serif" font-weight="700">RASTER SCAN</text>
+      <line x1="50" y1="70" x2="280" y2="70" stroke="#4f46e5" stroke-width="1.5"/>
+      <line x1="50" y1="90" x2="280" y2="90" stroke="#4f46e5" stroke-width="1.5"/>
+      <line x1="50" y1="110" x2="280" y2="110" stroke="#4f46e5" stroke-width="1.5"/>
+      <line x1="50" y1="130" x2="280" y2="130" stroke="#4f46e5" stroke-width="1.5"/>
+      <line x1="50" y1="150" x2="280" y2="150" stroke="#4f46e5" stroke-width="1.5"/>
+      <text x="170" y="175" text-anchor="middle" fill="#6b7280" font-size="11" font-family="Inter,sans-serif">Scans ALL lines left→right, top→bottom</text>
+      <rect x="380" y="20" width="300" height="160" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+      <text x="530" y="45" text-anchor="middle" fill="#065f46" font-size="13" font-family="Inter,sans-serif" font-weight="700">RANDOM SCAN (Vector)</text>
+      <line x1="410" y1="60" x2="470" y2="130" stroke="#10b981" stroke-width="1.8"/>
+      <line x1="470" y1="130" x2="610" y2="75" stroke="#10b981" stroke-width="1.8"/>
+      <line x1="610" y1="75" x2="490" y2="155" stroke="#10b981" stroke-width="1.8"/>
+      <line x1="490" y1="155" x2="450" y2="90" stroke="#10b981" stroke-width="1.8"/>
+      <text x="530" y="175" text-anchor="middle" fill="#6b7280" font-size="11" font-family="Inter,sans-serif">Draws ONLY lines/shapes directly</text>
+    </svg>
+    <p class="cap">Fig 2.1 — Raster scan covers every pixel line-by-line; Random/Vector scan draws only the actual lines needed</p>
+  </div>
+
+  <div class="card def">
+    <span class="tag">English</span>
+    <p>A <b>Raster Scan System</b> divides the screen into a rectangular grid of pixels (the <b>frame buffer</b> stores one colour value per pixel). The electron beam (CRT) or refresh logic sweeps left-to-right, top-to-bottom across <b>every scan line</b>, refreshing the entire screen at the refresh rate (typically 60–120 Hz) — regardless of what is drawn. Almost all modern displays are raster-based.</p>
+    <p>A <b>Random Scan System</b> (Vector display) directs the electron beam <b>only to positions where lines/shapes are to be drawn</b> — it does not cover the entire screen but only traces the picture's geometric components. The picture is stored as a <b>display list</b> of drawing commands.</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p><b>Raster scan</b> = har baar poori screen ka har ek pixel refresh hota hai (chahe kuch bhi draw ho ya nahi) — jaise ek painter puri canvas line-by-line paint kare. <b>Random scan</b> = sirf wahi lines draw karo jo actually chahiye — jaise ek painter seedha required shape trace kare, beech ke blank areas chhod ke. Modern screens (LCD/LED) sab raster hain.</p>
+  </div>
+
+  <h3 class="sub">Raster vs Random Scan — Complete Comparison <span class="imp h">High ⭐⭐⭐⭐⭐ — almost guaranteed 5-10 mark table question</span></h3>
+  <table>
+    <tr><th>Aspect</th><th>Raster Scan</th><th>Random Scan (Vector)</th></tr>
+    <tr><td>Scanning method</td><td>Sequential scan of all pixels, line by line</td><td>Beam directed only to required positions</td></tr>
+    <tr><td>Picture stored as</td><td>Array of pixel values in frame buffer</td><td>Display list of drawing commands</td></tr>
+    <tr><td>Image type</td><td>Bitmap/raster images — any picture type</td><td>Only line drawings / vector art</td></tr>
+    <tr><td>Resolution</td><td>Finite (limited by pixel count)</td><td>High — lines are mathematically smooth</td></tr>
+    <tr><td>Colours</td><td>Full colour (any colour per pixel)</td><td>Limited (typically monochrome or few colours)</td></tr>
+    <tr><td>Refresh approach</td><td>Entire screen refreshed each cycle</td><td>Only drawn components refreshed</td></tr>
+    <tr><td>Aliasing</td><td>Present (jagged diagonal lines)</td><td>None (lines are mathematically precise)</td></tr>
+    <tr><td>Cost</td><td>Lower (standard hardware)</td><td>Higher (special CRT hardware)</td></tr>
+    <tr><td>Applications</td><td>All modern monitors, TVs, mobiles</td><td>Old oscilloscopes, CAD plotters (historical)</td></tr>
+  </table>
+
+  <!-- 2.4 Frame Buffer -->
+  <h2 class="topic">4. Frame Buffer &amp; Pixel Concepts <span class="imp h">High ⭐⭐⭐</span></h2>
+  <div class="card def">
+    <span class="tag">English</span>
+    <p>A <b>frame buffer</b> (also called <b>raster</b>) is a dedicated area of memory that stores the colour value of every pixel on the screen. For a 1920×1080 display with 24-bit colour (8 bits each for R, G, B), the frame buffer size is 1920 × 1080 × 3 bytes = ~6.2 MB. The display controller continuously reads this buffer to refresh the screen at the set refresh rate.</p>
+    <p>A <b>pixel</b> (picture element) is the smallest addressable unit of a raster display, represented by a coordinate pair (x, y) and a colour value.</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Frame buffer = RAM ka ek special area jahan har pixel ka colour store hota hai. Screen pe jo bhi dikhta hai, woh sab is buffer se read hota hai. Jab tum koi pixel ka colour change karte ho (drawing algorithm se), actually tum is buffer mein ek memory location update kar rahe ho — display controller automatically updated value screen pe dikhata hai.</p>
+  </div>
+  <div class="formula">
+Frame Buffer Size = Width × Height × Colour Depth (bits/pixel)
+Example (Full HD, 24-bit):
+  = 1920 × 1080 × 24 bits
+  = 49,766,400 bits ≈ 6.2 MB
+  </div>
+
+  <!-- 2.5 Input Devices -->
+  <h2 class="topic">5. Graphics Input Devices <span class="imp m">Medium ⭐⭐⭐</span></h2>
+  <div class="card def">
+    <span class="tag">English</span>
+    <p><b>Graphics input devices</b> allow users to interact with and provide geometric/coordinate data to graphics applications. They are classified by their <b>logical input function</b> into: locator (position data), stroke (sequence of positions), valuator (scalar value), choice (menu selection), pick (selecting objects), and string (text input).</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Graphics input devices wo hardware hai jisse tum computer ko coordinate/geometric data dete ho. Mouse se click karte ho to x,y position computer ko milti hai (locator). Graphics tablet pe draw karte ho (stroke). Dial/slider se value set karte ho (valuator). Ye sab input devices different logical functions serve karte hain.</p>
+  </div>
+  <table>
+    <tr><th>Device</th><th>Logical Type</th><th>How It Works</th><th>CG Application</th></tr>
+    <tr><td><strong>Mouse</strong></td><td>Locator</td><td>Tracks relative movement; sends (Δx, Δy) changes</td><td>General graphics interaction, clicking, dragging</td></tr>
+    <tr><td><strong>Trackball</strong></td><td>Locator</td><td>Ball rotated in fixed housing; sensors detect rotation</td><td>3D model rotation in CAD systems</td></tr>
+    <tr><td><strong>Joystick</strong></td><td>Locator</td><td>Stick deflection gives directional velocity input</td><td>Game character movement, flight simulators</td></tr>
+    <tr><td><strong>Graphics Tablet (Digitizer)</strong></td><td>Locator / Stroke</td><td>Electromagnetic pen on pressure-sensitive tablet gives absolute (x,y)</td><td>Freehand drawing, digital art (Wacom)</td></tr>
+    <tr><td><strong>Touch Screen</strong></td><td>Locator / Stroke</td><td>Capacitive/resistive sensing of finger touch position</td><td>Mobile graphics apps, kiosk interfaces</td></tr>
+    <tr><td><strong>Light Pen</strong></td><td>Pick / Locator</td><td>Pen detects screen's electron beam when aimed at CRT screen</td><td>Historical CRT-era direct drawing (obsolete now)</td></tr>
+    <tr><td><strong>Data Glove</strong></td><td>Locator / Valuator</td><td>Fibre optic sensors measure finger bend angles; magnetic tracker for position</td><td>Virtual reality interaction</td></tr>
+    <tr><td><strong>Spaceball / 3D Mouse</strong></td><td>Locator (6-DOF)</td><td>Measures force/torque in 3D (x, y, z + pitch, yaw, roll)</td><td>3D CAD/CAM model manipulation</td></tr>
+    <tr><td><strong>Scanner</strong></td><td>String (image input)</td><td>Converts physical image to digital pixel array using CCD sensor</td><td>Digitizing hand-drawn artwork</td></tr>
+  </table>
+
+  <!-- 2.6 Graphics Software & Standards -->
+  <h2 class="topic">6. Graphics Software &amp; Standards <span class="imp m">Medium ⭐⭐⭐</span></h2>
+  <div class="card def">
+    <span class="tag">English</span>
+    <p><b>Graphics software</b> provides programmers and users with the tools to create and manipulate graphics, ranging from low-level hardware abstraction APIs to high-level applications. <b>Graphics standards</b> are internationally agreed specifications that define how graphics APIs should behave, enabling portability of graphics programs across different hardware.</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Agar har manufacturer alag-alag API/commands use kare, to ek graphics program ek computer pe chalega, doosre pe nahi. Graphics standards (jaise OpenGL, GKS) isliye banaye gaye ki ek hi code sab hardware pe same tarah kaam kare — same function calls, same results, different underlying hardware. Ye "write once, run anywhere" concept graphics ke liye hai.</p>
+  </div>
+
+  <h3 class="sub">Levels of Graphics Software</h3>
+  <div class="card">
+    <ul>
+      <li><b>Hardware-Level:</b> Device drivers that directly control display hardware (not used by application programmers).</li>
+      <li><b>Low-Level (Primitive) API:</b> Drawing primitives — points, lines, polygons. E.g. OpenGL core, DirectX.</li>
+      <li><b>Mid-Level (Geometric Modeling):</b> 3D scene construction tools, transformation/clipping functions. E.g. OpenGL with GLUT.</li>
+      <li><b>High-Level (Application Packages):</b> End-user tools — AutoCAD (CAD), Blender (3D modeling/animation), Photoshop (2D graphics), Unity/Unreal (game engines).</li>
+    </ul>
+  </div>
+
+  <h3 class="sub">Important Graphics Standards <span class="imp h">High ⭐⭐⭐</span></h3>
+  <table>
+    <tr><th>Standard</th><th>Full Name</th><th>Description</th></tr>
+    <tr><td><strong>GKS</strong></td><td>Graphical Kernel System</td><td>First ISO graphics standard (1985); 2D graphics functions for device-independent programming</td></tr>
+    <tr><td><strong>PHIGS</strong></td><td>Programmer's Hierarchical Interactive Graphics System</td><td>Extension of GKS to 3D; supports hierarchical scene structures (important for CAD)</td></tr>
+    <tr><td><strong>OpenGL</strong></td><td>Open Graphics Library</td><td>Cross-platform, cross-language 3D graphics API; most widely used standard today (Khronos Group)</td></tr>
+    <tr><td><strong>DirectX / Direct3D</strong></td><td>—</td><td>Microsoft's graphics API for Windows/Xbox; competitor to OpenGL</td></tr>
+    <tr><td><strong>VRML</strong></td><td>Virtual Reality Modeling Language</td><td>Standard for describing 3D interactive environments on the web</td></tr>
+    <tr><td><strong>CGM</strong></td><td>Computer Graphics Metafile</td><td>ISO standard for storing/exchanging graphics images (2D)</td></tr>
+  </table>
+
+  <div class="card example">
+    <span class="tag">Example — OpenGL (most asked standard)</span>
+    <p>A simple OpenGL snippet to draw a coloured triangle (the "Hello World" of graphics):</p>
+    <div class="formula">
+glBegin(GL_TRIANGLES);
+  glColor3f(1.0, 0.0, 0.0);  // Red
+  glVertex2f(0.0, 0.5);       // Top
+  glColor3f(0.0, 1.0, 0.0);  // Green
+  glVertex2f(-0.5, -0.5);    // Bottom-left
+  glColor3f(0.0, 0.0, 1.0);  // Blue
+  glVertex2f(0.5, -0.5);     // Bottom-right
+glEnd();
+    </div>
+    <p>This sends three vertex positions and colours to the GPU; OpenGL handles the rasterization (filling in the pixels) automatically.</p>
+  </div>
+
+  <!-- 2.7 Colour & Resolution -->
+  <h2 class="topic">7. Colour Depth &amp; Resolution <span class="imp m">Medium ⭐⭐</span></h2>
+  <div class="card">
+    <p><b>Resolution</b> = number of addressable pixels in horizontal × vertical direction (e.g., 1920×1080). Higher resolution = sharper image but requires more frame buffer memory and processing.</p>
+    <p><b>Colour Depth</b> = number of bits used to represent the colour of one pixel.</p>
+    <table style="margin:10px 0;">
+      <tr><th>Colour Mode</th><th>Bits/pixel</th><th>Colours Available</th></tr>
+      <tr><td>Monochrome</td><td>1</td><td>2 (black/white)</td></tr>
+      <tr><td>4-bit colour</td><td>4</td><td>16</td></tr>
+      <tr><td>8-bit colour</td><td>8</td><td>256 (indexed colour palette)</td></tr>
+      <tr><td>16-bit (High Colour)</td><td>16</td><td>65,536</td></tr>
+      <tr><td>24-bit (True Colour)</td><td>24</td><td>16,777,216 ≈ 16.7 million</td></tr>
+      <tr><td>32-bit (True + Alpha)</td><td>32</td><td>16.7M + transparency channel</td></tr>
+    </table>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p><b>Resolution</b> = screen pe kitne pixels hain (zyada pixels = sharper image). <b>Colour depth</b> = ek pixel kitne colours mein se ek colour hold kar sakta hai (24-bit "True Colour" = 16.7 million colours — human eye ke liye practically unlimited). Jab tum 8-bit colour ki purani games mein "pixelated &amp; limited colours" dekhte ho, wahi colour depth limitation hai.</p>
+  </div>
+
+  <!-- Q&A Unit 2 -->
+  <div class="qsection" id="qa">
+    <h1 class="unit-title">❓ Unit 2 — Q&amp;A (RTU Exam Pattern)</h1>
+
+    <div class="qcard">
+      <div class="qlabel">Unit 2 · Definition</div>
+      <div class="q">Q1. Define raster scan and random scan display systems. Compare them. <span class="imp h">★★★★★ 7-10 Marks — guaranteed every year</span></div>
+      <span class="marks m10">10 Marks</span>
+      <div class="a">
+        <p><strong>Raster Scan:</strong> Electron beam/refresh logic scans all pixels line-by-line, left→right, top→bottom. Image stored as pixel array in frame buffer. Used in all modern monitors, TVs, mobiles. Supports full colour and any image type but shows aliasing on diagonal lines.</p>
+        <p><strong>Random Scan (Vector):</strong> Beam directed only to positions where lines/curves are to be drawn. Image stored as display list of drawing commands. Mathematically precise lines (no aliasing), but only suitable for line drawings, not photographic images. Historical (oscilloscopes, old CAD plotters).</p>
+        <p>Full 9-point comparison table given above — write all rows in exam for 10 marks.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Unit 2 · Theory</div>
+      <div class="q">Q2. What is a frame buffer? How is its size calculated? Give an example. <span class="imp h">★★★★ 5 Marks</span></div>
+      <span class="marks m5">5 Marks</span>
+      <div class="a">
+        <p>A <strong>frame buffer</strong> is a dedicated memory area storing the colour value of every pixel on the screen. Display controller reads it continuously to refresh the screen.</p>
+        <p><strong>Size formula:</strong> Frame Buffer Size = Width × Height × Colour Depth (bits)</p>
+        <p><strong>Example:</strong> 1920×1080 display, 24-bit colour: Size = 1920 × 1080 × 24 = 49,766,400 bits ≈ 6.2 MB.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Unit 2 · Theory</div>
+      <div class="q">Q3. Explain different types of graphics input devices with their logical classification. <span class="imp h">★★★★ 7 Marks</span></div>
+      <span class="marks m10">7 Marks</span>
+      <div class="a">
+        <p>Logical classes: Locator (position), Stroke (path), Valuator (scalar), Choice (menu), Pick (object select), String (text). Physical devices: Mouse (locator), Graphics Tablet (locator/stroke), Joystick (locator), Data Glove (VR locator), Light Pen (pick, obsolete), Spaceball (6-DOF locator for 3D). Full table given above with working principle and CG application for each.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Unit 2 · Theory</div>
+      <div class="q">Q4. What are graphics standards? Explain GKS, PHIGS, and OpenGL. <span class="imp h">★★★★ 5-7 Marks</span></div>
+      <span class="marks m5">5 Marks</span>
+      <div class="a">
+        <p><strong>Graphics standards</strong> are agreed specifications for graphics APIs ensuring portability across hardware. <strong>GKS</strong> (1985) — first ISO standard, 2D device-independent graphics. <strong>PHIGS</strong> — extends GKS to 3D with hierarchical scene support (crucial for CAD). <strong>OpenGL</strong> — most widely used modern cross-platform 3D API (Khronos Group); industry standard for games, scientific visualization. <strong>DirectX</strong> — Microsoft's Windows/Xbox equivalent.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Unit 2 · Types</div>
+      <div class="q">Q5. Explain different display technologies (CRT, LCD, LED, OLED) and compare them. <span class="imp m">★★★ 5 Marks</span></div>
+      <span class="marks m5">5 Marks</span>
+      <div class="a">
+        <p><strong>CRT:</strong> Electron beam on phosphor — bulky, accurate colour, historical. <strong>LCD:</strong> Liquid crystals + backlight — thin, efficient, standard today. <strong>LED:</strong> LCD with LED backlight (brighter, thinner). <strong>OLED:</strong> Per-pixel light emission — true blacks, perfect contrast, flexible (phones, TVs), expensive. Full comparison table given above.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Unit 2 · Numerical</div>
+      <div class="q">Q6. Calculate the frame buffer memory required for a 1024×768 display with 8-bit colour depth. Also for 16-bit and 24-bit. <span class="imp h">★★★★ 5 Marks numerical</span></div>
+      <span class="marks m5">5 Marks</span>
+      <div class="a">
+        <p><strong>8-bit:</strong> 1024 × 768 × 8 = 6,291,456 bits = <strong>768 KB</strong></p>
+        <p><strong>16-bit:</strong> 1024 × 768 × 16 = 12,582,912 bits = <strong>1.5 MB</strong></p>
+        <p><strong>24-bit:</strong> 1024 × 768 × 24 = 18,874,368 bits = <strong>2.25 MB</strong></p>
+        <p>(Divide bits by 8 for bytes, then by 1024 for KB, then by 1024 for MB.)</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Unit 2 · Conceptual</div>
+      <div class="q">Q7. What are the applications of computer graphics? Explain any four with examples. <span class="imp m">★★★ 5 Marks</span></div>
+      <span class="marks m5">5 Marks</span>
+      <div class="a">
+        <p>Major applications: (1) <strong>Entertainment</strong> — video games, animated movies, VFX (Avatar, Avengers use CGI). (2) <strong>CAD/CAM</strong> — AutoCAD for engineering design, saves months of manual drafting. (3) <strong>Medical Imaging</strong> — MRI/CT volume rendering helps surgeons plan operations. (4) <strong>Scientific Visualization</strong> — weather forecasting, molecular dynamics rendered as 3D models. (5) <strong>AR/VR</strong> — VR training simulators for pilots/surgeons.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Unit 2 · Theory</div>
+      <div class="q">Q8. Differentiate between pixel and resolution. What factors affect image quality on a display? <span class="imp m">★★ 3-5 Marks</span></div>
+      <span class="marks m5">3 Marks</span>
+      <div class="a">
+        <p><strong>Pixel</strong> = smallest addressable display unit with (x,y) position and colour. <strong>Resolution</strong> = total number of pixels (horizontal × vertical). Factors affecting quality: resolution (more pixels = sharper), colour depth (more bits = more colours), refresh rate (higher = less flicker), dot pitch (smaller = sharper), screen size (same resolution on larger screen = lower pixel density = less sharp).</p>
+      </div>
+    </div>
+
+  </div><!-- end qa -->
+
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:center;padding:30px 20px;flex-wrap:wrap;">
+      <a href="unit1.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+      <a href="index.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">🏠 CG Hub</a>
+      <a href="unit3.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+    </div>
+  </main>
+  <div class="cursor-dot" data-cursor-dot></div>
+  <div class="cursor-outline" data-cursor-outline></div>
+  <script>
+    const cursorDot = document.querySelector("[data-cursor-dot]");
+    const cursorOutline = document.querySelector("[data-cursor-outline]");
+    window.addEventListener("mousemove", function(e){
+      cursorDot.style.left=e.clientX+"px"; cursorDot.style.top=e.clientY+"px";
+      cursorOutline.animate({left:e.clientX+"px",top:e.clientY+"px"},{duration:400,fill:"forwards"});
+    });
+    document.querySelectorAll("a,button").forEach(el=>{
+      el.addEventListener("mouseenter",()=>cursorOutline.classList.add("cursor-hovering"));
+      el.addEventListener("mouseleave",()=>cursorOutline.classList.remove("cursor-hovering"));
+    });
+  </script>
+<script src="../splash-cursor.js"></script>\n</body>
+</html>

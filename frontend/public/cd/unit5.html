@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Learning Plus // CD · Unit 5</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <main class="main-wrapper" style="width:100%;">
+    <div class="topbar">
+      <a href="../cd/index.html" class="back-btn">⬅ CD Hub</a>
+      <div class="brand">Smart<span>Learning</span>+ <span style="color:var(--muted);font-weight:400;font-size:14px;">// CD · Unit 5</span></div>
+      <div class="nav">
+        <a href="../cd/index.html">🏠 CD Hub</a>
+        <a href="#content">📖 Content</a>
+        <a href="#qa">❓ Q&amp;A</a>
+        <a href="unit4.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+        <a href="unit6.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="hero">
+        <h1>🗄️ Unit 5 — Storage Organization</h1>
+        <p>Storage Allocation Strategies · Activation Records · Local/Non-Local Name Access · Parameter Passing · Symbol Table Organization | Hours: 08</p>
+        <div class="badges" style="margin-top:14px;">
+          <a href="../cd/index.html" style="text-decoration:none;"><span class="badge b-teal">← Back to CD Hub</span></a>
+          <span class="badge b-gold">5CS4-02 · Compiler Design · RTU</span>
+        </div>
+      </div>
+      <div id="content">
+  <div class="hero" id="unit5">
+    <h1>UNIT 5 — STORAGE ORGANIZATION</h1>
+    <div class="sub">5CS4-02 · Compiler Design · RTU Kota · III Year – V Sem · B.Tech CSE</div>
+    <div class="sub" style="margin-top:4px;">Credit: 3 &nbsp;|&nbsp; Max Marks: 100 (IA:30, ETE:70) &nbsp;|&nbsp; End Term: 3 Hours</div>
+    <div class="badges">
+      <span class="badge b-red">⚠ HIGH PRIORITY UNIT</span>
+      <span class="badge b-gold">⭐ 5 &amp; 10 Mark Questions</span>
+      <span class="badge b-teal">✦ 8 Hours Weightage</span>
+    </div>
+  </div>
+
+  <div class="progress-bar"></div>
+
+  <div class="toc scroll-anchor" id="toc">
+    <h3>📋 UNIT 5 — CONTENTS</h3>
+    <ol>
+      <li><a href="#storage-alloc">Storage Allocation</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#strategies">Storage Allocation Strategies</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#activation">Activation Records</a> <span class="sublabel">HIGH ★★★ — Most Asked</span></li>
+      <li><a href="#localnonlocal">Accessing Local &amp; Non-Local Names</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#paramspassing">Parameter Passing</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#symtab">Symbol Table Organization</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#symtab-ds">Data Structures Used in Symbol Tables</a> <span class="sublabel">MEDIUM ★★</span></li>
+      <li><a href="#qa">RTU Exam Q&amp;A Bank (5-mark &amp; 10-mark)</a> <span class="sublabel">EXAM GOLD</span></li>
+    </ol>
+  </div>
+
+  <!-- 1. STORAGE ALLOCATION -->
+  <div class="unit-title scroll-anchor" id="storage-alloc">
+    <span style="color:var(--accent2);">01.</span> Storage Allocation
+    <span class="imp h">HIGH</span>
+  </div>
+  <div class="unit-sub">How does a compiler decide WHERE in memory each variable lives at runtime?</div>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>Storage Allocation</strong> is the process performed by a compiler/runtime system of assigning memory addresses to the data objects (variables, arrays, procedure activation records) of a program, so that the values can be stored and retrieved correctly during execution.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish Explanation</div>
+    Jab bhi tum koi variable declare karte ho (jaise <code>int x;</code>), compiler ko decide karna padta hai ki yeh variable RAM mein kahan store hoga aur kab tak rahega. Storage allocation isi process ka naam hai — compiler memory ko organize karta hai taaki har variable ko sahi jagah, sahi time pe milta rahe.
+  </div>
+
+  <h3 class="sub">Run-Time Memory Layout</h3>
+  <div class="svgbox">
+    <svg viewBox="0 0 360 320" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:300px;">
+      <rect x="0" y="0" width="360" height="320" fill="#0d1820"/>
+      <rect x="40" y="10" width="200" height="50" fill="none" stroke="#36e0c4" stroke-width="1.5"/>
+      <text x="140" y="40" fill="#36e0c4" font-size="12" text-anchor="middle" font-family="Consolas">Code (Text) Segment</text>
+      <rect x="40" y="70" width="200" height="50" fill="none" stroke="#ffb454" stroke-width="1.5"/>
+      <text x="140" y="100" fill="#ffb454" font-size="12" text-anchor="middle" font-family="Consolas">Static / Global Data</text>
+      <rect x="40" y="130" width="200" height="70" fill="none" stroke="#b18cff" stroke-width="1.5"/>
+      <text x="140" y="160" fill="#b18cff" font-size="12" text-anchor="middle" font-family="Consolas">Heap</text>
+      <text x="140" y="178" fill="#8aa0ad" font-size="10" text-anchor="middle" font-family="Consolas">(grows downward ↓)</text>
+      <rect x="40" y="210" width="200" height="90" fill="none" stroke="#ff6b6b" stroke-width="1.5"/>
+      <text x="140" y="240" fill="#ff6b6b" font-size="12" text-anchor="middle" font-family="Consolas">Stack</text>
+      <text x="140" y="258" fill="#8aa0ad" font-size="10" text-anchor="middle" font-family="Consolas">(grows upward ↑)</text>
+      <text x="140" y="280" fill="#8aa0ad" font-size="10" text-anchor="middle" font-family="Consolas">Activation Records</text>
+    </svg>
+    <p class="cap">Fig 1: Typical run-time memory layout — Code, Static Data, Heap (grows down), Stack (grows up)</p>
+  </div>
+
+  <h3 class="sub">Memory Regions Explained</h3>
+  <table>
+    <tr><th>Region</th><th>Purpose</th><th>Lifetime</th></tr>
+    <tr><td class="hi">Code/Text Segment</td><td>Stores the compiled machine instructions</td><td>Fixed, entire program run</td></tr>
+    <tr><td class="hi">Static/Global Data</td><td>Global variables, static variables, string literals</td><td>Entire program run</td></tr>
+    <tr><td>Heap</td><td>Dynamically allocated memory (malloc/new)</td><td>Until explicitly freed</td></tr>
+    <tr><td>Stack</td><td>Activation records of procedures (local vars, parameters, return address)</td><td>Only while procedure is active</td></tr>
+  </table>
+
+  <hr class="sep">
+
+  <!-- 2. STRATEGIES -->
+  <h2 class="topic scroll-anchor" id="strategies">
+    <span>02.</span> Storage Allocation Strategies
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p>A <strong>storage allocation strategy</strong> defines the rule by which memory is assigned to (and reclaimed from) program variables, based on when and how long the variable needs to exist.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Different variables ka lifetime different hota hai — kuch poore program mein zinda rehte hain, kuch sirf ek function call ke liye, aur kuch jab tak tum khud delete na karo. Inhe handle karne ke liye 3 strategies hain: Static, Stack, aur Heap allocation.
+  </div>
+
+  <h3 class="sub">Types of Storage Allocation Strategies <span class="imp h">EXAM HOT</span></h3>
+  <table>
+    <tr><th>Strategy</th><th>How it Works</th><th>Used For</th></tr>
+    <tr><td class="hi">Static Allocation</td><td>Memory address is bound at <strong>compile time</strong> and fixed for the entire program execution</td><td>Global variables, static variables, constants</td></tr>
+    <tr><td class="hi">Stack Allocation</td><td>Memory allocated/deallocated in LIFO order as procedures are called/return; managed via activation records on a runtime stack</td><td>Local variables, parameters, recursive function calls</td></tr>
+    <tr><td class="hi">Heap Allocation</td><td>Memory allocated/deallocated in any order at <strong>runtime</strong>, as requested by the program; not LIFO</td><td>Dynamic data structures (linked lists, objects via malloc/new)</td></tr>
+  </table>
+
+  <div class="card warn">
+    <div class="tag">⚠ Important</div>
+    <p>Stack allocation does <strong>NOT</strong> support recursive procedures whose local data must survive after the call returns (e.g. a function returning a pointer to a local variable) — that data must instead be placed on the heap.</p>
+  </div>
+
+  <div class="card example">
+    <div class="tag">Example</div>
+    <p>In C: <code>int g;</code> (global) → static allocation. <code>void f(){int x;}</code> → x is stack-allocated, created when f() is called, destroyed when f() returns. <code>int *p = malloc(4);</code> → heap-allocated, persists until <code>free(p)</code> is called.</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- 3. ACTIVATION RECORDS -->
+  <h2 class="topic scroll-anchor" id="activation">
+    <span>03.</span> Activation Records
+    <span class="imp h">HIGH — MOST ASKED</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p>An <strong>Activation Record (AR)</strong>, also called a <strong>stack frame</strong>, is a contiguous block of memory pushed onto the runtime stack each time a procedure is called, containing all the information needed to manage that single execution (activation) of the procedure.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Jab bhi koi function call hota hai, ek "packet" of memory stack pe banta hai jisme us function ke saare local variables, parameters, aur control info store hoti hai. Yeh packet hi Activation Record kehlata hai. Jab function return karta hai, yeh packet stack se pop ho jaata hai.
+  </div>
+
+  <h3 class="sub">Fields of a Typical Activation Record <span class="imp h">EXAM HOT — Draw the diagram!</span></h3>
+  <div class="svgbox">
+    <svg viewBox="0 0 360 380" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:320px;">
+      <rect x="0" y="0" width="360" height="380" fill="#0d1820"/>
+      <g font-family="Consolas" font-size="11" fill="#d7e1e8">
+        <rect x="60" y="10" width="200" height="40" fill="none" stroke="#8aa0ad" stroke-width="1.5"/>
+        <text x="160" y="34" text-anchor="middle">Actual Parameters</text>
+        <rect x="60" y="50" width="200" height="40" fill="none" stroke="#36e0c4" stroke-width="1.5"/>
+        <text x="160" y="74" text-anchor="middle" fill="#36e0c4">Control Link (Dynamic Link)</text>
+        <rect x="60" y="90" width="200" height="40" fill="none" stroke="#ffb454" stroke-width="1.5"/>
+        <text x="160" y="114" text-anchor="middle" fill="#ffb454">Access Link (Static Link)</text>
+        <rect x="60" y="130" width="200" height="40" fill="none" stroke="#b18cff" stroke-width="1.5"/>
+        <text x="160" y="154" text-anchor="middle" fill="#b18cff">Saved Machine Status</text>
+        <rect x="60" y="170" width="200" height="40" fill="none" stroke="#8aa0ad" stroke-width="1.5"/>
+        <text x="160" y="194" text-anchor="middle">Local Data</text>
+        <rect x="60" y="210" width="200" height="40" fill="none" stroke="#8aa0ad" stroke-width="1.5"/>
+        <text x="160" y="234" text-anchor="middle">Temporaries</text>
+        <rect x="60" y="250" width="200" height="40" fill="none" stroke="#ff6b6b" stroke-width="1.5"/>
+        <text x="160" y="274" text-anchor="middle" fill="#ff6b6b">Return Value</text>
+        <text x="20" y="300" font-size="10" fill="#8aa0ad">↑ Top of Stack (current AR)</text>
+      </g>
+    </svg>
+    <p class="cap">Fig 2: Layout of an Activation Record (bottom-to-top order may vary by implementation)</p>
+  </div>
+
+  <table>
+    <tr><th>Field</th><th>Purpose</th></tr>
+    <tr><td class="hi">Actual Parameters</td><td>Values/addresses passed by the caller to the callee</td></tr>
+    <tr><td class="hi">Return Value</td><td>Space reserved for the value the procedure will return to the caller</td></tr>
+    <tr><td class="hi">Control Link (Dynamic Link)</td><td>Pointer to the activation record of the <strong>caller</strong> — used to restore stack pointer on return</td></tr>
+    <tr><td class="hi">Access Link (Static Link)</td><td>Pointer to the activation record of the <strong>lexically enclosing</strong> (statically surrounding) procedure — used to access non-local names</td></tr>
+    <tr><td>Saved Machine Status</td><td>Register values, program counter, and other machine state to restore when control returns to caller</td></tr>
+    <tr><td>Local Data</td><td>Storage for the local variables declared in the procedure</td></tr>
+    <tr><td>Temporaries</td><td>Storage for intermediate values generated while evaluating expressions</td></tr>
+  </table>
+
+  <div class="card warn">
+    <div class="tag">⚠ Control Link vs Access Link — Frequently Confused!</div>
+    <p><strong>Control Link</strong> = "who called me?" (caller's AR, used for returning). <strong>Access Link</strong> = "who is my parent scope?" (used for finding non-local variables in nested/lexically-scoped languages like Pascal).</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- 4. LOCAL & NON-LOCAL NAMES -->
+  <h2 class="topic scroll-anchor" id="localnonlocal">
+    <span>04.</span> Accessing Local &amp; Non-Local Names in a Block-Structured Language
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p>In a <strong>block-structured language</strong> (where procedures can be nested inside other procedures, like Pascal), a <strong>local name</strong> refers to a variable declared within the currently executing procedure, while a <strong>non-local name</strong> refers to a variable declared in an enclosing (outer) procedure's scope.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Local variable matlab jo us function ke andar hi declare hua hai. Non-local variable matlab jo function ke bahar, kisi enclosing/parent function mein declare hua hai, lekin phir bhi accessible hai because of nested scoping (jaise Pascal mein hota hai, C mein generally nahi).
+  </div>
+
+  <h3 class="sub">Method: Access Links (Static Links) <span class="imp h">EXAM HOT</span></h3>
+  <div class="card">
+    <p>To access a non-local name, the compiler generates code that follows the chain of <strong>access links</strong> from the current activation record, going up through enclosing procedures' activation records, by a number of hops equal to the difference in <strong>nesting depth</strong> between the use and the declaration.</p>
+  </div>
+
+  <div class="formula">
+    nesting_depth_difference = depth(current procedure) − depth(declaring procedure)
+  </div>
+
+  <div class="card example">
+    <div class="tag">Example</div>
+    <p>If procedure <code>C</code> (nested at depth 3) wants to access a variable declared in procedure <code>A</code> (at depth 1), the generated code follows 2 access links upward from C's AR to reach A's AR.</p>
+  </div>
+
+  <h3 class="sub">Method: Display (Alternative to Access Links)</h3>
+  <table>
+    <tr><th>Method</th><th>Description</th><th>Access Time</th></tr>
+    <tr><td class="hi">Access Link Chasing</td><td>Follow a chain of pointers, one hop per nesting level</td><td>O(nesting depth) — slower for deep nesting</td></tr>
+    <tr><td class="hi">Display Array</td><td>Maintain a global array of pointers, one per nesting level, always pointing to the most recent AR at that level</td><td>O(1) — direct array lookup</td></tr>
+  </table>
+
+  <hr class="sep">
+
+  <!-- 5. PARAMETER PASSING -->
+  <h2 class="topic scroll-anchor" id="paramspassing">
+    <span>05.</span> Parameter Passing
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>Parameter passing</strong> refers to the mechanism by which arguments (actual parameters) supplied by the caller are communicated to the formal parameters of the called procedure, determining whether the callee can modify the caller's original variables.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Parameter passing decide karta hai ki jab tum function ko value bhejte ho, to function us original variable ko change kar sakta hai ya sirf uski copy use karta hai. Yeh alag-alag tareeke (call by value, call by reference, etc.) se ho sakta hai.
+  </div>
+
+  <h3 class="sub">Parameter Passing Methods <span class="imp h">EXAM HOT — Comparison guaranteed</span></h3>
+  <table>
+    <tr><th>Method</th><th>How it Works</th><th>Can Modify Caller's Variable?</th></tr>
+    <tr><td class="hi">Call by Value</td><td>A copy of the actual parameter's value is passed; callee works on the copy</td><td>No</td></tr>
+    <tr><td class="hi">Call by Reference (Address)</td><td>The address (location) of the actual parameter is passed; callee directly accesses caller's memory</td><td>Yes</td></tr>
+    <tr><td class="hi">Call by Copy-Restore (Value-Result)</td><td>Value copied in at call time; on return, the final value is copied back to the actual parameter</td><td>Yes (only after return)</td></tr>
+    <tr><td>Call by Name</td><td>Actual parameter is textually substituted for the formal parameter (like macro expansion); re-evaluated every use</td><td>Yes (indirectly)</td></tr>
+  </table>
+
+  <div class="card warn">
+    <div class="tag">⚠ Important</div>
+    <p><strong>Call by Reference</strong> can produce <em>aliasing</em> — if two formal parameters end up referring to the same actual variable, unexpected side-effects can occur. This is a classic 5-mark RTU question.</p>
+  </div>
+
+  <div class="card example">
+    <div class="tag">Example</div>
+    <p>C uses <strong>call by value</strong> by default (pass <code>&amp;x</code> to simulate reference). C++ supports true <strong>call by reference</strong> using <code>&amp;</code> in parameter declarations. Pascal's <code>var</code> parameters are call by reference.</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- 6. SYMBOL TABLE ORGANIZATION -->
+  <h2 class="topic scroll-anchor" id="symtab">
+    <span>06.</span> Symbol Table Organization
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p>A <strong>Symbol Table</strong> is a data structure maintained and used by the compiler throughout the compilation process to store information about identifiers (variables, functions, classes) appearing in the source program — such as their type, scope, memory location, and other attributes.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Symbol table ek tarah ki "directory" hai jisme compiler har variable/function ka record rakhta hai — uska naam, type, kahan declare hua, scope kya hai, kitni memory chahiye, etc. Compiler ke har phase (lexical analysis se code generation tak) is table ko use karta hai.
+  </div>
+
+  <h3 class="sub">Information Stored in a Symbol Table Entry</h3>
+  <table>
+    <tr><th>Attribute</th><th>Description</th></tr>
+    <tr><td class="hi">Name</td><td>Identifier name as it appears in source code</td></tr>
+    <tr><td class="hi">Type</td><td>Data type (int, float, array, function, etc.)</td></tr>
+    <tr><td>Scope</td><td>Block/function in which the identifier is visible</td></tr>
+    <tr><td>Memory Location (Offset)</td><td>Relative address within its activation record/storage area</td></tr>
+    <tr><td>Size</td><td>Number of bytes required for storage</td></tr>
+    <tr><td>Line Number</td><td>Line of declaration, used for error reporting</td></tr>
+    <tr><td>Other Attributes</td><td>e.g. is it a constant? array dimensions? parameter list for functions</td></tr>
+  </table>
+
+  <h3 class="sub">Operations on a Symbol Table</h3>
+  <div class="card">
+    <ul>
+      <li><strong>Insert(name, attributes):</strong> Add a new identifier with its attributes</li>
+      <li><strong>Lookup(name):</strong> Search for an identifier and retrieve its attributes</li>
+      <li><strong>Delete/Exit Scope:</strong> Remove identifiers when their scope ends (block exit)</li>
+      <li><strong>Update:</strong> Modify attributes once more information becomes known (e.g. type after declaration)</li>
+    </ul>
+  </div>
+
+  <h3 class="sub">Symbol Table Organization for Block-Structured Languages</h3>
+  <table>
+    <tr><th>Approach</th><th>Description</th></tr>
+    <tr><td class="hi">Single Global Table</td><td>One flat table for all names — simple but cannot handle scoping/shadowing correctly</td></tr>
+    <tr><td class="hi">Stack of Tables (per scope)</td><td>A new table is pushed for each new block/scope; popped when block ends. Lookup searches from innermost to outermost table</td></tr>
+  </table>
+
+  <hr class="sep">
+
+  <!-- 7. SYMBOL TABLE DATA STRUCTURES -->
+  <h2 class="topic scroll-anchor" id="symtab-ds">
+    <span>07.</span> Data Structures Used in Symbol Tables
+    <span class="imp m">MEDIUM</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p>The choice of underlying data structure for implementing a symbol table determines the time complexity of insertion and lookup operations — a critical performance factor since the symbol table is accessed extremely frequently during compilation.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Symbol table ko implement karne ke liye alag-alag data structures use ho sakte hain — har ek ka apna trade-off hai speed aur memory usage ke beech.
+  </div>
+
+  <h3 class="sub">Comparison of Symbol Table Implementations <span class="imp h">EXAM HOT</span></h3>
+  <table>
+    <tr><th>Data Structure</th><th>Insert Time</th><th>Lookup Time</th><th>Notes</th></tr>
+    <tr><td class="hi">Linear List (Array/Linked List)</td><td>O(1)</td><td>O(n)</td><td>Simple, but slow lookup for large programs</td></tr>
+    <tr><td class="hi">Sorted Array (Binary Search)</td><td>O(n)</td><td>O(log n)</td><td>Faster lookup, but costly insertion (must maintain order)</td></tr>
+    <tr><td class="hi">Hash Table</td><td>O(1) avg</td><td>O(1) avg</td><td>Most commonly used in real compilers — fastest on average</td></tr>
+    <tr><td>Binary Search Tree (BST)</td><td>O(log n) avg</td><td>O(log n) avg</td><td>Good balance; degrades to O(n) if unbalanced</td></tr>
+  </table>
+
+  <div class="card warn">
+    <div class="tag">⚠ Important</div>
+    <p><strong>Hash tables</strong> are the most widely used in real-world compilers (GCC, LLVM) because they offer the best average-case performance for the insert/lookup-heavy workload of symbol table management.</p>
+  </div>
+
+  <div class="card example">
+    <div class="tag">Example</div>
+    <p>A hash table symbol table uses a hash function h(name) to compute a bucket index; collisions are resolved using chaining (linked list per bucket) — allowing O(1) average insert and lookup even for thousands of identifiers.</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- Q&A SECTION -->
+  <div class="qsection" id="qa">
+    <h2 class="topic" style="border:none;">❓ RTU Exam Q&amp;A Bank — Unit 5 <span class="imp h">EXAM GOLD</span></h2>
+
+    <div class="qcard">
+      <div class="qlabel">Q1 · 10 MARKS</div>
+      <span class="marks m10">10 MARKS</span>
+      <div class="q">What is an Activation Record? Explain its fields with a neat diagram.</div>
+      <div class="a">
+        <p>An Activation Record (AR) is a block of memory allocated on the runtime stack for each invocation of a procedure, containing: Actual Parameters, Return Value space, Control Link (pointer to caller's AR), Access Link (pointer to lexically enclosing procedure's AR), Saved Machine Status, Local Data, and Temporaries. It is created when the procedure is called and destroyed when it returns. (Refer to the AR diagram above for the exam — draw it exactly.)</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q2 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">Differentiate between Control Link and Access Link in an activation record.</div>
+      <div class="a">
+        <table>
+          <tr><th>Feature</th><th>Control Link</th><th>Access Link</th></tr>
+          <tr><td>Also called</td><td>Dynamic Link</td><td>Static Link</td></tr>
+          <tr><td>Points to</td><td>AR of the caller (who called this procedure)</td><td>AR of the lexically enclosing procedure (parent scope)</td></tr>
+          <tr><td>Used for</td><td>Restoring stack on return</td><td>Accessing non-local names</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q3 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">Explain the different storage allocation strategies used by compilers.</div>
+      <div class="a">
+        <p><strong>Static Allocation:</strong> address fixed at compile time, used for global/static variables. <strong>Stack Allocation:</strong> LIFO allocation/deallocation matching procedure call/return, used for locals &amp; parameters. <strong>Heap Allocation:</strong> arbitrary-order allocation/deallocation at runtime, used for dynamic data structures (malloc/new), required when data must outlive the procedure that created it.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q4 · 10 MARKS</div>
+      <span class="marks m10">10 MARKS</span>
+      <div class="q">How are local and non-local names accessed in a block-structured language? Explain with access links.</div>
+      <div class="a">
+        <p>Local names are accessed directly via offsets within the current activation record. Non-local names (declared in an enclosing procedure) are accessed by following the chain of <strong>access links (static links)</strong> from the current AR upward through enclosing procedures' ARs, a number of hops equal to the difference in nesting depth between the usage and declaration points. An alternative is the <strong>Display</strong> technique — a global array of pointers (one per nesting level) giving O(1) access instead of chasing a chain of links, trading extra maintenance overhead on call/return for faster lookup.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q5 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">Explain the different parameter passing methods with examples.</div>
+      <div class="a">
+        <p><strong>Call by Value:</strong> a copy of the value is passed; changes inside the function don't affect the caller (default in C, Java for primitives). <strong>Call by Reference:</strong> the address is passed; changes directly affect the caller's variable (C++ references, Pascal var parameters). <strong>Call by Copy-Restore:</strong> value copied in, copied back out at return. <strong>Call by Name:</strong> textual substitution of the argument expression, re-evaluated at each use (rare, historic — Algol).</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q6 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">What is a Symbol Table? What information does it store?</div>
+      <div class="a">
+        <p>A Symbol Table is a data structure used by the compiler to store information about every identifier in the source program. It stores: name, data type, scope, memory location/offset, size, line number of declaration, and other attributes (e.g. parameter list for functions, dimensions for arrays). It supports operations Insert, Lookup, Delete and Update, and is consulted/updated throughout all phases of compilation.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q7 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">Compare different data structures used to implement symbol tables.</div>
+      <div class="a">
+        <table>
+          <tr><th>Data Structure</th><th>Insert</th><th>Lookup</th></tr>
+          <tr><td>Linear List</td><td>O(1)</td><td>O(n)</td></tr>
+          <tr><td>Sorted Array</td><td>O(n)</td><td>O(log n)</td></tr>
+          <tr><td>Hash Table</td><td>O(1) avg</td><td>O(1) avg</td></tr>
+          <tr><td>Binary Search Tree</td><td>O(log n) avg</td><td>O(log n) avg</td></tr>
+        </table>
+        <p>Hash tables are most commonly used in production compilers due to their average O(1) performance for both operations.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q8 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">Why is stack allocation insufficient for all variables? When is heap allocation necessary?</div>
+      <div class="a">
+        <p>Stack allocation works in strict LIFO order matching procedure call/return — but it cannot handle data that must outlive the procedure that created it (e.g. a function returning a pointer to a local array, or dynamically-sized data structures like linked lists). In such cases, heap allocation is required, since heap memory can be allocated and freed in any order, independent of the call stack's structure.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q9 · 5 MARKS — Short Note</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">Write a short note on the run-time memory layout of a program.</div>
+      <div class="a">
+        <p>A typical run-time memory layout consists of four regions: the <strong>Code/Text Segment</strong> (compiled instructions, fixed), <strong>Static/Global Data</strong> (global &amp; static variables, fixed for program lifetime), the <strong>Heap</strong> (dynamically allocated memory, conventionally grows downward toward the stack), and the <strong>Stack</strong> (activation records of active procedures, conventionally grows upward toward the heap). This layout allows the heap and stack to share the remaining address space flexibly.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q10 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">What is aliasing in the context of call by reference parameter passing?</div>
+      <div class="a">
+        <p>Aliasing occurs when two or more formal parameters (or a formal parameter and a global variable) end up referring to the <strong>same memory location</strong>, typically because the same variable was passed as multiple arguments under call-by-reference. This can cause unexpected side effects, since a write through one parameter name silently changes the value seen through the other name, making program behaviour harder to predict and debug.</p>
+      </div>
+    </div>
+
+  </div><div style="margin-top:60px; padding:20px 24px; border:1px dashed var(--line); border-radius:10px; color:var(--muted); font-size:13px;">
+    <div style="color:var(--accent); font-family:'Consolas',monospace; font-weight:700; margin-bottom:6px;">ZYREX // CD_VAULT — UNIT 5 · Storage Organization</div>
+    <p>RTU B.Tech CSE 5th Semester · 5CS4-02 Compiler Design · Unit 5 of 6</p>
+    <p style="margin-top:6px;">📌 Focus areas for exam: Activation Record diagram (10-mark regular), Control Link vs Access Link, Storage allocation strategies, Parameter passing comparison, Symbol table data structure comparison.</p>
+    <p style="margin-top:6px;">Key terms to memorize: Static/Stack/Heap allocation &nbsp;|&nbsp; Control Link = Dynamic Link &nbsp;|&nbsp; Access Link = Static Link &nbsp;|&nbsp; Hash Table → O(1) avg insert/lookup</p>
+  </div>
+
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:center;padding:30px 20px;flex-wrap:wrap;">
+      <a href="unit4.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+      <a href="../cd/index.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">🏠 CD Hub</a>
+      <a href="unit6.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+    </div>
+  </main>
+  <div class="cursor-dot" data-cursor-dot></div>
+  <div class="cursor-outline" data-cursor-outline></div>
+  <script>
+    const cursorDot = document.querySelector("[data-cursor-dot]");
+    const cursorOutline = document.querySelector("[data-cursor-outline]");
+    window.addEventListener("mousemove", function(e){
+      cursorDot.style.left=e.clientX+"px"; cursorDot.style.top=e.clientY+"px";
+      cursorOutline.animate({left:e.clientX+"px",top:e.clientY+"px"},{duration:400,fill:"forwards"});
+    });
+    document.querySelectorAll("a,button").forEach(el=>{
+      el.addEventListener("mouseenter",()=>cursorOutline.classList.add("cursor-hovering"));
+      el.addEventListener("mouseleave",()=>cursorOutline.classList.remove("cursor-hovering"));
+    });
+  </script>
+<script src="../splash-cursor.js"></script>\n</body>
+</html>

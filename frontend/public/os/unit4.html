@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Learning Plus // OS · Unit 4</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <main class="main-wrapper" style="width:100%;">
+    <div class="topbar">
+      <a href="index.html" class="back-btn">⬅ OS Hub</a>
+      <div class="brand">Smart<span>Learning</span>+ <span style="color:var(--muted);font-weight:400;font-size:14px;">// OS · Unit 4</span></div>
+      <div class="nav">
+        <a href="index.html">🏠 OS Hub</a>
+        <a href="#content">📖 Content</a>
+        <a href="#qa4">❓ Q&amp;A</a>
+        <a href="unit5.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="hero">
+        <h1>📕 UNIT 4 — Deadlock & Device Management</h1>
+        <p>Shared Resources · Resource Allocation & Scheduling · RAG · Deadlock Detection · Avoidance · Prevention · Device Mgmt · Device Drivers · Device Handling · Disk Scheduling | Hours: 15</p>
+        <div class="badges" style="margin-top:14px;">
+          <a href="index.html" style="text-decoration:none;"><span class="badge b-teal">← Back to OS Hub</span></a>
+          <span class="badge b-gold">5CS4-03 · OS · RTU</span>
+        </div>
+      </div>
+      <div id="content">
+      <h1 class="unit-title" id="unit4">📕 UNIT 4 — Deadlock &amp; Device Management</h1>
+      <p class="unit-sub">Shared Resources · Resource Allocation &amp; Scheduling · RAG · Deadlock Detection · Avoidance · Prevention · Device Mgmt · Device Drivers · Device Handling · Disk Scheduling &nbsp;|&nbsp; Hours: 15</p>
+
+      <div class="keypoint"><span class="icon">🔥</span><span>Banker's Algorithm + RAG diagram + Disk Scheduling numericals — all three are RTU exam staples. This unit carries 15 hours so expect 25-30 marks worth of questions from here.</span></div>
+
+      <h2 class="topic">1. Deadlock — Introduction <span class="imp h">High ⭐⭐⭐⭐⭐</span></h2>
+      <div class="card def">
+        <span class="tag">English</span>
+        <p>A <b>Deadlock</b> is a situation where a set of processes are blocked, each holding some resources and waiting to acquire resources held by other processes in the set — resulting in a circular wait with no process able to proceed.</p>
+      </div>
+      <div class="hin">
+        <span class="tag">Hinglish</span>
+        <p>Deadlock ek aisi situation hai jahan sab processes ek doosre ka wait kar rahi hoti hain aur koi bhi aage nahi badh sakti. Jaise do gaadiyaan ek single-lane bridge ke dono siro pe khadi hain — dono doosre ko pehle hatne ka wait kar rahi hain, koi nahi hata!</p>
+      </div>
+
+      <h3 class="sub">Coffman's 4 Necessary Conditions for Deadlock <span class="imp h">High — must memorize</span></h3>
+      <div class="card">
+        <ol>
+          <li><b>Mutual Exclusion:</b> At least one resource must be held in a non-sharable mode.</li>
+          <li><b>Hold and Wait:</b> A process is holding at least one resource and waiting to acquire additional resources held by other processes.</li>
+          <li><b>No Preemption:</b> Resources cannot be forcibly taken from a process; they must be released voluntarily.</li>
+          <li><b>Circular Wait:</b> There exists a circular chain of processes P1→P2→...→Pn→P1 such that each is waiting for a resource held by the next.</li>
+        </ol>
+      </div>
+      <div class="hin">
+        <span class="tag">Hinglish</span>
+        <p>Memory trick for 4 conditions: <b>M-H-N-C</b> → <b>M</b>utual exclusion, <b>H</b>old and wait, <b>N</b>o preemption, <b>C</b>ircular wait. Inme se koi ek condition tod do → deadlock nahi hoga!</p>
+      </div>
+
+      <h2 class="topic">2. Deadlock Handling Methods <span class="imp h">High ⭐⭐⭐⭐</span></h2>
+      <table>
+        <tr><th>Method</th><th>Strategy</th><th>Performance</th><th>Example</th></tr>
+        <tr><td><b>Prevention</b></td><td>Eliminate ≥1 Coffman condition</td><td>High overhead, resource wastage</td><td>No hold-and-wait rule</td></tr>
+        <tr><td><b>Avoidance</b></td><td>Safe state checking before allocation</td><td>Moderate; needs advance info</td><td>Banker's Algorithm</td></tr>
+        <tr><td><b>Detection</b></td><td>Allow deadlock, detect &amp; recover</td><td>Better resource use; recovery cost</td><td>Wait-for Graph</td></tr>
+        <tr><td><b>Ignorance</b></td><td>Ostrich Algorithm — pretend it won't happen</td><td>Best performance; risky</td><td>Windows, Linux (approx.)</td></tr>
+      </table>
+
+      <h2 class="topic">3. Deadlock Prevention <span class="imp h">High ⭐⭐⭐</span></h2>
+      <div class="card">
+        <p>Prevent deadlock by ensuring at least ONE Coffman condition is never satisfied:</p>
+        <ul>
+          <li><b>Eliminate Mutual Exclusion:</b> Make resources sharable (not always possible for printers etc.).</li>
+          <li><b>Eliminate Hold and Wait:</b> Process must request ALL resources at once before starting, OR release all before requesting more.</li>
+          <li><b>Allow Preemption:</b> If a process holding resources requests another unavailable resource, preempt all its resources.</li>
+          <li><b>Eliminate Circular Wait:</b> Impose a total ordering on resource types; processes must request resources in increasing order of enumeration.</li>
+        </ul>
+      </div>
+
+      <h2 class="topic">4. Deadlock Avoidance — Banker's Algorithm <span class="imp h">High ⭐⭐⭐⭐⭐ 🔥 Numerical</span></h2>
+      <div class="card def">
+        <span class="tag">English</span>
+        <p>The <b>Banker's Algorithm</b> (Dijkstra, 1965) is a deadlock avoidance algorithm. Before granting a resource request, it simulates the allocation and checks if the resulting state is <b>safe</b>. A state is safe if a <b>safe sequence</b> exists — an ordering of processes where each can complete using currently available + resources released by previously finished processes.</p>
+      </div>
+      <div class="hin">
+        <span class="tag">Hinglish</span>
+        <p>Banker's Algorithm ek bank jaisa kaam karta hai — bank loan dene se pehle check karta hai ki baad mein bhi sab loans return ho sakenge ya nahi. Similarly, OS resource dene se pehle simulate karta hai — "agar ye resource de diya to kya koi safe sequence milega?" Agar haan, to de do. Nahi to wait karo.</p>
+      </div>
+
+      <div class="card example">
+        <span class="tag">Banker's Algorithm Worked Example (RTU pattern)</span>
+        <p>5 processes (P0–P4), 3 resource types (A=10, B=5, C=7). Allocation and Max matrices:</p>
+        <table>
+          <tr><th>Process</th><th>Alloc A B C</th><th>Max A B C</th><th>Need A B C</th></tr>
+          <tr><td>P0</td><td>0 1 0</td><td>7 5 3</td><td>7 4 3</td></tr>
+          <tr><td>P1</td><td>2 0 0</td><td>3 2 2</td><td>1 2 2</td></tr>
+          <tr><td>P2</td><td>3 0 2</td><td>9 0 2</td><td>6 0 0</td></tr>
+          <tr><td>P3</td><td>2 1 1</td><td>2 2 2</td><td>0 1 1</td></tr>
+          <tr><td>P4</td><td>0 0 2</td><td>4 3 3</td><td>4 3 1</td></tr>
+        </table>
+        <p>Available = A:3, B:3, C:2 (Total − ΣAllocation)</p>
+        <p><b>Safe Sequence:</b> P1(need 1,2,2 ≤ available 3,3,2 ✓) → release → avail 5,3,2 → P3(0,1,1≤5,3,2 ✓) → avail 7,4,3 → P4(4,3,1≤7,4,3 ✓) → avail 7,4,5 → P0(7,4,3≤7,4,5 ✓) → avail 7,5,5 → P2(6,0,0≤7,5,5 ✓)</p>
+        <p><b>Safe Sequence: &lt;P1, P3, P4, P0, P2&gt; — System is in SAFE STATE ✅</b></p>
+      </div>
+
+      <h2 class="topic">5. Resource Allocation Graph (RAG) <span class="imp h">High ⭐⭐⭐⭐ 🔥</span></h2>
+      <div class="card def">
+        <span class="tag">English</span>
+        <p>A <b>Resource Allocation Graph (RAG)</b> is a directed graph G = (V, E) used to represent the state of resource allocation. Vertices V = Processes (P) ∪ Resources (R). Edges: <b>Request edge</b> (Pi → Rj) = process requesting resource. <b>Assignment edge</b> (Rj → Pi) = resource assigned to process. <b>Cycle in RAG = Deadlock</b> (for single-instance resources).</p>
+      </div>
+      <div class="hin">
+        <span class="tag">Hinglish</span>
+        <p>RAG ek directed graph hai jisme processes (circles) aur resources (rectangles) nodes hote hain. Request edge = process resource maang raha hai (P→R dashed). Assignment edge = resource process ko diya gaya hai (R→P solid). Agar RAG mein cycle ho to deadlock hai (single instance ke case mein).</p>
+      </div>
+
+      <h3 class="sub">Wait-For Graph (WFG)</h3>
+      <div class="card">
+        <p>WFG is derived from RAG by <b>removing resource nodes</b>. If Pi → Rj and Rj → Pk, then Pi → Pk in WFG. A <b>cycle in WFG = Deadlock</b> (single-instance resources). OS periodically checks for cycles in WFG to detect deadlocks.</p>
+      </div>
+
+      <h2 class="topic">6. Deadlock Recovery <span class="imp m">Medium ⭐⭐⭐</span></h2>
+      <div class="compare">
+        <div class="compare-card"><h4>Process Termination</h4>
+          <ul><li><b>Abort All</b> — terminate all deadlocked processes. Quick but expensive (all work lost).</li><li><b>Abort One at a Time</b> — terminate one process at a time and check if deadlock resolved. Costly but selective.</li></ul>
+        </div>
+        <div class="compare-card"><h4>Resource Preemption</h4>
+          <ul><li><b>Select Victim</b> — choose which process to preempt (min cost).</li><li><b>Rollback</b> — restore victim to safe state.</li><li><b>Starvation</b> — avoid selecting same process repeatedly.</li></ul>
+        </div>
+      </div>
+
+      <h2 class="topic">7. Device Management <span class="imp h">High ⭐⭐⭐⭐</span></h2>
+      <div class="card def">
+        <span class="tag">English</span>
+        <p><b>Device Management</b> is the OS subsystem responsible for controlling and coordinating all I/O devices attached to the computer system, including device drivers, device handling, I/O scheduling, and buffering/caching.</p>
+      </div>
+
+      <h3 class="sub">Types of Devices</h3>
+      <table>
+        <tr><th>Type</th><th>Description</th><th>Examples</th></tr>
+        <tr><td><b>Block Devices</b></td><td>Transfer data in fixed-size blocks; addressable; can seek</td><td>Hard disk, SSD, USB drive</td></tr>
+        <tr><td><b>Character Devices</b></td><td>Transfer data byte by byte; not addressable; stream-based</td><td>Keyboard, mouse, serial port</td></tr>
+        <tr><td><b>Network Devices</b></td><td>Transfer data as packets over a network</td><td>Network Interface Card (NIC)</td></tr>
+      </table>
+
+      <h3 class="sub">Device Drivers <span class="imp h">High</span></h3>
+      <div class="card def">
+        <span class="tag">English</span>
+        <p>A <b>Device Driver</b> is a software module that translates generic OS I/O requests into device-specific commands understood by the hardware controller. Each device requires its own driver.</p>
+      </div>
+      <div class="hin">
+        <span class="tag">Hinglish</span>
+        <p>Device driver ek translator hai — OS ek generic request deta hai "print karo" aur driver use specific printer language mein convert karta hai. Bina driver ke OS device se baat hi nahi kar sakta! Isliye naya printer connect karne pe driver install karna padta hai.</p>
+      </div>
+
+      <h3 class="sub">I/O Handling Techniques <span class="imp h">High</span></h3>
+      <table>
+        <tr><th>Technique</th><th>How it works</th><th>CPU Involvement</th><th>Suitable For</th></tr>
+        <tr><td><b>Programmed I/O (Polling)</b></td><td>CPU continuously checks device status (busy-wait)</td><td>Very High (100%)</td><td>Simple, slow devices</td></tr>
+        <tr><td><b>Interrupt-Driven I/O</b></td><td>Device sends interrupt when ready; CPU serves ISR</td><td>Moderate (ISR only)</td><td>Character devices, keyboard</td></tr>
+        <tr><td><b>DMA (Direct Memory Access)</b></td><td>DMA controller transfers data directly to memory; CPU only initializes</td><td>Very Low</td><td>Block devices, disk, NIC</td></tr>
+      </table>
+      <div class="hin">
+        <span class="tag">Hinglish</span>
+        <p>Memory trick: Polling = waiter khada rahega plate ke liye, Interrupt = bell bajao jab ready, DMA = khud utha lo (CPU mat bothro)!</p>
+      </div>
+
+      <h2 class="topic">8. Disk Scheduling Algorithms <span class="imp h">High ⭐⭐⭐⭐⭐ 🔥 Numerical</span></h2>
+      <div class="card def">
+        <span class="tag">English</span>
+        <p><b>Disk Scheduling</b> is the OS policy for deciding the order in which disk I/O requests are served, to minimize <b>seek time</b> (time for disk arm to move to correct track) and maximize throughput.</p>
+      </div>
+      <table>
+        <tr><th>Algorithm</th><th>Idea</th><th>Advantage</th><th>Disadvantage</th></tr>
+        <tr><td><b>FCFS</b></td><td>Serve requests in arrival order</td><td>Fair, no starvation</td><td>High seek time, poor performance</td></tr>
+        <tr><td><b>SSTF</b></td><td>Serve request closest to current head position</td><td>Better than FCFS</td><td>Starvation possible</td></tr>
+        <tr><td><b>SCAN (Elevator)</b></td><td>Head moves in one direction, serves all, then reverses</td><td>Good performance</td><td>Variation in wait time</td></tr>
+        <tr><td><b>C-SCAN</b></td><td>Head moves in one direction only, jumps to other end</td><td>Uniform wait time</td><td>Slight overhead at turnaround</td></tr>
+        <tr><td><b>LOOK</b></td><td>Like SCAN but only goes as far as last request</td><td>Efficient</td><td>Slightly complex</td></tr>
+      </table>
+
+      <div class="card example">
+        <span class="tag">Disk Scheduling Numerical — SSTF (RTU pattern)</span>
+        <p>Disk queue: 98, 183, 37, 122, 14, 124, 65, 67. Head starts at 53. Apply SSTF.</p>
+        <p>From 53: closest = 65 (diff 12). From 65: closest = 67 (diff 2). From 67: closest = 37 (diff 30). From 37: closest = 14 (diff 23). From 14: closest = 98 (diff 84). From 98: closest = 122 (diff 24). From 122: closest = 124 (diff 2). From 124: closest = 183 (diff 59).</p>
+        <p><b>Sequence: 53→65→67→37→14→98→122→124→183. Total movement = 236 cylinders.</b></p>
+      </div>
+
+      <!-- Q&A UNIT 4 -->
+      <div class="qsection scroll-anchor" id="qa4">
+        <h1 class="unit-title">❓ Unit 4 — Q&amp;A (RTU Exam Pattern)</h1>
+
+        <div class="qcard">
+          <div class="qlabel">RTU EXAM Q&amp;A</div>
+          <div class="q">Q1. Define Deadlock. State the four necessary conditions (Coffman conditions). <span class="imp h">★★★★★ 5-7 Marks</span></div>
+          <span class="marks m5">5 Marks</span>
+          <div class="a"><p>Deadlock = set of processes each holding resources and waiting for resources held by others — circular wait with no progress. 4 conditions: Mutual Exclusion, Hold &amp; Wait, No Preemption, Circular Wait. All four must hold simultaneously for deadlock.</p></div>
+        </div>
+
+        <div class="qcard">
+          <div class="qlabel">RTU EXAM Q&amp;A</div>
+          <div class="q">Q2. Explain Banker's Algorithm with example. <span class="imp h">★★★★★ 10 Marks — guaranteed every year</span></div>
+          <span class="marks m10">10 Marks</span>
+          <div class="a"><p>Banker's Algorithm: (1) Compute Need = Max − Allocation for each process. (2) Initialize Work = Available, Finish[i]=false. (3) Find a process i where Finish[i]=false AND Need[i] ≤ Work. (4) Work += Allocation[i], Finish[i]=true. (5) Repeat until all Finish=true (Safe) or no such i found (Unsafe). Full worked example above: Safe sequence &lt;P1,P3,P4,P0,P2&gt;.</p></div>
+        </div>
+
+        <div class="qcard">
+          <div class="qlabel">RTU EXAM Q&amp;A</div>
+          <div class="q">Q3. What is a Resource Allocation Graph? How does it detect deadlock? <span class="imp h">★★★★ 7 Marks</span></div>
+          <span class="marks m10">7 Marks</span>
+          <div class="a"><p>RAG = directed graph with processes (circles) and resources (rectangles). Request edge P→R, Assignment edge R→P. Deadlock detection: for single-instance resources, a cycle in RAG = deadlock. For multi-instance resources, use Wait-For Graph or reduction algorithm. WFG derived by removing resource nodes from RAG.</p></div>
+        </div>
+
+        <div class="qcard">
+          <div class="qlabel">RTU EXAM Q&amp;A</div>
+          <div class="q">Q4. Explain disk scheduling algorithms: FCFS, SSTF, SCAN, C-SCAN with numerical. <span class="imp h">★★★★★ 10 Marks — numerical guaranteed</span></div>
+          <span class="marks m10">10 Marks</span>
+          <div class="a"><p>All 4 algorithms defined in table above. SSTF numerical worked above (53→65→67→37→14→98→122→124→183, total 236 cylinders). Practice FCFS and SCAN on same queue to compare total head movement.</p></div>
+        </div>
+
+        <div class="qcard">
+          <div class="qlabel">RTU EXAM Q&amp;A</div>
+          <div class="q">Q5. Explain different I/O techniques: Polling, Interrupt-Driven, DMA. <span class="imp h">★★★★ 7 Marks</span></div>
+          <span class="marks m10">7 Marks</span>
+          <div class="a"><p>Polling = CPU checks device status in busy loop (simple but wastes CPU). Interrupt-Driven = device sends interrupt when ready, CPU handles ISR only (better CPU utilization). DMA = DMA controller handles data transfer directly, CPU only initializes (best — CPU nearly free during transfer). Table above gives full comparison.</p></div>
+        </div>
+
+        <div class="qcard">
+          <div class="qlabel">RTU EXAM Q&amp;A</div>
+          <div class="q">Q6. What are the methods to handle deadlock? Compare prevention, avoidance, detection. <span class="imp h">★★★★ 7 Marks</span></div>
+          <span class="marks m10">7 Marks</span>
+          <div class="a"><p>Prevention = eliminate one Coffman condition (high overhead). Avoidance = Banker's algorithm — check safe state before allocation (moderate overhead, needs advance info). Detection = allow deadlock, detect via RAG/WFG, recover by process termination or resource preemption (best utilization but recovery needed). Ignorance = Ostrich algorithm (Windows/Linux approach for rare deadlocks).</p></div>
+        </div>
+      </div>
+
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:center;padding:30px 20px;flex-wrap:wrap;">
+      <a href="index.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">🏠 OS Hub</a>
+      <a href="unit5.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+    </div>
+  </main>
+  <div class="cursor-dot" data-cursor-dot></div>
+  <div class="cursor-outline" data-cursor-outline></div>
+  <script>
+    const cursorDot = document.querySelector("[data-cursor-dot]");
+    const cursorOutline = document.querySelector("[data-cursor-outline]");
+    window.addEventListener("mousemove", function(e){
+      cursorDot.style.left=e.clientX+"px"; cursorDot.style.top=e.clientY+"px";
+      cursorOutline.animate({left:e.clientX+"px",top:e.clientY+"px"},{duration:400,fill:"forwards"});
+    });
+    document.querySelectorAll("a,button").forEach(el=>{
+      el.addEventListener("mouseenter",()=>cursorOutline.classList.add("cursor-hovering"));
+      el.addEventListener("mouseleave",()=>cursorOutline.classList.remove("cursor-hovering"));
+    });
+  </script>
+<script src="../splash-cursor.js"></script>\n</body>
+</html>

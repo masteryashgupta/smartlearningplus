@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Learning Plus // ITC · Unit 3</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <main class="main-wrapper" style="width:100%;">
+    <div class="topbar">
+      <a href="../itc/index.html" class="back-btn">⬅ ITC Hub</a>
+      <div class="brand">Smart<span>Learning</span>+ <span style="color:var(--muted);font-weight:400;font-size:14px;">// ITC · Unit 3</span></div>
+      <div class="nav">
+        <a href="../itc/index.html">🏠 ITC Hub</a>
+        <a href="#content">📖 Content</a>
+        <a href="#qa">❓ Q&amp;A</a>
+        <a href="unit2.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+        <a href="unit4.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="hero">
+        <h1>📙 Unit 3 — Source Coding Schemes</h1>
+        <p>Prefix Code · Huffman · Shannon-Fano · Lempel-Ziv · Channel Capacity · Shannon Limit | Hours: 05</p>
+        <div class="badges" style="margin-top:14px;">
+          <a href="../itc/index.html" style="text-decoration:none;"><span class="badge b-teal">← Back to ITC Hub</span></a>
+          <span class="badge b-gold">5CS3-01 · ITC · RTU</span>
+        </div>
+      </div>
+      <div id="content">
+  <h1 class="unit-title" id="unit3">📙 UNIT 3 — Source Coding Schemes for Data Compaction</h1>
+  <p class="unit-sub">Prefix Code · Huffman Code · Shannon-Fano Code · Lempel-Ziv Coding · Channel Capacity · Channel Coding Theorem · Shannon Limit &nbsp;|&nbsp; Hours: 05</p>
+
+  <h2 class="topic">1. Data Compaction — Recap <span class="imp l">Low ⭐ — intro</span></h2>
+  <div class="card def">
+    <span class="tag">English</span>
+    <p><b>Data compaction (source coding)</b> is the process of encoding source symbols using codewords of variable length, such that symbols with higher probability get shorter codewords and rarer symbols get longer codewords — reducing the average number of bits/symbol close to the source entropy H(X).</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Simple idea: jo letter/symbol <b>zyada baar aata hai</b> usko <b>chhota code</b> do, jo <b>kam aata hai</b> usko <b>lamba code</b> do. Isse average length kam ho jaati hai — yahi compression ka core idea hai (Morse code mein bhi 'E' ek dot hai kyunki English mein sabse common letter hai!).</p>
+  </div>
+
+  <h2 class="topic">2. Prefix Code (Instantaneous Code) <span class="imp h">High ⭐⭐⭐</span></h2>
+  <div class="card def">
+    <span class="tag">English</span>
+    <p>A <b>prefix code</b> (instantaneous code) is a variable-length code in which <b>no codeword is a prefix of any other codeword</b>. This property allows the receiver to decode each symbol the moment its complete codeword is received — without needing to look ahead at future bits.</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Prefix code ka matlab — koi bhi chhota codeword kisi bade codeword ka "starting part" nahi hona chahiye. Isse decoding karte waqt confusion nahi hota — jaise hi codeword complete hota hai, turant pata chal jaata hai ki symbol kya hai, aage ke bits dekhne ki zarurat nahi (isiliye "instantaneous" kehte hain).</p>
+  </div>
+
+  <div class="card example">
+    <span class="tag">Example</span>
+    <p><b>Valid prefix code:</b> A=0, B=10, C=110, D=111 → no code is prefix of another ✓</p>
+    <p><b>Invalid (not prefix-free):</b> A=0, B=01, C=011 → here '0' (code for A) is a prefix of '01' (code for B) ✗ — decoding becomes ambiguous.</p>
+  </div>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="200" cy="25" r="14" fill="#141a20" stroke="var(--accent2)" stroke-width="2"/>
+      <line x1="190" y1="35" x2="100" y2="75" stroke="#8aa0ad" stroke-width="1.5"/>
+      <text x="135" y="55" fill="#8aa0ad" font-size="11">0</text>
+      <line x1="210" y1="35" x2="300" y2="75" stroke="#8aa0ad" stroke-width="1.5"/>
+      <text x="265" y="55" fill="#8aa0ad" font-size="11">1</text>
+      <circle cx="100" cy="85" r="14" fill="#0e1a22" stroke="var(--accent2)" stroke-width="2"/>
+      <text x="100" y="89" text-anchor="middle" fill="#36e0c4" font-size="11">A</text>
+      <circle cx="300" cy="85" r="14" fill="#141a20" stroke="#ffb454" stroke-width="2"/>
+      <line x1="290" y1="95" x2="240" y2="135" stroke="#8aa0ad" stroke-width="1.5"/>
+      <text x="255" y="115" fill="#8aa0ad" font-size="11">0</text>
+      <line x1="310" y1="95" x2="360" y2="135" stroke="#8aa0ad" stroke-width="1.5"/>
+      <text x="345" y="115" fill="#8aa0ad" font-size="11">1</text>
+      <circle cx="240" cy="145" r="14" fill="#0e1a22" stroke="var(--accent2)" stroke-width="2"/>
+      <text x="240" y="149" text-anchor="middle" fill="#36e0c4" font-size="11">B</text>
+      <circle cx="360" cy="145" r="14" fill="#141a20" stroke="#ffb454" stroke-width="2"/>
+      <line x1="350" y1="155" x2="320" y2="190" stroke="#8aa0ad" stroke-width="1.5"/>
+      <text x="320" y="175" fill="#8aa0ad" font-size="11">0</text>
+      <line x1="370" y1="155" x2="395" y2="190" stroke="#8aa0ad" stroke-width="1.5"/>
+      <text x="390" y="175" fill="#8aa0ad" font-size="11">1</text>
+      <circle cx="320" cy="200" r="14" fill="#0e1a22" stroke="var(--accent2)" stroke-width="2"/>
+      <text x="320" y="204" text-anchor="middle" fill="#36e0c4" font-size="11">C</text>
+      <circle cx="395" cy="200" r="14" fill="#0e1a22" stroke="var(--accent2)" stroke-width="2"/>
+      <text x="395" y="204" text-anchor="middle" fill="#36e0c4" font-size="10">D</text>
+    </svg>
+    <p class="cap">Fig 3.1 — Binary Code Tree for prefix code A=0,B=10,C=110,D=111: only leaf nodes carry symbols, so no codeword can be a prefix of another</p>
+  </div>
+
+  <h2 class="topic">3. Huffman Coding <span class="imp h">High ⭐⭐⭐⭐⭐ (Most Important — numerical guaranteed)</span></h2>
+  <div class="card def">
+    <span class="tag">English</span>
+    <p><b>Huffman coding</b> is an optimal variable-length prefix coding technique that builds a binary tree bottom-up by repeatedly combining the two least-probable symbols/nodes into a new node, until a single root remains. It achieves the minimum possible average codeword length for a given symbol probability distribution (among all prefix codes).</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Huffman coding ka logic — har step pe sabse <b>2 kam probability</b> wale symbols/nodes ko utha ke unko jod do (ek naya combined node bana do), aur ye repeat karte raho jab tak sirf ek root node na bach jaaye. Ye process "optimal" code deta hai — matlab sabse kam possible average length.</p>
+  </div>
+
+  <h3 class="sub">Huffman Coding Algorithm <span class="imp h">High — write this step-by-step in exam</span></h3>
+  <div class="card">
+    <ol>
+      <li>List all symbols with their probabilities in <b>descending order</b>.</li>
+      <li>Take the <b>two symbols with lowest probability</b>; combine them into a new node with probability = sum of the two.</li>
+      <li>Assign bit '0' to one branch and '1' to the other (convention).</li>
+      <li>Re-sort the list (treating combined node as a new "symbol") and <b>repeat steps 2-3</b> until only one node (probability = 1) remains — this is the root.</li>
+      <li>The codeword for each original symbol = the sequence of 0s/1s read from root to that leaf.</li>
+    </ol>
+  </div>
+
+  <div class="card example">
+    <span class="tag">Full Worked Example — most common numerical pattern</span>
+    <p>Symbols: A(0.4), B(0.2), C(0.2), D(0.1), E(0.1). Construct Huffman code and find average code length &amp; efficiency.</p>
+    <p><b>Step-by-step combination:</b><br>
+    Step 1: D(0.1)+E(0.1) → DE(0.2)<br>
+    Step 2: Now: A(0.4), B(0.2), C(0.2), DE(0.2) → combine two lowest: C(0.2)+DE(0.2) → CDE(0.4)<br>
+    Step 3: Now: A(0.4), B(0.2), CDE(0.4) → combine B(0.2)+CDE(0.4) → BCDE(0.6)<br>
+    Step 4: Now: A(0.4), BCDE(0.6) → combine → root(1.0)</p>
+    <p><b>Resulting codewords</b> (one valid assignment):</p>
+    <table>
+      <tr><th>Symbol</th><th>Probability</th><th>Codeword</th><th>Length</th></tr>
+      <tr><td>A</td><td>0.4</td><td>0</td><td>1</td></tr>
+      <tr><td>B</td><td>0.2</td><td>10</td><td>2</td></tr>
+      <tr><td>C</td><td>0.2</td><td>110</td><td>3</td></tr>
+      <tr><td>D</td><td>0.1</td><td>1110</td><td>4</td></tr>
+      <tr><td>E</td><td>0.1</td><td>1111</td><td>4</td></tr>
+    </table>
+    <p><b>Average code length:</b><br>
+    L<sub>avg</sub> = Σ Pᵢlᵢ = 0.4(1)+0.2(2)+0.2(3)+0.1(4)+0.1(4) = 0.4+0.4+0.6+0.4+0.4 = <b>2.2 bits/symbol</b></p>
+    <p><b>Entropy:</b> H(X) = −Σ Pᵢlog₂Pᵢ = 0.4(1.32)+0.2(2.32)+0.2(2.32)+0.1(3.32)+0.1(3.32) ≈ <b>2.122 bits/symbol</b></p>
+    <p><b>Efficiency:</b> η = H(X)/L<sub>avg</sub> = 2.122/2.2 = <b>96.5%</b> &nbsp;|&nbsp; <b>Redundancy</b> = 1−0.965 = 3.5%</p>
+  </div>
+
+  <h2 class="topic">4. Shannon-Fano Coding <span class="imp h">High ⭐⭐⭐⭐</span></h2>
+  <div class="card def">
+    <span class="tag">English</span>
+    <p><b>Shannon-Fano coding</b> is a top-down variable-length prefix coding technique that recursively splits a probability-sorted symbol list into two parts with (as nearly as possible) equal total probabilities, assigning '0' to one part and '1' to the other, and repeating on each sub-part until every symbol is isolated.</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Huffman "bottom-up" (chhote nodes jodke upar jaate hain) hai, Shannon-Fano "top-down" hai — pehle sabko probability ke order mein rakho, fir list ko 2 roughly-equal-probability groups mein divide karo (top group=0, bottom group=1), aur har group ko fir se divide karte raho jab tak ek-ek symbol na bach jaaye.</p>
+  </div>
+
+  <h3 class="sub">Shannon-Fano Algorithm <span class="imp m">Medium</span></h3>
+  <div class="card">
+    <ol>
+      <li>Arrange symbols in <b>descending order</b> of probability.</li>
+      <li>Divide the list into two parts such that the sum of probabilities in each part is as close to equal as possible.</li>
+      <li>Assign '0' to the upper part and '1' to the lower part.</li>
+      <li>Recursively repeat the division process on each part until each part contains only a single symbol.</li>
+    </ol>
+  </div>
+
+  <div class="card example">
+    <span class="tag">Full Worked Example (same symbol set, for direct comparison with Huffman)</span>
+    <p>Symbols: A(0.4), B(0.2), C(0.2), D(0.1), E(0.1)</p>
+    <p><b>Split 1:</b> {A(0.4)} | {B,C,D,E(0.6)} → A=0, rest start with 1<br>
+    <b>Split 2 (within 0.6 group):</b> {B(0.2)} | {C,D,E(0.4)} → B=10, rest start with 11<br>
+    <b>Split 3 (within 0.4 group):</b> {C(0.2)} | {D,E(0.2)} → C=110, rest start with 111<br>
+    <b>Split 4:</b> {D(0.1)} | {E(0.1)} → D=1110, E=1111</p>
+    <table>
+      <tr><th>Symbol</th><th>Probability</th><th>Codeword</th><th>Length</th></tr>
+      <tr><td>A</td><td>0.4</td><td>0</td><td>1</td></tr>
+      <tr><td>B</td><td>0.2</td><td>10</td><td>2</td></tr>
+      <tr><td>C</td><td>0.2</td><td>110</td><td>3</td></tr>
+      <tr><td>D</td><td>0.1</td><td>1110</td><td>4</td></tr>
+      <tr><td>E</td><td>0.1</td><td>1111</td><td>4</td></tr>
+    </table>
+    <p>L<sub>avg</sub> = <b>2.2 bits/symbol</b> (same as Huffman in this particular example — but Huffman is guaranteed optimal in general, Shannon-Fano is not always).</p>
+  </div>
+
+  <h3 class="sub">Huffman vs Shannon-Fano <span class="imp h">High ⭐⭐⭐⭐ — very frequently asked difference question</span></h3>
+  <table>
+    <tr><th>Aspect</th><th>Huffman Coding</th><th>Shannon-Fano Coding</th></tr>
+    <tr><td>Approach</td><td>Bottom-up (combine smallest first)</td><td>Top-down (recursive splitting)</td></tr>
+    <tr><td>Optimality</td><td>Always optimal (minimum L<sub>avg</sub> among prefix codes)</td><td>Not always optimal — can be sub-optimal</td></tr>
+    <tr><td>Tree construction</td><td>Builds tree from leaves to root</td><td>Builds tree from root to leaves</td></tr>
+    <tr><td>Efficiency</td><td>Generally ≥ Shannon-Fano efficiency</td><td>Usually slightly less efficient than Huffman</td></tr>
+    <tr><td>Used in practice</td><td>JPEG, MP3, ZIP (DEFLATE), fax machines</td><td>Mostly historical / educational</td></tr>
+  </table>
+
+  <h2 class="topic">5. Lempel-Ziv (LZ) Coding <span class="imp h">High ⭐⭐⭐</span></h2>
+  <div class="card def">
+    <span class="tag">English</span>
+    <p><b>Lempel-Ziv coding</b> is a <b>dictionary-based / adaptive</b> universal lossless compression technique that does not require prior knowledge of source symbol probabilities. It works by building a dictionary of previously-seen substrings/patterns and replacing repeated occurrences with shorter references (pointers) to dictionary entries.</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Huffman/Shannon-Fano ke liye tumhe symbol probabilities pehle se pata honi chahiye. LZ coding mein aisi koi zarurat nahi — ye <b>"on-the-fly"</b> data ke patterns ko dekh ke khud dictionary banata hai, aur jab wahi pattern repeat ho, to use ek short "pointer/code" se replace kar deta hai. Isi liye LZ ko <b>"universal" / "adaptive"</b> coding kehte hain — ye file ke type pe depend nahi karta (text, image, sab pe chal jaata hai). ZIP, GIF, PNG sab LZ-family algorithms use karte hain!</p>
+  </div>
+
+  <h3 class="sub">LZ77 — Sliding Window Approach <span class="imp m">Medium ⭐⭐</span></h3>
+  <div class="card">
+    <p>LZ77 uses a <b>sliding window</b> over the data, split into a "search buffer" (already encoded text) and "look-ahead buffer" (upcoming text). For each position, it searches the search buffer for the longest match to the upcoming data, and outputs a triple:</p>
+  </div>
+  <div class="formula">(offset, length, next_character)</div>
+  <p>where <b>offset</b> = how far back the match starts, <b>length</b> = how many characters matched, and <b>next_character</b> = the character following the match (that breaks the match).</p>
+
+  <div class="card example">
+    <span class="tag">Simplified Example</span>
+    <p>Input string: <code>ABABABA</code></p>
+    <p>Encoding: A(0,0,A) → B(0,0,B) → AB seen before at offset 2, length 2 → match → (2,2,A) → remaining 'BA' matches at offset 2 → (2,2, end)</p>
+    <p>Output (conceptually): <code>(0,0,A)(0,0,B)(2,2,A)(2,2,-)</code> — repeated "AB" pattern is replaced by short back-references instead of repeating raw characters, hence compression.</p>
+  </div>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 480 140" xmlns="http://www.w3.org/2000/svg">
+      <rect x="20" y="40" width="200" height="50" fill="rgba(54,224,196,0.12)" stroke="var(--accent2)" stroke-width="2"/>
+      <text x="120" y="35" text-anchor="middle" fill="#36e0c4" font-size="12">Search Buffer (already coded)</text>
+      <rect x="220" y="40" width="120" height="50" fill="rgba(255,180,84,0.12)" stroke="#ffb454" stroke-width="2"/>
+      <text x="280" y="35" text-anchor="middle" fill="#ffb454" font-size="12">Look-ahead Buffer</text>
+      <text x="120" y="70" text-anchor="middle" fill="#d7e1e8" font-size="13" font-family="monospace">A B A B A B</text>
+      <text x="280" y="70" text-anchor="middle" fill="#d7e1e8" font-size="13" font-family="monospace">A B A</text>
+      <line x1="220" y1="40" x2="220" y2="90" stroke="#fff" stroke-width="2"/>
+      <text x="220" y="115" text-anchor="middle" fill="#8aa0ad" font-size="11">sliding window pointer →</text>
+    </svg>
+    <p class="cap">Fig 3.2 — LZ77 sliding window: matches found in search buffer are replaced with (offset,length) back-references</p>
+  </div>
+
+  <h3 class="sub">Comparison: Huffman/Shannon-Fano vs Lempel-Ziv <span class="imp m">Medium ⭐⭐⭐</span></h3>
+  <table>
+    <tr><th>Aspect</th><th>Huffman / Shannon-Fano</th><th>Lempel-Ziv</th></tr>
+    <tr><td>Type</td><td>Statistical (entropy) coding</td><td>Dictionary-based / pattern matching</td></tr>
+    <tr><td>Requires probability table?</td><td>Yes — must know symbol probabilities beforehand</td><td>No — adaptive, learns patterns from data itself</td></tr>
+    <tr><td>What is compressed?</td><td>Individual symbols (based on frequency)</td><td>Repeated sequences/substrings</td></tr>
+    <tr><td>Best suited for</td><td>Sources with skewed (non-uniform) symbol probabilities</td><td>Data with repeated patterns (text, source code)</td></tr>
+    <tr><td>Real-world use</td><td>JPEG, MP3 (often combined with other techniques)</td><td>ZIP, GIF, PNG, GZIP</td></tr>
+  </table>
+
+  <h2 class="topic">6. Channel Capacity (Continuous Channel) <span class="imp h">High ⭐⭐⭐⭐⭐ — Shannon-Hartley theorem</span></h2>
+  <div class="card def">
+    <span class="tag">English</span>
+    <p>For a continuous, band-limited channel corrupted by additive white Gaussian noise (AWGN), the <b>Shannon-Hartley Theorem</b> gives the channel capacity — the maximum rate at which information can be transmitted with arbitrarily low error probability:</p>
+  </div>
+  <div class="formula">C = B · log₂(1 + S/N)  &nbsp;&nbsp;[bits/second]</div>
+  <p>where <b>B</b> = channel bandwidth (Hz), <b>S</b> = average received signal power, <b>N</b> = average noise power, S/N = signal-to-noise ratio (SNR).</p>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Ye formula batata hai ki ek channel ki <b>maximum reliable speed</b> uske <b>bandwidth</b> aur <b>signal-to-noise ratio</b> pe depend karti hai. Zyada bandwidth ya zyada SNR (kam noise) → zyada capacity. Yahi formula bataata hai ki tumhare WiFi/4G ki max possible speed kitni ho sakti hai given uska bandwidth aur signal quality.</p>
+  </div>
+
+  <div class="card example">
+    <span class="tag">Example</span>
+    <p>A channel has bandwidth B=3000 Hz and SNR=1000 (≈30dB, typical telephone line). Find channel capacity.</p>
+    <p><b>Solution:</b><br>
+    C = 3000 × log₂(1+1000) = 3000 × log₂(1001) ≈ 3000 × 9.97 ≈ <b>29,910 bits/sec ≈ 29.9 kbps</b></p>
+  </div>
+
+  <h3 class="sub">Properties of Channel Capacity <span class="imp m">Medium</span></h3>
+  <div class="card">
+    <ol>
+      <li>Capacity increases with bandwidth B (linearly) and with log of SNR (diminishing returns at high SNR).</li>
+      <li>Even with infinite bandwidth, capacity approaches a finite limit: C<sub>∞</sub> = (S/N₀)·log₂e ≈ 1.44·S/N₀ (where N₀ = noise power spectral density) — this is the absolute limit imposed by noise power alone.</li>
+      <li>Trade-off: the same capacity can be achieved with high bandwidth + low SNR, or low bandwidth + high SNR.</li>
+    </ol>
+  </div>
+
+  <h2 class="topic">7. Channel Coding Theorem (Shannon's Second Theorem) <span class="imp h">High ⭐⭐⭐⭐⭐ — extremely important theory</span></h2>
+  <div class="card def">
+    <span class="tag">English</span>
+    <p>Shannon's <b>Channel Coding Theorem</b> states: For a discrete memoryless channel with capacity C, if the information transmission rate R is <b>less than or equal to C</b> (R ≤ C), then there exists a coding scheme such that the probability of error can be made <b>arbitrarily small</b> (approaching zero) by increasing the code block length, while keeping R fixed. Conversely, if R &gt; C, reliable (error-free) transmission is <b>not possible</b>, no matter how clever the code.</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Yeh Information Theory ka sabse important result hai! Iska matlab — agar tum data ko channel capacity C se <b>kam ya equal rate</b> pe bhejo, to (achha encoding/decoding scheme use karke) error-probability ko <b>almost zero</b> tak le ja sakte ho — bina speed kam kiye! Lekin agar capacity C se <b>zyada rate</b> pe bhejne ki koshish karo, to <b>error-free transmission kabhi possible nahi</b>, chahe kitna bhi smart code design karo. Ye theorem hi batata hai ki error-correcting codes (jo Unit 4/5 mein padhenge) kyu kaam karte hain.</p>
+  </div>
+
+  <div class="card">
+    <h3 class="sub" style="margin-top:0;">Significance / Key Takeaways <span class="imp h">High</span></h3>
+    <ul>
+      <li>It proves that <b>reliable communication is possible even over noisy channels</b> — as long as R ≤ C, which was a revolutionary (and initially counter-intuitive) result in 1948.</li>
+      <li>It does NOT tell us <i>how</i> to construct such a code — only that one <b>exists</b>. The theorem is a pure <b>existence proof</b>.</li>
+      <li>It establishes capacity C as a <b>sharp threshold</b>: below it, arbitrarily reliable communication is achievable; above it, it is fundamentally impossible.</li>
+      <li>This motivated decades of research into practical error-correcting codes (Linear Block, Cyclic, Convolutional, Turbo, LDPC) that try to approach the Shannon limit.</li>
+    </ul>
+  </div>
+
+  <h2 class="topic">8. Shannon Limit <span class="imp h">High ⭐⭐⭐⭐</span></h2>
+  <div class="card def">
+    <span class="tag">English</span>
+    <p>The <b>Shannon Limit</b> is the theoretical maximum data rate (= channel capacity C) at which information can be transmitted over a given channel with an arbitrarily low (→0) probability of error. It represents the ultimate boundary on communication efficiency dictated by the channel's bandwidth and noise — no real coding scheme can exceed it.</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Shannon Limit = wo <b>"ultimate speed limit"</b> jo ek channel apni bandwidth aur noise ki wajah se allow karta hai. Iske aage koi bhi coding scheme — chahe kitna bhi advanced ho — error-free data nahi bhej sakta. Modern codes (Turbo codes, LDPC codes — jo 4G/5G/WiFi mein use hote hain) is limit ke <b>bahut close</b> (0.5dB ke andar!) pohoch chuke hain — yehi unki achievement hai.</p>
+  </div>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 480 220" xmlns="http://www.w3.org/2000/svg">
+      <line x1="50" y1="190" x2="460" y2="190" stroke="#8aa0ad" stroke-width="1.5"/>
+      <line x1="50" y1="190" x2="50" y2="20" stroke="#8aa0ad" stroke-width="1.5"/>
+      <text x="450" y="210" fill="#8aa0ad" font-size="12">SNR (dB)</text>
+      <text x="15" y="20" fill="#8aa0ad" font-size="12">Rate</text>
+      <path d="M50,190 Q150,170 250,100 Q350,40 450,15" stroke="var(--accent2)" stroke-width="2.5" fill="none"/>
+      <text x="350" y="55" fill="#36e0c4" font-size="11">Shannon Limit (C = B log₂(1+S/N))</text>
+      <path d="M50,190 L150,150 L240,110 L300,95 L370,75 L450,65" stroke="#ff6b6b" stroke-width="2" stroke-dasharray="5,4" fill="none"/>
+      <text x="350" y="95" fill="#ff6b6b" font-size="11">Practical code (Turbo/LDPC) — close gap</text>
+    </svg>
+    <p class="cap">Fig 3.3 — Shannon Limit curve vs achievable rate of real practical codes; the gap has been narrowed to fractions of a dB by modern codes</p>
+  </div>
+
+  <hr class="sep">
+
+  <div class="qsection" id="qa3">
+    <h1 class="unit-title">❓ Unit 3 — Q&amp;A (RTU Exam Pattern)</h1>
+
+    <div class="qa">
+      <div class="q">Q1. Define prefix code. Why is it also called an instantaneous code? <span class="imp h">★★★ 5 Marks</span></div>
+      <div class="a">A code where no codeword is a prefix of another. Called "instantaneous" because the receiver can decode each symbol the instant its codeword is complete, without waiting for further bits. Example given above with valid/invalid cases.</div>
+    </div>
+
+    <div class="qa">
+      <div class="q">Q2. Explain Huffman coding algorithm. Construct Huffman code for given symbol probabilities and find efficiency. <span class="imp h">★★★★★ 10 Marks — guaranteed numerical every year</span></div>
+      <div class="a">Algorithm: sort by probability, repeatedly combine two lowest-probability nodes, assign 0/1 to branches, repeat till root. Full worked example with A(0.4),B(0.2),C(0.2),D(0.1),E(0.1) → L<sub>avg</sub>=2.2 bits, η=96.5% given above — practice this exact pattern with different probability sets.</div>
+    </div>
+
+    <div class="qa">
+      <div class="q">Q3. Explain Shannon-Fano coding algorithm with a suitable example. <span class="imp h">★★★★ 7 Marks</span></div>
+      <div class="a">Top-down recursive splitting into roughly-equal-probability halves, assigning 0/1 at each split. Full example with same 5-symbol set given above for direct Huffman comparison.</div>
+    </div>
+
+    <div class="qa">
+      <div class="q">Q4. Differentiate between Huffman coding and Shannon-Fano coding. <span class="imp h">★★★★ 5 Marks — very frequently asked</span></div>
+      <div class="a">Huffman = bottom-up, always optimal. Shannon-Fano = top-down, not always optimal. Full comparison table given above (approach, optimality, tree construction, efficiency, practical use).</div>
+    </div>
+
+    <div class="qa">
+      <div class="q">Q5. Explain Lempel-Ziv coding technique. How is it different from Huffman/Shannon-Fano coding? <span class="imp h">★★★★ 7 Marks</span></div>
+      <div class="a">LZ is dictionary-based/adaptive — no prior probability knowledge needed, builds dictionary of repeated patterns on the fly and replaces them with back-references (offset, length, next char in LZ77). Differs from Huffman/SF which require known symbol probabilities and compress individual symbols, not sequences. Comparison table given above.</div>
+    </div>
+
+    <div class="qa">
+      <div class="q">Q6. Explain LZ77 sliding-window compression with an example. <span class="imp m">★★★ 5 Marks</span></div>
+      <div class="a">Uses search buffer (past data) + look-ahead buffer (upcoming data); finds longest match in search buffer, outputs (offset, length, next_character) triple instead of raw repeated characters. Example with "ABABABA" given above.</div>
+    </div>
+
+    <div class="qa">
+      <div class="q">Q7. State and derive the Shannon-Hartley theorem for channel capacity of a continuous channel. <span class="imp h">★★★★★ 7-10 Marks</span></div>
+      <div class="a">C = B log₂(1+S/N) bits/sec for an AWGN band-limited channel. Explain B=bandwidth, S/N=SNR. Mention that capacity grows linearly with B but only logarithmically with SNR (diminishing returns).</div>
+    </div>
+
+    <div class="qa">
+      <div class="q">Q8. Numerical: A channel has B=3 kHz, SNR=1000. Find its channel capacity. <span class="imp h">★★★★ 5 Marks numerical</span></div>
+      <div class="a">C = 3000×log₂(1001) ≈ <b>29.9 kbps</b>. Full solution above.</div>
+    </div>
+
+    <div class="qa">
+      <div class="q">Q9. State and explain Shannon's Channel Coding Theorem (Shannon's Second Theorem). <span class="imp h">★★★★★ 10 Marks — most important theory question in whole unit</span></div>
+      <div class="a">If R≤C, a code exists making error probability arbitrarily small with increasing block length; if R&gt;C, reliable transmission is impossible. It's an existence proof (doesn't construct the code). Full explanation + significance points given above.</div>
+    </div>
+
+    <div class="qa">
+      <div class="q">Q10. What is meant by the "Shannon Limit"? Why can no practical system exceed it? <span class="imp h">★★★ 5 Marks</span></div>
+      <div class="a">Shannon Limit = the channel capacity C itself — the absolute maximum reliable data rate given the channel's bandwidth and noise. No coding scheme, however clever, can communicate reliably above this rate because it is a fundamental information-theoretic bound, not an engineering limitation. Modern codes (Turbo/LDPC) approach it within ~0.5dB.</div>
+    </div>
+
+    <div class="qa">
+      <div class="q">Q11. Explain the relationship between channel capacity, channel coding theorem, and Shannon limit. <span class="imp m">★★★ 5 Marks — conceptual linking question</span></div>
+      <div class="a">Channel capacity C is the maximum rate (Shannon-Hartley gives formula for continuous channels). Channel coding theorem proves that reliable transmission is achievable for any R≤C. "Shannon limit" is the practical/colloquial name for this same capacity boundary — the three concepts describe the same underlying limit from definition → proof → practical naming.</div>
+    </div>
+  </div>
+
+  <div class="footer-note">
+
+</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:center;padding:30px 20px;flex-wrap:wrap;">
+      <a href="unit2.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+      <a href="../itc/index.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">🏠 ITC Hub</a>
+      <a href="unit4.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+    </div>
+  </main>
+  <div class="cursor-dot" data-cursor-dot></div>
+  <div class="cursor-outline" data-cursor-outline></div>
+  <script>
+    const cursorDot = document.querySelector("[data-cursor-dot]");
+    const cursorOutline = document.querySelector("[data-cursor-outline]");
+    window.addEventListener("mousemove", function(e){
+      cursorDot.style.left=e.clientX+"px"; cursorDot.style.top=e.clientY+"px";
+      cursorOutline.animate({left:e.clientX+"px",top:e.clientY+"px"},{duration:400,fill:"forwards"});
+    });
+    document.querySelectorAll("a,button").forEach(el=>{
+      el.addEventListener("mouseenter",()=>cursorOutline.classList.add("cursor-hovering"));
+      el.addEventListener("mouseleave",()=>cursorOutline.classList.remove("cursor-hovering"));
+    });
+  </script>
+<script src="../splash-cursor.js"></script>\n</body>
+</html>

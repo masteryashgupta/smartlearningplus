@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Learning Plus // AOA · Unit 3</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <main class="main-wrapper" style="width:100%;">
+    <div class="topbar">
+      <a href="index.html" class="back-btn">⬅ AOA Hub</a>
+      <div class="brand">Smart<span>Learning</span>+ <span style="color:var(--muted);font-weight:400;font-size:14px;">// AOA · Unit 3</span></div>
+      <div class="nav">
+        <a href="index.html">🏠 AOA Hub</a>
+        <a href="#content">📖 Content</a>
+        <a href="#qa">❓ Q&amp;A</a>
+        <a href="unit2.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+        <a href="unit4.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="hero">
+        <h1>🪙 Unit 3 — Greedy Method &amp; Dynamic Programming</h1>
+        <p>Knapsack Problem · Job Sequencing · Optimal Merge Patterns · Minimal Spanning Trees · Matrix Chain Multiplication · Longest Common Subsequence · 0/1 Knapsack | Hours: 10</p>
+        <div class="badges" style="margin-top:14px;">
+          <a href="index.html" style="text-decoration:none;"><span class="badge b-teal">← Back to AOA Hub</span></a>
+          <span class="badge b-gold">5CS4-05 · Analysis of Algorithms · RTU</span>
+        </div>
+      </div>
+      <div id="content">
+<div id="unit3">
+<div class="unit-title">🪙 Unit 3 — Greedy Method &amp; Dynamic Programming</div>
+<div class="unit-sub">Greedy Method &middot; Fractional Knapsack Problem &middot; Job Sequencing with Deadlines &middot; Optimal Merge Patterns &middot; Minimal Spanning Trees (Prim's &amp; Kruskal's) &middot; Dynamic Programming &middot; Matrix Chain Multiplication &middot; Longest Common Subsequence &middot; 0/1 Knapsack Problem</div>
+
+<div class="badge-row">
+  <span class="badge b-red">🔥 HIGHEST WEIGHT UNIT — 10 Hours, Numerical-Heavy</span>
+  <span class="badge b-gold">⚠ 10-Mark: 0/1 Knapsack DP, MST (Prim's/Kruskal's), MCM</span>
+  <span class="badge b-teal">✅ Greedy vs DP Difference Asked Almost Every Year</span>
+</div>
+
+<div class="card" style="margin-bottom:28px;">
+  <div style="color:var(--accent2); font-weight:700; margin-bottom:10px;">📑 Unit 3 Quick Navigation</div>
+  <div class="toc" style="columns:2; column-gap:24px;">
+    <div><a href="#u3-greedy">3.1 Greedy Method — Concept</a></div>
+    <div><a href="#u3-knapsack-frac">3.2 Fractional Knapsack Problem</a></div>
+    <div><a href="#u3-jobseq">3.3 Job Sequencing with Deadlines</a></div>
+    <div><a href="#u3-merge">3.4 Optimal Merge Patterns</a></div>
+    <div><a href="#u3-mst">3.5 Minimal Spanning Trees</a></div>
+    <div><a href="#u3-dp">3.6 Dynamic Programming — Concept</a></div>
+    <div><a href="#u3-mcm">3.7 Matrix Chain Multiplication</a></div>
+    <div><a href="#u3-lcs">3.8 Longest Common Subsequence</a></div>
+    <div><a href="#u3-01knap">3.9 0/1 Knapsack Problem (DP)</a></div>
+    <div><a href="#u3-tables">3.10 Comparison Tables</a></div>
+    <div><a href="#u3-qa">3.11 RTU Exam Q&amp;A</a></div>
+  </div>
+</div>
+
+<!-- 3.1 GREEDY METHOD -->
+<h2 class="topic" id="u3-greedy">3.1 Greedy Method — Concept <span class="imp h">FOUNDATION</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">The <strong>Greedy Method</strong> is a problem-solving strategy that builds up a solution piece by piece, at each step choosing the option that looks <strong>locally optimal (best at that moment)</strong>, without reconsidering earlier choices, in the hope that this sequence of local choices leads to a globally optimal solution.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish Explanation</div>
+  <p style="margin-top:6px;">Greedy approach mein hum har step par "abhi ke liye sabse best" choice lete hain, bina yeh soche ki future mein iska kya effect hoga, aur kabhi bhi piche jaakar decision change nahi karte. Yeh fast aur simple hota hai, lekin hamesha optimal (sabse best) answer nahi deta — sirf un problems ke liye guaranteed optimal hota hai jinme "greedy choice property" aur "optimal substructure" hoti hai.</p>
+</div>
+
+<h3 class="sub">Key Requirements for Greedy to Work</h3>
+<div class="card">
+  <ul>
+    <li>🎯 <strong>Greedy Choice Property:</strong> A globally optimal solution can be reached by making a locally optimal (greedy) choice at each step.</li>
+    <li>🧩 <strong>Optimal Substructure:</strong> An optimal solution to the problem contains optimal solutions to its sub-problems.</li>
+  </ul>
+</div>
+
+<!-- 3.2 FRACTIONAL KNAPSACK -->
+<h2 class="topic" id="u3-knapsack-frac">3.2 Fractional Knapsack Problem (Greedy) <span class="imp h">EXAM HOT — NUMERICAL</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">The <strong>Fractional Knapsack Problem</strong> requires filling a knapsack of capacity W with items (each having a weight and a profit/value) — items can be broken into <strong>fractions</strong> — to maximize the total profit, solved optimally by the greedy strategy of picking items in decreasing order of <strong>profit/weight ratio</strong>.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Fractional Knapsack mein item ko todha (fraction mein liya) ja sakta hai — jaise sona ka kuch gram le lo. Strategy simple hai: har item ka profit/weight ratio nikalo, sabse high ratio wale item ko poora utha lo, fir agla, jab tak bag bhar na jaaye — agar last item poora nahi aata toh uska fraction le lo. Yeh greedy approach hamesha optimal solution deta hai is problem ke liye.</p>
+</div>
+
+<h3 class="sub">Algorithm</h3>
+<div class="card">
+  <div class="formula">1. Compute ratio[i] = profit[i] / weight[i] for every item
+2. Sort items in decreasing order of ratio
+3. For each item (in sorted order):
+     if weight[i] <= remaining capacity: take it fully
+     else: take fraction = remaining_capacity / weight[i]; STOP</div>
+</div>
+
+<div class="card example">
+  <div class="tag">💡 Numerical Example: W=50, Items (profit,weight): (60,10),(100,20),(120,30)</div>
+  <p style="margin-top:6px;">Ratios: 60/10=6, 100/20=5, 120/30=4 → sort by ratio: Item1(6), Item2(5), Item3(4).</p>
+  <div class="formula">Take Item1 fully: weight=10, profit=60, remaining capacity=40
+Take Item2 fully: weight=20, profit=100, remaining capacity=20
+Item3 needs 30 but only 20 left → take fraction 20/30 = 2/3
+   profit added = 120 × 2/3 = 80
+Total Profit = 60+100+80 = 240</div>
+</div>
+
+<!-- 3.3 JOB SEQUENCING -->
+<h2 class="topic" id="u3-jobseq">3.3 Job Sequencing with Deadlines (Greedy) <span class="imp h">EXAM HOT</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;"><strong>Job Sequencing with Deadlines</strong> is the problem of scheduling a set of jobs, each with a <strong>deadline</strong> and a <strong>profit</strong>, on a single processor (one job per unit time slot) to <strong>maximize total profit</strong>, where profit is earned only if a job completes within its deadline.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Har job ek deadline aur profit ke saath aati hai. Hum jobs ko profit ke decreasing order mein sort karte hain, aur har job ko uske deadline se ek slot pehle, sabse late available free slot mein fit karne ki koshish karte hain (taaki earlier slots dusri jobs ke liye free rahein). Agar koi free slot nahi milta deadline tak, toh job skip kar di jaati hai.</p>
+</div>
+
+<h3 class="sub">Algorithm</h3>
+<div class="card">
+  <div class="formula">1. Sort all jobs in decreasing order of profit
+2. Let max deadline = d_max; create d_max empty time slots
+3. For each job (in sorted order):
+     Find the latest free slot available before (or at) its deadline
+     If found: place job in that slot
+     Else: reject the job</div>
+</div>
+
+<div class="card example">
+  <div class="tag">💡 Numerical Example</div>
+  <p style="margin-top:6px;">Jobs (Job, Deadline, Profit): J1(2,100), J2(1,19), J3(2,27), J4(1,25), J5(3,15) — sorted by profit: J1(100),J3(27),J4(25),J2(19),J5(15).</p>
+  <div class="formula">J1 (deadline 2): place in slot 2 → [_, J1]
+J3 (deadline 2): slot 2 taken → try slot 1 → [J3, J1]
+J4 (deadline 1): slot 1 taken → no earlier slot → REJECT
+J2 (deadline 1): slot 1 taken → REJECT
+J5 (deadline 3): no slot 3 exists (max deadline=2) → REJECT
+Selected: J3, J1 | Total Profit = 27+100 = 127</div>
+</div>
+
+<!-- 3.4 OPTIMAL MERGE -->
+<h2 class="topic" id="u3-merge">3.4 Optimal Merge Patterns (Greedy) <span class="imp m">5-MARK</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">The <strong>Optimal Merge Pattern</strong> problem finds the order in which a set of sorted files (of given sizes) should be pairwise merged so that the <strong>total number of record comparisons (cost)</strong> across all merges is minimized, solved greedily by always merging the <strong>two smallest</strong> files/lists available at each step.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Jab humein multiple sorted files ko ek single sorted file mein merge karna hota hai, toh order important hai — galat order se zyada comparisons lagte hain. Greedy strategy: hamesha do sabse chhoti files ko pehle merge karo, unka result wapas list mein daalo, aur phir se do sabse chhoti uthao. Yeh exactly Huffman coding jaisi technique hai aur min-heap se efficiently implement hoti hai.</p>
+</div>
+
+<h3 class="sub">Algorithm</h3>
+<div class="card">
+  <div class="formula">1. Put all file sizes into a min-priority-queue (min-heap)
+2. While more than 1 file remains:
+     Extract the two smallest files, x and y
+     Merge them: new file size = x + y; cost += (x+y)
+     Insert merged file size back into the heap
+3. Total cost = sum of all merge costs (weighted path length)</div>
+</div>
+
+<div class="card example">
+  <div class="tag">💡 Numerical Example: Files of sizes 20, 30, 10, 5</div>
+  <div class="formula">Sorted: 5,10,20,30
+Merge 5+10=15  (cost=15)   → remaining: 15,20,30
+Merge 15+20=35 (cost=35)   → remaining: 35,30
+Merge 30+35=65 (cost=65)   → remaining: 65
+Total Merge Cost = 15+35+65 = 115</div>
+</div>
+
+<!-- 3.5 MST -->
+<h2 class="topic" id="u3-mst">3.5 Minimal Spanning Trees — Prim's &amp; Kruskal's (Greedy) <span class="imp h">EXAM HOT — 10 MARK</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">A <strong>Minimum Spanning Tree (MST)</strong> of a connected, weighted, undirected graph is a subset of its edges that connects all vertices together, without any cycles, while minimizing the total edge weight. <strong>Prim's</strong> and <strong>Kruskal's</strong> algorithms are two classic greedy methods to construct an MST.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">MST woh tree hai jo graph ke saare vertices ko jodta hai minimum total edge weight ke saath, bina koi cycle banaye. Prim's algorithm ek vertex se start karke tree ko grow karta hai (har baar minimum weight wala connecting edge jodte hue), jabki Kruskal's algorithm saare edges ko weight ke according sort karke, cycle avoid karte hue, sabse chhote edges choose karta hai.</p>
+</div>
+
+<h3 class="sub">Prim's Algorithm</h3>
+<div class="card">
+  <div class="formula">1. Start with any single vertex in the MST set
+2. Repeat (n-1) times:
+     Find the minimum-weight edge connecting a vertex INSIDE the MST set
+     to a vertex OUTSIDE the MST set
+     Add that edge and the new vertex to the MST set
+3. Stop when all vertices are included</div>
+  <p>Implemented efficiently using a min-priority-queue; grows the tree vertex by vertex.</p>
+</div>
+
+<h3 class="sub">Kruskal's Algorithm</h3>
+<div class="card">
+  <div class="formula">1. Sort all edges of the graph in increasing order of weight
+2. Initialize each vertex as its own separate set (Union-Find / Disjoint Set)
+3. For each edge (u,v) in sorted order:
+     if find(u) != find(v):     // doesn't form a cycle
+         add edge to MST
+         union(u, v)
+4. Stop when MST has (n-1) edges</div>
+  <p>Uses the <strong>Union-Find (Disjoint Set)</strong> data structure to efficiently detect cycles; grows the forest edge by edge.</p>
+</div>
+
+<div class="card example">
+  <div class="tag">💡 Example</div>
+  <p style="margin-top:8px;">For a graph with 5 vertices and 7 edges, Kruskal's picks edges in increasing weight order (e.g., 1,2,3,4,5,...) skipping any edge that would form a cycle with already-selected edges, stopping once 4 edges (n&#x2212;1) are chosen — this gives the same total MST weight as Prim's, though the order of edge selection differs.</p>
+</div>
+
+<div class="keypoint">
+  <span class="icon">📌</span>
+  <span><strong>Prim's vs Kruskal's:</strong> Prim's works well on dense graphs (grows one connected tree), while Kruskal's works well on sparse graphs (sorts all edges globally and uses Union-Find). Both always produce a minimum-weight spanning tree, though it may not be unique if edge weights repeat.</span>
+</div>
+
+<!-- 3.6 DP CONCEPT -->
+<h2 class="topic" id="u3-dp">3.6 Dynamic Programming — Concept <span class="imp h">FOUNDATION</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;"><strong>Dynamic Programming (DP)</strong> is an optimization technique that solves complex problems by breaking them into <strong>overlapping sub-problems</strong>, solving each sub-problem only once, and <strong>storing (memoizing)</strong> its result — avoiding the re-computation that plain recursion would otherwise repeat.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">DP tab use hoti hai jab problem ko chhote sub-problems mein todha jaa sakta ho, aur woh sub-problems baar-baar repeat (overlap) hote hों. DP unke results ko ek table (array) mein store kar leti hai, taaki dobara calculate na karna pade — isse exponential time complexity polynomial time mein convert ho jaati hai. Do approaches hoti hain: Top-Down (Memoization, recursion + cache) aur Bottom-Up (Tabulation, iterative table filling).</p>
+</div>
+
+<h3 class="sub">Key Requirements for DP to Apply</h3>
+<div class="card">
+  <ul>
+    <li>🔁 <strong>Overlapping Sub-problems:</strong> The same smaller sub-problems are solved multiple times in a naive recursive solution.</li>
+    <li>🧩 <strong>Optimal Substructure:</strong> The optimal solution to the problem can be built from optimal solutions of its sub-problems.</li>
+  </ul>
+</div>
+
+<h3 class="sub">Top-Down (Memoization) vs Bottom-Up (Tabulation)</h3>
+<div class="compare">
+  <div class="compare-card">
+    <h4 style="color:var(--accent);">Top-Down (Memoization)</h4>
+    <p>Recursive solution + a lookup table (cache) to store already-computed results, avoiding recomputation.</p>
+  </div>
+  <div class="compare-card">
+    <h4 style="color:var(--accent2);">Bottom-Up (Tabulation)</h4>
+    <p>Iterative approach that fills a table starting from base cases, building up to the final solution — usually more space/time efficient (no recursion overhead).</p>
+  </div>
+</div>
+
+<!-- 3.7 MCM -->
+<h2 class="topic" id="u3-mcm">3.7 Matrix Chain Multiplication (DP) <span class="imp h">EXAM HOT — 10 MARK</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">The <strong>Matrix Chain Multiplication</strong> problem finds the most efficient way (i.e., the order of parenthesization) to multiply a chain of matrices, so as to <strong>minimize the total number of scalar multiplications</strong> — the matrices themselves are not actually reordered, only the placement of parentheses (which pairs to multiply first) is optimized.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Matrices ka multiplication associative hota hai, lekin order of multiplication (kaunsa pehle multiply karna hai) se total scalar multiplications ki count bahut change ho sakti hai. MCM problem optimal parenthesization (bracket placement) dhoondhti hai jisse minimum multiplications lagein — DP table m[i][j] use karke saare possible split points try kiye jaate hain aur minimum cost wala choose hota hai.</p>
+</div>
+
+<h3 class="sub">DP Recurrence</h3>
+<div class="card">
+  <div class="formula">m[i][i] = 0   (single matrix, no multiplication needed)
+m[i][j] = min over k (i<=k<j) of:
+   { m[i][k] + m[k+1][j] + p[i-1]*p[k]*p[j] }
+where matrix Ai has dimensions p[i-1] × p[i]</div>
+</div>
+
+<div class="card example">
+  <div class="tag">💡 Numerical Example: Dimensions p = [10,20,30,40] (3 matrices A1,A2,A3)</div>
+  <div class="formula">A1: 10×20, A2: 20×30, A3: 30×40
+Option 1: (A1A2)A3 = (10×20×30) + (10×30×40) = 6000+12000 = 18000
+Option 2: A1(A2A3) = (20×30×40) + (10×20×40) = 24000+8000  = 32000
+Minimum cost = 18000, achieved by parenthesization (A1A2)A3</div>
+</div>
+
+<!-- 3.8 LCS -->
+<h2 class="topic" id="u3-lcs">3.8 Longest Common Subsequence (DP) <span class="imp h">EXAM HOT — NUMERICAL</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">The <strong>Longest Common Subsequence (LCS)</strong> problem finds the longest sequence of characters that appears, in the same relative order (not necessarily contiguous), in both of two given strings; solved using DP by building a table of LCS lengths for all prefix-pairs of the two strings.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Subsequence ka matlab hai characters same order mein hों, lekin continuous (adjacent) hona zaroori nahi — beech mein gaps ho sakte hain. LCS dono strings mein common aisa sabse lamba subsequence dhoondhta hai. DP table dp[i][j] banta hai: agar character match karta hai toh dp[i][j]=dp[i-1][j-1]+1, warna dp[i][j]=max(dp[i-1][j], dp[i][j-1]).</p>
+</div>
+
+<h3 class="sub">DP Recurrence</h3>
+<div class="card">
+  <div class="formula">dp[i][0] = dp[0][j] = 0   (base case: empty string)
+if X[i] == Y[j]:  dp[i][j] = dp[i-1][j-1] + 1
+else:             dp[i][j] = max(dp[i-1][j], dp[i][j-1])</div>
+</div>
+
+<div class="card example">
+  <div class="tag">💡 Numerical Example: X = "ABCBDAB", Y = "BDCABA"</div>
+  <p style="margin-top:6px;">Filling the dp table row by row (matching characters increment diagonal +1, else take max of left/top) gives a final LCS length of <strong>4</strong>, with one valid LCS being "BCBA" (or "BDAB").</p>
+</div>
+
+<!-- 3.9 0/1 KNAPSACK -->
+<h2 class="topic" id="u3-01knap">3.9 0/1 Knapsack Problem (DP) <span class="imp h">MOST IMPORTANT — 10 MARK NUMERICAL</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">The <strong>0/1 Knapsack Problem</strong> requires selecting a subset of items (each with a weight and a profit), where each item is either taken <strong>whole or not at all (0/1, no fractions allowed)</strong>, to maximize total profit without exceeding the knapsack's weight capacity W — solved optimally using Dynamic Programming (unlike the fractional version, Greedy does NOT guarantee optimality here).</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">0/1 Knapsack mein item ko todha nahi ja sakta — ya toh poora lo ya bilkul mat lo. Isliye greedy (ratio-based) approach yahan optimal solution guarantee nahi karta, DP use karni padti hai. Hum ek 2D table dp[i][w] banate hain jisme i = items consider kiye gaye, w = capacity — har cell mein decide karte hain ki current item lena better hai ya chodhna.</p>
+</div>
+
+<h3 class="sub">DP Recurrence</h3>
+<div class="card">
+  <div class="formula">dp[0][w] = 0 for all w   (no items = 0 profit)
+dp[i][w] = dp[i-1][w]                                    if weight[i] > w
+dp[i][w] = max( dp[i-1][w],  profit[i] + dp[i-1][w-weight[i]] )   otherwise</div>
+</div>
+
+<div class="card example">
+  <div class="tag">💡 Numerical Example: W=5, Items (weight,profit): (2,3),(3,4),(4,5),(5,6)</div>
+  <p style="margin-top:6px;">Building dp[i][w] for w=0..5 across 4 items:</p>
+  <table style="margin-top:10px;">
+    <tr><th>Item \ W</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr>
+    <tr><td>—</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+    <tr><td>(2,3)</td><td>0</td><td>0</td><td>3</td><td>3</td><td>3</td><td>3</td></tr>
+    <tr><td>(3,4)</td><td>0</td><td>0</td><td>3</td><td>4</td><td>4</td><td>7</td></tr>
+    <tr><td>(4,5)</td><td>0</td><td>0</td><td>3</td><td>4</td><td>5</td><td>7</td></tr>
+    <tr><td>(5,6)</td><td>0</td><td>0</td><td>3</td><td>4</td><td>5</td><td>7</td></tr>
+  </table>
+  <p style="margin-top:8px;">Maximum profit dp[4][5] = <strong>7</strong>, achieved by selecting items (2,3) and (3,4) → total weight=5, total profit=7.</p>
+</div>
+
+<!-- 3.10 TABLES -->
+<h2 class="topic" id="u3-tables">3.10 Important Comparison Tables <span class="imp h">RAPID REVISION</span></h2>
+
+<h3 class="sub">Greedy Method vs Dynamic Programming</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Basis</th><th>Greedy Method</th><th>Dynamic Programming</th></tr>
+    <tr><td>Choice making</td><td>Makes one locally-optimal choice and never reconsiders it</td><td>Explores/stores results of all relevant sub-problems before deciding</td></tr>
+    <tr><td>Sub-problems</td><td>Solves each sub-problem only once (no overlap exploited)</td><td>Solves overlapping sub-problems and reuses stored results</td></tr>
+    <tr><td>Optimality guarantee</td><td>Only optimal when greedy-choice property holds</td><td>Always finds the global optimum (if optimal substructure holds)</td></tr>
+    <tr><td>Speed</td><td>Generally faster, simpler</td><td>Generally slower, needs extra memory for table</td></tr>
+    <tr><td>Example</td><td>Fractional Knapsack, Prim's/Kruskal's MST</td><td>0/1 Knapsack, Matrix Chain Multiplication, LCS</td></tr>
+  </table>
+</div>
+
+<h3 class="sub">Fractional vs 0/1 Knapsack</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Basis</th><th>Fractional Knapsack</th><th>0/1 Knapsack</th></tr>
+    <tr><td>Item selection</td><td>Items can be broken into fractions</td><td>Items must be taken whole or not at all</td></tr>
+    <tr><td>Best approach</td><td>Greedy (profit/weight ratio)</td><td>Dynamic Programming</td></tr>
+    <tr><td>Time Complexity</td><td>O(n log n) — dominated by sorting</td><td>O(n×W)</td></tr>
+  </table>
+</div>
+
+<h3 class="sub">Prim's vs Kruskal's Algorithm</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Basis</th><th>Prim's Algorithm</th><th>Kruskal's Algorithm</th></tr>
+    <tr><td>Approach</td><td>Grows a single tree vertex by vertex</td><td>Builds a forest, picking edges globally by weight</td></tr>
+    <tr><td>Data structure</td><td>Min-priority-queue (min-heap)</td><td>Union-Find (Disjoint Set)</td></tr>
+    <tr><td>Better for</td><td>Dense graphs</td><td>Sparse graphs</td></tr>
+    <tr><td>Time Complexity</td><td>O(E log V) using a binary heap</td><td>O(E log E) for sorting edges</td></tr>
+  </table>
+</div>
+
+<!-- 3.11 Q&A -->
+<h2 class="topic" id="u3-qa">3.11 RTU Exam Questions &amp; Answers (Importance-Wise)</h2>
+<div id="qsection">
+
+  <div class="qcard">
+    <div class="qlabel">Q1</div>
+    <div class="q">Solve the 0/1 Knapsack problem using Dynamic Programming for W=5 and items (weight,profit): (2,3),(3,4),(4,5),(5,6). Show the DP table. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>Building the dp[i][w] table row by row, where each cell takes the better of "exclude item i" (dp[i-1][w]) or "include item i" (profit[i] + dp[i-1][w-weight[i]], if it fits), the table fills as shown above, ending with maximum profit dp[4][5] = 7, achieved by choosing items (2,3) and (3,4), using total weight 5 and yielding total profit 7.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q2</div>
+    <div class="q">Explain Greedy Method and Dynamic Programming. Differentiate between them with examples. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>The Greedy Method builds a solution by repeatedly making the locally best choice at each step without reconsidering past decisions, which works only when the problem has the greedy-choice property and optimal substructure (e.g., Fractional Knapsack, MST). Dynamic Programming instead solves and stores results for all relevant overlapping sub-problems, guaranteeing the global optimum whenever optimal substructure holds, at the cost of extra time/memory for the DP table (e.g., 0/1 Knapsack, Matrix Chain Multiplication, LCS).</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q3</div>
+    <div class="q">Find the Minimum Spanning Tree of a given graph using both Prim's and Kruskal's algorithms. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>Prim's algorithm starts from an arbitrary vertex and repeatedly adds the minimum-weight edge connecting the current tree to a new outside vertex, until all vertices are included. Kruskal's algorithm instead sorts all edges by weight and greedily adds each edge that does not form a cycle (checked via Union-Find), stopping once n−1 edges have been added. Both methods, though structurally different, always produce a spanning tree of the same total minimum weight for a given connected graph.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q4</div>
+    <div class="q">Solve the Matrix Chain Multiplication problem for matrices with dimensions p=[10,20,30,40] and find the minimum number of scalar multiplications. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>For three matrices A1(10×20), A2(20×30), A3(30×40), parenthesizing as (A1A2)A3 costs (10×20×30)+(10×30×40) = 6000+12000 = 18000 multiplications, while A1(A2A3) costs (20×30×40)+(10×20×40) = 24000+8000 = 32000. The DP recurrence m[i][j] = min over k of m[i][k]+m[k+1][j]+p[i-1]p[k]p[j] confirms (A1A2)A3 as optimal, giving a minimum cost of 18000.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q5</div>
+    <div class="q">Find the Longest Common Subsequence of X="ABCBDAB" and Y="BDCABA" using Dynamic Programming. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>Using the recurrence dp[i][j]=dp[i-1][j-1]+1 when characters match, and dp[i][j]=max(dp[i-1][j],dp[i][j-1]) otherwise, the DP table is filled across all prefixes of X and Y. The resulting longest common subsequence has length 4, with "BCBA" (or equivalently "BDAB") being one valid such subsequence found by tracing back through the table.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q6</div>
+    <div class="q">Explain the Fractional Knapsack problem and solve it for W=50 and items (profit,weight): (60,10),(100,20),(120,30). <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>The greedy strategy computes the profit/weight ratio for each item (6, 5, and 4 respectively), sorts items by decreasing ratio, and takes items fully until capacity is exhausted, taking a fraction of the last item if needed. Taking item1 and item2 fully uses 30 of the 50 capacity (profit 160), and taking 2/3 of item3 (20 of its 30 weight) adds 80 more profit, giving a maximum total profit of 240.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q7</div>
+    <div class="q">Explain Job Sequencing with Deadlines and solve for jobs J1(d=2,p=100), J2(d=1,p=19), J3(d=2,p=27), J4(d=1,p=25), J5(d=3,p=15). <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>Jobs are sorted in decreasing order of profit, and each is greedily placed into the latest available free time slot at or before its deadline; a job is rejected if no such slot remains. Following this for the given jobs, J1 is placed in slot 2 and J3 in slot 1 (since slot 2 is taken), while J4, J2, and J5 all fail to find a free slot and are rejected, giving a maximum total profit of 127 from jobs J3 and J1.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q8</div>
+    <div class="q">Explain the Optimal Merge Pattern problem and find the optimal merge cost for files of sizes 20, 30, 10, 5. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>The optimal merge pattern problem minimizes total record comparisons across all pairwise merges by always greedily combining the two currently-smallest files first, typically implemented using a min-heap. For files 5, 10, 20, 30: merging 5+10 costs 15, then merging 15+20 costs 35, then merging 30+35 costs 65, giving a total minimum merge cost of 15+35+65 = 115.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q9</div>
+    <div class="q">Why does the Greedy approach fail to give an optimal solution for the 0/1 Knapsack problem? Explain with an example. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>In 0/1 Knapsack, items cannot be split, so greedily picking the item with the highest profit/weight ratio first can leave leftover capacity that cannot be efficiently used by remaining items, resulting in a sub-optimal total profit. For example, with capacity W=10 and items (profit,weight) = (10,5),(10,5),(12,8), the greedy ratio-based choice would pick the 12-profit item first (ratio 1.5), filling 8 of 10 capacity and leaving only 2 capacity unused, yielding total profit 12 — whereas picking both 10-profit items uses exactly 10 capacity for a higher total profit of 20, which DP correctly identifies but greedy does not.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q10</div>
+    <div class="q">Differentiate between Top-Down (Memoization) and Bottom-Up (Tabulation) approaches in Dynamic Programming. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>Top-Down (Memoization) uses the natural recursive formulation of the problem along with a cache/lookup table to store results of sub-problems as they are computed, avoiding redundant recursive calls. Bottom-Up (Tabulation) instead iteratively fills a table starting from the smallest base-case sub-problems and builds up to the final answer, which generally avoids recursion overhead and is often more space and time efficient in practice.</p>
+    </div>
+  </div>
+
+</div><!-- end qsection -->
+
+<!-- CHEAT SHEET -->
+<div class="card" style="margin-top:40px; background:linear-gradient(135deg,#0a1525,#0b0d10); border:2px solid var(--accent);">
+  <div style="color:var(--accent); font-family:'Consolas',monospace; font-weight:700; font-size:15px; margin-bottom:14px;">📌 UNIT 3 — MASTER FORMULA CHEAT SHEET</div>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+    <div class="formula" style="margin:3px 0; font-size:12px;">Fractional Knapsack: sort by profit/weight ratio</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Job Sequencing: sort by profit, place in latest free slot</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Optimal Merge: always merge 2 smallest files (min-heap)</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Prim's: min-heap, grows 1 tree; Kruskal's: sort edges + Union-Find</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">MCM: m[i][j]=min{m[i][k]+m[k+1][j]+p[i-1]p[k]p[j]}</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">LCS: match→dp[i-1][j-1]+1, else max(dp[i-1][j],dp[i][j-1])</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">0/1 Knapsack: dp[i][w]=max(dp[i-1][w], p[i]+dp[i-1][w-wt[i]])</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Greedy: locally optimal, no backtrack, no overlap reuse</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">DP: overlapping sub-problems + optimal substructure</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">0/1 Knapsack DP time: O(n×W)</div>
+  </div>
+</div>
+
+<!-- Unit 3 Footer -->
+<div style="margin-top:50px; padding:20px 24px; border:1px dashed var(--line); border-radius:10px; color:var(--muted); font-size:13px;">
+  <div style="color:var(--accent); font-family:'Consolas',monospace; font-weight:700; margin-bottom:6px;">ZYREX // AOA_VAULT — UNIT 3 · Greedy Method &amp; Dynamic Programming</div>
+  <p>RTU B.Tech CSE 5th Semester · 5CS4-05 Analysis of Algorithms · Unit 3 of 6</p>
+  <p style="margin-top:6px;">📌 Key formulas: Greedy ratio selection · Job sequencing slot rule · MST (Prim's/Kruskal's) · MCM, LCS &amp; 0/1 Knapsack DP recurrences</p>
+  <p style="margin-top:6px;">⚡ Unit 4 — Branch and Bound &amp; Pattern Matching can be appended directly below this section.</p>
+</div>
+
+</div><!-- end unit3 -->
+
+<hr class="sep">
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:center;padding:30px 20px;flex-wrap:wrap;">
+      <a href="unit2.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+      <a href="index.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">🏠 AOA Hub</a>
+      <a href="unit4.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+    </div>
+  </main>
+  <div class="cursor-dot" data-cursor-dot></div>
+  <div class="cursor-outline" data-cursor-outline></div>
+  <script>
+    const cursorDot = document.querySelector("[data-cursor-dot]");
+    const cursorOutline = document.querySelector("[data-cursor-outline]");
+    window.addEventListener("mousemove", function(e){
+      cursorDot.style.left=e.clientX+"px"; cursorDot.style.top=e.clientY+"px";
+      cursorOutline.animate({left:e.clientX+"px",top:e.clientY+"px"},{duration:400,fill:"forwards"});
+    });
+    document.querySelectorAll("a,button").forEach(el=>{
+      el.addEventListener("mouseenter",()=>cursorOutline.classList.add("cursor-hovering"));
+      el.addEventListener("mouseleave",()=>cursorOutline.classList.remove("cursor-hovering"));
+    });
+  </script>
+<script src="../splash-cursor.js"></script>\n</body>
+</html>

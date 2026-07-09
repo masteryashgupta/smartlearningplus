@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Learning Plus // ITC · Unit 6</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <main class="main-wrapper" style="width:100%;">
+    <div class="topbar">
+      <a href="../itc/index.html" class="back-btn">⬅ ITC Hub</a>
+      <div class="brand">Smart<span>Learning</span>+ <span style="color:var(--muted);font-weight:400;font-size:14px;">// ITC · Unit 6</span></div>
+      <div class="nav">
+        <a href="../itc/index.html">🏠 ITC Hub</a>
+        <a href="#content">📖 Content</a>
+        <a href="#qa">❓ Q&amp;A</a>
+        <a href="unit5.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+        
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="hero">
+        <h1>🔗 Unit 6 — Convolutional Codes</h1>
+        <p>Encoders · Code Tree · Trellis · State Diagram · Viterbi Algorithm · Free Distance | Hours: 06</p>
+        <div class="badges" style="margin-top:14px;">
+          <a href="../itc/index.html" style="text-decoration:none;"><span class="badge b-teal">← Back to ITC Hub</span></a>
+          <span class="badge b-gold">5CS3-01 · ITC · RTU</span>
+        </div>
+      </div>
+      <div id="content">
+<div id="unit6">
+<div class="unit-title">🔗 Unit 6 — Convolutional Codes</div>
+<div class="unit-sub">Convolutional Encoders of Different Rates &middot; Code Tree &middot; Trellis &amp; State Diagram &middot; Maximum Likelihood Decoding (Viterbi Algorithm) &middot; Free Distance &nbsp;|&nbsp; Hours: 06</div>
+
+<div class="badge-row">
+  <span class="badge b-red">🔥 HIGH WEIGHT — Viterbi numerical almost guaranteed</span>
+  <span class="badge b-gold">⭐ 5 &amp; 10 Mark Questions</span>
+</div>
+
+<!-- 1. Introduction -->
+<h2 class="topic scroll-anchor" id="cc-intro">1. Introduction to Convolutional Codes <span class="imp h">High ⭐⭐⭐</span></h2>
+<div class="card def">
+  <span class="tag">English</span>
+  <p>A <b>Convolutional Code</b> is an error-control code in which the encoder output at any time instant depends not only on the current input block of <i>k</i> bits, but also on a fixed number of <b>previous input blocks</b> (stored in shift-register memory). Unlike block codes (where each codeword is encoded independently), convolutional codes process data as a <b>continuous stream</b>, convolving the input sequence with the encoder's impulse response (generator sequences) — hence the name.</p>
+</div>
+<div class="hin">
+  <span class="tag">Hinglish</span>
+  <p>Linear Block Code (Unit 4) aur Cyclic Code (Unit 5) mein har codeword <b>independent</b> hota hai — fixed k input bits se fixed n output bits bante hain, koi memory nahi. Convolutional code mein encoder ek <b>shift register</b> use karta hai jisme purane input bits "yaad" rehte hain — to current output sirf current input pe nahi, <b>pichle kuch bits pe bhi</b> depend karta hai. Isiliye data ko continuous stream ki tarah process karta hai, block-by-block nahi. Ye satellite communication, deep-space probes (Voyager), aur 4G/WiFi mein bahut use hota hai.</p>
+</div>
+
+<table>
+  <tr><th>Aspect</th><th>Block Codes (Linear/Cyclic)</th><th>Convolutional Codes</th></tr>
+  <tr><td>Memory</td><td>None — each codeword independent</td><td>Has memory — depends on past <i>m</i> input blocks</td></tr>
+  <tr><td>Encoding</td><td>Algebraic (matrix/polynomial multiplication)</td><td>Convolution operation (shift register + modulo-2 adders)</td></tr>
+  <tr><td>Structure</td><td>Fixed-length blocks of n bits from k bits</td><td>Continuous stream, semi-infinite sequences</td></tr>
+  <tr><td>Decoding</td><td>Syndrome decoding</td><td>Viterbi / Sequential decoding (maximum likelihood)</td></tr>
+  <tr><td>Best for</td><td>Burst error correction (with interleaving)</td><td>Random/Gaussian channel errors, deep-space links</td></tr>
+</table>
+
+<!-- 2. Encoder structure & parameters -->
+<h2 class="topic scroll-anchor" id="cc-encoder">2. Convolutional Encoder — Structure &amp; Parameters <span class="imp h">High ⭐⭐⭐⭐</span></h2>
+<div class="card def">
+  <span class="tag">English</span>
+  <p>A convolutional encoder is built from a <b>k-bit-wide shift register</b> with <i>m</i> memory stages, and <i>n</i> modulo-2 (XOR) adders tapped at specific register positions (defined by <b>generator sequences/polynomials</b>) to produce <i>n</i> output bits for every <i>k</i> input bits. It is denoted as an <b>(n, k, m)</b> code.</p>
+</div>
+<div class="formula">
+Code Rate:  R = k/n  (k input bits → n output bits)
+Constraint Length:  K = m + 1  (total no. of input bits influencing one output set; m = memory order / no. of shift-register stages)
+</div>
+<div class="hin">
+  <span class="tag">Hinglish</span>
+  <p><b>k</b> = ek time mein kitne input bits jaate hain, <b>n</b> = unse kitne output bits banate hain, <b>m</b> = shift register mein kitne "purane" input bits store hote hain (memory). <b>Constraint length K</b> batata hai ki <b>total kitne bits</b> (current + memory) ek output ko affect karte hain — jitna zyada K, utna behtar error-correction lekin utna zyada complex decoder.</p>
+</div>
+
+<div class="svgbox">
+  <svg viewBox="0 0 520 200" xmlns="http://www.w3.org/2000/svg">
+    <rect x="20" y="70" width="60" height="50" fill="#141a20" stroke="var(--accent2)" stroke-width="2"/>
+    <text x="50" y="100" text-anchor="middle" fill="#d7e1e8" font-size="13">u(t)</text>
+    <text x="50" y="55" text-anchor="middle" fill="#8aa0ad" font-size="11">Input</text>
+    <line x1="80" y1="95" x2="120" y2="95" stroke="#8aa0ad" stroke-width="1.5"/>
+    <rect x="120" y="70" width="60" height="50" fill="#141a20" stroke="#ffb454" stroke-width="2"/>
+    <text x="150" y="100" text-anchor="middle" fill="#d7e1e8" font-size="12">D (s₁)</text>
+    <line x1="180" y1="95" x2="220" y2="95" stroke="#8aa0ad" stroke-width="1.5"/>
+    <rect x="220" y="70" width="60" height="50" fill="#141a20" stroke="#ffb454" stroke-width="2"/>
+    <text x="250" y="100" text-anchor="middle" fill="#d7e1e8" font-size="12">D (s₀)</text>
+    <circle cx="350" cy="40" r="18" fill="#0e1a22" stroke="var(--accent2)" stroke-width="2"/>
+    <text x="350" y="45" text-anchor="middle" fill="#36e0c4" font-size="12">⊕</text>
+    <text x="395" y="45" fill="#36e0c4" font-size="12">c₁(t)</text>
+    <circle cx="350" cy="150" r="18" fill="#0e1a22" stroke="#ffb454" stroke-width="2"/>
+    <text x="350" y="155" text-anchor="middle" fill="#ffb454" font-size="12">⊕</text>
+    <text x="395" y="155" fill="#ffb454" font-size="12">c₂(t)</text>
+    <line x1="50" y1="70" x2="50" y2="40" stroke="#8aa0ad" stroke-width="1.2"/>
+    <line x1="50" y1="40" x2="335" y2="40" stroke="#8aa0ad" stroke-width="1.2"/>
+    <line x1="150" y1="70" x2="150" y2="40" stroke="#8aa0ad" stroke-width="1.2"/>
+    <line x1="150" y1="40" x2="345" y2="48" stroke="#8aa0ad" stroke-width="1.2"/>
+    <line x1="250" y1="70" x2="250" y2="40" stroke="#8aa0ad" stroke-width="1.2"/>
+    <line x1="250" y1="40" x2="345" y2="35" stroke="#8aa0ad" stroke-width="1.2"/>
+    <line x1="50" y1="120" x2="50" y2="150" stroke="#8aa0ad" stroke-width="1.2"/>
+    <line x1="50" y1="150" x2="335" y2="150" stroke="#8aa0ad" stroke-width="1.2"/>
+    <line x1="250" y1="120" x2="250" y2="155" stroke="#8aa0ad" stroke-width="1.2"/>
+    <line x1="250" y1="155" x2="345" y2="155" stroke="#8aa0ad" stroke-width="1.2"/>
+    <text x="260" y="20" fill="#8aa0ad" font-size="10">g₁=(1,1,1)→c₁=u⊕s₁⊕s₀</text>
+    <text x="260" y="185" fill="#8aa0ad" font-size="10">g₂=(1,0,1)→c₂=u⊕s₀</text>
+  </svg>
+  <p class="cap">Fig 6.1 — Rate-½ Convolutional Encoder, K=3 (m=2 memory stages), generator polynomials g₁=(111), g₂=(101) — the classic "(7,5) octal" NASA encoder used throughout this unit's worked examples</p>
+</div>
+
+<!-- 3. Encoders of different rates -->
+<h2 class="topic scroll-anchor" id="cc-rates">3. Convolutional Encoders of Different Rates <span class="imp h">High ⭐⭐⭐</span></h2>
+<div class="card">
+  <h3 class="sub" style="margin-top:0;">Rate-1/2 Encoder (k=1, n=2)</h3>
+  <p>Most common in practice. One input bit produces two output bits per clock cycle (as shown in Fig 6.1 above). Used in deep-space communication, GSM, dial-up modems.</p>
+</div>
+<div class="card">
+  <h3 class="sub" style="margin-top:0;">Rate-1/3 Encoder (k=1, n=3)</h3>
+  <p>One input bit produces <b>three</b> output bits — lower rate, more redundancy, stronger error correction but lower throughput. Three generator polynomials g₁,g₂,g₃ tap the shift register at different positions; used where channel is extremely noisy (e.g. very weak satellite signal links).</p>
+</div>
+<div class="card">
+  <h3 class="sub" style="margin-top:0;">General Rate-k/n Encoder</h3>
+  <p>k input bits enter simultaneously per clock cycle, producing n output bits, with k separate shift registers feeding n modulo-2 adders. Higher k/n ratio (e.g. 2/3, 3/4) gives <b>higher throughput but weaker error protection</b> — there is always a fundamental trade-off between rate and error-correcting strength.</p>
+</div>
+<div class="hin">
+  <span class="tag">Hinglish</span>
+  <p>Rate <b>k/n</b> jitna chhota (jaise 1/3), utni zyada redundancy add hoti hai → behtar error correction, lekin bandwidth zyada use hoti hai (slow effective throughput). Rate jitna bada (jaise 3/4), utni kam redundancy → fast throughput lekin kamzor error protection. Engineer ko apne channel ki noise condition dekh kar ye trade-off choose karna padta hai.</p>
+</div>
+
+<h3 class="sub">Rate Comparison Table <span class="imp m">Medium ⭐⭐</span></h3>
+<table>
+  <tr><th>Rate (k/n)</th><th>Redundancy</th><th>Error-Correcting Strength</th><th>Throughput</th><th>Typical Use</th></tr>
+  <tr><td>1/3</td><td>Highest</td><td>Strongest</td><td>Lowest</td><td>Deep-space probes (Voyager)</td></tr>
+  <tr><td>1/2</td><td>High</td><td>Strong</td><td>Moderate</td><td>GSM, satellite, dial-up modems</td></tr>
+  <tr><td>2/3, 3/4</td><td>Low (via puncturing)</td><td>Weaker</td><td>High</td><td>WiFi, 4G/LTE (punctured codes)</td></tr>
+</table>
+
+<!-- 4. Code Tree -->
+<h2 class="topic scroll-anchor" id="cc-tree">4. Code Tree Representation <span class="imp m">Medium ⭐⭐⭐</span></h2>
+<div class="card def">
+  <span class="tag">English</span>
+  <p>A <b>code tree</b> is a graphical representation of a convolutional encoder where each level (depth) corresponds to one input time-step, each node represents the encoder's state, and each branch represents the output produced for a given input bit (0 = upper branch, 1 = lower branch, by convention). The tree grows without bound as more input bits arrive, doubling the number of branches at every level.</p>
+</div>
+<div class="hin">
+  <span class="tag">Hinglish</span>
+  <p>Code tree sabse "basic"/literal representation hai — har input bit ke liye tree do branches mein split hota hai (0 ya 1), aur har branch pe output bits likhe jaate hain. Problem ye hai ki ye tree <b>exponentially badhta</b> hai (har level pe nodes double), isiliye practically lamba sequence ke liye bahut bada ho jaata hai — yahi limitation trellis diagram solve karta hai (states repeat hote hain, tree "fold" ho jaata hai).</p>
+</div>
+
+<div class="svgbox">
+  <svg viewBox="0 0 480 240" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="40" cy="120" r="6" fill="#36e0c4"/>
+    <line x1="40" y1="120" x2="160" y2="50" stroke="var(--accent2)" stroke-width="1.5"/>
+    <text x="90" y="75" fill="#8aa0ad" font-size="10">0/00</text>
+    <line x1="40" y1="120" x2="160" y2="190" stroke="#ffb454" stroke-width="1.5"/>
+    <text x="90" y="170" fill="#8aa0ad" font-size="10">1/11</text>
+    <circle cx="160" cy="50" r="5" fill="#36e0c4"/>
+    <circle cx="160" cy="190" r="5" fill="#ffb454"/>
+    <line x1="160" y1="50" x2="280" y2="15" stroke="var(--accent2)" stroke-width="1.2"/>
+    <text x="210" y="20" fill="#8aa0ad" font-size="9">0/00</text>
+    <line x1="160" y1="50" x2="280" y2="85" stroke="var(--accent2)" stroke-width="1.2"/>
+    <text x="210" y="85" fill="#8aa0ad" font-size="9">1/11</text>
+    <line x1="160" y1="190" x2="280" y2="155" stroke="#ffb454" stroke-width="1.2"/>
+    <text x="210" y="155" fill="#8aa0ad" font-size="9">0/11</text>
+    <line x1="160" y1="190" x2="280" y2="225" stroke="#ffb454" stroke-width="1.2"/>
+    <text x="210" y="225" fill="#8aa0ad" font-size="9">1/00</text>
+    <text x="290" y="15" fill="#8aa0ad" font-size="9">→ continues, doubling each level...</text>
+  </svg>
+  <p class="cap">Fig 6.2 — Code Tree for the rate-½ encoder of Fig 6.1: branches double at every level (input bit 0 = upper path, 1 = lower path), each labeled "input/output"</p>
+</div>
+
+<!-- 5. State Diagram -->
+<h2 class="topic scroll-anchor" id="cc-state">5. State Diagram <span class="imp h">High ⭐⭐⭐⭐</span></h2>
+<div class="card def">
+  <span class="tag">English</span>
+  <p>The <b>state diagram</b> represents the convolutional encoder as a finite-state machine: each <b>node</b> is one of the 2<sup>m</sup> possible shift-register contents (states), and each <b>directed edge</b> shows the transition to a new state for a given input bit, labeled "input/output". Unlike the code tree, the state diagram has a <b>fixed, finite number of nodes</b> — it compresses the infinitely-growing tree into a compact, repeating structure.</p>
+</div>
+<div class="hin">
+  <span class="tag">Hinglish</span>
+  <p>State diagram mein sirf <b>2<sup>m</sup> states</b> hote hain (jaise m=2 ke liye 4 states: 00,01,10,11) — chahe sequence kitni bhi lambi ho, states repeat hote rehte hain. Har state se 2 outgoing edges hote hain (input 0 ke liye, input 1 ke liye), edge pe "input/output" label hota hai. Ye code tree se zyada practical/compact representation hai.</p>
+</div>
+
+<h3 class="sub">Next-State &amp; Output Table (for Fig 6.1 encoder) <span class="imp h">High — memorize this pattern for numericals</span></h3>
+<table>
+  <tr><th>Current State (s₁s₀)</th><th>Input u</th><th>Output c₁c₂</th><th>Next State</th></tr>
+  <tr><td>00</td><td>0</td><td>00</td><td>00</td></tr>
+  <tr><td>00</td><td>1</td><td>11</td><td>10</td></tr>
+  <tr><td>01</td><td>0</td><td>11</td><td>00</td></tr>
+  <tr><td>01</td><td>1</td><td>00</td><td>10</td></tr>
+  <tr><td>10</td><td>0</td><td>10</td><td>01</td></tr>
+  <tr><td>10</td><td>1</td><td>01</td><td>11</td></tr>
+  <tr><td>11</td><td>0</td><td>01</td><td>01</td></tr>
+  <tr><td>11</td><td>1</td><td>10</td><td>11</td></tr>
+</table>
+
+<div class="svgbox">
+  <svg viewBox="0 0 420 320" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="210" cy="50" r="28" fill="#141a20" stroke="var(--accent2)" stroke-width="2"/>
+    <text x="210" y="55" text-anchor="middle" fill="#36e0c4" font-size="13">00</text>
+    <circle cx="80" cy="160" r="28" fill="#141a20" stroke="#ffb454" stroke-width="2"/>
+    <text x="80" y="165" text-anchor="middle" fill="#ffb454" font-size="13">01</text>
+    <circle cx="340" cy="160" r="28" fill="#141a20" stroke="#9fd8ff" stroke-width="2"/>
+    <text x="340" y="165" text-anchor="middle" fill="#9fd8ff" font-size="13">10</text>
+    <circle cx="210" cy="270" r="28" fill="#141a20" stroke="#ff6b6b" stroke-width="2"/>
+    <text x="210" y="275" text-anchor="middle" fill="#ff6b6b" font-size="13">11</text>
+    <path d="M195,30 Q160,5 195,25" stroke="#8aa0ad" fill="none" stroke-width="1.3"/>
+    <text x="135" y="15" fill="#8aa0ad" font-size="9">0/00</text>
+    <line x1="190" y1="68" x2="100" y2="142" stroke="#8aa0ad" stroke-width="1.3"/>
+    <text x="120" y="100" fill="#8aa0ad" font-size="9">1/11</text>
+    <line x1="105" y1="140" x2="190" y2="65" stroke="#8aa0ad" stroke-width="1.3"/>
+    <text x="180" y="105" fill="#8aa0ad" font-size="9">0/11</text>
+    <line x1="100" y1="178" x2="320" y2="178" stroke="#8aa0ad" stroke-width="1.3"/>
+    <text x="200" y="195" fill="#8aa0ad" font-size="9">1/00</text>
+    <line x1="230" y1="65" x2="320" y2="140" stroke="#8aa0ad" stroke-width="1.3"/>
+    <text x="290" y="100" fill="#8aa0ad" font-size="9">1/11</text>
+    <line x1="330" y1="185" x2="230" y2="250" stroke="#8aa0ad" stroke-width="1.3"/>
+    <text x="295" y="225" fill="#8aa0ad" font-size="9">0/10</text>
+    <line x1="195" y1="250" x2="100" y2="185" stroke="#8aa0ad" stroke-width="1.3"/>
+    <text x="120" y="225" fill="#8aa0ad" font-size="9">0/01</text>
+    <path d="M225,290 Q260,315 225,285" stroke="#8aa0ad" fill="none" stroke-width="1.3"/>
+    <text x="245" y="315" fill="#8aa0ad" font-size="9">1/10</text>
+    <line x1="350" y1="140" x2="225" y2="60" stroke="#8aa0ad" stroke-width="1.3" stroke-dasharray="3,2"/>
+    <text x="305" y="60" fill="#8aa0ad" font-size="9">0/10</text>
+  </svg>
+  <p class="cap">Fig 6.3 — State Diagram: 4 states (00,01,10,11), each with 2 outgoing edges labeled "input/output", per the encoder table above</p>
+</div>
+
+<!-- 6. Trellis Diagram -->
+<h2 class="topic scroll-anchor" id="cc-trellis">6. Trellis Diagram <span class="imp h">High ⭐⭐⭐⭐⭐ — essential for Viterbi numericals</span></h2>
+<div class="card def">
+  <span class="tag">English</span>
+  <p>A <b>trellis diagram</b> is the state diagram <b>unrolled over time</b> — it shows all possible states at every time instant (as columns), with branches connecting states from one time-step to the next. It combines the finite-state compactness of the state diagram with the explicit time-progression of the code tree, making it the ideal structure for decoding algorithms like Viterbi.</p>
+</div>
+<div class="hin">
+  <span class="tag">Hinglish</span>
+  <p>Trellis = state diagram ko time ke saath "unfold" kar diya — har time step pe sab 4 states ek column mein dikhte hain, aur lines unhe agle time-step ke states se jodti hain. Ye Viterbi algorithm ke liye perfect structure hai kyunki ismein <b>"merging paths"</b> dikhte hain — jab do different input sequences same state pe converge ho jaayen, to weak path ko discard kar sakte hain (yahi Viterbi ka core trick hai).</p>
+</div>
+
+<div class="svgbox">
+  <svg viewBox="0 0 620 260" xmlns="http://www.w3.org/2000/svg">
+    <text x="20" y="35" fill="#36e0c4" font-size="11">00</text>
+    <text x="20" y="105" fill="#ffb454" font-size="11">01</text>
+    <text x="20" y="175" fill="#9fd8ff" font-size="11">10</text>
+    <text x="20" y="245" fill="#ff6b6b" font-size="11">11</text>
+    <g font-size="9" fill="#8aa0ad" text-anchor="middle">
+      <text x="80" y="15">t0</text><text x="200" y="15">t1</text><text x="320" y="15">t2</text><text x="440" y="15">t3</text><text x="560" y="15">t4</text>
+    </g>
+    <circle cx="80" cy="30" r="5" fill="#36e0c4"/>
+    <circle cx="200" cy="30" r="5" fill="#36e0c4"/><circle cx="200" cy="170" r="5" fill="#9fd8ff"/>
+    <circle cx="320" cy="30" r="5" fill="#36e0c4"/><circle cx="320" cy="100" r="5" fill="#ffb454"/><circle cx="320" cy="170" r="5" fill="#9fd8ff"/><circle cx="320" cy="240" r="5" fill="#ff6b6b"/>
+    <circle cx="440" cy="30" r="5" fill="#36e0c4"/><circle cx="440" cy="100" r="5" fill="#ffb454"/><circle cx="440" cy="170" r="5" fill="#9fd8ff"/><circle cx="440" cy="240" r="5" fill="#ff6b6b"/>
+    <circle cx="560" cy="30" r="6" fill="#36e0c4" stroke="#fff" stroke-width="1.5"/>
+    <!-- survivor path (decoded) highlighted -->
+    <line x1="80" y1="30" x2="200" y2="170" stroke="var(--accent2)" stroke-width="3"/>
+    <line x1="200" y1="170" x2="320" y2="240" stroke="var(--accent2)" stroke-width="3"/>
+    <line x1="320" y1="240" x2="440" y2="100" stroke="var(--accent2)" stroke-width="3"/>
+    <line x1="440" y1="100" x2="560" y2="30" stroke="var(--accent2)" stroke-width="3"/>
+    <!-- some competing branches (faint) -->
+    <line x1="200" y1="30" x2="320" y2="30" stroke="#8aa0ad" stroke-width="1" stroke-dasharray="3,2"/>
+    <line x1="200" y1="30" x2="320" y2="170" stroke="#8aa0ad" stroke-width="1" stroke-dasharray="3,2"/>
+    <line x1="320" y1="30" x2="440" y2="30" stroke="#8aa0ad" stroke-width="1" stroke-dasharray="3,2"/>
+    <line x1="320" y1="100" x2="440" y2="240" stroke="#8aa0ad" stroke-width="1" stroke-dasharray="3,2"/>
+    <line x1="440" y1="170" x2="560" y2="30" stroke="#8aa0ad" stroke-width="1" stroke-dasharray="3,2"/>
+    <text x="300" y="258" fill="#36e0c4" font-size="10" text-anchor="middle">Bold teal = Viterbi-selected survivor (most-likely) path</text>
+  </svg>
+  <p class="cap">Fig 6.4 — Trellis Diagram: states repeat at every time-step; the bold teal path is the maximum-likelihood path traced back by the Viterbi algorithm (worked example below)</p>
+</div>
+
+<h3 class="sub">Code Tree vs State Diagram vs Trellis Diagram <span class="imp h">High ⭐⭐⭐⭐ — frequently asked comparison</span></h3>
+<table>
+  <tr><th>Aspect</th><th>Code Tree</th><th>State Diagram</th><th>Trellis Diagram</th></tr>
+  <tr><td>Size</td><td>Grows exponentially (2<sup>L</sup> branches for L inputs)</td><td>Fixed — only 2<sup>m</sup> states, ever</td><td>Fixed states × time steps (linear growth)</td></tr>
+  <tr><td>Time shown?</td><td>Yes — implicitly via depth</td><td>No — time-independent</td><td>Yes — explicitly, states repeated per column</td></tr>
+  <tr><td>Used for</td><td>Conceptual understanding only</td><td>Encoder design/analysis</td><td><b>Practical decoding (Viterbi algorithm)</b></td></tr>
+  <tr><td>Path merging visible?</td><td>No (every path unique, never merges)</td><td>N/A</td><td><b>Yes</b> — key to Viterbi's efficiency</td></tr>
+</table>
+
+<!-- 7. Viterbi -->
+<h2 class="topic scroll-anchor" id="cc-viterbi">7. Maximum Likelihood Decoding — The Viterbi Algorithm <span class="imp h">High ⭐⭐⭐⭐⭐ (Most Important Topic — full numerical expected)</span></h2>
+<div class="card def">
+  <span class="tag">English</span>
+  <p><b>Maximum Likelihood (ML) Decoding</b> selects, among all possible transmitted codeword sequences, the one that is "closest" (minimum Hamming distance, for a binary symmetric channel) to the received sequence. The <b>Viterbi Algorithm</b> is an efficient way to perform ML decoding on a trellis: instead of comparing every possible path (which grows exponentially), it computes a running <b>path metric</b> at each state and, whenever two paths merge into the same state, discards the path with the worse metric — keeping only the single best ("survivor") path into each state at every time step.</p>
+</div>
+<div class="hin">
+  <span class="tag">Hinglish</span>
+  <p>Maximum likelihood decoding ka matlab — sab possible transmitted sequences mein se wo sequence choose karo jo received sequence ke sabse "close" (kam se kam Hamming distance) ho. Lekin sab sequences ko check karna exponentially expensive hai. <b>Viterbi algorithm</b> ka trick — trellis pe chalte hue, jab bhi 2 paths same state pe milte hain ("merge"), to jo path zyada error/distance accumulate kar chuka hai use turant discard kar do, sirf best ("survivor") path rakho. Isse computation drastically kam ho jaata hai, aur phir bhi guaranteed optimal (ML) answer milta hai.</p>
+</div>
+
+<h3 class="sub">Viterbi Algorithm — Step-by-Step <span class="imp h">High — write this exact sequence in exam</span></h3>
+<div class="card">
+  <ol>
+    <li><b>Initialize:</b> Set path metric of the starting state (usually all-zero state 00) = 0; all other states = ∞ (unreachable initially).</li>
+    <li><b>Branch metric computation:</b> At each time step, for every valid transition, compute the <b>branch metric</b> = Hamming distance between the received bits and the expected output bits for that branch.</li>
+    <li><b>Path metric update (Add-Compare-Select):</b> For every state at the new time step, add the branch metric to the path metric of the originating state (for each incoming branch). If multiple branches arrive at the same state, <b>compare</b> them and <b>select</b> (keep) only the path with the <b>minimum total metric</b> — this is the survivor path for that state; discard the other(s).</li>
+    <li><b>Repeat</b> steps 2-3 for every time step until the end of the received sequence.</li>
+    <li><b>Trace back:</b> At the final time step, pick the state with the minimum path metric (usually the all-zero state if the encoder was flushed/terminated). Trace back through the stored survivor branches to recover the most likely input sequence.</li>
+  </ol>
+</div>
+
+<h3 class="sub">Full Worked Numerical — Viterbi Decoding <span class="imp h">High ⭐⭐⭐⭐⭐ — exact RTU 10-mark pattern</span></h3>
+<div class="card example">
+  <span class="tag">Example</span>
+  <p>Using the rate-½, K=3 encoder of Fig 6.1 (g₁=111, g₂=101), the message <b>m = 1,1,0</b> (plus 2 flush zero-bits to return encoder to state 00) is transmitted. Due to channel noise, <b>one bit is received in error</b>. Decode using the Viterbi algorithm.</p>
+
+  <p><b>Step 1 — Encode the original message</b> (using the next-state table above), starting at state 00:</p>
+  <table>
+    <tr><th>t</th><th>State</th><th>Input u</th><th>Output c₁c₂</th><th>Next State</th></tr>
+    <tr><td>1</td><td>00</td><td>1</td><td>11</td><td>10</td></tr>
+    <tr><td>2</td><td>10</td><td>1</td><td>01</td><td>11</td></tr>
+    <tr><td>3</td><td>11</td><td>0</td><td>01</td><td>01</td></tr>
+    <tr><td>4</td><td>01</td><td>0</td><td>11</td><td>00</td></tr>
+    <tr><td>5</td><td>00</td><td>0</td><td>00</td><td>00</td></tr>
+  </table>
+  <p>Transmitted (encoded) sequence: <b>11 01 01 11 00</b></p>
+  <p>Received sequence (1-bit error introduced in pair 3): <b>11 01 <span style="color:var(--danger);">11</span> 11 00</b> &nbsp;<span class="note">(should've been "01", error flips it to "11")</span></p>
+
+  <p><b>Step 2 — Build path metrics using Add-Compare-Select</b> (branch metric = Hamming distance to received pair):</p>
+  <table>
+    <tr><th>Time</th><th>State 00</th><th>State 01</th><th>State 10</th><th>State 11</th></tr>
+    <tr><td>t0</td><td>0</td><td>∞</td><td>∞</td><td>∞</td></tr>
+    <tr><td>t1</td><td>2</td><td>∞</td><td>0</td><td>∞</td></tr>
+    <tr><td>t2</td><td>3</td><td>2</td><td>3</td><td>0</td></tr>
+    <tr><td>t3</td><td>2 ✓(via 01)</td><td>1 ✓(via 11)</td><td>3 ✓(via 00)</td><td>1 ✓(via 11)</td></tr>
+    <tr><td>t4</td><td>1 ✓(via 01)</td><td>2 ✓(via 11)</td><td>2 ✓(via 00)</td><td>2 ✓(via 11)</td></tr>
+    <tr><td>t5</td><td><b>1 ✓(via 00)</b></td><td>3</td><td>2</td><td>3</td></tr>
+  </table>
+  <p>Final minimum metric = <b>1</b> at state 00 (t5) — this matches exactly the single bit error we introduced, confirming the decoder correctly "sees" only 1 unit of distance from a valid codeword.</p>
+
+  <p><b>Step 3 — Trace back the survivor path</b> from t5(00) → t4(00,u=0) → t3(01,u=0) → t2(11,u=1) → t1(10,u=1) → t0(00):</p>
+  <div class="formula">Decoded path: 00 → 10 → 11 → 01 → 00 → 00
+Decoded input bits (u): 1, 1, 0  (flush bits 0,0 dropped)</div>
+  <p><b>Result: Decoded message = 1,1,0</b> — exactly matches the original transmitted message, despite the single-bit channel error. ✅ This demonstrates the error-correcting power of convolutional codes with Viterbi decoding.</p>
+</div>
+
+<!-- 8. Free Distance -->
+<h2 class="topic scroll-anchor" id="cc-freedist">8. Free Distance of a Convolutional Code <span class="imp h">High ⭐⭐⭐⭐</span></h2>
+<div class="card def">
+  <span class="tag">English</span>
+  <p>The <b>Free Distance (d<sub>free</sub>)</b> of a convolutional code is the <b>minimum Hamming distance</b> between any two distinct (complete) code sequences generated by the encoder — equivalently, it is the minimum-weight nonzero path in the trellis/state diagram that diverges from the all-zero state and eventually remerges with it. It plays the same role for convolutional codes that <b>minimum distance d<sub>min</sub></b> plays for block codes — determining the code's error-correcting capability.</p>
+</div>
+<div class="formula">Error-correcting capability:  t = ⌊(d<sub>free</sub> − 1) / 2⌋</div>
+<div class="hin">
+  <span class="tag">Hinglish</span>
+  <p>Free distance batata hai ki agar encoder all-zero state se "bhatak" jaaye (kisi non-zero input ki wajah se) aur fir se all-zero state pe wapas aaye, to is poore detour mein <b>minimum kitna "weight" (1s ki count)</b> accumulate hoga. Yahi number decide karta hai ki code kitne errors tak correct kar sakta hai — jaise block codes mein d<sub>min</sub> karta hai.</p>
+</div>
+
+<div class="card example">
+  <span class="tag">Computing d<sub>free</sub> for our Fig 6.1 encoder</span>
+  <p>Find the minimum-weight path that leaves state 00 and returns to state 00 (using the state diagram, Fig 6.3):</p>
+  <p><b>Path:</b> 00 →(u=1, out=11, weight=2)→ 10 →(u=0, out=10, weight=1)→ 01 →(u=0, out=11, weight=2)→ 00</p>
+  <p>Total weight = 2+1+2 = <b>5</b></p>
+  <p>No shorter-weight path exists that diverges and remerges with state 00 (can be verified by checking all alternative paths — they all accumulate weight ≥5).</p>
+  <p><b>∴ d<sub>free</sub> = 5</b> for this rate-½, K=3 code.<br>
+  Error-correcting capability: t = ⌊(5−1)/2⌋ = <b>2 errors</b> per decoding window.</p>
+</div>
+
+<h3 class="sub">Factors Affecting Free Distance <span class="imp m">Medium ⭐⭐</span></h3>
+<div class="card">
+  <ul>
+    <li>Increasing <b>constraint length K</b> (more memory/shift-register stages) generally increases d<sub>free</sub> — better error correction, at the cost of decoder complexity (states grow as 2<sup>m</sup>).</li>
+    <li><b>Choice of generator polynomials</b> matters greatly — poorly chosen generators can give a low d<sub>free</sub> even for large K; generators must be chosen (e.g. via computer search) to maximize d<sub>free</sub>.</li>
+    <li>Lower code rate (k/n) typically allows higher d<sub>free</sub> due to greater redundancy.</li>
+  </ul>
+</div>
+
+<!-- CHEAT SHEET -->
+<div class="card" style="margin-top:40px; background:linear-gradient(135deg,#0a1525,#0b0d10); border:2px solid var(--accent);">
+  <div style="color:var(--accent); font-family:'Consolas',monospace; font-weight:700; font-size:15px; margin-bottom:14px;">📌 UNIT 6 — MASTER FORMULA CHEAT SHEET</div>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+    <div class="formula" style="margin:3px 0; font-size:12px;">Rate R = k/n</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Constraint length K = m+1</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">No. of states = 2^m</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">c₁=u⊕s₁⊕s₀ (g₁=111)</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">c₂=u⊕s₀ (g₂=101)</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Branch metric = Hamming dist.</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Path metric = Σ branch metrics</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Viterbi: Add→Compare→Select</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">d_free = min weight closed path</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">t = ⌊(d_free−1)/2⌋</div>
+  </div>
+</div>
+
+<!-- Q&A -->
+<hr class="sep">
+<div class="qsection" id="qa6">
+  <div class="unit-title" style="margin-top:0;">
+    🎯 RTU EXAM Q&amp;A BANK — UNIT 6
+    <span class="imp h">EXAM GOLD</span>
+  </div>
+
+  <div class="qa">
+    <div class="q">Q1. Define convolutional code. How does it differ from block codes? <span class="imp h">★★★ 5 Marks</span></div>
+    <div class="a">Convolutional code: encoder output depends on current + previous m input blocks (has memory), processes data as a continuous stream. Block codes: each codeword independent, no memory. Full comparison table given above.</div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Q2. Explain the structure of a convolutional encoder. Define rate, constraint length, and memory order. <span class="imp h">★★★★ 7 Marks</span></div>
+    <div class="a">Encoder = k-bit shift register (m stages) + n mod-2 adders tapped by generator sequences, denoted (n,k,m). Rate R=k/n. Constraint length K=m+1 = total bits influencing one output. Diagram in Fig 6.1.</div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Q3. Draw and explain a rate-½ convolutional encoder with K=3. Derive its output equations. <span class="imp h">★★★★★ 10 Marks</span></div>
+    <div class="a">Shift register with 2 memory stages s₁,s₀; generators g₁=(111)→c₁=u⊕s₁⊕s₀, g₂=(101)→c₂=u⊕s₀. Full diagram (Fig 6.1) and derivation given above.</div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Q4. Explain convolutional encoders of different rates (1/2, 1/3, k/n) and the rate vs error-correction trade-off. <span class="imp h">★★★★ 7 Marks</span></div>
+    <div class="a">Rate-1/2: 1 input→2 output bits (most common). Rate-1/3: 1 input→3 outputs (more redundancy, stronger correction, lower throughput). General k/n: trade-off table given above — lower rate = more redundancy = stronger correction but less throughput.</div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Q5. What is a code tree? Construct the code tree for a given rate-½ encoder for 2-3 input bits. <span class="imp m">★★★ 5 Marks</span></div>
+    <div class="a">Graphical representation where each level=one time step, branches double per level (0=upper,1=lower), each branch labeled "input/output". Grows exponentially — limitation solved by trellis. Example in Fig 6.2.</div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Q6. Draw the state diagram for a convolutional encoder with m=2 (4 states) and explain its transitions. <span class="imp h">★★★★ 7 Marks</span></div>
+    <div class="a">4 states (00,01,10,11), each with 2 outgoing edges labeled "input/output" per the next-state table. Full diagram in Fig 6.3 + transition table — memorize this table pattern for any similar encoder.</div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Q7. What is a trellis diagram? How is it different from the state diagram and code tree? <span class="imp h">★★★★ 5-7 Marks — very frequently asked</span></div>
+    <div class="a">Trellis = state diagram unrolled over time, showing all states at each time-step as columns with transition branches; unlike code tree it doesn't grow exponentially (states repeat), and unlike plain state diagram it explicitly shows time progression and "path merging" — critical for Viterbi. Full 3-way comparison table given above.</div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Q8. Explain Maximum Likelihood decoding. Describe the Viterbi Algorithm step by step. <span class="imp h">★★★★★ 10 Marks — theory backbone of the unit</span></div>
+    <div class="a">ML decoding picks the transmitted sequence closest (min Hamming distance) to received sequence. Viterbi efficiently finds it on the trellis using Add-Compare-Select: compute branch metrics, accumulate path metrics, at merging states keep only the minimum-metric survivor path, discard others. 5-step algorithm listed above.</div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Q9. Numerical: Given a convolutional encoder and a received sequence with an error, decode using the Viterbi algorithm. Show all path metrics and the traceback. <span class="imp h">★★★★★ 10 Marks — guaranteed numerical, practice this exact pattern</span></div>
+    <div class="a">Full worked solution above: encode m=1,1,0 (+flush) → transmitted "11 01 01 11 00" → 1-bit error → received "11 01 11 11 00" → build path-metric table via Add-Compare-Select → minimum final metric=1 at state00 → traceback gives decoded message 1,1,0 (error corrected).</div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Q10. Define free distance of a convolutional code. How is it related to error-correcting capability? <span class="imp h">★★★★ 7 Marks</span></div>
+    <div class="a">d<sub>free</sub> = minimum Hamming distance between any two distinct code sequences = minimum-weight path diverging from and remerging to the all-zero state. Error-correcting capability t=⌊(d_free−1)/2⌋. Plays same role as d_min for block codes.</div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Q11. Numerical: Compute the free distance of the rate-½, K=3 encoder with g₁=(111), g₂=(101). <span class="imp h">★★★★ 5-7 Marks numerical</span></div>
+    <div class="a">Minimum-weight closed path: 00→10(wt2)→01(wt1)→00(wt2), total weight=5. So d_free=5, giving t=⌊4/2⌋=2 correctable errors. Full derivation above.</div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Q12. What factors affect the free distance of a convolutional code? <span class="imp m">★★ 3-5 Marks</span></div>
+    <div class="a">Larger constraint length K (more memory) generally increases d_free; choice of generator polynomials strongly affects it (must be chosen carefully, e.g. by search); lower code rate (more redundancy) typically allows higher d_free.</div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Q13. Compare Linear Block Codes / Cyclic Codes with Convolutional Codes. <span class="imp m">★★★ 5 Marks — cross-unit comparison, sometimes asked</span></div>
+    <div class="a">Block/Cyclic codes: memoryless, algebraic encoding (matrix/polynomial), syndrome decoding, good for burst errors with interleaving. Convolutional: has memory, shift-register convolution encoding, Viterbi/ML decoding, good for random channel errors (deep space, satellite). Full table given in Section 1 above.</div>
+  </div>
+</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:center;padding:30px 20px;flex-wrap:wrap;">
+      <a href="unit5.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+      <a href="../itc/index.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">🏠 ITC Hub</a>
+      
+    </div>
+  </main>
+  <div class="cursor-dot" data-cursor-dot></div>
+  <div class="cursor-outline" data-cursor-outline></div>
+  <script>
+    const cursorDot = document.querySelector("[data-cursor-dot]");
+    const cursorOutline = document.querySelector("[data-cursor-outline]");
+    window.addEventListener("mousemove", function(e){
+      cursorDot.style.left=e.clientX+"px"; cursorDot.style.top=e.clientY+"px";
+      cursorOutline.animate({left:e.clientX+"px",top:e.clientY+"px"},{duration:400,fill:"forwards"});
+    });
+    document.querySelectorAll("a,button").forEach(el=>{
+      el.addEventListener("mouseenter",()=>cursorOutline.classList.add("cursor-hovering"));
+      el.addEventListener("mouseleave",()=>cursorOutline.classList.remove("cursor-hovering"));
+    });
+  </script>
+<script src="../splash-cursor.js"></script>\n</body>
+</html>

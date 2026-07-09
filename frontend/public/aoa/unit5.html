@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Learning Plus // AOA · Unit 5</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <main class="main-wrapper" style="width:100%;">
+    <div class="topbar">
+      <a href="index.html" class="back-btn">⬅ AOA Hub</a>
+      <div class="brand">Smart<span>Learning</span>+ <span style="color:var(--muted);font-weight:400;font-size:14px;">// AOA · Unit 5</span></div>
+      <div class="nav">
+        <a href="index.html">🏠 AOA Hub</a>
+        <a href="#content">📖 Content</a>
+        <a href="#qa">❓ Q&amp;A</a>
+        <a href="unit4.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+        <a href="unit6.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="hero">
+        <h1>🎲 Unit 5 — Assignment Problems &amp; Randomized Algorithms</h1>
+        <p>Assignment Problem Formulation · Quadratic Assignment Problem · Las Vegas &amp; Monte Carlo Algorithms · Randomized Min-Cut · Randomized 2-SAT · Multicommodity Flow · Flow Shop Scheduling · Network Capacity Assignment | Hours: 08</p>
+        <div class="badges" style="margin-top:14px;">
+          <a href="index.html" style="text-decoration:none;"><span class="badge b-teal">← Back to AOA Hub</span></a>
+          <span class="badge b-gold">5CS4-05 · Analysis of Algorithms · RTU</span>
+        </div>
+      </div>
+      <div id="content">
+<div id="unit5">
+<div class="unit-title">🎲 Unit 5 — Assignment Problems &amp; Randomized Algorithms</div>
+<div class="unit-sub">Formulation of Assignment Problem &middot; Quadratic Assignment Problem &middot; Randomized Algorithms &middot; Las Vegas Algorithms &middot; Monte Carlo Algorithms &middot; Randomized Min-Cut Algorithm &middot; Randomized 2-SAT &middot; Multicommodity Flow Problem &middot; Flow Shop Scheduling Problem &middot; Network Capacity Assignment Problem</div>
+
+<div class="badge-row">
+  <span class="badge b-red">🔥 HIGH WEIGHT — Conceptual + Definition Based</span>
+  <span class="badge b-gold">⚠ 5/10-Mark: Las Vegas vs Monte Carlo, Karger's Min-Cut</span>
+  <span class="badge b-teal">✅ Problem-Definition Questions Common (No Heavy Numericals)</span>
+</div>
+
+<div class="card" style="margin-bottom:28px;">
+  <div style="color:var(--accent2); font-weight:700; margin-bottom:10px;">📑 Unit 5 Quick Navigation</div>
+  <div class="toc" style="columns:2; column-gap:24px;">
+    <div><a href="#u5-assign">5.1 Assignment Problem — Formulation</a></div>
+    <div><a href="#u5-qap">5.2 Quadratic Assignment Problem</a></div>
+    <div><a href="#u5-rand">5.3 Randomized Algorithms — Concept</a></div>
+    <div><a href="#u5-lasvegas">5.4 Las Vegas Algorithms</a></div>
+    <div><a href="#u5-montecarlo">5.5 Monte Carlo Algorithms</a></div>
+    <div><a href="#u5-mincut">5.6 Randomized Algorithm for Min-Cut</a></div>
+    <div><a href="#u5-2sat">5.7 Randomized Algorithm for 2-SAT</a></div>
+    <div><a href="#u5-multicommodity">5.8 Multicommodity Flow Problem</a></div>
+    <div><a href="#u5-flowshop">5.9 Flow Shop Scheduling Problem</a></div>
+    <div><a href="#u5-netcap">5.10 Network Capacity Assignment Problem</a></div>
+    <div><a href="#u5-tables">5.11 Comparison Tables</a></div>
+    <div><a href="#u5-qa">5.12 RTU Exam Q&amp;A</a></div>
+  </div>
+</div>
+
+<!-- 5.1 ASSIGNMENT PROBLEM -->
+<h2 class="topic" id="u5-assign">5.1 Assignment Problem — Formulation <span class="imp h">EXAM HOT</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">The <strong>Assignment Problem</strong> is a combinatorial optimization problem that requires assigning <strong>n agents to n tasks</strong>, one-to-one (a bijection), such that the <strong>total cost (or total profit)</strong> of the assignment is minimized (or maximized), given a cost matrix C where C[i][j] is the cost of assigning agent i to task j.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish Explanation</div>
+  <p style="margin-top:6px;">Assignment Problem mein humare paas n workers aur n jobs hoti hain, aur har worker-job pair ka ek defined cost hota hai. Hume har worker ko exactly ek job aur har job ko exactly ek worker assign karna hai (one-to-one mapping) is tarah ki total cost minimum ho jaaye. Yeh ek special case hai transportation problem ka, jaha supply aur demand dono hamesha 1-1 hoti hain.</p>
+</div>
+
+<h3 class="sub">Mathematical Formulation</h3>
+<div class="card">
+  <div class="formula">Minimize:  Σ&#x1d62; Σ&#x2c7c; C[i][j]&middot;x[i][j]
+
+Subject to:
+  Σ&#x2c7c; x[i][j] = 1   for every agent i     (each agent gets exactly 1 task)
+  Σ&#x1d62; x[i][j] = 1   for every task j      (each task gets exactly 1 agent)
+  x[i][j] &#x2208; {0,1}                         (binary decision variable)</div>
+  <p>where x[i][j]=1 if agent i is assigned to task j, and 0 otherwise. This is a special case of the Linear (0/1 Integer) Programming problem, commonly solved using the <strong>Hungarian Method</strong> in O(n&sup3;) time.</p>
+</div>
+
+<div class="card example">
+  <div class="tag">💡 Example</div>
+  <p style="margin-top:8px;">Given 3 workers and 3 jobs with a 3×3 cost matrix, the assignment problem finds which single job each worker should be assigned so that exactly one worker per job and one job per worker is chosen, minimizing the sum of selected cell costs — e.g., assigning Worker1→Job2, Worker2→Job1, Worker3→Job3 if that combination yields the lowest total cost among all 3! = 6 possible assignments.</p>
+</div>
+
+<div class="keypoint">
+  <span class="icon">📌</span>
+  <span><strong>Brute force vs Hungarian Method:</strong> Checking all n! possible assignments is infeasible for large n; the Hungarian Method solves the assignment problem optimally in polynomial time, O(n&sup3;).</span>
+</div>
+
+<!-- 5.2 QAP -->
+<h2 class="topic" id="u5-qap">5.2 Quadratic Assignment Problem (QAP) <span class="imp h">EXAM HOT</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">The <strong>Quadratic Assignment Problem</strong> generalizes the assignment problem by also accounting for <strong>interaction costs between pairs of assigned facilities</strong> — given n facilities and n locations, with a flow matrix F (flow between facility pairs) and a distance matrix D (distance between location pairs), QAP finds the assignment of facilities to locations that minimizes the total cost of flow × distance over all facility pairs.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Normal Assignment Problem mein sirf ek-ek pair ka individual cost important hota hai, lekin QAP mein iske saath-saath yeh bhi matter karta hai ki do facilities ek dusre se kitni "interact" karti hain (flow) aur unke locations ke beech ki distance kya hai. Jaise factory floor planning mein, jo machines aapas mein zyada material transfer karti hain unhe paas-paas rakhna chahiye taaki total (flow × distance) cost minimum ho. QAP, Assignment Problem se kahin zyada hard hai — yeh NP-Hard problem hai.</p>
+</div>
+
+<h3 class="sub">Mathematical Formulation</h3>
+<div class="card">
+  <div class="formula">Minimize:  Σ&#x1d62; Σ&#x2c7c; Σ&#x2096; Σ&#x2097; F[i][k]&middot;D[j][l]&middot;x[i][j]&middot;x[k][l]
+
+where: F[i][k] = flow between facility i and facility k
+       D[j][l] = distance between location j and location l
+       x[i][j] = 1 if facility i is placed at location j, else 0</div>
+  <p>Unlike the linear (standard) Assignment Problem, the objective function here is <strong>quadratic</strong> in the decision variables (a product of two assignment variables x[i][j]·x[k][l]), making QAP <strong>NP-Hard</strong> — no known polynomial-time algorithm solves it optimally for large n.</p>
+</div>
+
+<div class="card example">
+  <div class="tag">💡 Example</div>
+  <p style="margin-top:8px;">In hospital department layout planning, departments (e.g., Emergency, Radiology, Surgery) have known patient/staff "flow" frequencies between each pair, and candidate room locations have known pairwise distances; QAP finds the layout assignment of departments to rooms that minimizes total (flow × distance), reducing overall patient/staff travel.</p>
+</div>
+
+<h3 class="sub">Assignment Problem vs Quadratic Assignment Problem</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Basis</th><th>Assignment Problem (AP)</th><th>Quadratic Assignment Problem (QAP)</th></tr>
+    <tr><td>Objective function</td><td>Linear (sum of individual costs)</td><td>Quadratic (sum of flow × distance for facility pairs)</td></tr>
+    <tr><td>Complexity class</td><td>Solvable in polynomial time, O(n&sup3;)</td><td>NP-Hard</td></tr>
+    <tr><td>Solution method</td><td>Hungarian Method</td><td>Heuristics, approximation, branch &amp; bound (exact only for small n)</td></tr>
+    <tr><td>Real-world use</td><td>Worker-job allocation</td><td>Facility layout, circuit board design</td></tr>
+  </table>
+</div>
+
+<!-- 5.3 RANDOMIZED CONCEPT -->
+<h2 class="topic" id="u5-rand">5.3 Randomized Algorithms — Concept <span class="imp h">FOUNDATION</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">A <strong>Randomized Algorithm</strong> is an algorithm that uses a source of <strong>random numbers</strong> as part of its logic to make decisions during execution, so that its behavior (running time and/or correctness) can vary across different runs on the same input, often achieving simpler logic or better expected performance than the best known deterministic algorithm.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Randomized algorithms apne decisions lene ke liye randomness (random numbers) use karte hain — isliye same input par bhi different runs mein different behavior dikh sakta hai. Yeh do main types ke hote hain: Las Vegas (jo hamesha correct answer dete hain, sirf time vary karta hai) aur Monte Carlo (jo fixed time mein chalte hain, lekin kabhi-kabhi galat answer de sakte hain — chance se).</p>
+</div>
+
+<h3 class="sub">Two Main Categories</h3>
+<div class="card">
+  <ul>
+    <li>🎰 <strong>Las Vegas Algorithms:</strong> Always produce a correct result; only the running time is a random variable.</li>
+    <li>🎲 <strong>Monte Carlo Algorithms:</strong> Have a fixed (bounded) running time; the correctness of the result is probabilistic (may occasionally be wrong).</li>
+  </ul>
+</div>
+
+<!-- 5.4 LAS VEGAS -->
+<h2 class="topic" id="u5-lasvegas">5.4 Las Vegas Algorithms <span class="imp h">EXAM HOT</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">A <strong>Las Vegas Algorithm</strong> is a randomized algorithm that <strong>always produces a correct answer</strong> whenever it terminates, but its <strong>running time is a random variable</strong> that may vary between executions, depending on the random choices made.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Las Vegas algorithm "Bet hamesha jeetegi, sirf time pata nahi kitna lagega" — yeh hamesha correct answer dega, bas execution time har baar alag ho sakta hai (random choices ki wajah se). Classic example hai Randomized Quick Sort — pivot randomly choose hota hai, isliye average case O(n log n) milta hai (worst case bahut rarely hota hai), lekin sort result hamesha 100% correct hota hai.</p>
+</div>
+
+<h3 class="sub">Example: Randomized Quick Sort</h3>
+<div class="card">
+  <p>Instead of always picking a fixed pivot (e.g., the last element), the pivot is chosen <strong>uniformly at random</strong> from the sub-array at each recursive call. This makes the worst-case O(n²) behavior (caused by adversarial/sorted input) extremely unlikely, giving an <strong>expected</strong> time complexity of O(n log n) regardless of input arrangement, while the sort result is always correct.</p>
+</div>
+
+<!-- 5.5 MONTE CARLO -->
+<h2 class="topic" id="u5-montecarlo">5.5 Monte Carlo Algorithms <span class="imp h">EXAM HOT</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">A <strong>Monte Carlo Algorithm</strong> is a randomized algorithm that runs in a <strong>fixed (deterministic or tightly bounded) running time</strong>, but whose output may be <strong>incorrect with some small, bounded probability</strong>; repeating the algorithm multiple times can reduce the error probability to an arbitrarily small value.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Monte Carlo algorithm "Time fixed hai, but answer galat bhi ho sakta hai (chhoti probability se)" — yeh hamesha ek fixed time mein result de dega, lekin kabhi-kabhi (kam probability se) galat answer aa sakta hai. Agar algorithm ko baar-baar (independently) repeat karke majority/consistent answer liya jaaye, toh error probability bahut chhoti ho jaati hai. Primality testing (Miller-Rabin test) is iska classic example hai.</p>
+</div>
+
+<h3 class="sub">Example: Miller-Rabin Primality Test</h3>
+<div class="card">
+  <p>To test if a number n is prime, the algorithm picks random "witness" values and performs modular exponentiation checks; if n fails a check, it is definitely composite, but if n passes all checks, it is only <strong>probably</strong> prime (with a tiny chance of error). Running the test with k independent random witnesses reduces the error probability to at most 1/4^k, making it practically reliable for very large k.</p>
+</div>
+
+<h3 class="sub">Las Vegas vs Monte Carlo</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Basis</th><th>Las Vegas</th><th>Monte Carlo</th></tr>
+    <tr><td>Correctness</td><td>Always correct</td><td>May be incorrect (with bounded probability)</td></tr>
+    <tr><td>Running time</td><td>Variable (random variable)</td><td>Fixed / bounded</td></tr>
+    <tr><td>Improving reliability</td><td>N/A — already always correct</td><td>Repeat multiple times to reduce error probability</td></tr>
+    <tr><td>Example</td><td>Randomized Quick Sort</td><td>Miller-Rabin Primality Test</td></tr>
+  </table>
+</div>
+
+<!-- 5.6 MIN-CUT -->
+<h2 class="topic" id="u5-mincut">5.6 Randomized Algorithm for Min-Cut (Karger's Algorithm) <span class="imp h">MOST IMPORTANT — 10 MARK</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">The <strong>Min-Cut problem</strong> asks for the minimum number of edges whose removal disconnects a connected, undirected graph into two parts. <strong>Karger's randomized algorithm</strong> is a Monte Carlo algorithm that finds a min-cut by repeatedly choosing a <strong>random edge</strong> and <strong>contracting</strong> it (merging its two endpoint vertices) until only 2 "super-vertices" remain — the edges between them form a candidate cut.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Min-Cut problem mein humein graph ke saare vertices ko 2 groups mein todhna hota hai aise ki dono groups ke beech minimum edges cross hों. Karger's algorithm bahut simple idea use karta hai: ek random edge choose karo, uske dono endpoints ko merge (contract) kar do ek single vertex mein (multi-edges allowed, self-loops remove kar dete hain), aur yeh repeat karte raho jab tak sirf 2 vertices na bach jaayein — bachi hui edges hi candidate min-cut hain. Kyunki random hai, yeh hamesha sahi min-cut nahi deta, isliye algorithm ko multiple baar run karke best (smallest) result lete hain.</p>
+</div>
+
+<h3 class="sub">Algorithm (Karger's Contraction Algorithm)</h3>
+<div class="card">
+  <div class="formula">KargerMinCut(G):
+  while G has more than 2 vertices:
+      pick a random edge (u, v) from G
+      contract u and v into a single super-vertex
+        (remove resulting self-loops; keep parallel/multi-edges)
+  return the count of edges between the final 2 super-vertices
+        as the candidate min-cut
+
+Repeat the whole process many times (e.g., O(n&sup2; log n) times)
+and return the smallest cut found across all runs.</div>
+</div>
+
+<h3 class="sub">Success Probability &amp; Complexity</h3>
+<div class="card">
+  <div class="formula">Probability a single run finds the true min-cut: &#x2265; 2 / (n(n-1))
+Repeating O(n&sup2; log n) times boosts success probability close to 1
+Single run time: O(n&sup2;);  with repetitions: O(n&#x2074; log n)</div>
+</div>
+
+<div class="card example">
+  <div class="tag">💡 Example</div>
+  <p style="margin-top:8px;">For a small graph, repeatedly contracting random edges may, in one run, merge vertices in a way that leaves 3 edges between the final two super-vertices, while another independent run might luckily contract edges in an order that leaves only the true minimum of 2 edges — running the algorithm many times and keeping the smallest cut observed converges to the correct global min-cut with high probability.</p>
+</div>
+
+<!-- 5.7 2-SAT -->
+<h2 class="topic" id="u5-2sat">5.7 Randomized Algorithm for 2-SAT <span class="imp h">EXAM HOT</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">The <strong>2-SAT (2-Satisfiability) problem</strong> asks whether a Boolean formula in conjunctive normal form, where every clause has exactly <strong>2 literals</strong>, can be satisfied by some assignment of TRUE/FALSE to its variables. A <strong>randomized algorithm</strong> for 2-SAT repeatedly picks an unsatisfied clause and <strong>randomly flips</strong> the value of one of its two variables, converging to a satisfying assignment (if one exists) with high probability in polynomial expected time.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">2-SAT mein har clause mein exactly 2 literals hote hain (jaise (x1 OR ¬x2)), aur humein dhoondhna hai ki kya saari clauses ko ek saath TRUE banaya ja sakta hai. Randomized approach: kisi bhi random variable assignment se start karo; jab tak koi clause unsatisfied hai, randomly ek unsatisfied clause choose karo, uske 2 variables mein se koi ek randomly flip kar do. Yeh process surprisingly fast (expected O(n&sup2;) steps) mein converge ho jaata hai ek satisfying assignment tak, agar koi exist karta hai — yeh ek random-walk based technique hai.</p>
+</div>
+
+<h3 class="sub">Algorithm</h3>
+<div class="card">
+  <div class="formula">Randomized2SAT(formula, n):
+  assign random TRUE/FALSE to each of the n variables
+  repeat up to O(n&sup2;) times:
+      if all clauses are satisfied: return "SATISFIABLE", assignment
+      pick any currently UNSATISFIED clause
+      randomly flip the value of ONE of its 2 variables
+  return "UNSATISFIABLE" (with high confidence, if loop exhausted)</div>
+  <p>This works because flipping a variable from an unsatisfied clause moves the current assignment, in expectation, one step closer (in Hamming distance) to a true satisfying assignment — modeled as a random walk on a line, which is known to converge in O(n&sup2;) expected steps.</p>
+</div>
+
+<div class="card example">
+  <div class="tag">💡 Example</div>
+  <p style="margin-top:8px;">For formula (x1∨x2)∧(¬x1∨x2)∧(x1∨¬x2), starting from a random assignment that fails one clause, the algorithm picks that unsatisfied clause and randomly flips one of its two variables; this random-walk process is repeated until all three clauses are simultaneously satisfied (e.g., x1=TRUE, x2=TRUE works here), or the formula is declared unsatisfiable if no assignment exists.</p>
+</div>
+
+<!-- 5.8 MULTICOMMODITY FLOW -->
+<h2 class="topic" id="u5-multicommodity">5.8 Multicommodity Flow Problem — Definition <span class="imp m">5-MARK</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">The <strong>Multicommodity Flow Problem</strong> generalizes the single-commodity max-flow problem to <strong>multiple distinct commodities (k different source-sink pairs)</strong> that must simultaneously flow through a shared network, where each edge has a capacity constraint that limits the <strong>combined</strong> flow of all commodities passing through it.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Normal max-flow problem mein sirf ek hi commodity (jaise paani ya data) ek source se ek sink tak bhejni hoti hai. Multicommodity flow mein multiple alag-alag commodities (different source-sink pairs) hoti hain jo same shared network use karti hain — har edge ki ek total capacity hoti hai jo saari commodities ke combined flow ko limit karti hai. Telecom networks (multiple calls), road networks (multiple origin-destination traffic pairs) is type ke real-world examples hain. Yeh problem Linear Programming se model kiya jaata hai aur single-commodity flow se kahin zyada complex hai.</p>
+</div>
+
+<h3 class="sub">Formulation (High-Level)</h3>
+<div class="card">
+  <div class="formula">Given: graph G=(V,E) with edge capacities c(e)
+       k commodities, each with (source s&#x1d62;, sink t&#x1d62;, demand d&#x1d62;)
+
+Find: a flow f&#x1d62; for each commodity i such that:
+   - f&#x1d62; satisfies flow conservation (except at s&#x1d62;, t&#x1d62;)
+   - For every edge e: Σ&#x1d62; f&#x1d62;(e)  &#x2264;  c(e)   (shared capacity constraint)
+   - Each commodity's demand d&#x1d62; is routed from s&#x1d62; to t&#x1d62;</div>
+  <p>Unlike single-commodity max-flow (solvable exactly and efficiently via Ford-Fulkerson/Edmonds-Karp), multicommodity flow with integer flow requirements is generally <strong>NP-Hard</strong>; the fractional (LP relaxation) version is solvable in polynomial time.</p>
+</div>
+
+<!-- 5.9 FLOW SHOP SCHEDULING -->
+<h2 class="topic" id="u5-flowshop">5.9 Flow Shop Scheduling Problem — Definition <span class="imp m">5-MARK</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">The <strong>Flow Shop Scheduling Problem</strong> requires scheduling <strong>n jobs</strong>, each of which must be processed through the <strong>same sequence of m machines</strong> (in identical order for every job), to optimize an objective such as minimizing the total completion time (<strong>makespan</strong>) of all jobs.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Flow Shop Scheduling mein saari jobs same order mein, same machines se guzarti hain (jaise factory assembly line — Machine1 → Machine2 → Machine3, har job isi order mein process hoti hai). Goal hota hai jobs ko aise order mein schedule karna ki total makespan (sabse aakhri job ka completion time) minimum ho jaaye. Yeh classic operations research / scheduling problem hai, jiska 2-machine case Johnson's Algorithm se optimally solve hota hai, lekin 3+ machines ke liye general case NP-Hard ho jaata hai.</p>
+</div>
+
+<h3 class="sub">Problem Formulation (High-Level)</h3>
+<div class="card">
+  <div class="formula">Given: n jobs, m machines
+       processing time p[i][j] = time job i takes on machine j
+       all jobs follow the SAME machine order: M1 → M2 → ... → Mm
+
+Find: a job sequence (permutation) that minimizes
+      Makespan = completion time of the LAST job on the LAST machine</div>
+  <p>For the special case of 2 machines, <strong>Johnson's Algorithm</strong> gives an optimal O(n log n) solution; for 3 or more machines, the problem is generally NP-Hard and solved via heuristics or branch &amp; bound for small instances.</p>
+</div>
+
+<!-- 5.10 NETWORK CAPACITY -->
+<h2 class="topic" id="u5-netcap">5.10 Network Capacity Assignment Problem — Definition <span class="imp m">5-MARK</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">The <strong>Network Capacity Assignment Problem</strong> requires assigning <strong>capacity values to each link (edge)</strong> of a communication/transportation network — subject to a total cost or budget constraint — so as to optimize a network performance objective, typically <strong>minimizing total delay/congestion</strong> or <strong>maximizing the achievable throughput</strong> while satisfying given traffic demand requirements.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Network Capacity Assignment mein humein decide karna hota hai ki network ke har link (edge) par kitni capacity (bandwidth) assign ki jaaye, ek fixed total budget/cost ke andar rehte hue, taaki overall network performance best ho — jaise minimum delay/congestion ya maximum throughput. Yeh telecom aur computer network design mein use hota hai, jahan zyada traffic wale links ko zyada capacity di jaati hai cost-effective tarike se.</p>
+</div>
+
+<h3 class="sub">Problem Formulation (High-Level)</h3>
+<div class="card">
+  <div class="formula">Given: network graph G=(V,E), traffic demand matrix between node pairs,
+       cost function cost(e, capacity) for assigning capacity to edge e,
+       total available budget B
+
+Find: capacity c(e) for every edge e such that:
+   - Σ&#x2091; cost(e, c(e))  &#x2264;  B            (budget constraint)
+   - All traffic demands can be routed within assigned capacities
+   - A performance objective (e.g., average delay) is optimized</div>
+  <p>This problem is closely related to multicommodity flow (since traffic demands between many node pairs must be routed) and is typically solved using nonlinear/convex optimization techniques or heuristic search for large networks.</p>
+</div>
+
+<!-- 5.11 TABLES -->
+<h2 class="topic" id="u5-tables">5.11 Important Comparison Tables <span class="imp h">RAPID REVISION</span></h2>
+
+<h3 class="sub">Las Vegas vs Monte Carlo Algorithms</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Basis</th><th>Las Vegas</th><th>Monte Carlo</th></tr>
+    <tr><td>Result correctness</td><td>Always correct when it terminates</td><td>Correct with high probability; may err</td></tr>
+    <tr><td>Running time</td><td>Random / variable</td><td>Fixed / bounded</td></tr>
+    <tr><td>Reliability boost</td><td>Not needed (always correct)</td><td>Achieved by repeating the algorithm</td></tr>
+    <tr><td>Example</td><td>Randomized Quick Sort</td><td>Miller-Rabin Primality Test, Karger's Min-Cut</td></tr>
+  </table>
+</div>
+
+<h3 class="sub">Assignment Problem vs Quadratic Assignment Problem</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Basis</th><th>Assignment Problem</th><th>Quadratic Assignment Problem</th></tr>
+    <tr><td>Objective</td><td>Linear (individual pairing costs)</td><td>Quadratic (pairwise flow × distance)</td></tr>
+    <tr><td>Solvability</td><td>Polynomial — O(n&sup3;) via Hungarian Method</td><td>NP-Hard</td></tr>
+  </table>
+</div>
+
+<h3 class="sub">Flow Shop Scheduling vs Multicommodity Flow vs Network Capacity Assignment</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Problem</th><th>Goal</th><th>Key Constraint</th></tr>
+    <tr><td>Flow Shop Scheduling</td><td>Minimize makespan of n jobs on m machines</td><td>All jobs follow the same machine sequence</td></tr>
+    <tr><td>Multicommodity Flow</td><td>Route multiple commodities simultaneously</td><td>Shared edge capacity across all commodities</td></tr>
+    <tr><td>Network Capacity Assignment</td><td>Optimize delay/throughput by assigning link capacities</td><td>Total budget/cost constraint on capacities</td></tr>
+  </table>
+</div>
+
+<!-- 5.12 Q&A -->
+<h2 class="topic" id="u5-qa">5.12 RTU Exam Questions &amp; Answers (Importance-Wise)</h2>
+<div id="qsection">
+
+  <div class="qcard">
+    <div class="qlabel">Q1</div>
+    <div class="q">Formulate the Assignment Problem mathematically and explain how it differs from the Quadratic Assignment Problem. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>The Assignment Problem is formulated as minimizing Σᵢ Σⱼ C[i][j]·x[i][j] subject to each agent being assigned exactly one task and each task receiving exactly one agent, with x[i][j] as a 0/1 decision variable, and is solvable optimally in O(n³) time via the Hungarian Method. The Quadratic Assignment Problem extends this by adding a flow-times-distance term over all facility pairs, making the objective quadratic in the decision variables rather than linear, which pushes QAP into the NP-Hard complexity class with no known efficient exact algorithm for large instances.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q2</div>
+    <div class="q">Explain Las Vegas and Monte Carlo randomized algorithms with suitable examples. Differentiate between them. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>A Las Vegas algorithm always produces a correct result but has a running time that varies randomly between executions, exemplified by Randomized Quick Sort, where random pivot selection avoids worst-case behavior in expectation while always producing a correctly sorted output. A Monte Carlo algorithm instead runs in a fixed/bounded time but may produce an incorrect result with some small probability, exemplified by the Miller-Rabin primality test, where repeating the test with more random witnesses reduces the error probability — the fundamental difference being that Las Vegas trades variable time for guaranteed correctness, while Monte Carlo trades occasional incorrectness for predictable running time.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q3</div>
+    <div class="q">Explain Karger's randomized algorithm for the Min-Cut problem with its working and success probability. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>Karger's algorithm repeatedly picks a random edge in the graph and contracts its two endpoints into a single super-vertex (removing resulting self-loops but keeping parallel edges), continuing until only two super-vertices remain, at which point the number of edges between them is returned as a candidate min-cut. Since a single run finds the true minimum cut with probability at least 2/(n(n−1)), the algorithm is repeated O(n² log n) times and the smallest cut observed across all runs is returned, boosting the overall success probability close to 1 while keeping the total expected running time polynomial.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q4</div>
+    <div class="q">Explain the randomized algorithm for 2-SAT and why it converges efficiently. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>The randomized 2-SAT algorithm starts with an arbitrary truth assignment to all variables, and as long as some clause remains unsatisfied, it picks any such clause and randomly flips the value of one of its two variables, repeating this for up to O(n²) iterations. This process behaves like a random walk on a line representing the Hamming distance to a satisfying assignment (if one exists), and because each flip moves the current assignment one step closer to a true satisfying assignment with probability at least 1/2, the expected number of steps needed to reach a satisfying assignment is O(n²), making the algorithm efficient despite its randomness.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q5</div>
+    <div class="q">Define and explain the problems of Multicommodity Flow, Flow Shop Scheduling, and Network Capacity Assignment. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>The Multicommodity Flow problem routes multiple distinct source-sink commodity pairs simultaneously through a shared network, where every edge's capacity must accommodate the combined flow of all commodities passing through it, generally NP-Hard for integer flows though efficiently solvable in its fractional (LP relaxation) form. Flow Shop Scheduling schedules n jobs through the same fixed sequence of m machines to minimize the overall makespan, optimally solvable in O(n log n) for two machines via Johnson's Algorithm but NP-Hard for three or more machines. Network Capacity Assignment determines how much capacity to allocate to each link of a network under a total budget constraint so as to optimize a performance metric such as delay or throughput while meeting all traffic demands, typically solved using convex optimization or heuristic methods.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q6</div>
+    <div class="q">What is a randomized algorithm? Explain its two main categories. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>A randomized algorithm incorporates random choices into its execution, so its behavior can differ across runs on identical input, often used to achieve simpler logic or better expected performance than the best deterministic alternative. Its two main categories are Las Vegas algorithms, which always give a correct result but have variable running time, and Monte Carlo algorithms, which run in fixed/bounded time but may occasionally return an incorrect result, with error probability reducible through repetition.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q7</div>
+    <div class="q">Explain the formulation of the Assignment Problem as a linear/integer programming problem. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>The Assignment Problem is formulated to minimize the total cost Σᵢ Σⱼ C[i][j]·x[i][j], subject to each agent i being assigned to exactly one task (Σⱼ x[i][j]=1) and each task j receiving exactly one agent (Σᵢ x[i][j]=1), with each x[i][j] restricted to binary values 0 or 1. This 0/1 integer programming formulation, despite its combinatorial nature, can be solved optimally in polynomial time using the Hungarian Method due to the special structure of the constraint matrix.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q8</div>
+    <div class="q">Why is the Quadratic Assignment Problem considered NP-Hard while the standard Assignment Problem is polynomial-time solvable? <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>The standard Assignment Problem has a linear objective function (a sum of independent individual pairing costs), which gives the underlying constraint matrix a special totally-unimodular structure that the Hungarian Method exploits to find the optimum in O(n³) time. The Quadratic Assignment Problem's objective instead involves products of pairs of assignment variables (flow between facilities times distance between their assigned locations), destroying this special structure and making the problem combinatorially much harder, placing it in the NP-Hard complexity class with no known polynomial-time exact algorithm.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q9</div>
+    <div class="q">Explain the Flow Shop Scheduling problem and state how the 2-machine case is solved optimally. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>Flow Shop Scheduling requires sequencing n jobs that must all pass through the same fixed order of m machines, with the goal of minimizing the makespan (the completion time of the last job on the last machine). For the special case of exactly 2 machines, Johnson's Algorithm provides an optimal O(n log n) solution by a specific job-ordering rule based on each job's processing times on the two machines, though for 3 or more machines the general problem becomes NP-Hard.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q10</div>
+    <div class="q">Explain the Multicommodity Flow problem and why it is generally harder than the single-commodity max-flow problem. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>Multicommodity Flow requires simultaneously routing several distinct source-sink commodity pairs through a shared network where each edge's capacity bounds the combined flow of all commodities together, unlike single-commodity max-flow which only routes one source-sink pair. This shared-capacity coupling between commodities means the elegant exact polynomial-time techniques (like Ford-Fulkerson) used for single-commodity flow do not directly extend, making the integer multicommodity flow problem NP-Hard in general, even though its fractional (LP-relaxed) version remains solvable in polynomial time.</p>
+    </div>
+  </div>
+
+</div><!-- end qsection -->
+
+<!-- CHEAT SHEET -->
+<div class="card" style="margin-top:40px; background:linear-gradient(135deg,#0a1525,#0b0d10); border:2px solid var(--accent);">
+  <div style="color:var(--accent); font-family:'Consolas',monospace; font-weight:700; font-size:15px; margin-bottom:14px;">📌 UNIT 5 — MASTER FORMULA CHEAT SHEET</div>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+    <div class="formula" style="margin:3px 0; font-size:12px;">Assignment Problem: min Σᵢ Σⱼ C[i][j]x[i][j], solved by Hungarian Method O(n&sup3;)</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">QAP: min ΣΣΣΣ F[i][k]D[j][l]x[i][j]x[k][l] — NP-Hard</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Las Vegas: always correct, random time</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Monte Carlo: fixed time, may be incorrect</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Karger's Min-Cut: contract random edges till 2 vertices left</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Karger's success prob (1 run) ≥ 2/(n(n-1))</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Randomized 2-SAT: flip random var of unsatisfied clause, O(n&sup2;) steps</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Multicommodity Flow: shared edge capacity, multiple (s,t) pairs</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Flow Shop (2 machines): Johnson's Algorithm, O(n log n)</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Network Capacity Assignment: optimize delay under budget B</div>
+  </div>
+</div>
+
+<!-- Unit 5 Footer -->
+<div style="margin-top:50px; padding:20px 24px; border:1px dashed var(--line); border-radius:10px; color:var(--muted); font-size:13px;">
+  <div style="color:var(--accent); font-family:'Consolas',monospace; font-weight:700; margin-bottom:6px;">ZYREX // AOA_VAULT — UNIT 5 · Assignment Problems &amp; Randomized Algorithms</div>
+  <p>RTU B.Tech CSE 5th Semester · 5CS4-05 Analysis of Algorithms · Unit 5 of 6</p>
+  <p style="margin-top:6px;">📌 Key formulas: Assignment/QAP formulations · Las Vegas vs Monte Carlo · Karger's Min-Cut · Randomized 2-SAT · Multicommodity Flow, Flow Shop &amp; Network Capacity definitions</p>
+  <p style="margin-top:6px;">⚡ Unit 6 — Problem Classes NP, NP-Hard &amp; NP-Complete can be appended directly below this section.</p>
+</div>
+
+</div><!-- end unit5 -->
+
+<hr class="sep">
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:center;padding:30px 20px;flex-wrap:wrap;">
+      <a href="unit4.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+      <a href="index.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">🏠 AOA Hub</a>
+      <a href="unit6.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+    </div>
+  </main>
+  <div class="cursor-dot" data-cursor-dot></div>
+  <div class="cursor-outline" data-cursor-outline></div>
+  <script>
+    const cursorDot = document.querySelector("[data-cursor-dot]");
+    const cursorOutline = document.querySelector("[data-cursor-outline]");
+    window.addEventListener("mousemove", function(e){
+      cursorDot.style.left=e.clientX+"px"; cursorDot.style.top=e.clientY+"px";
+      cursorOutline.animate({left:e.clientX+"px",top:e.clientY+"px"},{duration:400,fill:"forwards"});
+    });
+    document.querySelectorAll("a,button").forEach(el=>{
+      el.addEventListener("mouseenter",()=>cursorOutline.classList.add("cursor-hovering"));
+      el.addEventListener("mouseleave",()=>cursorOutline.classList.remove("cursor-hovering"));
+    });
+  </script>
+<script src="../splash-cursor.js"></script>\n</body>
+</html>

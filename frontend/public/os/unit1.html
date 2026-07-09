@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Learning Plus // OS · Unit 1</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <main class="main-wrapper" style="width:100%;">
+    <div class="topbar">
+      <a href="index.html" class="back-btn">⬅ OS Hub</a>
+      <div class="brand">Smart<span>Learning</span>+ <span style="color:var(--muted);font-weight:400;font-size:14px;">// OS · Unit 1</span></div>
+      <div class="nav">
+        <a href="index.html">🏠 OS Hub</a>
+        <a href="#content">📖 Content</a>
+        <a href="#qa1">❓ Q&amp;A</a>
+        <a href="unit2.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="hero">
+        <h1>📘 UNIT 1 — Introduction</h1>
+        <p>Objective, Scope and Outcome of the Course | Hours: 01</p>
+        <div class="badges" style="margin-top:14px;">
+          <a href="index.html" style="text-decoration:none;"><span class="badge b-teal">← Back to OS Hub</span></a>
+          <span class="badge b-gold">5CS4-03 · OS · RTU</span>
+        </div>
+      </div>
+      <div id="content">
+      <h1 class="unit-title" id="unit1">📘 UNIT 1 — Introduction</h1>
+      <p class="unit-sub">Objective, Scope and Outcome of the Course &nbsp;|&nbsp; Hours: 01</p>
+
+      <div class="card def">
+        <span class="tag">English</span>
+        <p>An <b>Operating System (OS)</b> is system software that acts as an intermediary between the computer hardware and the user/application programs, managing hardware resources (CPU, memory, I/O devices, files) and providing a convenient, efficient environment for program execution.</p>
+      </div>
+      <div class="hin">
+        <span class="tag">Hinglish</span>
+        <p>OS subject ka core idea — tumhara phone/laptop chalu karte hi jo "background manager" kaam karta hai (Windows, Linux, Android) — wahi OS hai. Ye CPU, RAM, disk, printer sab resources ko manage karta hai taaki tum directly hardware se baat na karo, balki easy interface mil jaaye.</p>
+      </div>
+
+      <h2 class="topic">Objective of the Course <span class="imp h">High</span></h2>
+      <div class="card">
+        <ul>
+          <li>To understand the fundamental concepts, structure, and goals of an operating system.</li>
+          <li>To study process management — scheduling, synchronization, inter-process communication, deadlocks.</li>
+          <li>To understand memory management techniques — paging, segmentation, virtual memory.</li>
+          <li>To study device and file management, and case studies of real OS (UNIX/Linux/Mobile OS).</li>
+        </ul>
+      </div>
+      <div class="hin">
+        <span class="tag">Hinglish</span>
+        <p>Goal hai — tumhe samjhana ki ek OS andar se kaise kaam karta hai: kaise multiple programs ek saath CPU share karte hain (scheduling), kaise memory allocate hoti hai, kaise resources ka conflict (deadlock) avoid hota hai, aur files/devices kaise manage hote hain.</p>
+      </div>
+
+      <h2 class="topic">Scope of the Course <span class="imp m">Medium</span></h2>
+      <div class="card">
+        <p>OS is the foundation layer for:</p>
+        <ul>
+          <li><b>Every computing device</b> — desktops, servers, smartphones, embedded systems.</li>
+          <li><b>Software development</b> — understanding OS helps write efficient, concurrent, resource-aware programs.</li>
+          <li><b>System administration</b> — managing processes, memory, files, and devices on real systems (Linux servers, etc.).</li>
+          <li><b>Interview/placement prep</b> — OS concepts (scheduling, deadlock, paging, threading) are core CS fundamentals asked in almost every tech interview.</li>
+        </ul>
+      </div>
+      <div class="hin">
+        <span class="tag">Hinglish</span>
+        <p>Ye subject sirf exam ke liye nahi — placement interviews mein OS ke questions (process vs thread, deadlock, paging, scheduling algorithms) <b>bahut common</b> hote hain. Isiliye concepts clearly samajhna important hai, na ki sirf ratta lagana.</p>
+      </div>
+
+      <h2 class="topic">Outcome of the Course <span class="imp h">High</span></h2>
+      <div class="card">
+        <p>After completing this course, the student will be able to:</p>
+        <ul>
+          <li><b>CO1:</b> Explain OS structure, operations, and history/evolution of operating systems.</li>
+          <li><b>CO2:</b> Apply process scheduling algorithms and synchronization techniques (semaphores, mutual exclusion).</li>
+          <li><b>CO3:</b> Analyze memory management schemes — paging, segmentation, virtual memory, page replacement.</li>
+          <li><b>CO4:</b> Apply deadlock detection, prevention and avoidance algorithms.</li>
+          <li><b>CO5:</b> Understand device/file management and compare UNIX, Linux and Mobile OS case studies.</li>
+        </ul>
+      </div>
+
+      <div class="svgbox">
+        <svg viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg">
+          <style>.b{fill:#f0f4ff;stroke:#4f46e5;stroke-width:1.5;}.l{fill:#0f172a;font-size:12px;font-family:Consolas,monospace;text-anchor:middle;}</style>
+          <rect class="b" x="270" y="10" width="160" height="40" rx="8"/>
+          <text class="l" x="350" y="34">Application Programs</text>
+          <line x1="350" y1="50" x2="350" y2="65" stroke="#4f46e5" stroke-width="1.5"/>
+          <rect x="250" y="65" width="200" height="40" rx="8" fill="#eef2ff" stroke="#06b6d4" stroke-width="1.5"/>
+          <text class="l" x="350" y="89">Operating System</text>
+          <line x1="350" y1="105" x2="350" y2="120" stroke="#4f46e5" stroke-width="1.5"/>
+          <rect x="230" y="120" width="240" height="40" rx="8" fill="#fff1f2" stroke="#ef4444" stroke-width="1.5"/>
+          <text class="l" x="350" y="144">Hardware (CPU, RAM, Disk, I/O)</text>
+          <line x1="270" y1="30" x2="80" y2="30" stroke="#64748b" stroke-width="1"/>
+          <text class="l" x="170" y="20" fill="#64748b">Users interact via apps</text>
+          <line x1="100" y1="30" x2="100" y2="85" stroke="#64748b" stroke-dasharray="3,3"/>
+          <line x1="100" y1="85" x2="250" y2="85" stroke="#64748b" stroke-dasharray="3,3"/>
+        </svg>
+        <p class="cap">Fig 1.1 — OS as the intermediary layer between application programs and raw hardware</p>
+      </div>
+
+      <!-- Q&A UNIT 1 -->
+      <div class="qsection scroll-anchor" id="qa1">
+        <h1 class="unit-title">❓ Unit 1 — Q&amp;A (RTU Exam Pattern)</h1>
+
+        <div class="qcard">
+          <div class="qlabel">RTU EXAM Q&amp;A</div>
+          <div class="q">Q1. Define Operating System. What is its role? <span class="imp h">★★★★ 5 Marks</span></div>
+          <span class="marks m5">5 Marks</span>
+          <div class="a"><p>An <b>Operating System</b> is system software that acts as an intermediary between hardware and user programs. It manages CPU, memory, I/O devices, and files while providing a user-friendly interface. Its two main roles are: (1) <b>Resource Manager</b> — fairly allocates CPU time, memory, and I/O among competing processes. (2) <b>Extended Machine</b> — hides hardware complexity and presents a simple, uniform interface to user programs.</p></div>
+        </div>
+
+        <div class="qcard">
+          <div class="qlabel">RTU EXAM Q&amp;A</div>
+          <div class="q">Q2. State the objectives and outcomes of the Operating System course. <span class="imp m">★★★ 5 Marks</span></div>
+          <span class="marks m5">5 Marks</span>
+          <div class="a"><p>Objectives: understand OS structure, study process/memory/file/device management, understand deadlock, and study UNIX/Linux case studies. Outcomes (COs): CO1-OS structure, CO2-scheduling/synchronization, CO3-memory management, CO4-deadlock algorithms, CO5-file/device management and OS case studies.</p></div>
+        </div>
+
+        <div class="qcard">
+          <div class="qlabel">RTU EXAM Q&amp;A</div>
+          <div class="q">Q3. What are the functions of an Operating System? <span class="imp h">★★★★ 5 Marks</span></div>
+          <span class="marks m5">5 Marks</span>
+          <div class="a">
+            <p>Main functions of OS:</p>
+            <ul>
+              <li><b>Process Management</b> — creation, scheduling, termination of processes.</li>
+              <li><b>Memory Management</b> — allocation/deallocation of RAM to processes.</li>
+              <li><b>File Management</b> — creation, deletion, organization of files &amp; directories.</li>
+              <li><b>Device Management</b> — controlling I/O devices via drivers.</li>
+              <li><b>Security &amp; Protection</b> — controlling user access and authentication.</li>
+              <li><b>User Interface</b> — providing CLI or GUI for user interaction.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:center;padding:30px 20px;flex-wrap:wrap;">
+      <a href="index.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">🏠 OS Hub</a>
+      <a href="unit2.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+    </div>
+  </main>
+  <div class="cursor-dot" data-cursor-dot></div>
+  <div class="cursor-outline" data-cursor-outline></div>
+  <script>
+    const cursorDot = document.querySelector("[data-cursor-dot]");
+    const cursorOutline = document.querySelector("[data-cursor-outline]");
+    window.addEventListener("mousemove", function(e){
+      cursorDot.style.left=e.clientX+"px"; cursorDot.style.top=e.clientY+"px";
+      cursorOutline.animate({left:e.clientX+"px",top:e.clientY+"px"},{duration:400,fill:"forwards"});
+    });
+    document.querySelectorAll("a,button").forEach(el=>{
+      el.addEventListener("mouseenter",()=>cursorOutline.classList.add("cursor-hovering"));
+      el.addEventListener("mouseleave",()=>cursorOutline.classList.remove("cursor-hovering"));
+    });
+  </script>
+<script src="../splash-cursor.js"></script>\n</body>
+</html>

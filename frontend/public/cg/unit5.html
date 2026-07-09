@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Learning Plus // CG&M · Unit 5</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <main class="main-wrapper" style="width:100%;">
+    <div class="topbar">
+      <a href="index.html" class="back-btn">⬅ CG&M Hub</a>
+      <div class="brand">Smart<span>Learning</span>+ <span style="color:var(--muted);font-weight:400;font-size:14px;">// CG&M · Unit 5</span></div>
+      <div class="nav">
+        <a href="index.html">🏠 CG&M Hub</a>
+        <a href="#content">📖 Content</a>
+        <a href="#qa">❓ Q&amp;A</a>
+        <a href="unit4.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+        <a href="unit6.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="hero">
+        <h1>🧊 Unit 5 — Three Dimensional Graphics</h1>
+        <p>3D Display Methods · Polygon &amp; Curved Surfaces · Spline Representation · 3D Transformations · Viewing Pipeline · Projections | Hours: 08</p>
+        <div class="badges" style="margin-top:14px;">
+          <a href="index.html" style="text-decoration:none;"><span class="badge b-teal">← Back to CG&M Hub</span></a>
+          <span class="badge b-gold">5CS4-04 · Computer Graphics &amp; Multimedia · RTU</span>
+        </div>
+      </div>
+      <div id="content">
+<div id="unit5">
+<div class="unit-title">&#x1F9CA; Unit 5 &#x2014; Three Dimensional Graphics</div>
+<div class="unit-sub">3D Display Methods &middot; Polygon Surfaces, Tables &amp; Meshes &middot; Curved Lines &amp; Surfaces &middot; Quadric Surfaces &middot; Spline Representation &middot; Cubic Spline Interpolation &middot; B&eacute;zier &amp; B-Spline Curves/Surfaces &middot; 3D Scaling, Rotation, Translation &middot; Composite Transformation &middot; Viewing Pipeline &amp; Coordinates &middot; Parallel &amp; Perspective Projection &middot; View Volume</div>
+
+<div class="badge-row">
+  <span class="badge b-red">&#x1F525; HIGH WEIGHT &#x2014; 12-14 Marks Expected</span>
+  <span class="badge b-gold">&#x26A0; 5-Mark: Polygon Tables, B&eacute;zier Properties, Projections</span>
+  <span class="badge b-teal">&#x2705; Unit 5 = 8 Hours (Total Course = 42 Hours)</span>
+</div>
+
+<div class="card" style="margin-bottom:28px;">
+  <div style="color:var(--accent2); font-weight:700; margin-bottom:10px;">&#x1F4D1; Unit 5 Quick Navigation</div>
+  <div class="toc" style="columns:2; column-gap:24px;">
+    <div><a href="#u5-display">5.1 3D Display Methods</a></div>
+    <div><a href="#u5-polysurf">5.2 Polygon Surfaces, Tables &amp; Meshes</a></div>
+    <div><a href="#u5-curved">5.3 Curved Lines, Surfaces &amp; Quadric Surfaces</a></div>
+    <div><a href="#u5-spline">5.4 Spline Representation</a></div>
+    <div><a href="#u5-cubic">5.5 Cubic Spline Interpolation</a></div>
+    <div><a href="#u5-bezier">5.6 B&eacute;zier Curves &amp; Surfaces</a></div>
+    <div><a href="#u5-bspline">5.7 B-Spline Curves &amp; Surfaces</a></div>
+    <div><a href="#u5-transform">5.8 3D Transformations &amp; Composite</a></div>
+    <div><a href="#u5-pipeline">5.9 Viewing Pipeline &amp; Coordinates</a></div>
+    <div><a href="#u5-projection">5.10 Projections &amp; View Volume</a></div>
+    <div><a href="#u5-tables">5.11 Comparison Tables</a></div>
+    <div><a href="#u5-qa">5.12 RTU Exam Q&amp;A</a></div>
+  </div>
+</div>
+
+<!-- 5.1 3D DISPLAY METHODS -->
+<h2 class="topic" id="u5-display">5.1 3D Display Methods <span class="imp h">EXAM HOT</span></h2>
+
+<div class="card def">
+  <div class="tag">&#x1F4D6; Definition</div>
+  <p style="margin-top:8px;"><strong>3D Display Methods</strong> are techniques used to represent and visualize three-dimensional objects on a two-dimensional display device by converting 3D scene descriptions into 2D projections, often enhanced with depth cues like shading, perspective, and hidden-surface removal.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">&#x1F5E3; Hinglish Explanation</div>
+  <p style="margin-top:6px;">Hamara monitor ek flat (2D) screen hai, lekin hume 3D objects dikhane hote hain. Isliye different methods use karte hain jisse screen par dekhne wale ko depth (gehrai) ka feel aaye — jaise wireframe (sirf edges), surface rendering (solid look), aur depth cueing (door cheezein dhundhli, paas wali bright).</p>
+</div>
+
+<h3 class="sub">Major 3D Display Techniques</h3>
+<div class="card">
+  <ul>
+    <li>&#x1F578;&#xFE0F; <strong>Parallel Projection:</strong> Projects points along parallel lines onto the view plane; preserves relative proportions (used in CAD/engineering drawing).</li>
+    <li>&#x1F4F7; <strong>Perspective Projection:</strong> Projects points toward a center of projection; far objects appear smaller — gives realistic depth feel (used in games, movies).</li>
+    <li>&#x1F578;&#xFE0F; <strong>Wireframe (Depth Cueing) Display:</strong> Only edges drawn; depth shown by varying line intensity — closer = brighter.</li>
+    <li>&#x1F3A8; <strong>Surface Rendering:</strong> Surfaces are shaded/colored based on lighting models, giving a solid realistic look.</li>
+    <li>&#x1F441;&#xFE0F; <strong>Visible Line/Surface Identification:</strong> Hidden-line and hidden-surface removal algorithms highlight only the visible parts.</li>
+    <li>&#x1FA9E; <strong>Stereoscopic Views:</strong> Two slightly different views (one per eye) are generated to create true depth perception (3D glasses, VR).</li>
+  </ul>
+</div>
+
+<div class="card example">
+  <div class="tag">&#x1F4A1; Example</div>
+  <p style="margin-top:8px;">A 3D cube wireframe shown with all 12 edges drawn but no faces filled is a wireframe display. The same cube rendered with Gouraud-shaded faces and one light source is a surface-rendered display with realistic shading.</p>
+</div>
+
+<!-- 5.2 POLYGON SURFACES -->
+<h2 class="topic" id="u5-polysurf">5.2 Polygon Surfaces, Tables &amp; Meshes <span class="imp h">MUST KNOW</span></h2>
+
+<div class="card def">
+  <div class="tag">&#x1F4D6; Definition</div>
+  <p style="margin-top:8px;"><strong>Polygon Surface</strong> representation describes an object's boundary using a set of flat polygonal faces, defined by vertices, edges, and surface normals, organized into <strong>polygon tables</strong> (data structures) for efficient processing and rendering.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">&#x1F5E3; Hinglish</div>
+  <p style="margin-top:6px;">Koi bhi complex 3D shape (jaise car, building) ko hum chhote-chhote flat polygons (triangles/quads) mein todh dete hain — yeh "polygon mesh" kehlata hai. Inhe efficiently store karne ke liye tables banate hain: vertex table (coordinates), edge table (kaun se vertices judhe hain), aur polygon/surface table (kaun se edges milkar face banate hain).</p>
+</div>
+
+<h3 class="sub">Polygon Data Tables <span class="imp m">5-MARK</span></h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Table</th><th>Stores</th><th>Purpose</th></tr>
+    <tr><td>Vertex Table</td><td>Coordinate values (x,y,z) of each vertex</td><td>Geometric data (location)</td></tr>
+    <tr><td>Edge Table</td><td>Pointers to vertex table for each edge's 2 endpoints</td><td>Connects vertices to form edges</td></tr>
+    <tr><td>Polygon (Surface) Table</td><td>Pointers to edges that bound each polygon</td><td>Defines each face/surface</td></tr>
+  </table>
+  <p style="margin-top:10px;">These are also called <strong>Geometric Tables</strong> (vertex, edge, polygon) and <strong>Attribute Tables</strong> (color, transparency, surface normal, reflectivity).</p>
+</div>
+
+<div class="card example">
+  <div class="tag">&#x1F4A1; Example: Square Pyramid Vertex/Edge Table</div>
+  <div class="formula">
+V1=(0,0,0)  V2=(4,0,0)  V3=(4,4,0)  V4=(0,4,0)  V5=(2,2,4)
+E1:V1V2  E2:V2V3  E3:V3V4  E4:V4V1  E5:V1V5  E6:V2V5  E7:V3V5  E8:V4V5
+S1: E1,E2,E3,E4 (base)   S2: E1,E6,E5 (side)   S3: E2,E7,E6 (side)
+  </div>
+</div>
+
+<h3 class="sub">Plane Equation &amp; Polygon Meshes</h3>
+<div class="card def">
+  <p>The orientation of a polygon surface is given by its <strong>plane equation</strong>:</p>
+  <div class="formula">Ax + By + Cz + D = 0</div>
+  <p>where (A,B,C) is the surface normal vector. A <strong>polygon mesh</strong> is a collection of connected polygons (commonly triangle mesh or quad mesh) approximating a curved or complex surface — the building block of most 3D models in games/CAD.</p>
+</div>
+
+<div class="keypoint">
+  <span class="icon">&#x1F4CC;</span>
+  <span><strong>Surface Normal</strong> is found using the cross product of two edge vectors of the polygon: N = (V2&#x2212;V1) &times; (V3&#x2212;V1). It is used in back-face culling and lighting calculations.</span>
+</div>
+
+<!-- 5.3 CURVED SURFACES -->
+<h2 class="topic" id="u5-curved">5.3 Curved Lines, Surfaces &amp; Quadric Surfaces <span class="imp m">5-MARK</span></h2>
+
+<div class="card def">
+  <div class="tag">&#x1F4D6; Definition</div>
+  <p style="margin-top:8px;"><strong>Curved surfaces</strong> are generated mathematically using polynomial or quadratic equations rather than flat polygons, giving smoother, more realistic representations of natural and engineered objects. <strong>Quadric surfaces</strong> are surfaces described by second-degree (quadratic) equations in x, y, z.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">&#x1F5E3; Hinglish</div>
+  <p style="margin-top:6px;">Polygon meshes se sirf flat approximation milta hai, lekin sphere, ellipsoid jaise smooth objects ke liye humein curved equations chahiye. Quadric surfaces, quadratic (degree-2) equations se define hote hain — jaise sphere ka equation x&sup2;+y&sup2;+z&sup2;=r&sup2;.</p>
+</div>
+
+<h3 class="sub">Common Quadric Surfaces</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Surface</th><th>Equation</th><th>Description</th></tr>
+    <tr><td>Sphere</td><td>x&sup2;/r&#x2093;&sup2; + y&sup2;/r&#x1d67;&sup2; + z&sup2;/r&#x1d69;&sup2; = 1</td><td>Centered at origin, radius r</td></tr>
+    <tr><td>Ellipsoid</td><td>x&sup2;/a&sup2; + y&sup2;/b&sup2; + z&sup2;/c&sup2; = 1</td><td>Stretched sphere along axes</td></tr>
+    <tr><td>Torus</td><td>(&radic;(x&sup2;+y&sup2;) &#x2212; a)&sup2; + z&sup2; = b&sup2;</td><td>Donut shape; a=center-to-tube distance</td></tr>
+    <tr><td>Paraboloid</td><td>z = x&sup2;/a&sup2; + y&sup2;/b&sup2;</td><td>Bowl/dish shape (satellite dish)</td></tr>
+  </table>
+</div>
+
+<div class="card example">
+  <div class="tag">&#x1F4A1; Example</div>
+  <p style="margin-top:8px;">A sphere of radius 5 centered at origin has equation x&sup2;+y&sup2;+z&sup2;=25. Parametrically: x=r&middot;sin&theta;&middot;cos&phi;, y=r&middot;sin&theta;&middot;sin&phi;, z=r&middot;cos&theta;, where 0&le;&theta;&le;&pi;, 0&le;&phi;&le;2&pi;.</p>
+</div>
+
+<!-- 5.4 SPLINE REPRESENTATION -->
+<h2 class="topic" id="u5-spline">5.4 Spline Representation <span class="imp h">EXAM HOT</span></h2>
+
+<div class="card def">
+  <div class="tag">&#x1F4D6; Definition</div>
+  <p style="margin-top:8px;">A <strong>spline</strong> is a piecewise polynomial curve used to model smooth curves and surfaces by passing through or near a given set of <strong>control points</strong>, ensuring continuity between adjoining curve segments.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">&#x1F5E3; Hinglish</div>
+  <p style="margin-top:6px;">Pehle ke zamane mein draftsman ek flexible strip (spline) ko pins se mod kar smooth curve banate the. Computer graphics mein, hum control points dete hain aur mathematical equations un points ke through ek smooth curve generate karte hain — yahi spline curve hai.</p>
+</div>
+
+<h3 class="sub">Spline Continuity Conditions <span class="imp m">5-MARK</span></h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Continuity</th><th>Condition</th><th>Meaning</th></tr>
+    <tr><td>C&#x2070; (Zero-order)</td><td>Curves meet at the joint point</td><td>No gap, but possible sharp corner</td></tr>
+    <tr><td>C&#xB9; (First-order)</td><td>1st derivatives (tangents) match</td><td>Smooth tangent direction at joint</td></tr>
+    <tr><td>C&#xB2; (Second-order)</td><td>2nd derivatives (curvature) match</td><td>Smooth curvature, no visible "kink"</td></tr>
+  </table>
+</div>
+
+<h3 class="sub">Interpolation vs Approximation Splines</h3>
+<div class="compare">
+  <div class="compare-card">
+    <h4 style="color:var(--accent);">Interpolation Spline</h4>
+    <p>Curve passes <strong>exactly through</strong> every control point. Example: Cubic Spline, Natural Cubic Spline.</p>
+  </div>
+  <div class="compare-card">
+    <h4 style="color:var(--accent2);">Approximation Spline</h4>
+    <p>Curve is influenced by control points but does <strong>not necessarily pass through</strong> all of them. Example: B&eacute;zier, B-Spline.</p>
+  </div>
+</div>
+
+<div class="svgbox">
+<svg viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:560px;">
+  <polyline points="40,180 150,40 280,160 400,30 540,150" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="6,4"/>
+  <path d="M40,180 C90,70 190,60 280,160 S470,20 540,150" fill="none" stroke="var(--accent)" stroke-width="3"/>
+  <circle cx="40" cy="180" r="6" fill="var(--red)"/>
+  <circle cx="150" cy="40" r="6" fill="var(--red)"/>
+  <circle cx="280" cy="160" r="6" fill="var(--red)"/>
+  <circle cx="400" cy="30" r="6" fill="var(--red)"/>
+  <circle cx="540" cy="150" r="6" fill="var(--red)"/>
+  <text x="40" y="200" font-size="12">P0</text>
+  <text x="150" y="30" font-size="12">P1</text>
+  <text x="280" y="180" font-size="12">P2</text>
+  <text x="400" y="20" font-size="12">P3</text>
+  <text x="540" y="170" font-size="12">P4</text>
+</svg>
+<div class="cap">Dashed line = control polygon; solid curve = smooth spline through control points</div>
+</div>
+
+<!-- 5.5 CUBIC SPLINE INTERPOLATION -->
+<h2 class="topic" id="u5-cubic">5.5 Cubic Spline Interpolation Methods <span class="imp h">10-MARK TOPIC</span></h2>
+
+<div class="card def">
+  <div class="tag">&#x1F4D6; Definition</div>
+  <p style="margin-top:8px;"><strong>Cubic Spline Interpolation</strong> uses piecewise third-degree (cubic) polynomials between each pair of consecutive control points, ensuring C&#xB2; continuity (matching position, tangent, and curvature) at every joining point, called a <strong>knot</strong>.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">&#x1F5E3; Hinglish</div>
+  <p style="margin-top:6px;">N control points ke beech N&#x2212;1 cubic curve segments banaye jaate hain. Har segment ek cubic polynomial hota hai. Adjoining segments ke joint (knot) par position, slope aur curvature teeno match karte hain — isi wajah se curve bilkul smooth dikhta hai, koi visible break nahi hota.</p>
+</div>
+
+<h3 class="sub">General Cubic Polynomial for a Segment</h3>
+<div class="card">
+  <div class="formula">x(u) = a&#x2093;u&sup3; + b&#x2093;u&sup2; + c&#x2093;u + d&#x2093;
+y(u) = a&#x1d67;u&sup3; + b&#x1d67;u&sup2; + c&#x1d67;u + d&#x1d67;
+z(u) = a&#x1d69;u&sup3; + b&#x1d69;u&sup2; + c&#x1d69;u + d&#x1d69;,&nbsp;&nbsp; 0&le;u&le;1</div>
+  <p>For n control points, there are n&#x2212;1 cubic segments, each having 4 unknown coefficients per coordinate &#x2192; total 4(n&#x2212;1) unknowns solved using boundary &amp; continuity conditions.</p>
+</div>
+
+<h3 class="sub">Types of Cubic Splines</h3>
+<div class="card">
+  <ul>
+    <li><strong>Natural Cubic Spline:</strong> Second derivative = 0 at the two end points (free, relaxed ends).</li>
+    <li><strong>Hermite Spline:</strong> Defined using endpoint positions AND endpoint tangent vectors directly.</li>
+    <li><strong>Cardinal Spline:</strong> Tangents calculated automatically from neighboring control points using a tension parameter.</li>
+    <li><strong>Kochanek-Bartels Spline:</strong> Extension of Cardinal spline with tension, bias, and continuity parameters for finer artistic control.</li>
+  </ul>
+</div>
+
+<!-- 5.6 BEZIER -->
+<h2 class="topic" id="u5-bezier">5.6 B&eacute;zier Curves &amp; Surfaces <span class="imp h">EXAM HOT</span></h2>
+
+<div class="card def">
+  <div class="tag">&#x1F4D6; Definition</div>
+  <p style="margin-top:8px;">A <strong>B&eacute;zier curve</strong> is an approximation spline defined by a set of n+1 control points using <strong>Bernstein basis polynomials</strong>; it passes through the first and last control points only, while intermediate points "pull" the curve's shape.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">&#x1F5E3; Hinglish</div>
+  <p style="margin-top:6px;">B&eacute;zier curve ek bahut popular curve hai (Adobe Illustrator, fonts, animation paths mein use hota hai). Sirf first aur last control point se curve guzarta hai, beech ke control points sirf curve ko apni taraf attract karte hain jaisे magnet.</p>
+</div>
+
+<h3 class="sub">Bezier Curve Equation</h3>
+<div class="card">
+  <div class="formula">P(u) = &#x2211;&#x1d62;&#x208c;&#x2080;&#x207f; P&#x1d62; &middot; BEZ&#x1d62;,&#x2099;(u),&nbsp;&nbsp; 0&le;u&le;1
+
+BEZ&#x1d62;,&#x2099;(u) = C(n,i)&middot;u&#x1d62;&middot;(1&#x2212;u)&#x207f;&#x207B;&#x1d62;&nbsp;&nbsp; (Bernstein Polynomial)</div>
+  <p>For a <strong>cubic B&eacute;zier</strong> (n=3, 4 control points P0,P1,P2,P3):</p>
+  <div class="formula">P(u) = (1&#x2212;u)&sup3;P0 + 3u(1&#x2212;u)&sup2;P1 + 3u&sup2;(1&#x2212;u)P2 + u&sup3;P3</div>
+</div>
+
+<h3 class="sub">Properties of B&eacute;zier Curves <span class="imp m">5-MARK</span></h3>
+<div class="card">
+  <ul>
+    <li>&#x2705; Degree of curve = (number of control points &#x2212; 1)</li>
+    <li>&#x2705; Curve always passes through P0 and P&#x2099; (first and last points)</li>
+    <li>&#x2705; Curve lies entirely within the <strong>convex hull</strong> of its control points</li>
+    <li>&#x2705; Tangent at start = direction of P0P1; tangent at end = direction of P&#x2099;&#x208B;&#x2081;P&#x2099;</li>
+    <li>&#x2705; Moving ANY one control point affects the shape of the ENTIRE curve (no local control)</li>
+    <li>&#x2705; Symmetric: same control points in reverse order draw the same curve</li>
+  </ul>
+</div>
+
+<div class="card example">
+  <div class="tag">&#x1F4A1; Example: Cubic B&eacute;zier Calculation</div>
+  <p style="margin-top:6px;">Given P0=(0,0), P1=(1,3), P2=(3,3), P3=(4,0). Find point at u=0.5:</p>
+  <div class="formula">P(0.5) = (0.5)&sup3;(0,0)&#x2212;wait, use formula:
+P(0.5)=(0.125)(0,0)+(0.375)(1,3)+(0.375)(3,3)+(0.125)(4,0)
+     = (0,0)+(0.375,1.125)+(1.125,1.125)+(0.5,0)
+     = (2.0, 2.25)</div>
+</div>
+
+<h3 class="sub">B&eacute;zier Surfaces</h3>
+<div class="card def">
+  <p>A <strong>B&eacute;zier surface</strong> extends the curve idea to two parametric directions u and v using a grid of (m+1)&times;(n+1) control points:</p>
+  <div class="formula">P(u,v) = &#x2211;&#x1d62;&#x208c;&#x2080;&#x1d50; &#x2211;&#x2c7c;&#x208c;&#x2080;&#x207f; P&#x1d62;,&#x2c7c; &middot; BEZ&#x1d62;,&#x1d50;(u) &middot; BEZ&#x2c7c;,&#x207f;(v)</div>
+  <p>Used for modeling curved car bodies, terrains, and free-form solid surfaces.</p>
+</div>
+
+<!-- 5.7 B-SPLINE -->
+<h2 class="topic" id="u5-bspline">5.7 B-Spline Curves &amp; Surfaces <span class="imp h">10-MARK TOPIC</span></h2>
+
+<div class="card def">
+  <div class="tag">&#x1F4D6; Definition</div>
+  <p style="margin-top:8px;">A <strong>B-Spline curve</strong> is a generalization of the B&eacute;zier curve using <strong>basis functions defined over local intervals (knot vector)</strong>, allowing the polynomial degree to be set independently of the number of control points and providing <strong>local control</strong>.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">&#x1F5E3; Hinglish</div>
+  <p style="margin-top:6px;">B&eacute;zier curve ki sabse badi limitation yeh hai ki ek point move karne se poora curve change ho jata hai. B-Spline isko fix karta hai — yahan har control point ka effect sirf ek local region tak limited hota hai, baki curve untouched rehta hai. Isiliye complex shapes design karne mein B-Spline zyada flexible hai.</p>
+</div>
+
+<h3 class="sub">B-Spline Curve Equation</h3>
+<div class="card">
+  <div class="formula">P(u) = &#x2211;&#x1d62;&#x208c;&#x2080;&#x207f; P&#x1d62; &middot; N&#x1d62;,&#x2096;(u),&nbsp;&nbsp; u&#x2098;&#x1d62;&#x2099; &le; u &le; u&#x2098;&#x2090;&#x2093;</div>
+  <p>where N&#x1d62;,&#x2096;(u) are B-Spline basis functions of order k (degree k&#x2212;1), computed recursively (Cox&#x2013;de Boor recursion) over a knot vector.</p>
+</div>
+
+<h3 class="sub">Key Properties &amp; B&eacute;zier vs B-Spline <span class="imp h">EXAM HOT</span></h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Property</th><th>B&eacute;zier Curve</th><th>B-Spline Curve</th></tr>
+    <tr><td>Degree</td><td>Fixed = (n&#x2212;1) control points</td><td>Independent of number of control points</td></tr>
+    <tr><td>Local Control</td><td>&#x274C; No (global effect)</td><td>&#x2705; Yes (local effect only)</td></tr>
+    <tr><td>Knot Vector</td><td>Not required</td><td>Required (defines parameter intervals)</td></tr>
+    <tr><td>Continuity</td><td>Lower at curve joins (separate segments)</td><td>Higher continuity automatically achieved</td></tr>
+    <tr><td>Convex Hull</td><td>Encloses entire curve</td><td>Encloses only local segment</td></tr>
+  </table>
+</div>
+
+<div class="keypoint">
+  <span class="icon">&#x1F4CC;</span>
+  <span><strong>Uniform vs Non-Uniform B-Spline:</strong> If knot values are equally spaced, it's a uniform B-Spline; if spacing varies, it's non-uniform (NURBS = Non-Uniform Rational B-Spline, widely used in industry CAD software).</span>
+</div>
+
+<h3 class="sub">B-Spline Surfaces</h3>
+<div class="card def">
+  <p>Similar to B&eacute;zier surfaces but built from B-Spline basis functions in two parametric directions, giving local-control surfaces ideal for editing complex free-form models (e.g., car body panels, character models) without disturbing distant regions.</p>
+</div>
+
+<!-- 5.8 3D TRANSFORMATIONS -->
+<h2 class="topic" id="u5-transform">5.8 3D Transformations &amp; Composite Transformation <span class="imp h">MUST KNOW</span></h2>
+
+<div class="card def">
+  <div class="tag">&#x1F4D6; Definition</div>
+  <p style="margin-top:8px;"><strong>3D Geometric Transformations</strong> (translation, rotation, scaling) reposition, reorient, or resize objects in three-dimensional space using 4&times;4 homogeneous transformation matrices, enabling multiple transformations to be combined via matrix multiplication into one <strong>composite transformation</strong>.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">&#x1F5E3; Hinglish</div>
+  <p style="margin-top:6px;">2D transformation jaisa hi concept hai, bas ab z-axis bhi add ho gaya hai, isliye matrix 4&times;4 ho jaata hai (homogeneous coordinates ke liye). Multiple transformations (jaise pehle rotate karo phir translate karo) ko ek single matrix mein combine karna hi composite transformation kehlata hai — yeh efficiency ke liye zaroori hai.</p>
+</div>
+
+<h3 class="sub">3D Translation</h3>
+<div class="card">
+  <div class="formula">[x' y' z' 1] = [x y z 1] &middot; T,&nbsp;&nbsp; T =
+| 1  0  0  0 |
+| 0  1  0  0 |
+| 0  0  1  0 |
+| tx ty tz 1 |</div>
+  <p>Result: x'=x+tx, y'=y+ty, z'=z+tz</p>
+</div>
+
+<h3 class="sub">3D Scaling</h3>
+<div class="card">
+  <div class="formula">S =
+| sx 0  0  0 |
+| 0  sy 0  0 |
+| 0  0  sz 0 |
+| 0  0  0  1 |</div>
+  <p>Result: x'=x&middot;sx, y'=y&middot;sy, z'=z&middot;sz (about origin; for scaling about a fixed point, translate-scale-translate back)</p>
+</div>
+
+<h3 class="sub">3D Rotation (About Coordinate Axes) <span class="imp h">10-MARK TOPIC</span></h3>
+<div class="card">
+  <p><strong>Rotation about Z-axis (by angle &theta;):</strong></p>
+  <div class="formula">R&#x1d68; =
+| cos&theta;   sin&theta;  0  0 |
+|-sin&theta;   cos&theta;  0  0 |
+| 0       0      1  0 |
+| 0       0      0  1 |</div>
+  <p><strong>Rotation about X-axis:</strong> y,z rotate (x unchanged). <strong>Rotation about Y-axis:</strong> z,x rotate (y unchanged). Each follows the same pattern, cycling x&#x2192;y&#x2192;z&#x2192;x.</p>
+  <div class="formula">R&#x2093; rotates (y,z)    R&#x1d67; rotates (z,x)    R&#x1d69; rotates (x,y)</div>
+</div>
+
+<div class="card example">
+  <div class="tag">&#x1F4A1; Example: Composite Transformation</div>
+  <p style="margin-top:6px;">To rotate an object about an arbitrary axis (not passing through origin), the composite sequence is:</p>
+  <div class="formula">1. Translate axis point to origin (T)
+2. Rotate axis to align with a coordinate axis (e.g. Z) (R&#x1d63;&#x2090;)
+3. Perform desired rotation about that axis (R&theta;)
+4. Apply inverse of step 2 (R&#x1d63;&#x2090;&#x207B;&sup1;)
+5. Apply inverse of step 1 (T&#x207B;&sup1;)
+
+Composite Matrix M = T&#x207B;&sup1; &middot; R&#x1d63;&#x2090;&#x207B;&sup1; &middot; R&theta; &middot; R&#x1d63;&#x2090; &middot; T</div>
+</div>
+
+<div class="keypoint">
+  <span class="icon">&#x1F4CC;</span>
+  <span>Matrix multiplication is <strong>not commutative</strong> — order of transformations matters! Rotate-then-translate &ne; translate-then-rotate.</span>
+</div>
+
+<!-- 5.9 VIEWING PIPELINE -->
+<h2 class="topic" id="u5-pipeline">5.9 Viewing Pipeline &amp; Coordinates <span class="imp h">EXAM HOT</span></h2>
+
+<div class="card def">
+  <div class="tag">&#x1F4D6; Definition</div>
+  <p style="margin-top:8px;">The <strong>3D Viewing Pipeline</strong> is the sequence of coordinate transformations that convert a 3D object's description in world coordinates into a final 2D image on the device screen, passing through multiple coordinate reference systems.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">&#x1F5E3; Hinglish</div>
+  <p style="margin-top:6px;">3D scene ko 2D screen par dikhane ke liye ek lambi pipeline (step-by-step process) follow hoti hai — jaise camera ka view set karna, phir us view ke according object ko transform karna, phir clipping (jo dikhega usi ko rakhna), aur finally screen par map karna.</p>
+</div>
+
+<h3 class="sub">Stages of the Viewing Pipeline</h3>
+<div class="svgbox">
+<svg viewBox="0 0 900 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:860px;">
+  <g font-size="13" font-family="inherit">
+  <rect x="10" y="50" width="120" height="50" rx="8" fill="var(--accent-light)" stroke="var(--accent)"/>
+  <text x="70" y="68" text-anchor="middle">Modeling</text>
+  <text x="70" y="84" text-anchor="middle">Coordinates</text>
+
+  <rect x="160" y="50" width="120" height="50" rx="8" fill="var(--accent2-light)" stroke="var(--accent2)"/>
+  <text x="220" y="68" text-anchor="middle">World</text>
+  <text x="220" y="84" text-anchor="middle">Coordinates</text>
+
+  <rect x="310" y="50" width="130" height="50" rx="8" fill="var(--amber-light)" stroke="#fcd34d"/>
+  <text x="375" y="68" text-anchor="middle">Viewing</text>
+  <text x="375" y="84" text-anchor="middle">Coordinates</text>
+
+  <rect x="470" y="50" width="130" height="50" rx="8" fill="var(--green-light)" stroke="var(--green)"/>
+  <text x="535" y="68" text-anchor="middle">Projection</text>
+  <text x="535" y="84" text-anchor="middle">Coordinates</text>
+
+  <rect x="630" y="50" width="120" height="50" rx="8" fill="var(--purple-light)" stroke="var(--purple)"/>
+  <text x="690" y="68" text-anchor="middle">Normalized</text>
+  <text x="690" y="84" text-anchor="middle">Device Coords</text>
+
+  <rect x="780" y="50" width="110" height="50" rx="8" fill="var(--red-light)" stroke="var(--red)"/>
+  <text x="835" y="68" text-anchor="middle">Device/</text>
+  <text x="835" y="84" text-anchor="middle">Screen Coords</text>
+
+  <path d="M130,75 L158,75" stroke="var(--text)" stroke-width="2" marker-end="url(#arr)"/>
+  <path d="M280,75 L308,75" stroke="var(--text)" stroke-width="2" marker-end="url(#arr)"/>
+  <path d="M440,75 L468,75" stroke="var(--text)" stroke-width="2" marker-end="url(#arr)"/>
+  <path d="M600,75 L628,75" stroke="var(--text)" stroke-width="2" marker-end="url(#arr)"/>
+  <path d="M750,75 L778,75" stroke="var(--text)" stroke-width="2" marker-end="url(#arr)"/>
+  </g>
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="var(--text)"/>
+    </marker>
+  </defs>
+</svg>
+<div class="cap">3D Viewing Pipeline: Modeling &#x2192; World &#x2192; Viewing &#x2192; Projection &#x2192; Normalized Device &#x2192; Screen Coordinates</div>
+</div>
+
+<div class="card">
+  <ul>
+    <li><strong>Modeling Coordinates (MC):</strong> Each object defined in its own local coordinate system.</li>
+    <li><strong>World Coordinates (WC):</strong> All objects combined into one common scene coordinate system.</li>
+    <li><strong>Viewing Coordinates (VC):</strong> Scene transformed relative to the camera/viewing position (View Reference Point, View Plane Normal, View-Up Vector).</li>
+    <li><strong>Projection Coordinates:</strong> 3D viewing coordinates projected onto the 2D view plane (parallel or perspective).</li>
+    <li><strong>Normalized Device Coordinates (NDC):</strong> Coordinates scaled into a standard range (e.g., 0 to 1) independent of any specific device.</li>
+    <li><strong>Device/Screen Coordinates:</strong> Final mapping to actual pixel positions of the output device.</li>
+  </ul>
+</div>
+
+<h3 class="sub">Viewing Coordinate Parameters</h3>
+<div class="card">
+  <ul>
+    <li><strong>VRP (View Reference Point):</strong> Origin of the viewing coordinate system.</li>
+    <li><strong>VPN (View Plane Normal):</strong> Direction the camera is looking (defines viewing z-axis, N).</li>
+    <li><strong>VUP (View-Up Vector):</strong> Defines the "up" direction for the camera (orients viewing y-axis).</li>
+  </ul>
+</div>
+
+<!-- 5.10 PROJECTIONS -->
+<h2 class="topic" id="u5-projection">5.10 Parallel &amp; Perspective Projection, View Volume <span class="imp h">10-MARK TOPIC</span></h2>
+
+<div class="card def">
+  <div class="tag">&#x1F4D6; Definition</div>
+  <p style="margin-top:8px;"><strong>Projection</strong> is the transformation that converts 3D viewing-coordinate points onto a 2D view plane. The <strong>view volume</strong> is the region of 3D space that is visible to the camera/viewer, bounded by clipping planes.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">&#x1F5E3; Hinglish</div>
+  <p style="margin-top:6px;">Projection batata hai ki 3D point ko 2D screen par kahan plot karna hai. Do main types hain: Parallel (jaisa engineering drawings mein hota hai, sab lines parallel) aur Perspective (jaise real camera/eye dekhta hai, door ki cheez chhoti dikhti hai).</p>
+</div>
+
+<h3 class="sub">Parallel vs Perspective Projection <span class="imp h">EXAM HOT</span></h3>
+<div class="compare">
+  <div class="compare-card">
+    <h4 style="color:var(--accent);">Parallel Projection</h4>
+    <p>Projection lines are <strong>parallel</strong>; Center of Projection (COP) is at infinity. Preserves relative proportions and parallel lines. Used in CAD, architecture.</p>
+  </div>
+  <div class="compare-card">
+    <h4 style="color:var(--accent2);">Perspective Projection</h4>
+    <p>Projection lines converge to a finite <strong>Center of Projection</strong>. Far objects appear smaller (perspective foreshortening). Realistic; used in games/movies.</p>
+  </div>
+</div>
+
+<h3 class="sub">Types of Parallel Projection</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Type</th><th>Sub-type</th><th>Description</th></tr>
+    <tr><td rowspan="2">Orthographic</td><td>Axonometric (Isometric)</td><td>Projection plane perpendicular to a principal axis; equal angles between axes</td></tr>
+    <tr><td>Multiview (Front/Top/Side)</td><td>Projection plane perpendicular to one axis only</td></tr>
+    <tr><td colspan="2">Oblique</td><td>Projection direction NOT perpendicular to view plane (Cavalier, Cabinet)</td></tr>
+  </table>
+</div>
+
+<h3 class="sub">Types of Perspective Projection</h3>
+<div class="card">
+  <p>Classified by the number of principal axes (x, y, z) that the view plane intersects, creating vanishing points:</p>
+  <ul>
+    <li><strong>One-Point Perspective:</strong> View plane parallel to two axes &#x2192; 1 vanishing point</li>
+    <li><strong>Two-Point Perspective:</strong> View plane parallel to one axis &#x2192; 2 vanishing points</li>
+    <li><strong>Three-Point Perspective:</strong> View plane intersects all three axes &#x2192; 3 vanishing points</li>
+  </ul>
+</div>
+
+<div class="svgbox">
+<svg viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:520px;">
+  <text x="20" y="20" font-size="13" fill="var(--accent)">Parallel Projection</text>
+  <line x1="30" y1="40" x2="30" y2="120" stroke="var(--text)" stroke-width="2"/>
+  <line x1="60" y1="40" x2="60" y2="120" stroke="var(--text)" stroke-width="2"/>
+  <line x1="90" y1="40" x2="90" y2="120" stroke="var(--text)" stroke-width="2"/>
+  <line x1="10" y1="150" x2="120" y2="150" stroke="var(--accent)" stroke-width="2"/>
+  <line x1="30" y1="40" x2="30" y2="150" stroke="var(--muted)" stroke-dasharray="3,3"/>
+  <line x1="60" y1="40" x2="60" y2="150" stroke="var(--muted)" stroke-dasharray="3,3"/>
+  <line x1="90" y1="40" x2="90" y2="150" stroke="var(--muted)" stroke-dasharray="3,3"/>
+  <text x="40" y="170" font-size="11">View Plane</text>
+
+  <text x="320" y="20" font-size="13" fill="var(--accent2)">Perspective Projection</text>
+  <line x1="350" y1="40" x2="350" y2="120" stroke="var(--text)" stroke-width="2"/>
+  <line x1="380" y1="50" x2="380" y2="110" stroke="var(--text)" stroke-width="2"/>
+  <line x1="410" y1="60" x2="410" y2="100" stroke="var(--text)" stroke-width="2"/>
+  <circle cx="500" cy="80" r="4" fill="var(--red)"/>
+  <line x1="350" y1="40" x2="500" y2="80" stroke="var(--muted)" stroke-dasharray="3,3"/>
+  <line x1="350" y1="120" x2="500" y2="80" stroke="var(--muted)" stroke-dasharray="3,3"/>
+  <line x1="380" y1="50" x2="500" y2="80" stroke="var(--muted)" stroke-dasharray="3,3"/>
+  <line x1="380" y1="110" x2="500" y2="80" stroke="var(--muted)" stroke-dasharray="3,3"/>
+  <text x="475" y="70" font-size="11">COP</text>
+  <line x1="350" y1="150" x2="350" y2="40" stroke="none"/>
+  <line x1="350" y1="150" x2="350" y2="150" stroke="none"/>
+  <line x1="320" y1="150" x2="430" y2="150" stroke="var(--accent2)" stroke-width="2"/>
+  <text x="350" y="170" font-size="11">View Plane</text>
+</svg>
+<div class="cap">Left: parallel rays hit view plane directly. Right: rays converge toward Center of Projection (COP) &#x2014; distant objects shrink.</div>
+</div>
+
+<h3 class="sub">View Volume &amp; General Projection Transformation</h3>
+<div class="card def">
+  <p>The <strong>view volume</strong> is bounded by 6 clipping planes: <strong>near plane, far plane</strong>, and 4 side planes forming a frustum (perspective) or a rectangular box/parallelepiped (parallel). Only objects inside the view volume are visible and rendered; rest are clipped away.</p>
+  <ul style="margin-top:8px;">
+    <li><strong>Parallel View Volume:</strong> A rectangular parallelepiped (box) since projection lines are parallel.</li>
+    <li><strong>Perspective View Volume:</strong> A frustum (truncated pyramid) since projection lines converge at COP.</li>
+  </ul>
+</div>
+
+<!-- 5.11 COMPARISON TABLES -->
+<h2 class="topic" id="u5-tables">5.11 Important Comparison Tables &#x1F4CA;</h2>
+
+<div class="card">
+  <strong style="color:var(--accent2);">B&eacute;zier vs B-Spline vs Cubic Spline</strong>
+  <table style="margin-top:10px;">
+    <tr><th>Feature</th><th>Cubic Spline</th><th>B&eacute;zier</th><th>B-Spline</th></tr>
+    <tr><td>Passes through points?</td><td>Yes (interpolation)</td><td>Only endpoints</td><td>No (approximation)</td></tr>
+    <tr><td>Local control</td><td>Yes</td><td>No</td><td>Yes</td></tr>
+    <tr><td>Degree control</td><td>Fixed cubic (degree 3)</td><td>Depends on # points</td><td>Independent of # points</td></tr>
+    <tr><td>Knot vector needed?</td><td>No</td><td>No</td><td>Yes</td></tr>
+  </table>
+</div>
+
+<div class="card" style="margin-top:18px;">
+  <strong style="color:var(--accent2);">Parallel vs Perspective Projection</strong>
+  <table style="margin-top:10px;">
+    <tr><th>Aspect</th><th>Parallel</th><th>Perspective</th></tr>
+    <tr><td>Center of Projection</td><td>At infinity</td><td>Finite point (COP)</td></tr>
+    <tr><td>Realism</td><td>Less realistic</td><td>More realistic (matches human eye)</td></tr>
+    <tr><td>Size preservation</td><td>Preserved (true scale)</td><td>Not preserved (foreshortening)</td></tr>
+    <tr><td>View Volume shape</td><td>Rectangular box</td><td>Frustum (pyramid)</td></tr>
+    <tr><td>Application</td><td>CAD, engineering drafts</td><td>Games, movies, simulations</td></tr>
+  </table>
+</div>
+
+<!-- 5.12 Q&A SECTION -->
+<h2 class="topic" id="u5-qa">5.12 RTU Exam Q&amp;A (Based on Previous Importance) &#x2753;</h2>
+<div id="qa" class="qsection">
+
+  <div class="qcard">
+    <div class="qlabel">Q1</div>
+    <div class="q">Explain various polygon tables used to represent polygon surfaces with a suitable example. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>Polygon surfaces are represented using three geometric tables: <strong>Vertex Table</strong> (stores x,y,z of each vertex), <strong>Edge Table</strong> (pointers to two vertices forming each edge), and <strong>Polygon/Surface Table</strong> (pointers to the edges bounding each face). Attribute tables additionally store color, transparency, and surface normal for each polygon.</p>
+      <p>Example: For a pyramid with vertices V1-V5, the vertex table lists their coordinates, edge table lists E1(V1,V2), E2(V2,V3) etc., and the surface table lists S1(E1,E2,E3,E4) for the base.</p>
+      <p>This separation avoids duplicate storage of shared vertices/edges and makes operations like shading and transformation efficient.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q2</div>
+    <div class="q">Derive the equation of a cubic B&eacute;zier curve and list its important properties. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>For n+1 control points P0...Pn, the B&eacute;zier curve is P(u) = &#x2211;P&#x1d62;&middot;BEZ&#x1d62;,&#x2099;(u), where BEZ&#x1d62;,&#x2099;(u)=C(n,i)u&#x1d62;(1-u)&#x207f;&#x207B;&#x1d62; is the Bernstein basis polynomial.</p>
+      <p>For n=3 (cubic, 4 control points): P(u) = (1-u)&sup3;P0 + 3u(1-u)&sup2;P1 + 3u&sup2;(1-u)P2 + u&sup3;P3.</p>
+      <p>Properties: passes through P0 and P3 only; lies within convex hull of control points; degree = n; no local control (moving one point affects whole curve); tangent at endpoints follows the first/last control polygon segment.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q3</div>
+    <div class="q">Differentiate between B&eacute;zier curves and B-Spline curves. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>B&eacute;zier curves use Bernstein basis functions, have degree fixed by the number of control points, and lack local control (one point moved affects the entire curve). B-Spline curves use basis functions defined over a knot vector, allow degree to be chosen independently of control point count, and provide local control where moving one point affects only a nearby curve segment, making them more flexible for complex shape design.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q4</div>
+    <div class="q">Explain the 3D viewing pipeline with the help of a diagram. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>The 3D viewing pipeline converts a scene from modeling coordinates to final screen coordinates through stages: Modeling Coordinates &#x2192; World Coordinates (objects assembled into one scene) &#x2192; Viewing Coordinates (transformed relative to VRP, VPN, VUP of the camera) &#x2192; Projection Coordinates (3D to 2D via parallel/perspective projection) &#x2192; Normalized Device Coordinates (scaled to a standard range) &#x2192; Device/Screen Coordinates (mapped to actual pixels).</p>
+      <p>Each stage uses its own transformation matrix, and the matrices are composed for efficiency before being applied to the object's vertices.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q5</div>
+    <div class="q">Derive the 3D rotation matrices about the X, Y, and Z axes. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>Rotation about the Z-axis by angle &theta; affects x,y while z stays unchanged: x'=x&middot;cos&theta;&#x2212;y&middot;sin&theta;, y'=x&middot;sin&theta;+y&middot;cos&theta;, z'=z. The matrix form is R&#x1d68; with cos&theta;, sin&theta; terms in the top-left 2&times;2 block and identity elsewhere.</p>
+      <p>Rotation about the X-axis affects y,z (x unchanged): y'=y&middot;cos&theta;&#x2212;z&middot;sin&theta;, z'=y&middot;sin&theta;+z&middot;cos&theta;.</p>
+      <p>Rotation about the Y-axis affects z,x (y unchanged): z'=z&middot;cos&theta;&#x2212;x&middot;sin&theta;, x'=z&middot;sin&theta;+x&middot;cos&theta;. Each follows a cyclic pattern x&#x2192;y&#x2192;z&#x2192;x for the unaffected axis.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q6</div>
+    <div class="q">Explain parallel and perspective projections with their types and view volumes. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p><strong>Parallel projection</strong> has projection lines parallel and COP at infinity; sub-types are Orthographic (axonometric/isometric and multiview) and Oblique (cavalier, cabinet). It preserves relative dimensions and produces a rectangular box-shaped view volume.</p>
+      <p><strong>Perspective projection</strong> has projection lines converging at a finite COP, creating realistic foreshortening (distant objects appear smaller). It is classified as one-point, two-point, or three-point based on how many axes the view plane intersects, and its view volume is a frustum (truncated pyramid).</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q7</div>
+    <div class="q">What is a spline curve? Explain continuity conditions C0, C1, C2 with examples. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>A spline is a piecewise polynomial curve passing through or near a set of control points to model smooth shapes. Continuity defines how smoothly adjoining segments connect: C&#x2070; means the segments just meet at a point (positions match, but there can be a corner); C&#xB9; means the first derivatives (tangent directions) also match, giving a smooth tangent; C&#xB2; means second derivatives (curvature) also match, eliminating any visible change in bending at the joint &#x2014; the highest visual smoothness among the three.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q8</div>
+    <div class="q">List and explain common quadric surfaces with their equations. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>Quadric surfaces are described by second-degree equations. A sphere of radius r centered at origin satisfies x&sup2;+y&sup2;+z&sup2;=r&sup2;. An ellipsoid generalizes this with different semi-axis lengths a,b,c: x&sup2;/a&sup2;+y&sup2;/b&sup2;+z&sup2;/c&sup2;=1. A torus (donut shape) is given by (&radic;(x&sup2;+y&sup2;)&#x2212;a)&sup2;+z&sup2;=b&sup2;. A paraboloid (bowl shape) is z=x&sup2;/a&sup2;+y&sup2;/b&sup2;. These are commonly used to model natural and mechanical curved objects in 3D scenes.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q9</div>
+    <div class="q">Explain composite transformation for rotation of an object about an arbitrary axis in 3D. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>Since rotation matrices are simplest about the coordinate axes, rotating about an arbitrary axis requires a composite sequence: (1) translate a point on the axis to the origin, (2) rotate the axis to align it with a coordinate axis (often two rotations are needed, about X then Y), (3) apply the desired rotation angle about that aligned axis, (4) apply the inverse rotations to restore original orientation, and (5) apply the inverse translation. The final composite matrix M = T&#x207B;&sup1;&middot;R&#x1d63;&#x2090;&#x207B;&sup1;&middot;R&theta;&middot;R&#x1d63;&#x2090;&middot;T is applied once to every vertex, which is far more efficient than performing each step separately.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q10</div>
+    <div class="q">What is a polygon mesh? How is it different from a quadric surface representation? <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>A polygon mesh is a collection of connected flat polygons (commonly triangles or quadrilaterals) that approximates the surface of a 3D object using straight edges and vertices, suitable for any arbitrary shape but only an approximation for curved objects. A quadric surface, in contrast, is defined exactly by a mathematical second-degree equation (like a sphere or ellipsoid), giving a perfectly smooth and precise curved surface, but is limited to specific simple geometric forms rather than arbitrary shapes.</p>
+    </div>
+  </div>
+
+</div><!-- end qsection -->
+
+<!-- CHEAT SHEET -->
+<div class="card" style="margin-top:40px; background:linear-gradient(135deg,#0a1525,#0b0d10); border:2px solid var(--accent);">
+  <div style="color:var(--accent); font-family:'Consolas',monospace; font-weight:700; font-size:15px; margin-bottom:14px;">&#x1F4CC; UNIT 5 &#x2014; MASTER FORMULA CHEAT SHEET</div>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+    <div class="formula" style="margin:3px 0; font-size:12px;">Plane: Ax+By+Cz+D=0</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Sphere: x&sup2;+y&sup2;+z&sup2;=r&sup2;</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Cubic Bezier: (1-u)&sup3;P0+3u(1-u)&sup2;P1+3u&sup2;(1-u)P2+u&sup3;P3</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Bernstein: C(n,i)u&#x1d62;(1-u)&#x207f;&#x207B;&#x1d62;</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">3D Translation: x'=x+tx, y'=y+ty, z'=z+tz</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">3D Scaling: x'=x&middot;sx, y'=y&middot;sy, z'=z&middot;sz</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Rot-Z: x'=xcos&theta;-ysin&theta;, y'=xsin&theta;+ycos&theta;</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Continuity: C0 (position), C1 (tangent), C2 (curvature)</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">B-Spline: local control via knot vector</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Bezier: NO local control, global effect</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Parallel: COP at infinity, box view volume</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Perspective: finite COP, frustum view volume</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Pipeline: MC&#x2192;WC&#x2192;VC&#x2192;Proj&#x2192;NDC&#x2192;Screen</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">VRP, VPN, VUP define viewing coords</div>
+  </div>
+</div>
+
+<!-- Unit 5 Footer -->
+<div style="margin-top:50px; padding:20px 24px; border:1px dashed var(--line); border-radius:10px; color:var(--muted); font-size:13px;">
+  <div style="color:var(--accent); font-family:'Consolas',monospace; font-weight:700; margin-bottom:6px;">ZYREX // CGM_VAULT &#x2014; UNIT 5 &#xB7; Three Dimensional Graphics</div>
+  <p>RTU B.Tech CSE 5th Semester &#xB7; 5CS4-04 Computer Graphics &amp; Multimedia &#xB7; Unit 5 of 7</p>
+  <p style="margin-top:6px;">&#x1F4CC; Key formulas: Cubic Bezier P(u) &#xB7; Bernstein basis &#xB7; 3D rotation matrices &#xB7; Parallel vs Perspective projection &#xB7; Viewing pipeline stages</p>
+  <p style="margin-top:6px;">&#x26A1; Unit 6 &#x2014; Illumination &amp; Colour Models can be appended directly below this section.</p>
+</div>
+
+</div><!-- end unit5 -->
+
+<hr class="sep">
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:center;padding:30px 20px;flex-wrap:wrap;">
+      <a href="unit4.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+      <a href="index.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">🏠 CG&M Hub</a>
+      <a href="unit6.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+    </div>
+  </main>
+  <div class="cursor-dot" data-cursor-dot></div>
+  <div class="cursor-outline" data-cursor-outline></div>
+  <script>
+    const cursorDot = document.querySelector("[data-cursor-dot]");
+    const cursorOutline = document.querySelector("[data-cursor-outline]");
+    window.addEventListener("mousemove", function(e){
+      cursorDot.style.left=e.clientX+"px"; cursorDot.style.top=e.clientY+"px";
+      cursorOutline.animate({left:e.clientX+"px",top:e.clientY+"px"},{duration:400,fill:"forwards"});
+    });
+    document.querySelectorAll("a,button").forEach(el=>{
+      el.addEventListener("mouseenter",()=>cursorOutline.classList.add("cursor-hovering"));
+      el.addEventListener("mouseleave",()=>cursorOutline.classList.remove("cursor-hovering"));
+    });
+  </script>
+<script src="../splash-cursor.js"></script>\n</body>
+</html>

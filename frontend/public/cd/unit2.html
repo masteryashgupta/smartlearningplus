@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Learning Plus // CD · Unit 2</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <main class="main-wrapper" style="width:100%;">
+    <div class="topbar">
+      <a href="index.html" class="back-btn">⬅ CD Hub</a>
+      <div class="brand">Smart<span>Learning</span>+ <span style="color:var(--muted);font-weight:400;font-size:14px;">// CD · Unit 2</span></div>
+      <div class="nav">
+        <a href="index.html">🏠 CD Hub</a>
+        <a href="#content">📖 Content</a>
+        <a href="#qa">❓ Q&amp;A</a>
+        <a href="unit1.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+        <a href="unit3.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="hero">
+        <h1>📗 Unit 2 — Introduction to Compilers</h1>
+        <p>Compiler/Translator/Interpreter · Phases · Bootstrapping · Lexical Analysis · LEX · Error Handling | Hours: 06</p>
+        <div class="badges" style="margin-top:14px;">
+          <a href="index.html" style="text-decoration:none;"><span class="badge b-teal">← Back to CD Hub</span></a>
+          <span class="badge b-gold">5CS4-02 · Compiler Design · RTU</span>
+        </div>
+      </div>
+      <div id="content">
+  <h1 class="unit-title" id="unit2">📗 UNIT 2 — Introduction to Compilers</h1>
+  <p class="unit-sub">Objective, Scope, Outcome · Compiler/Translator/Interpreter · Phases · Bootstrapping · Finite Automata Lexical Analyzer · Token Recognition · LEX · Error Handling &nbsp;|&nbsp; Hours: 06</p>
+
+  <div class="progress-bar"></div>
+
+  <div class="card def">
+    <span class="tag">English</span>
+    <p>A <b>Compiler</b> is a program that translates source code written in a high-level programming language into an equivalent program in a low-level target language (usually machine or assembly code), reporting any errors found during translation. This unit covers the foundational concepts: definitions of compiler/translator/interpreter, the phases a compiler goes through, and the first real compiler phase — <b>Lexical Analysis</b>.</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Ye unit Compiler Design ka <b>foundation</b> hai. Sabse pehle samjhenge ki Compiler, Translator aur Interpreter mein kya farak hai. Phir dekhenge ki ek compiler internally kitne phases (stages) mein kaam karta hai. Sabse important part — <b>Lexical Analysis</b> — jo source code ko chhote-chhote meaningful pieces (tokens) mein todta hai. Ye unit RTU exam mein <b>bahut heavily poochha jaata hai</b>.</p>
+  </div>
+
+  <!-- 1. Compiler Translator Interpreter -->
+  <h2 class="topic">1. Compiler, Translator &amp; Interpreter — Definitions <span class="imp h">High ⭐⭐⭐⭐⭐</span></h2>
+
+  <div class="card def">
+    <span class="tag">English</span>
+    <p><b>Compiler:</b> A program that translates an entire source program written in a high-level language into an equivalent target program (usually machine code), all at once, before execution begins.</p>
+    <p><b>Translator:</b> A general term for any program that converts code from one language (source) to another language (target). A compiler, interpreter, and assembler are all types of translators.</p>
+    <p><b>Interpreter:</b> A program that directly executes source code instructions one statement at a time, without producing a separate target file — it translates and executes simultaneously, line by line.</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p><b>Compiler:</b> Pura source code ek baar mein translate karke ek <b>executable file</b> bana deta hai (jaise .exe). Phir us file ko run karo. C/C++ compilers (GCC) is tarah kaam karte hain.<br>
+    <b>Translator:</b> Ek umbrella term hai — koi bhi program jo ek language ko dusri language mein convert kare, "translator" kehlaata hai. Compiler, interpreter, assembler — sab translator ki categories hain.<br>
+    <b>Interpreter:</b> Line-by-line code ko directly execute karta hai, bina pehle se ek alag executable file banaye. Python isi tarah kaam karta hai — har line padhta hai aur turant execute karta hai.</p>
+  </div>
+
+  <h3 class="sub">Compiler vs Interpreter — Comparison Table <span class="imp h">High ⭐⭐⭐⭐⭐ (Guaranteed every year)</span></h3>
+  <table>
+    <tr><th>Aspect</th><th>Compiler</th><th>Interpreter</th></tr>
+    <tr><td>Translation</td><td>Translates entire program at once before execution</td><td>Translates and executes line by line</td></tr>
+    <tr><td>Output</td><td>Produces a separate target/object file (e.g. .exe)</td><td>No separate output file; direct execution</td></tr>
+    <tr><td>Speed of execution</td><td>Faster (already compiled to machine code)</td><td>Slower (translation overhead every run)</td></tr>
+    <tr><td>Error detection</td><td>All errors reported after full compilation</td><td>Stops at first error encountered (line by line)</td></tr>
+    <tr><td>Memory usage</td><td>Compiler needed only once; output runs independently</td><td>Interpreter must be present every time program runs</td></tr>
+    <tr><td>Debugging</td><td>Harder — errors shown after full compile</td><td>Easier — errors shown immediately, line by line</td></tr>
+    <tr><td>Examples</td><td>C, C++, Rust, Go (GCC, Clang)</td><td>Python, JavaScript (originally), Ruby, PHP</td></tr>
+    <tr><td>Portability of output</td><td>Target code is platform-specific (needs recompilation)</td><td>Source code is portable (interpreter handles platform)</td></tr>
+  </table>
+
+  <div class="card example">
+    <span class="tag">Note</span>
+    <p>Many modern languages use a <b>hybrid approach</b>: Java compiles to bytecode (compiler phase) which is then interpreted/JIT-compiled by the JVM (interpreter + just-in-time compiler). Python similarly compiles to bytecode (.pyc) before interpretation. So "pure" compilers/interpreters are increasingly rare in practice.</p>
+  </div>
+
+  <!-- 2. Phases of compiler -->
+  <h2 class="topic">2. Phases of a Compiler <span class="imp h">High ⭐⭐⭐⭐⭐ (Most Important — diagram + explanation guaranteed)</span></h2>
+
+  <div class="card def">
+    <span class="tag">English</span>
+    <p>A compiler translates source code to target code through a sequence of <b>six phases</b>, each performing a specific, well-defined transformation: Lexical Analysis, Syntax Analysis, Semantic Analysis, Intermediate Code Generation, Code Optimization, and Code Generation. A <b>Symbol Table</b> and <b>Error Handler</b> interact with every phase.</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Compiler ek single step mein kaam nahi karta — ye <b>6 phases</b> mein source code ko process karta hai, har phase ka apna specific kaam hai. Pehle phase tokens banaata hai, dusra grammar check karta hai, teesra meaning check karta hai, aur aage badhte hue eventually machine code generate hota hai. <b>Symbol Table</b> har phase ke saath interact karti hai (variables/functions ki info store karne ke liye), aur <b>Error Handler</b> har phase mein errors detect karta hai.</p>
+  </div>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 540 480" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="ph-ar" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
+          <path d="M0,0L7,3L0,6Z" fill="#36e0c4"/>
+        </marker>
+      </defs>
+      <style>.phbox{fill:#141a20;stroke:#36e0c4;stroke-width:1.5;}.phlbl{fill:#d7e1e8;font-size:12px;font-family:Consolas,monospace;text-anchor:middle;}.phln{stroke:#36e0c4;stroke-width:1.5;marker-end:url(#ph-ar);}.phside{fill:#1a2538;stroke:#ffb454;stroke-width:1.2;}.phsidelbl{fill:#ffb454;font-size:10px;font-family:Consolas,monospace;text-anchor:middle;}.phdash{stroke:#ffb454;stroke-width:1;stroke-dasharray:3,3;}</style>
+
+      <rect class="phbox" x="170" y="10" width="200" height="36" rx="6"/>
+      <text class="phlbl" x="270" y="33">Source Program</text>
+      <line class="phln" x1="270" y1="46" x2="270" y2="68"/>
+
+      <rect class="phbox" x="140" y="70" width="260" height="40" rx="6"/>
+      <text class="phlbl" x="270" y="94">1. Lexical Analyzer (Scanner)</text>
+      <line class="phln" x1="270" y1="110" x2="270" y2="132"/>
+
+      <rect class="phbox" x="140" y="134" width="260" height="40" rx="6"/>
+      <text class="phlbl" x="270" y="158">2. Syntax Analyzer (Parser)</text>
+      <line class="phln" x1="270" y1="174" x2="270" y2="196"/>
+
+      <rect class="phbox" x="140" y="198" width="260" height="40" rx="6"/>
+      <text class="phlbl" x="270" y="222">3. Semantic Analyzer</text>
+      <line class="phln" x1="270" y1="238" x2="270" y2="260"/>
+
+      <rect class="phbox" x="140" y="262" width="260" height="40" rx="6"/>
+      <text class="phlbl" x="270" y="282">4. Intermediate Code</text>
+      <text class="phlbl" x="270" y="296">Generator</text>
+      <line class="phln" x1="270" y1="302" x2="270" y2="324"/>
+
+      <rect class="phbox" x="140" y="326" width="260" height="40" rx="6"/>
+      <text class="phlbl" x="270" y="350">5. Code Optimizer</text>
+      <line class="phln" x1="270" y1="366" x2="270" y2="388"/>
+
+      <rect class="phbox" x="140" y="390" width="260" height="40" rx="6"/>
+      <text class="phlbl" x="270" y="414">6. Code Generator</text>
+      <line class="phln" x1="270" y1="430" x2="270" y2="452"/>
+
+      <rect class="phbox" x="170" y="454" width="200" height="36" rx="6" stroke="#10b981"/>
+      <text class="phlbl" x="270" y="477" style="fill:#10b981;">Target Program</text>
+
+      <!-- Symbol Table sidebar -->
+      <rect class="phside" x="420" y="130" width="100" height="270" rx="8"/>
+      <text class="phsidelbl" x="470" y="260" transform="rotate(-90 470 260)">Symbol Table Manager</text>
+      <line class="phdash" x1="400" y1="90" x2="425" y2="150"/>
+      <line class="phdash" x1="400" y1="154" x2="425" y2="180"/>
+      <line class="phdash" x1="400" y1="218" x2="425" y2="220"/>
+      <line class="phdash" x1="400" y1="282" x2="425" y2="280"/>
+      <line class="phdash" x1="400" y1="346" x2="425" y2="340"/>
+      <line class="phdash" x1="400" y1="410" x2="425" y2="380"/>
+
+      <!-- Error Handler sidebar -->
+      <rect class="phside" x="10" y="130" width="100" height="270" rx="8"/>
+      <text class="phsidelbl" x="60" y="260" transform="rotate(-90 60 260)">Error Handler</text>
+      <line class="phdash" x1="140" y1="90" x2="115" y2="150"/>
+      <line class="phdash" x1="140" y1="154" x2="115" y2="180"/>
+      <line class="phdash" x1="140" y1="218" x2="115" y2="220"/>
+      <line class="phdash" x1="140" y1="282" x2="115" y2="280"/>
+      <line class="phdash" x1="140" y1="346" x2="115" y2="340"/>
+      <line class="phdash" x1="140" y1="410" x2="115" y2="380"/>
+    </svg>
+    <p class="cap">Fig 2.1 — The 6 phases of a compiler, with Symbol Table Manager and Error Handler interacting with every phase. This is the most commonly drawn diagram in RTU exams.</p>
+  </div>
+
+  <div class="card">
+    <b>Description of each phase (with examples for: x = a + b * c):</b>
+    <ol>
+      <li><b>Lexical Analyzer (Scanner):</b> Reads source code character-by-character and groups them into <b>tokens</b> (meaningful units). For "x = a + b * c": tokens are id(x), =, id(a), +, id(b), *, id(c).</li>
+      <li><b>Syntax Analyzer (Parser):</b> Takes the token stream and checks if it follows the language's grammar rules; builds a <b>parse tree / syntax tree</b> representing the grammatical structure.</li>
+      <li><b>Semantic Analyzer:</b> Checks for semantic correctness — type checking, scope rules, ensuring operations make sense (e.g., can't add a string to an integer in a type-strict language). Builds an <b>annotated syntax tree</b>.</li>
+      <li><b>Intermediate Code Generator:</b> Converts the syntax tree into an intermediate representation (e.g., Three Address Code) that's easier to optimize and is closer to machine code, but still machine-independent.</li>
+      <li><b>Code Optimizer:</b> Improves the intermediate code to make it run faster or use less memory, without changing its meaning (removes redundant computations, dead code, etc.).</li>
+      <li><b>Code Generator:</b> Converts optimized intermediate code into the final target code (assembly or machine code), handling register allocation and instruction selection.</li>
+    </ol>
+  </div>
+
+  <div class="card example">
+    <span class="tag">Example — Tracing all 6 phases for: <code>x = a + b * c</code></span>
+    <table style="margin:0;">
+      <thead><tr><th>Phase</th><th>Output</th></tr></thead>
+      <tbody>
+        <tr><td><strong>1. Lexical Analysis</strong></td><td>Tokens: <code>id(x), =, id(a), +, id(b), *, id(c)</code></td></tr>
+        <tr><td><strong>2. Syntax Analysis</strong></td><td>Parse Tree: <code>=</code> at root, with <code>x</code> on left, and <code>+</code> subtree on right combining <code>a</code> and <code>(b * c)</code></td></tr>
+        <tr><td><strong>3. Semantic Analysis</strong></td><td>Type checking passes (all operands numeric); annotated tree confirms valid operation types</td></tr>
+        <tr><td><strong>4. Intermediate Code</strong></td><td><code>t1 = b * c</code><br><code>t2 = a + t1</code><br><code>x = t2</code></td></tr>
+        <tr><td><strong>5. Code Optimization</strong></td><td>If t1, t2 aren't reused elsewhere, may combine: <code>x = a + b * c</code> (single optimized TAC line, fewer temporaries)</td></tr>
+        <tr><td><strong>6. Code Generation</strong></td><td>Assembly: <code>MOV R1, b<br>MUL R1, c<br>MOV R2, a<br>ADD R2, R1<br>MOV x, R2</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Ye example bohot important hai — RTU mein aksar exact yahi type ka question aata hai (kisi simple expression ko lekar sab 6 phases dikhao). Yaad rakho ki har phase ek specific kaam karta hai: tokens banana, grammar check karna, type check karna, intermediate code banana, optimize karna, aur finally assembly/machine code generate karna.</p>
+  </div>
+
+  <h3 class="sub">Symbol Table &amp; Error Handler <span class="imp m">Medium ⭐⭐⭐</span></h3>
+  <div class="card def">
+    <span class="tag">English</span>
+    <p>The <b>Symbol Table</b> is a data structure that stores information about identifiers (variables, functions, classes) used in the program — name, type, scope, memory location. It is consulted and updated by nearly every phase. The <b>Error Handler</b> detects, reports, and (where possible) recovers from errors at each phase (lexical errors, syntax errors, semantic errors).</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p><b>Symbol Table</b> ek data structure hai jisme har variable/function ka naam, type, scope, memory location store hota hai. Almost har phase isse read/write karta hai. <b>Error Handler</b> har phase mein errors pakadta hai — jaise undefined variable, syntax mistake, type mismatch — aur error messages deta hai (kabhi-kabhi recovery bhi try karta hai taaki compilation aage continue ho sake).</p>
+  </div>
+
+  <!-- 3. Bootstrapping -->
+  <h2 class="topic">3. Bootstrapping <span class="imp m">Medium ⭐⭐⭐</span></h2>
+  <div class="card def">
+    <span class="tag">English</span>
+    <p><b>Bootstrapping</b> is the technique of writing a compiler for a language using that same language itself, then using a simpler/existing compiler (often written in another language, or a smaller subset) to compile this self-hosting compiler the first time. After this initial compilation, the compiler can compile itself in subsequent versions.</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Bootstrapping ka concept thoda confusing lagta hai pehli baar mein — basically: agar tumhe ek <b>C compiler khud C mein likhna hai</b>, to chicken-egg problem hai (C compiler chahiye C compiler banane ke liye!). Solution: pehle ek <b>chhota subset</b> wala C compiler kisi aur language (jaise assembly) mein likho. Use use karke apna full C compiler (jo C mein likha hai) compile karo. Ab ye naya compiler khud ko future mein compile kar sakta hai — "bootstrap" ho gaya!</p>
+  </div>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="bs-ar" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
+          <path d="M0,0L7,3L0,6Z" fill="#ffb454"/>
+        </marker>
+      </defs>
+      <style>.bsbox{fill:#141a20;stroke:#36e0c4;stroke-width:1.5;}.bslbl{fill:#d7e1e8;font-size:10.5px;font-family:Consolas,monospace;text-anchor:middle;}.bsln{stroke:#ffb454;stroke-width:1.5;marker-end:url(#bs-ar);}.bstit{fill:#d7e1e8;font-size:12px;font-family:Consolas,monospace;text-anchor:middle;}</style>
+      <text class="bstit" x="300" y="18">Bootstrapping a Compiler — 3 Stage Process</text>
+
+      <!-- Stage 1 -->
+      <text class="bslbl" x="100" y="40" style="fill:#ffb454;font-weight:700;">Stage 1</text>
+      <rect class="bsbox" x="20" y="50" width="160" height="40" rx="6"/>
+      <text class="bslbl" x="100" y="68">New compiler NC</text>
+      <text class="bslbl" x="100" y="82">written IN language X</text>
+      <line class="bsln" x1="100" y1="90" x2="100" y2="118"/>
+      <rect class="bsbox" x="20" y="120" width="160" height="40" rx="6" stroke="#ffb454"/>
+      <text class="bslbl" x="100" y="138">Existing compiler EC</text>
+      <text class="bslbl" x="100" y="152">(compiles X, runs on M1)</text>
+      <line class="bsln" x1="180" y1="140" x2="208" y2="140"/>
+
+      <!-- Stage 2 -->
+      <text class="bslbl" x="300" y="40" style="fill:#ffb454;font-weight:700;">Stage 2</text>
+      <rect class="bsbox" x="210" y="120" width="160" height="40" rx="6"/>
+      <text class="bslbl" x="290" y="138">NC compiled by EC</text>
+      <text class="bslbl" x="290" y="152">→ runs on M1</text>
+      <line class="bsln" x1="370" y1="140" x2="398" y2="140"/>
+
+      <!-- Stage 3 -->
+      <text class="bslbl" x="490" y="40" style="fill:#ffb454;font-weight:700;">Stage 3</text>
+      <rect class="bsbox" x="400" y="120" width="170" height="40" rx="6" stroke="#10b981"/>
+      <text class="bslbl" x="485" y="138" style="fill:#10b981;">NC compiles itself</text>
+      <text class="bslbl" x="485" y="152" style="fill:#10b981;">(self-hosting achieved!)</text>
+
+      <text class="bslbl" x="300" y="195" style="fill:#8aa0ad;">Once self-hosting, future versions of NC compile themselves directly.</text>
+    </svg>
+    <p class="cap">Fig 2.2 — Bootstrapping: use an existing compiler to build the first version of a new self-hosting compiler.</p>
+  </div>
+
+  <!-- 4. Lexical Analysis -->
+  <h2 class="topic">4. Lexical Analysis — Review of Finite Automata <span class="imp h">High ⭐⭐⭐⭐⭐ (Most Important Topic in Unit 2)</span></h2>
+
+  <div class="card def">
+    <span class="tag">English</span>
+    <p><b>Lexical Analysis</b> (also called <b>Scanning</b>) is the first phase of a compiler. It reads the source program character by character and groups characters into meaningful sequences called <b>lexemes</b>, producing a <b>token</b> for each lexeme. Lexical analyzers are implemented using <b>finite automata (FA)</b> — each token type corresponds to a regular expression, and the FA recognizes strings matching that pattern.</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Lexical Analysis ka kaam hai — source code ko character by character padhna aur usse <b>chhote meaningful groups (tokens)</b> mein todna. Jaise "int x = 5;" ko tokens mein todo: <code>int</code> (keyword), <code>x</code> (identifier), <code>=</code> (operator), <code>5</code> (number), <code>;</code> (punctuation). Ye recognition internally <b>Finite Automata (FA)</b> use karke hota hai — har token type ka apna pattern (regular expression) hota hai, aur FA us pattern ko match karta hai.</p>
+  </div>
+
+  <h3 class="sub">Key Terms: Token, Lexeme, Pattern <span class="imp h">High ⭐⭐⭐⭐⭐</span></h3>
+  <div class="card def">
+    <span class="tag">English</span>
+    <p><b>Token:</b> A category/class name representing a group of lexemes (e.g., <code>id</code>, <code>num</code>, <code>keyword</code>).<br>
+    <b>Lexeme:</b> The actual sequence of characters in the source code that matches a token's pattern (e.g., "counter", "42", "while").<br>
+    <b>Pattern:</b> The rule (often a regular expression) describing the set of strings that can form a particular token (e.g., letter followed by letters/digits for identifiers).</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Ye teeno terms exam mein bahut confuse karti hain — yaad rakhne ka tarika: <b>Token</b> = category ka naam (jaise "identifier"). <b>Lexeme</b> = actual text jo source code mein likha hai (jaise "counter"). <b>Pattern</b> = rule jo batata hai ki kaunsi strings is token mein aa sakti hain (jaise "letter follow by letters/digits").</p>
+  </div>
+
+  <table>
+    <tr><th>Lexeme (actual text)</th><th>Token (category)</th><th>Pattern (rule)</th></tr>
+    <tr><td>counter, sum, x1</td><td>id (identifier)</td><td>letter (letter | digit)*</td></tr>
+    <tr><td>42, 3.14</td><td>num</td><td>digit+ (. digit+)?</td></tr>
+    <tr><td>while, if, int</td><td>keyword</td><td>specific reserved strings</td></tr>
+    <tr><td>+, -, *, /</td><td>op (operator)</td><td>specific symbol set</td></tr>
+    <tr><td>(, ), {, }, ;</td><td>punctuation</td><td>specific symbol set</td></tr>
+  </table>
+
+  <div class="card example">
+    <span class="tag">Example — Tokenizing a statement</span>
+    <p>Source line: <code>if (x &gt;= 100) y = x + 1;</code></p>
+    <p><b>Tokens generated:</b></p>
+    <table style="margin:0;">
+      <tr><th>Lexeme</th><th>Token</th></tr>
+      <tr><td>if</td><td>keyword</td></tr>
+      <tr><td>(</td><td>lparen</td></tr>
+      <tr><td>x</td><td>id</td></tr>
+      <tr><td>&gt;=</td><td>relop</td></tr>
+      <tr><td>100</td><td>num</td></tr>
+      <tr><td>)</td><td>rparen</td></tr>
+      <tr><td>y</td><td>id</td></tr>
+      <tr><td>=</td><td>assign</td></tr>
+      <tr><td>x</td><td>id</td></tr>
+      <tr><td>+</td><td>op</td></tr>
+      <tr><td>1</td><td>num</td></tr>
+      <tr><td>;</td><td>semicolon</td></tr>
+    </table>
+  </div>
+
+  <h3 class="sub">Finite Automata for Token Recognition <span class="imp h">High ⭐⭐⭐⭐</span></h3>
+  <div class="card def">
+    <span class="tag">English</span>
+    <p>A <b>Finite Automaton (FA)</b> is a mathematical model used to recognize patterns. Lexical analyzers convert each token's regular expression into a <b>Deterministic Finite Automaton (DFA)</b> via NFA construction (Thompson's construction + subset construction). The DFA reads input characters, transitions between states, and accepts the input if it ends in a final/accepting state.</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>FA basically ek state machine hai jo input characters padh ke states ke beech move karta hai. Agar end mein "accepting state" pe pahunch jaaye, to wo string token ke pattern se match karti hai. Lexical analyzer banane ka standard process: <b>Regular Expression → NFA (Thompson's Construction) → DFA (Subset Construction)</b>. Ye TOC subject se directly connect hota hai!</p>
+  </div>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 460 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="dfa-ar" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
+          <path d="M0,0L7,3L0,6Z" fill="#36e0c4"/>
+        </marker>
+      </defs>
+      <style>.dst{fill:#141a20;stroke:#36e0c4;stroke-width:1.5;}.dfin{fill:#141a20;stroke:#10b981;stroke-width:2;}.dlbl{fill:#d7e1e8;font-size:11px;font-family:Consolas,monospace;text-anchor:middle;}.delbl{fill:#ffb454;font-size:10px;font-family:Consolas,monospace;text-anchor:middle;}.dln{stroke:#36e0c4;stroke-width:1.3;fill:none;marker-end:url(#dfa-ar);}</style>
+      <text class="dlbl" x="230" y="16" style="fill:#d7e1e8;font-size:12px;">DFA for Identifier: letter (letter|digit)*</text>
+
+      <!-- start arrow -->
+      <line class="dln" x1="20" y1="100" x2="58" y2="100"/>
+      <text class="dlbl" x="38" y="92">start</text>
+
+      <!-- state 0 -->
+      <circle class="dst" cx="80" cy="100" r="25"/>
+      <text class="dlbl" x="80" y="105">S0</text>
+
+      <!-- transition to S1 (accepting) -->
+      <path class="dln" d="M105,100 Q170,100 195,100"/>
+      <text class="delbl" x="150" y="90">letter</text>
+
+      <!-- state 1 (final, double circle) -->
+      <circle class="dfin" cx="225" cy="100" r="25"/>
+      <circle class="dfin" cx="225" cy="100" r="20" fill="none"/>
+      <text class="dlbl" x="225" y="105" style="fill:#10b981;">S1*</text>
+
+      <!-- self loop on S1 -->
+      <path class="dln" d="M210,80 Q225,40 245,80" fill="none"/>
+      <text class="delbl" x="225" y="50">letter | digit</text>
+
+      <!-- Note box -->
+      <rect x="290" y="60" width="155" height="85" rx="6" fill="#1a2538" stroke="#ffb454" stroke-width="1"/>
+      <text class="delbl" x="367" y="80">S0 = start state</text>
+      <text class="delbl" x="367" y="96">S1* = accepting state</text>
+      <text class="delbl" x="367" y="112">(double circle)</text>
+      <text class="delbl" x="367" y="130">Any string reaching</text>
+      <text class="delbl" x="367" y="142" style="font-size:9px;">S1 and ending = valid id</text>
+    </svg>
+    <p class="cap">Fig 2.3 — DFA recognizing identifiers: a letter, followed by zero or more letters/digits. S1 (double circle) is the accepting state.</p>
+  </div>
+
+  <table>
+    <tr><th>Aspect</th><th>NFA</th><th>DFA</th></tr>
+    <tr><td>Transitions</td><td>Multiple/ε-transitions possible from one state on same input</td><td>Exactly one transition per state per input symbol</td></tr>
+    <tr><td>Determinism</td><td>Non-deterministic</td><td>Deterministic</td></tr>
+    <tr><td>States needed</td><td>Fewer states, simpler to construct from regex</td><td>More states (subset construction), but faster execution</td></tr>
+    <tr><td>Simulation speed</td><td>Slower (may need backtracking/parallel paths)</td><td>Faster (single path per input)</td></tr>
+    <tr><td>Construction</td><td>Thompson's Construction from regex</td><td>Subset Construction from NFA</td></tr>
+    <tr><td>Used in lexer for</td><td>Intermediate representation</td><td>Final, actual scanning implementation</td></tr>
+  </table>
+
+  <!-- 5. Input buffering -->
+  <h2 class="topic">5. Input Buffering <span class="imp m">Medium ⭐⭐⭐</span></h2>
+  <div class="card def">
+    <span class="tag">English</span>
+    <p><b>Input Buffering</b> is a technique used to speed up the scanning process by reading large blocks of source code into memory buffers at once (rather than character by character from disk), reducing the number of slow I/O operations. The classic technique uses <b>two buffers</b> (often each of size N, e.g., 4096 bytes) with a special <b>sentinel character (eof)</b> placed at the end of each buffer to efficiently detect buffer boundaries.</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Agar lexical analyzer har character disk se ek-ek karke padhe, to ye bahut slow hoga (disk I/O expensive hai). Isliye <b>buffering</b> use hoti hai — ek baar mein bada chunk (jaise 4KB) memory mein load karo, phir wahan se fast access karo. <b>Two-buffer scheme</b> mein do buffers hote hain, aur ek <b>sentinel character</b> (special marker, jaise EOF) har buffer ke end mein lagaya jaata hai taaki "buffer khatam ho gaya" ye check fast ho jaaye (without checking buffer-end condition on every single character).</p>
+  </div>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 500 140" xmlns="http://www.w3.org/2000/svg">
+      <style>.ibbox{fill:#141a20;stroke:#36e0c4;stroke-width:1.5;}.iblbl{fill:#d7e1e8;font-size:10px;font-family:Consolas,monospace;text-anchor:middle;}.ibtit{fill:#d7e1e8;font-size:12px;font-family:Consolas,monospace;text-anchor:middle;}.ibsent{fill:#ff6b6b;font-weight:700;}.ibptr{fill:#ffb454;font-size:10px;font-family:Consolas,monospace;text-anchor:middle;}</style>
+      <text class="ibtit" x="250" y="16">Two-Buffer Input Scheme with Sentinels</text>
+      <rect class="ibbox" x="20" y="40" width="200" height="40"/>
+      <text class="iblbl" x="120" y="64">Buffer 1: source code chars...</text>
+      <rect x="210" y="40" width="10" height="40" fill="#ff6b6b"/>
+      <text class="ibsent" x="215" y="95" style="font-size:9px;text-anchor:middle;">eof</text>
+      <rect class="ibbox" x="230" y="40" width="200" height="40"/>
+      <text class="iblbl" x="330" y="64">Buffer 2: source code chars...</text>
+      <rect x="420" y="40" width="10" height="40" fill="#ff6b6b"/>
+      <text class="ibsent" x="425" y="95" style="font-size:9px;text-anchor:middle;">eof</text>
+      <line x1="80" y1="20" x2="80" y2="38" stroke="#ffb454" stroke-width="1.5"/>
+      <text class="ibptr" x="80" y="15">lexemeBegin</text>
+      <line x1="160" y1="20" x2="160" y2="38" stroke="#36e0c4" stroke-width="1.5"/>
+      <text class="ibptr" x="160" y="15">forward</text>
+      <text class="iblbl" x="250" y="118" style="fill:#8aa0ad;">Sentinel (eof) lets forward pointer check buffer-end and EOF in one comparison</text>
+    </svg>
+    <p class="cap">Fig 2.4 — Two-buffer scheme: lexemeBegin marks the start of current lexeme, forward scans ahead. Sentinels avoid checking buffer boundary on every character.</p>
+  </div>
+
+  <!-- 6. Recognition of tokens -->
+  <h2 class="topic">6. Recognition of Tokens <span class="imp h">High ⭐⭐⭐⭐</span></h2>
+  <div class="card def">
+    <span class="tag">English</span>
+    <p>Token recognition uses <b>Transition Diagrams</b> — flowchart-like representations of the finite automaton for a token pattern, with states (circles) and labeled edges (transitions on specific input characters). The lexical analyzer simulates these diagrams to identify which token type a sequence of input characters belongs to.</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Transition diagrams DFA jaise hi hote hain — states (circles) aur edges (transitions) ka use karke batate hain ki kaunse characters aane par kaunsa state jaayenge. Lexer in diagrams ko follow karke decide karta hai ki current lexeme kaunsa token hai. RTU mein <b>relational operators (&lt;, &lt;=, &lt;&gt;, =, &gt;, &gt;=)</b> ka transition diagram bahut common numerical/diagram question hai!</p>
+  </div>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="rel-ar" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
+          <path d="M0,0L7,3L0,6Z" fill="#36e0c4"/>
+        </marker>
+      </defs>
+      <style>.rst{fill:#141a20;stroke:#36e0c4;stroke-width:1.5;}.rfin{fill:#141a20;stroke:#10b981;stroke-width:2;}.rlbl{fill:#d7e1e8;font-size:11px;font-family:Consolas,monospace;text-anchor:middle;}.relbl{fill:#ffb454;font-size:9.5px;font-family:Consolas,monospace;text-anchor:middle;}.rln{stroke:#36e0c4;stroke-width:1.2;fill:none;marker-end:url(#rel-ar);}</style>
+      <text class="rlbl" x="280" y="16" style="font-size:12px;">Transition Diagram — Relational Operators (&lt;, &lt;=, &lt;&gt;, =, &gt;, &gt;=)</text>
+
+      <line class="rln" x1="15" y1="110" x2="48" y2="110"/>
+      <circle class="rst" cx="65" cy="110" r="20"/>
+      <text class="rlbl" x="65" y="115">0</text>
+
+      <!-- on '<' to state 1 -->
+      <path class="rln" d="M85,105 Q120,85 150,90"/>
+      <text class="relbl" x="115" y="80">&lt;</text>
+      <circle class="rst" cx="170" cy="95" r="20"/>
+      <text class="rlbl" x="170" y="100">1</text>
+
+      <!-- from 1 on '=' to 2 (accepting <=) -->
+      <path class="rln" d="M190,90 Q220,75 245,75"/>
+      <text class="relbl" x="215" y="65">=</text>
+      <circle class="rfin" cx="265" cy="75" r="18"/>
+      <text class="rlbl" x="265" y="80" style="font-size:9px;">2* &lt;=</text>
+
+      <!-- from 1 on '>' to 3 (accepting <>) -->
+      <path class="rln" d="M178,113 Q210,140 240,140"/>
+      <text class="relbl" x="210" y="150">&gt;</text>
+      <circle class="rfin" cx="262" cy="140" r="18"/>
+      <text class="rlbl" x="262" y="145" style="font-size:9px;">3* &lt;&gt;</text>
+
+      <!-- from 1 other (accepting <) -->
+      <path class="rln" d="M170,115 Q170,160 195,175"/>
+      <text class="relbl" x="170" y="170">other*</text>
+      <circle class="rfin" cx="215" cy="185" r="18"/>
+      <text class="rlbl" x="215" y="190" style="font-size:9px;">4* &lt;</text>
+
+      <!-- on '=' from 0 to 5 -->
+      <path class="rln" d="M83,118 Q100,170 130,180"/>
+      <text class="relbl" x="100" y="160">=</text>
+      <circle class="rfin" cx="155" cy="190" r="18"/>
+      <text class="rlbl" x="155" y="195" style="font-size:9px;">5* =</text>
+
+      <!-- on '>' from 0 to 6 -->
+      <path class="rln" d="M85,118 Q330,160 380,140"/>
+      <text class="relbl" x="330" y="180">&gt;</text>
+      <circle class="rst" cx="400" cy="120" r="20"/>
+      <text class="rlbl" x="400" y="125">6</text>
+
+      <!-- from 6 on '=' to 7 (accepting >=) -->
+      <path class="rln" d="M418,110 Q445,95 470,95"/>
+      <text class="relbl" x="445" y="85">=</text>
+      <circle class="rfin" cx="490" cy="95" r="18"/>
+      <text class="rlbl" x="490" y="100" style="font-size:9px;">7* &gt;=</text>
+
+      <!-- from 6 other -->
+      <path class="rln" d="M400,140 Q420,165 450,165"/>
+      <text class="relbl" x="420" y="158">other*</text>
+      <circle class="rfin" cx="470" cy="165" r="18"/>
+      <text class="rlbl" x="470" y="170" style="font-size:9px;">8* &gt;</text>
+    </svg>
+    <p class="cap">Fig 2.5 — Transition diagram for relational operators. * = accepting states (each recognizes a different token: &lt;=, &lt;&gt;, &lt;, =, &gt;=, &gt;). "other*" means retract one character (lookahead) before accepting.</p>
+  </div>
+
+  <div class="card">
+    <b>Key concept — Lookahead / Retraction:</b>
+    <p>When the automaton reads one character too many to decide the token (e.g., reading '&lt;' then a non-'=' character to confirm it's just "&lt;" not "&lt;="), it must <b>retract</b> (push back) that extra character so it can be read again as part of the next token. This is why some transitions are marked "other*" with retraction.</p>
+  </div>
+
+  <!-- 7. LEX Tool -->
+  <h2 class="topic">7. LEX — A Lexical Analyzer Generator <span class="imp h">High ⭐⭐⭐⭐⭐</span></h2>
+
+  <div class="card def">
+    <span class="tag">English</span>
+    <p><b>LEX</b> is a tool (lexical analyzer generator) that automatically generates a lexical analyzer (scanner) in C from a specification file containing regular expressions and corresponding actions. The programmer writes patterns for each token type; LEX compiles these into an efficient DFA-based scanner, removing the need to hand-code the lexer.</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>LEX ek tool hai jo <b>khud lexical analyzer banata hai</b> — tumhe manually DFA code likhne ki zaroorat nahi! Tum bas regular expressions aur unke corresponding actions (kya karna hai jab wo pattern match ho) likhte ho ek <code>.l</code> file mein, aur LEX use compile karke ek C program (lex.yy.c) bana deta hai jo automatically tokens recognize karta hai. Ye bahut time-saving tool hai compiler development mein.</p>
+  </div>
+
+  <h3 class="sub">Structure of a LEX Program <span class="imp h">High ⭐⭐⭐⭐⭐ (Diagram + structure commonly asked)</span></h3>
+  <div class="card">
+    <p>A LEX source file (<code>.l</code>) has three sections separated by <code>%%</code>:</p>
+    <div class="formula" style="font-size:13px;">
+Declarations Section
+%%
+Translation Rules (Pattern → Action)
+%%
+Auxiliary Functions / User Code
+    </div>
+    <ul>
+      <li><b>Declarations Section:</b> C declarations, macro definitions, and header includes go here (between %{ and %}).</li>
+      <li><b>Translation Rules:</b> Each rule is a pattern (regex) and an action (C code) — when input matches the pattern, the action executes.</li>
+      <li><b>Auxiliary Functions:</b> Additional C functions (e.g., <code>main()</code>) used by the actions, plus the mandatory call to <code>yylex()</code> to start scanning.</li>
+    </ul>
+  </div>
+
+  <div class="card example">
+    <span class="tag">Example — Simple LEX program to count vowels and lines</span>
+    <div class="formula" style="font-size:12.5px;">
+%{
+int vowel_count = 0, line_count = 0;
+%}
+
+%%
+[aeiouAEIOU]   { vowel_count++; }
+\n             { line_count++; }
+%%
+
+int main() {
+    yylex();
+    printf("Vowels: %d, Lines: %d\n", vowel_count, line_count);
+    return 0;
+}
+    </div>
+  </div>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="lex-ar" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
+          <path d="M0,0L7,3L0,6Z" fill="#36e0c4"/>
+        </marker>
+      </defs>
+      <style>.lxbox{fill:#141a20;stroke:#36e0c4;stroke-width:1.5;}.lxlbl{fill:#d7e1e8;font-size:11px;font-family:Consolas,monospace;text-anchor:middle;}.lxln{stroke:#36e0c4;stroke-width:1.5;marker-end:url(#lex-ar);}.lxtit{fill:#d7e1e8;font-size:12px;font-family:Consolas,monospace;text-anchor:middle;}</style>
+      <text class="lxtit" x="280" y="16">LEX Compilation Process</text>
+
+      <rect class="lxbox" x="20" y="50" width="120" height="40" rx="6"/>
+      <text class="lxlbl" x="80" y="68">lex.l</text>
+      <text class="lxlbl" x="80" y="82">(LEX source)</text>
+      <line class="lxln" x1="140" y1="70" x2="168" y2="70"/>
+
+      <rect class="lxbox" x="170" y="50" width="120" height="40" rx="6"/>
+      <text class="lxlbl" x="230" y="68">LEX Compiler</text>
+      <text class="lxlbl" x="230" y="82">(lex / flex)</text>
+      <line class="lxln" x1="290" y1="70" x2="318" y2="70"/>
+
+      <rect class="lxbox" x="320" y="50" width="120" height="40" rx="6"/>
+      <text class="lxlbl" x="380" y="68">lex.yy.c</text>
+      <text class="lxlbl" x="380" y="82">(C source)</text>
+      <line class="lxln" x1="440" y1="70" x2="468" y2="70"/>
+
+      <rect class="lxbox" x="470" y="50" width="75" height="40" rx="6"/>
+      <text class="lxlbl" x="507" y="68">C</text>
+      <text class="lxlbl" x="507" y="82">Compiler</text>
+
+      <line x1="380" y1="90" x2="380" y2="125" stroke="#36e0c4" stroke-width="1.5"/>
+      <line x1="507" y1="90" x2="507" y2="125" stroke="#36e0c4" stroke-width="1.5"/>
+      <path class="lxln" d="M507,150 Q450,150 410,150"/>
+
+      <rect class="lxbox" x="240" y="130" width="140" height="40" rx="6" stroke="#10b981"/>
+      <text class="lxlbl" x="310" y="148" style="fill:#10b981;">a.out</text>
+      <text class="lxlbl" x="310" y="162" style="fill:#10b981;">(Executable Lexer)</text>
+      <line class="lxln" x1="240" y1="150" x2="212" y2="150"/>
+
+      <rect class="lxbox" x="20" y="130" width="190" height="40" rx="6"/>
+      <text class="lxlbl" x="115" y="148">Input stream</text>
+      <text class="lxlbl" x="115" y="162">(source code to tokenize)</text>
+
+      <text class="lxlbl" x="280" y="200" style="fill:#8aa0ad;">Output: Sequence of tokens</text>
+    </svg>
+    <p class="cap">Fig 2.6 — LEX compilation pipeline: lex.l → lex.yy.c (via lex/flex) → compiled with C compiler → executable lexer that scans input and produces tokens.</p>
+  </div>
+
+  <table>
+    <tr><th>Advantage</th><th>Why it matters</th></tr>
+    <tr><td>Automatic DFA generation</td><td>No need to hand-code finite automata logic</td></tr>
+    <tr><td>Regex-based specification</td><td>Concise, readable token definitions</td></tr>
+    <tr><td>Fast generated scanners</td><td>Produces optimized, table-driven C code</td></tr>
+    <tr><td>Easy integration</td><td>Works seamlessly with YACC for full parser-lexer pipelines</td></tr>
+  </table>
+
+  <!-- 8. Error Handling -->
+  <h2 class="topic">8. Error Handling in Lexical Analysis <span class="imp h">High ⭐⭐⭐⭐</span></h2>
+
+  <div class="card def">
+    <span class="tag">English</span>
+    <p><b>Lexical errors</b> occur when the scanner encounters a sequence of characters that doesn't match any valid token pattern (e.g., an illegal character, a malformed number). Since few errors are purely lexical (most show up as syntax errors later), the lexer typically performs minimal local correction and reports the error so compilation can continue.</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Lexical errors tab hote hain jab scanner ko aisa character sequence milta hai jo kisi bhi valid token pattern se match nahi karta — jaise koi illegal symbol (@#$ jo language mein support nahi). Lexer usually error report karta hai aur kuch simple recovery technique use karke aage badhta hai, taaki sirf ek error ke wajah se poora compilation na ruk jaaye.</p>
+  </div>
+
+  <h3 class="sub">Error Recovery Strategies <span class="imp h">High ⭐⭐⭐⭐</span></h3>
+  <table>
+    <tr><th>Strategy</th><th>Description</th></tr>
+    <tr><td><strong>Panic Mode</strong></td><td>Delete successive characters from the erroneous input until a well-formed token is found (simplest, most common in lexical analysis).</td></tr>
+    <tr><td><strong>Deletion</strong></td><td>Delete one extra/illegal character and retry.</td></tr>
+    <tr><td><strong>Insertion</strong></td><td>Insert a missing character that was likely omitted (e.g., missing closing quote).</td></tr>
+    <tr><td><strong>Replacement</strong></td><td>Replace an incorrect character with the correct one (e.g., typo correction).</td></tr>
+    <tr><td><strong>Transposition</strong></td><td>Swap two adjacent characters that appear to be in wrong order.</td></tr>
+  </table>
+
+  <div class="card example">
+    <span class="tag">Example — Lexical error scenarios</span>
+    <ul>
+      <li><b>Illegal character:</b> <code>x = a @ b;</code> — '@' is not a valid operator → lexer reports "illegal character '@'" and may skip it (panic mode).</li>
+      <li><b>Unterminated string:</b> <code>printf("hello);</code> — missing closing quote → lexer may insert assumed closing quote or report error at end of line.</li>
+      <li><b>Malformed number:</b> <code>3.14.15</code> — two decimal points → lexer reports malformed numeric literal.</li>
+    </ul>
+  </div>
+
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p><b>Panic Mode</b> sabse common recovery technique hai lexical analysis mein — bas tab tak characters skip karte raho jab tak ek valid token na mil jaaye. Ye approach simple hai aur compilation ko crash hone se bachata hai — bas error report karke aage badh jaate hain.</p>
+  </div>
+
+  <h3 class="sub">Summary — Unit 2 Key Takeaways <span class="imp h">High</span></h3>
+  <div class="card">
+    <ul>
+      <li>Compiler = whole-program translation; Interpreter = line-by-line execution; Translator = umbrella term for both.</li>
+      <li>6 Phases: Lexical → Syntax → Semantic → Intermediate Code → Optimization → Code Generation, with Symbol Table &amp; Error Handler throughout.</li>
+      <li>Bootstrapping: building a self-hosting compiler using an existing compiler.</li>
+      <li>Lexical Analysis: source code → tokens, implemented via Finite Automata (DFA from regex via NFA).</li>
+      <li>Token vs Lexeme vs Pattern — category vs actual text vs rule.</li>
+      <li>Input Buffering: two-buffer scheme with sentinels for fast scanning.</li>
+      <li>LEX: automatic lexical analyzer generator from regex + action specifications.</li>
+      <li>Error handling: panic mode is the standard lexical error recovery strategy.</li>
+    </ul>
+  </div>
+
+  <div class="qsection" id="qa">
+    <h1 class="unit-title">❓ Unit 2 — Q&amp;A (RTU Exam Pattern)</h1>
+
+    <div class="qcard">
+      <div class="qlabel">Unit 2 · Definition</div>
+      <div class="q">Q1. Differentiate between Compiler, Interpreter, and Translator. <span class="imp h">★★★★★ 5-7 Marks — guaranteed every year</span></div>
+      <span class="marks m10">7 Marks</span>
+      <div class="a">
+        <p><strong>Translator</strong> is a general term for any program converting source code to a target language; compilers, interpreters, and assemblers are all translators.</p>
+        <p><strong>Compiler</strong> translates the entire source program into target code (e.g., machine code) before execution; produces a separate output file (.exe); errors reported after full scan. Examples: GCC, Clang.</p>
+        <p><strong>Interpreter</strong> translates and executes source code line by line, with no separate output file; stops at the first error encountered. Examples: Python, classic JavaScript engines.</p>
+        <p>Full 8-row comparison table given above — write all rows for full marks.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Unit 2 · Diagram · Theory</div>
+      <div class="q">Q2. Explain the phases of a compiler with a neat diagram. <span class="imp h">★★★★★ 10 Marks — Most Asked Question in Whole Subject</span></div>
+      <span class="marks m10">10 Marks</span>
+      <div class="a">
+        <p>A compiler has <strong>6 phases</strong>: (1) Lexical Analyzer — converts source to tokens. (2) Syntax Analyzer — builds parse tree checking grammar. (3) Semantic Analyzer — checks type/scope correctness, builds annotated tree. (4) Intermediate Code Generator — produces machine-independent code like TAC. (5) Code Optimizer — improves intermediate code without changing meaning. (6) Code Generator — produces final target/machine code.</p>
+        <p><strong>Symbol Table</strong> is consulted/updated by every phase to track identifier info (name, type, scope). <strong>Error Handler</strong> detects and reports errors at every phase. Diagram given above (Fig 2.1) — draw this exact structure in exam with Symbol Table and Error Handler as side boxes connecting to all 6 phases.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Unit 2 · Example · Trace</div>
+      <div class="q">Q3. Trace all phases of a compiler for the statement <code>x = a + b * c</code>. <span class="imp h">★★★★★ 10 Marks — Frequently Asked</span></div>
+      <span class="marks m10">10 Marks</span>
+      <div class="a">
+        <p><strong>1. Lexical:</strong> Tokens: id(x), =, id(a), +, id(b), *, id(c).</p>
+        <p><strong>2. Syntax:</strong> Parse tree with = at root; x on left; (a + (b*c)) subtree on right respecting operator precedence.</p>
+        <p><strong>3. Semantic:</strong> Type checking confirms all operands are compatible numeric types.</p>
+        <p><strong>4. Intermediate code:</strong> t1 = b * c; t2 = a + t1; x = t2.</p>
+        <p><strong>5. Optimization:</strong> May reduce temporary variables if not reused elsewhere.</p>
+        <p><strong>6. Code generation:</strong> Assembly using registers: MOV R1,b; MUL R1,c; MOV R2,a; ADD R2,R1; MOV x,R2.</p>
+        <p>Full table given above in body (Fig under section 2) — reproduce exactly for full marks.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Unit 2 · Concept</div>
+      <div class="q">Q4. What is Bootstrapping? Explain with a diagram. <span class="imp m">★★★ 5 Marks</span></div>
+      <span class="marks m5">5 Marks</span>
+      <div class="a">
+        <p><strong>Bootstrapping</strong> is the process of writing a compiler for language X using language X itself, then using an existing/simpler compiler to compile this self-hosting compiler the first time. After the first successful compilation, the new compiler can compile future versions of itself, achieving self-hosting.</p>
+        <p>3-stage process: (1) Write new compiler NC in language X. (2) Use existing compiler EC (which compiles X, runs on machine M1) to compile NC. (3) NC, now compiled, can compile itself directly. Diagram given above (Fig 2.2).</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Unit 2 · Definition</div>
+      <div class="q">Q5. Define Token, Lexeme, and Pattern with examples. <span class="imp h">★★★★ 5 Marks</span></div>
+      <span class="marks m5">5 Marks</span>
+      <div class="a">
+        <p><strong>Token:</strong> A category name representing a class of lexemes (e.g., id, num, keyword).</p>
+        <p><strong>Lexeme:</strong> The actual character sequence from source code matching a token's pattern (e.g., "counter", "42").</p>
+        <p><strong>Pattern:</strong> The rule (often a regular expression) describing valid lexemes for a token (e.g., letter(letter|digit)* for identifiers).</p>
+        <p>Example: in "int x = 5;" — "x" is a lexeme matching the id token, whose pattern is letter(letter|digit)*.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Unit 2 · Diagram · Numerical</div>
+      <div class="q">Q6. Draw the transition diagram for recognizing relational operators (&lt;, &lt;=, &lt;&gt;, =, &gt;, &gt;=). <span class="imp h">★★★★★ 7-10 Marks — Very Frequently Asked</span></div>
+      <span class="marks m10">10 Marks</span>
+      <div class="a">
+        <p>Start at state 0. On input '&lt;' → state 1 (intermediate); from state 1, on '=' → accepting state for "&lt;=", on '&gt;' → accepting state for "&lt;&gt;", on any other character (with retraction) → accepting state for "&lt;". On input '=' from state 0 → accepting state for "=". On input '&gt;' from state 0 → state 6 (intermediate); from state 6, on '=' → accepting state for "&gt;=", on other (retraction) → accepting state for "&gt;". Full diagram given above (Fig 2.5) with all 9 states. "Retraction"/"lookahead" is needed because the automaton may read one extra character before knowing the final token.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Unit 2 · Concept</div>
+      <div class="q">Q7. Explain Input Buffering technique used in lexical analysis. <span class="imp m">★★★ 5 Marks</span></div>
+      <span class="marks m5">5 Marks</span>
+      <div class="a">
+        <p>Input buffering speeds up scanning by reading large chunks of source code into memory buffers (instead of one character at a time from disk). The classic <strong>two-buffer scheme</strong> uses two buffers each of size N (e.g., 4096 bytes), with a <strong>sentinel character (eof)</strong> placed at the end of each buffer. Two pointers — <em>lexemeBegin</em> (start of current lexeme) and <em>forward</em> (scans ahead) — move through the buffers. The sentinel allows a single comparison to detect both end-of-buffer and end-of-file, avoiding a separate boundary check on every character.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Unit 2 · Tool · Theory</div>
+      <div class="q">Q8. What is LEX? Explain its structure with a suitable example. <span class="imp h">★★★★★ 7-10 Marks</span></div>
+      <span class="marks m10">10 Marks</span>
+      <div class="a">
+        <p><strong>LEX</strong> is a lexical analyzer generator that automatically produces a scanner (in C) from a specification file containing regular expression patterns and corresponding actions.</p>
+        <p><strong>Structure (3 sections, separated by %%):</strong> (1) Declarations — C code, macros (between %{ %}). (2) Translation Rules — pattern → action pairs. (3) Auxiliary Functions — supporting C code including main() calling yylex().</p>
+        <p><strong>Example:</strong> A LEX program to count vowels and lines uses rules like <code>[aeiouAEIOU] {`vowel_count++;`}</code> and <code>\n {`line_count++;`}</code>. Full example code given above.</p>
+        <p>Compilation pipeline: lex.l → (lex/flex compiler) → lex.yy.c → (C compiler) → executable scanner. Diagram given above (Fig 2.6).</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Unit 2 · Concept</div>
+      <div class="q">Q9. What is a lexical error? Explain different error recovery strategies in lexical analysis. <span class="imp h">★★★★ 5-7 Marks</span></div>
+      <span class="marks m5">7 Marks</span>
+      <div class="a">
+        <p>A <strong>lexical error</strong> occurs when the scanner encounters character sequences that don't match any valid token pattern (e.g., illegal symbols, malformed numbers).</p>
+        <p><strong>Recovery strategies:</strong> (1) <em>Panic mode</em> — delete characters until a valid token is found (most common). (2) <em>Deletion</em> — remove an extra illegal character. (3) <em>Insertion</em> — insert a likely missing character. (4) <em>Replacement</em> — substitute an incorrect character. (5) <em>Transposition</em> — swap adjacent out-of-order characters.</p>
+        <p>Goal: report the error but allow compilation to continue scanning rest of the program (rather than stopping entirely at first error).</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Unit 2 · Comparison</div>
+      <div class="q">Q10. Differentiate between NFA and DFA in the context of lexical analysis. <span class="imp m">★★★ 5 Marks</span></div>
+      <span class="marks m5">5 Marks</span>
+      <div class="a">
+        <p><strong>NFA</strong> (Non-deterministic Finite Automaton): multiple/epsilon transitions possible from a state on the same input; constructed directly from regex via Thompson's Construction; fewer states but slower to simulate.</p>
+        <p><strong>DFA</strong> (Deterministic Finite Automaton): exactly one transition per state per input symbol; constructed from NFA via Subset Construction; more states but faster simulation since no backtracking needed.</p>
+        <p>Lexical analyzers typically convert regex → NFA → DFA for actual implementation, since DFA gives faster, single-pass scanning. Full comparison table given above.</p>
+      </div>
+    </div>
+
+  </div><!-- end qa -->
+
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:center;padding:30px 20px;flex-wrap:wrap;">
+      <a href="unit1.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+      <a href="index.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">🏠 CD Hub</a>
+      <a href="unit3.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+    </div>
+  </main>
+  <div class="cursor-dot" data-cursor-dot></div>
+  <div class="cursor-outline" data-cursor-outline></div>
+  <script>
+    const cursorDot = document.querySelector("[data-cursor-dot]");
+    const cursorOutline = document.querySelector("[data-cursor-outline]");
+    window.addEventListener("mousemove", function(e){
+      cursorDot.style.left=e.clientX+"px"; cursorDot.style.top=e.clientY+"px";
+      cursorOutline.animate({left:e.clientX+"px",top:e.clientY+"px"},{duration:400,fill:"forwards"});
+    });
+    document.querySelectorAll("a,button").forEach(el=>{
+      el.addEventListener("mouseenter",()=>cursorOutline.classList.add("cursor-hovering"));
+      el.addEventListener("mouseleave",()=>cursorOutline.classList.remove("cursor-hovering"));
+    });
+  </script>
+<script src="../splash-cursor.js"></script>\n</body>
+</html>

@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Learning Plus // CGM · Unit 4</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <main class="main-wrapper" style="width:100%;">
+    <div class="topbar">
+      <a href="../cgm/index.html" class="back-btn">⬅ CGM Hub</a>
+      <div class="brand">Smart<span>Learning</span>+ <span style="color:var(--muted);font-weight:400;font-size:14px;">// CGM · Unit 4</span></div>
+      <div class="nav">
+        <a href="../cgm/index.html">🏠 CGM Hub</a>
+        <a href="#content">📖 Content</a>
+        <a href="#qa">❓ Q&amp;A</a>
+        <a href="unit3.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+        <a href="unit5.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="hero">
+        <h1>🖥️ Unit 4 — Two Dimensional Graphics</h1>
+        <p>Transformations · Matrix Representation · Viewing Pipeline · Clipping Algorithms | Hours: 08</p>
+        <div class="badges" style="margin-top:14px;">
+          <a href="../cgm/index.html" style="text-decoration:none;"><span class="badge b-teal">← Back to CGM Hub</span></a>
+          <span class="badge b-gold">5CS4-04 · CGM · RTU</span>
+        </div>
+      </div>
+      <div id="content">
+  <div class="hero" id="unit4">
+    <h1>UNIT 4 — TWO DIMENSIONAL GRAPHICS</h1>
+    <div class="sub">5CS4-04 · Computer Graphics &amp; Multimedia · RTU Kota · III Year – V Sem · B.Tech CSE</div>
+    <div class="sub" style="margin-top:4px;">Credit: 3 &nbsp;|&nbsp; Max Marks: 100 (IA:30, ETE:70) &nbsp;|&nbsp; End Term: 3 Hours</div>
+    <div class="badges">
+      <span class="badge b-red">⚠ HIGH PRIORITY UNIT</span>
+      <span class="badge b-gold">⭐ 5 &amp; 10 Mark Questions</span>
+      <span class="badge b-teal">✦ 8 Hours Weightage</span>
+    </div>
+  </div>
+
+  <div class="progress-bar"></div>
+
+  <div class="toc scroll-anchor" id="toc">
+    <h3>📋 UNIT 4 — CONTENTS</h3>
+    <ol>
+      <li><a href="#intro">Introduction to 2D Transformations</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#translation">Translation</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#rotation">Rotation</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#scaling">Scaling</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#homogeneous">Matrix Representation &amp; Homogeneous Coordinates</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#composite">Composite Transformations</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#reflection">Reflection</a> <span class="sublabel">MEDIUM ★★</span></li>
+      <li><a href="#shearing">Shearing</a> <span class="sublabel">MEDIUM ★★</span></li>
+      <li><a href="#pipeline">Viewing Pipeline &amp; Coordinate Systems</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#windowviewport">Window-to-Viewport Transformation</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#clipping">Clipping — Point &amp; Line Clipping</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#cohen">Cohen–Sutherland Line Clipping</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#liang">Liang–Barsky Line Clipping</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#nln">NLN (Nicholl-Lee-Nicholl) Line Clipping</a> <span class="sublabel">MEDIUM ★★</span></li>
+      <li><a href="#polygonclip">Polygon Clipping (Sutherland-Hodgman)</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#qa">RTU Exam Q&amp;A Bank (5-mark &amp; 10-mark)</a> <span class="sublabel">EXAM GOLD</span></li>
+    </ol>
+  </div>
+
+  <div class="unit-title scroll-anchor" id="intro">
+    <span style="color:var(--accent2);">01.</span> Introduction to 2D Transformations
+    <span class="imp h">HIGH</span>
+  </div>
+  <div class="unit-sub">What is a geometric transformation and why do we need it?</div>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p>A <strong>2D Transformation</strong> is a mathematical operation that changes the position, orientation, size, or shape of a graphical object (point, line, or polygon) by altering its coordinates according to a defined rule, usually expressed as a <em>matrix</em>.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish Explanation</div>
+    Transformation ka matlab hai ek object ki position, size ya orientation ko change karna without redrawing it from scratch. Jaise ek photo ko zoom karna (scaling), ghumana (rotation) ya move karna (translation) — sab kuch coordinate ke upar matrix multiply karke hota hai. <strong>Yahi computer graphics ka core concept hai.</strong>
+  </div>
+
+  <h3 class="sub">Basic Types of Transformations</h3>
+  <table>
+    <tr><th>Transformation</th><th>Effect</th><th>Real World Example</th></tr>
+    <tr><td class="hi">Translation</td><td>Moves object — shifts position</td><td>Dragging an icon on screen</td></tr>
+    <tr><td class="hi">Rotation</td><td>Rotates object about a point</td><td>Rotating a steering wheel</td></tr>
+    <tr><td class="hi">Scaling</td><td>Changes size of object</td><td>Zoom in/out of an image</td></tr>
+    <tr><td>Reflection</td><td>Mirror image about an axis</td><td>Mirror reflection</td></tr>
+    <tr><td>Shearing</td><td>Slants the shape</td><td>Italic text effect</td></tr>
+  </table>
+
+  <div class="card example">
+    <div class="tag">Why Matrix Form?</div>
+    <p>All these transformations can be represented as <strong>matrix multiplication</strong> of the form P' = P·T, which allows transformations to be <strong>combined (composited)</strong> easily by simply multiplying matrices together — instead of applying each transformation step by step.</p>
+  </div>
+
+  <hr class="sep">
+
+  <h2 class="topic scroll-anchor" id="translation">
+    <span>02.</span> Translation
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>Translation</strong> is the transformation that repositions an object along a straight-line path from one location to another, by adding translation distances tₓ and t_y to the original coordinates.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Translation matlab object ko bina ghumaye ya size badle bas <strong>ek jagah se doosri jagah shift</strong> karna. Point (x,y) ko tx aur ty add karke naya point (x',y') milta hai.
+  </div>
+
+  <div class="formula">
+    x' = x + tₓ<br>
+    y' = y + t_y<br><br>
+    In Matrix Form: P' = P + T &nbsp;&nbsp; where T = [tₓ, t_y]
+  </div>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:400px;">
+      <rect x="0" y="0" width="400" height="200" fill="#0d1820"/>
+      <polygon points="40,160 90,160 65,110" fill="none" stroke="#36e0c4" stroke-width="2"/>
+      <text x="40" y="178" fill="#36e0c4" font-size="11" font-family="Consolas">Original</text>
+      <polygon points="180,100 230,100 205,50" fill="none" stroke="#ffb454" stroke-width="2"/>
+      <text x="180" y="118" fill="#ffb454" font-size="11" font-family="Consolas">Translated</text>
+      <line x1="65" y1="135" x2="205" y2="75" stroke="#ff6b6b" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#a2)"/>
+      <defs><marker id="a2" markerWidth="8" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#ff6b6b"/></marker></defs>
+      <text x="100" y="95" fill="#ff6b6b" font-size="11" font-family="Consolas">(tx, ty)</text>
+    </svg>
+    <p class="cap">Fig 1: Translation of a Triangle</p>
+  </div>
+
+  <div class="card example">
+    <div class="tag">Example</div>
+    <p>Point P(2,3) translated by tₓ=5, t_y=1 → P'(2+5, 3+1) = <strong>P'(7,4)</strong></p>
+  </div>
+
+  <hr class="sep">
+
+  <h2 class="topic scroll-anchor" id="rotation">
+    <span>03.</span> Rotation
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>Rotation</strong> repositions an object along a circular path in the xy-plane, about a pivot point, through a specified rotation angle θ (counter-clockwise positive).</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Rotation mein object ek fixed point (pivot) ke around ghumta hai by angle θ. Agar pivot origin ho, toh formula simple hota hai using sin/cos.
+  </div>
+
+  <h3 class="sub">Rotation about Origin</h3>
+  <div class="formula">
+    x' = x·cosθ − y·sinθ<br>
+    y' = x·sinθ + y·cosθ
+  </div>
+
+  <h3 class="sub">Derivation (Important for 10-Mark)</h3>
+  <div class="steps">
+    <ol>
+      <li>Let point P(x,y) be at distance r from origin, at angle φ → x = r·cosφ, y = r·sinφ</li>
+      <li>After rotating by θ, new angle = φ+θ → x' = r·cos(φ+θ), y' = r·sin(φ+θ)</li>
+      <li>Expand using trig identities: cos(φ+θ)=cosφcosθ−sinφsinθ, sin(φ+θ)=sinφcosθ+cosφsinθ</li>
+      <li>Substitute r·cosφ=x, r·sinφ=y → x' = x·cosθ − y·sinθ, &nbsp; y' = x·sinθ + y·cosθ</li>
+    </ol>
+  </div>
+
+  <h3 class="sub">Rotation about an Arbitrary Pivot Point (xp, yp)</h3>
+  <div class="formula">
+    x' = xp + (x−xp)cosθ − (y−yp)sinθ<br>
+    y' = yp + (x−xp)sinθ + (y−yp)cosθ
+  </div>
+
+  <div class="card warn">
+    <div class="tag">⚠ Important Note</div>
+    <p>For pivot rotation: <strong>Translate pivot to origin → Rotate → Translate back.</strong> This 3-step combination is a classic RTU exam question (composite transformation).</p>
+  </div>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:300px;">
+      <rect x="0" y="0" width="300" height="220" fill="#0d1820"/>
+      <line x1="150" y1="20" x2="150" y2="200" stroke="#2a3a44" stroke-width="1"/>
+      <line x1="20" y1="110" x2="280" y2="110" stroke="#2a3a44" stroke-width="1"/>
+      <line x1="150" y1="110" x2="220" y2="110" stroke="#36e0c4" stroke-width="2"/>
+      <circle cx="150" cy="110" r="2.5" fill="#fff"/>
+      <line x1="150" y1="110" x2="190" y2="60" stroke="#ffb454" stroke-width="2"/>
+      <path d="M 185 110 A 35 35 0 0 0 173 80" fill="none" stroke="#ff6b6b" stroke-width="1.5"/>
+      <text x="190" y="103" fill="#ff6b6b" font-size="12" font-family="Consolas">θ</text>
+      <text x="222" y="114" fill="#36e0c4" font-size="11" font-family="Consolas">P(x,y)</text>
+      <text x="194" y="56" fill="#ffb454" font-size="11" font-family="Consolas">P'(x',y')</text>
+    </svg>
+    <p class="cap">Fig 2: Rotation of Point P by angle θ about Origin</p>
+  </div>
+
+  <div class="card example">
+    <div class="tag">Example</div>
+    <p>Rotate point P(1,0) by θ=90° about origin:<br>
+    x' = 1·cos90 − 0·sin90 = 0 &nbsp;|&nbsp; y' = 1·sin90 + 0·cos90 = 1 → <strong>P'(0,1)</strong> ✓ (matches intuition)</p>
+  </div>
+
+  <hr class="sep">
+
+  <h2 class="topic scroll-anchor" id="scaling">
+    <span>04.</span> Scaling
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>Scaling</strong> alters the size of an object by multiplying the coordinate values (x,y) by scaling factors Sₓ and S_y along the x and y directions respectively.</p>
+  </div>
+
+  <div class="formula">
+    x' = x · Sₓ<br>
+    y' = y · S_y
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Scaling se object ka size badhta ya ghatata hai. Agar Sx=Sy ho toh <strong>uniform scaling</strong> (same shape, only size change), agar Sx≠Sy ho toh <strong>differential scaling</strong> (shape distort ho jata hai).
+  </div>
+
+  <table>
+    <tr><th>Condition</th><th>Type</th><th>Effect</th></tr>
+    <tr><td>Sₓ = S_y &gt; 1</td><td class="hi">Uniform Enlargement</td><td>Object enlarges proportionally</td></tr>
+    <tr><td>Sₓ = S_y &lt; 1</td><td class="hi">Uniform Reduction</td><td>Object shrinks proportionally</td></tr>
+    <tr><td>Sₓ ≠ S_y</td><td>Differential Scaling</td><td>Shape distorted (stretched/squeezed)</td></tr>
+    <tr><td>Sₓ = S_y = 1</td><td>Identity</td><td>No change</td></tr>
+  </table>
+
+  <div class="card warn">
+    <div class="tag">⚠ Important Note</div>
+    <p>Scaling about origin moves the object's position too (unless centroid is at origin). To scale about a <strong>fixed point</strong> (xf,yf): Translate fixed point to origin → Scale → Translate back.</p>
+  </div>
+
+  <div class="formula">
+    x' = xf + (x−xf)·Sₓ<br>
+    y' = yf + (y−yf)·S_y
+  </div>
+
+  <div class="card example">
+    <div class="tag">Example</div>
+    <p>Point P(2,3) scaled with Sₓ=2, S_y=3 about origin → P'(4,9)</p>
+  </div>
+
+  <hr class="sep">
+
+  <h2 class="topic scroll-anchor" id="homogeneous">
+    <span>05.</span> Matrix Representation &amp; Homogeneous Coordinates
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>Homogeneous Coordinates</strong> represent a 2D point (x,y) as a 3-tuple (x,y,1), allowing translation — which is normally an <em>addition</em> operation — to be expressed as <em>matrix multiplication</em>, just like rotation and scaling. This unifies all transformations into a single 3×3 matrix form.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Problem yeh thi ki translation addition hota hai jabki rotation/scaling multiplication. Inko ek saath combine (composite) karna mushkil tha. Solution: har point mein ek extra coordinate "1" add karo (x,y,1) — ab translation bhi matrix multiplication ban jaata hai. Isse <strong>saari transformations ek single 3x3 matrix se ho jaati hain!</strong>
+  </div>
+
+  <h3 class="sub">Standard Homogeneous Transformation Matrices</h3>
+  <div class="formula">
+    Translation: T(tx,ty) = <br>
+    ⎡ 1 &nbsp;0 &nbsp;tx ⎤<br>
+    ⎢ 0 &nbsp;1 &nbsp;ty ⎥<br>
+    ⎣ 0 &nbsp;0 &nbsp;1 &nbsp;⎦
+    <br><br>
+    Rotation: R(θ) = <br>
+    ⎡ cosθ &nbsp;−sinθ &nbsp;0 ⎤<br>
+    ⎢ sinθ &nbsp;&nbsp;cosθ &nbsp;0 ⎥<br>
+    ⎣ 0 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0 &nbsp;&nbsp;&nbsp;&nbsp;1 ⎦
+    <br><br>
+    Scaling: S(sx,sy) = <br>
+    ⎡ sx &nbsp;0 &nbsp;&nbsp;0 ⎤<br>
+    ⎢ 0 &nbsp;&nbsp;sy &nbsp;0 ⎥<br>
+    ⎣ 0 &nbsp;&nbsp;0 &nbsp;&nbsp;1 ⎦
+  </div>
+
+  <p>A point in homogeneous form: <strong>P = [x &nbsp;y &nbsp;1]ᵗ</strong> &nbsp; and transformation applied as: <strong>P' = M · P</strong></p>
+
+  <div class="card example">
+    <div class="tag">Example</div>
+    <p>Translate P(3,4) by (tx=2, ty=5) using matrix form:</p>
+    <div class="formula">
+      P' = ⎡1 0 2⎤ ⎡3⎤ &nbsp; ⎡3+2⎤ &nbsp; ⎡5⎤<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;⎢0 1 5⎥ ⎢4⎥ = ⎢4+5⎥ = ⎢9⎥<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;⎣0 0 1⎦ ⎣1⎦ &nbsp; ⎣1⎦ &nbsp;&nbsp; ⎣1⎦
+    </div>
+    <p>Result: <strong>P'(5,9)</strong></p>
+  </div>
+
+  <hr class="sep">
+
+  <h2 class="topic scroll-anchor" id="composite">
+    <span>06.</span> Composite Transformations
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>Composite Transformation</strong> is a sequence of two or more transformations combined into one single transformation by multiplying their individual matrices, producing one resultant matrix that is applied once to the object.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Jab multiple transformations ek saath apply karni ho (jaise rotate then translate), toh har baar alag se calculation karne ke jagah, saari matrices ko <strong>multiply</strong> karke ek single "composite matrix" bana lo. Order matters — matrix multiplication commutative nahi hoti!
+  </div>
+
+  <div class="card warn">
+    <div class="tag">⚠ Important — Order Matters!</div>
+    <p>T₁·T₂ ≠ T₂·T₁ in general. Always apply transformations in the order specified by the problem. Matrices are multiplied in <strong>reverse order</strong> of application when using column-vector convention: P' = Tₙ·...·T₂·T₁·P</p>
+  </div>
+
+  <h3 class="sub">Classic Example: Rotation about Arbitrary Pivot Point (xp, yp)</h3>
+  <div class="steps">
+    <ol>
+      <li><strong>Step 1:</strong> Translate pivot point to origin → T(−xp, −yp)</li>
+      <li><strong>Step 2:</strong> Rotate about origin by θ → R(θ)</li>
+      <li><strong>Step 3:</strong> Translate back to original pivot position → T(xp, yp)</li>
+      <li><strong>Composite Matrix:</strong> M = T(xp,yp) · R(θ) · T(−xp,−yp)</li>
+    </ol>
+  </div>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 680 110" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:660px;">
+      <rect x="20" y="35" width="120" height="40" rx="6" fill="#0d1820" stroke="var(--accent2)" stroke-width="1.5"/>
+      <text x="32" y="60" fill="#36e0c4" font-size="11" font-family="Consolas">Translate(-xp,-yp)</text>
+      <line x1="140" y1="55" x2="180" y2="55" stroke="#8aa0ad" stroke-width="1.5" marker-end="url(#a3)"/>
+      <defs><marker id="a3" markerWidth="8" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8aa0ad"/></marker></defs>
+      <rect x="180" y="35" width="100" height="40" rx="6" fill="#0d1820" stroke="#ffb454" stroke-width="1.5"/>
+      <text x="208" y="60" fill="#ffb454" font-size="11" font-family="Consolas">Rotate(θ)</text>
+      <line x1="280" y1="55" x2="320" y2="55" stroke="#8aa0ad" stroke-width="1.5" marker-end="url(#a3)"/>
+      <rect x="320" y="35" width="130" height="40" rx="6" fill="#0d1820" stroke="var(--accent2)" stroke-width="1.5"/>
+      <text x="333" y="60" fill="#36e0c4" font-size="11" font-family="Consolas">Translate(xp,yp)</text>
+      <line x1="450" y1="55" x2="490" y2="55" stroke="#4ade80" stroke-width="1.5" marker-end="url(#a3)"/>
+      <rect x="490" y="35" width="160" height="40" rx="6" fill="#06140a" stroke="#4ade80" stroke-width="1.5"/>
+      <text x="500" y="60" fill="#4ade80" font-size="11" font-family="Consolas">Final Rotated Object</text>
+    </svg>
+    <p class="cap">Fig 3: Composite Transformation Pipeline — Rotation about Pivot</p>
+  </div>
+
+  <div class="card example">
+    <div class="tag">Worked Example</div>
+    <p>Rotate triangle by 90° about pivot point (2,2). Take vertex P(4,2):</p>
+    <p><strong>Step 1:</strong> Translate: (4−2, 2−2) = (2,0)</p>
+    <p><strong>Step 2:</strong> Rotate 90°: x'=2·cos90−0·sin90=0, y'=2·sin90+0·cos90=2 → (0,2)</p>
+    <p><strong>Step 3:</strong> Translate back: (0+2, 2+2) = <strong>(2,4)</strong></p>
+  </div>
+
+  <hr class="sep">
+
+  <h2 class="topic scroll-anchor" id="reflection">
+    <span>07.</span> Reflection
+    <span class="imp m">MEDIUM</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>Reflection</strong> produces a mirror image of an object with respect to an axis of reflection (a line), by rotating the object 180° about that reflection axis.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Reflection matlab object ka mirror image banana kisi axis ke against. Jaise x-axis ke around reflect karne se upar-neeche flip hota hai.
+  </div>
+
+  <table>
+    <tr><th>Reflection About</th><th>Transformation</th><th>Matrix</th></tr>
+    <tr><td class="hi">x-axis</td><td>x'=x, y'=−y</td><td>[1,0,0; 0,−1,0; 0,0,1]</td></tr>
+    <tr><td class="hi">y-axis</td><td>x'=−x, y'=y</td><td>[−1,0,0; 0,1,0; 0,0,1]</td></tr>
+    <tr><td>Origin</td><td>x'=−x, y'=−y</td><td>[−1,0,0; 0,−1,0; 0,0,1]</td></tr>
+    <tr><td>Line y=x</td><td>x'=y, y'=x</td><td>[0,1,0; 1,0,0; 0,0,1]</td></tr>
+    <tr><td>Line y=−x</td><td>x'=−y, y'=−x</td><td>[0,−1,0; −1,0,0; 0,0,1]</td></tr>
+  </table>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:300px;">
+      <rect x="0" y="0" width="300" height="200" fill="#0d1820"/>
+      <line x1="20" y1="100" x2="280" y2="100" stroke="#ffb454" stroke-width="1.5" stroke-dasharray="5,3"/>
+      <text x="250" y="95" fill="#ffb454" font-size="10" font-family="Consolas">x-axis</text>
+      <polygon points="80,50 130,50 105,20" fill="none" stroke="#36e0c4" stroke-width="2"/>
+      <polygon points="80,150 130,150 105,180" fill="none" stroke="#ff6b6b" stroke-width="2"/>
+      <text x="80" y="40" fill="#36e0c4" font-size="10" font-family="Consolas">Original</text>
+      <text x="80" y="172" fill="#ff6b6b" font-size="10" font-family="Consolas">Reflected</text>
+    </svg>
+    <p class="cap">Fig 4: Reflection about X-axis</p>
+  </div>
+
+  <hr class="sep">
+
+  <h2 class="topic scroll-anchor" id="shearing">
+    <span>08.</span> Shearing
+    <span class="imp m">MEDIUM</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>Shearing</strong> is a transformation that distorts the shape of an object such that the transformed shape appears as if the object were composed of internal layers slid over one another — used to produce slant or skew effects.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Shearing se object slant ho jaata hai — jaise italic text. X-shear mein x-coordinate y ke proportion mein shift hota hai, y-shear mein opposite.
+  </div>
+
+  <table>
+    <tr><th>Shear Type</th><th>Formula</th><th>Matrix</th></tr>
+    <tr><td class="hi">X-Shear (Shx)</td><td>x' = x + Shx·y, &nbsp; y' = y</td><td>[1,Shx,0; 0,1,0; 0,0,1]</td></tr>
+    <tr><td class="hi">Y-Shear (Shy)</td><td>x' = x, &nbsp; y' = y + Shy·x</td><td>[1,0,0; Shy,1,0; 0,0,1]</td></tr>
+  </table>
+
+  <div class="card example">
+    <div class="tag">Example</div>
+    <p>Shear unit square with Shx=2 along x-direction. Point (0,1): x'=0+2·1=2, y'=1 → <strong>(2,1)</strong> — square becomes a parallelogram.</p>
+  </div>
+
+  <hr class="sep">
+
+  <h2 class="topic scroll-anchor" id="pipeline">
+    <span>09.</span> Viewing Pipeline &amp; Coordinate Systems
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p>The <strong>2D Viewing Pipeline</strong> is the sequence of coordinate transformations that converts a scene defined in world coordinates into a displayed image on a physical output device, passing through window, normalized, and viewport/device coordinate systems.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Viewing pipeline ek series of steps hai jo world coordinates (jahan object define hua) ko screen coordinates (jahan dikhna hai) mein convert karta hai. Beech mein clipping bhi hoti hai jo window ke bahar ki cheezein hata deti hai.
+  </div>
+
+  <h3 class="sub">Coordinate Systems Involved</h3>
+  <table>
+    <tr><th>Coordinate System</th><th>Description</th></tr>
+    <tr><td class="hi">World Coordinate System (WCS)</td><td>Where the object/scene is originally defined (real-world units)</td></tr>
+    <tr><td class="hi">Window</td><td>A rectangular region in world coordinates selected for viewing</td></tr>
+    <tr><td>Normalized Coordinates</td><td>Device-independent coordinates, typically range 0 to 1</td></tr>
+    <tr><td class="hi">Viewport</td><td>A rectangular region on the display device where window content is mapped</td></tr>
+    <tr><td>Device/Screen Coordinates</td><td>Final physical pixel coordinates on the output device</td></tr>
+  </table>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 680 130" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:660px;">
+      <rect x="10" y="40" width="110" height="40" rx="6" fill="#0d1820" stroke="var(--accent2)" stroke-width="1.5"/>
+      <text x="20" y="65" fill="#36e0c4" font-size="11" font-family="Consolas">World Coords</text>
+      <line x1="120" y1="60" x2="160" y2="60" stroke="#8aa0ad" stroke-width="1.5" marker-end="url(#a4)"/>
+      <defs><marker id="a4" markerWidth="8" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8aa0ad"/></marker></defs>
+      <rect x="160" y="40" width="100" height="40" rx="6" fill="#0d1820" stroke="#ffb454" stroke-width="1.5"/>
+      <text x="172" y="65" fill="#ffb454" font-size="11" font-family="Consolas">Clipping</text>
+      <line x1="260" y1="60" x2="300" y2="60" stroke="#8aa0ad" stroke-width="1.5" marker-end="url(#a4)"/>
+      <rect x="300" y="40" width="120" height="40" rx="6" fill="#0d1820" stroke="var(--accent2)" stroke-width="1.5"/>
+      <text x="310" y="65" fill="#36e0c4" font-size="11" font-family="Consolas">Normalized Coords</text>
+      <line x1="420" y1="60" x2="460" y2="60" stroke="#8aa0ad" stroke-width="1.5" marker-end="url(#a4)"/>
+      <rect x="460" y="40" width="90" height="40" rx="6" fill="#0d1820" stroke="#ffb454" stroke-width="1.5"/>
+      <text x="473" y="65" fill="#ffb454" font-size="11" font-family="Consolas">Viewport</text>
+      <line x1="550" y1="60" x2="590" y2="60" stroke="#4ade80" stroke-width="1.5" marker-end="url(#a4)"/>
+      <rect x="590" y="40" width="90" height="40" rx="6" fill="#06140a" stroke="#4ade80" stroke-width="1.5"/>
+      <text x="600" y="65" fill="#4ade80" font-size="11" font-family="Consolas">Device/Screen</text>
+    </svg>
+    <p class="cap">Fig 5: 2D Viewing Pipeline</p>
+  </div>
+
+  <hr class="sep">
+
+  <h2 class="topic scroll-anchor" id="windowviewport">
+    <span>10.</span> Window-to-Viewport Transformation
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p>The <strong>Window-to-Viewport Transformation</strong> is the mapping that converts a point's position in the world-coordinate window into a corresponding position in the viewport on the display device, preserving the relative position of the point within both rectangles.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Window world coordinates mein hai, viewport screen coordinates mein. Hume window ke point ko proportionally viewport mein map karna hai — jaise ek photo ko crop karke screen ke specific area mein fit karna.
+  </div>
+
+  <div class="formula">
+    Given Window: (xwmin,ywmin) to (xwmax,ywmax)<br>
+    Given Viewport: (xvmin,yvmin) to (xvmax,yvmax)<br><br>
+    Scale factors:<br>
+    Sx = (xvmax−xvmin) / (xwmax−xwmin)<br>
+    Sy = (yvmax−yvmin) / (ywmax−ywmin)<br><br>
+    xv = xvmin + (xw − xwmin) · Sx<br>
+    yv = yvmin + (yw − ywmin) · Sy
+  </div>
+
+  <div class="steps">
+    <ol>
+      <li>Translate window to origin: (xw − xwmin), (yw − ywmin)</li>
+      <li>Scale to viewport size using Sx, Sy</li>
+      <li>Translate to viewport position: add xvmin, yvmin</li>
+    </ol>
+  </div>
+
+  <div class="card example">
+    <div class="tag">Example</div>
+    <p>Window: (0,0) to (10,10). Viewport: (0,0) to (400,300). Map point (5,5):</p>
+    <p>Sx = 400/10 = 40, Sy = 300/10 = 30</p>
+    <p>xv = 0 + (5−0)·40 = 200, &nbsp; yv = 0 + (5−0)·30 = 150 → <strong>(200,150)</strong></p>
+  </div>
+
+  <hr class="sep">
+
+  <h2 class="topic scroll-anchor" id="clipping">
+    <span>11.</span> Clipping — Concepts &amp; Point Clipping
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>Clipping</strong> is the process of identifying and saving only the portion of a picture that lies within a specified region (clip window), and discarding everything outside it, so that only visible parts are processed/displayed.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Clipping ka matlab hai screen ke bahar wala extra content cut karna. Jo window ke bahar hai usse hata do, jo andar hai usse rakho — taki rendering fast ho aur sirf visible part process ho.
+  </div>
+
+  <h3 class="sub">Point Clipping</h3>
+  <div class="card">
+    <p>A point P(x,y) is <strong>inside</strong> the clip window if it satisfies all four conditions:</p>
+    <div class="formula">
+      xwmin ≤ x ≤ xwmax &nbsp;&nbsp; AND &nbsp;&nbsp; ywmin ≤ y ≤ ywmax
+    </div>
+    <p>If any condition fails → point is clipped (rejected).</p>
+  </div>
+
+  <h3 class="sub">Types of Clipping</h3>
+  <table>
+    <tr><th>Type</th><th>Description</th></tr>
+    <tr><td class="hi">Point Clipping</td><td>Check if a single point is within window</td></tr>
+    <tr><td class="hi">Line Clipping</td><td>Determine and keep only the visible segment of a line</td></tr>
+    <tr><td>Polygon Clipping</td><td>Clip a closed boundary, possibly producing a new vertex list</td></tr>
+    <tr><td>Curve/Text Clipping</td><td>Clip curves or character outlines against window</td></tr>
+  </table>
+
+  <hr class="sep">
+
+  <h2 class="topic scroll-anchor" id="cohen">
+    <span>12.</span> Cohen–Sutherland Line Clipping Algorithm
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p>The <strong>Cohen-Sutherland Algorithm</strong> is a line-clipping technique that uses a 4-bit <em>region code (outcode)</em> assigned to each line endpoint, based on its position relative to the clip window's boundaries, to quickly accept, reject, or further process lines.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Yeh algorithm screen ko 9 regions mein divide karta hai (window + 8 outside regions). Har point ko 4-bit code (Top,Bottom,Right,Left) milta hai. Codes ki AND/OR operation se pata chalta hai line ko trivially accept/reject karna hai ya intersection calculate karni hai.
+  </div>
+
+  <h3 class="sub">Region Codes (TBRL)</h3>
+  <div class="svgbox">
+    <svg viewBox="0 0 360 280" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:360px;">
+      <rect x="0" y="0" width="360" height="280" fill="#0d1820"/>
+      <line x1="0" y1="80" x2="360" y2="80" stroke="#8aa0ad" stroke-width="1"/>
+      <line x1="0" y1="200" x2="360" y2="200" stroke="#8aa0ad" stroke-width="1"/>
+      <line x1="100" y1="0" x2="100" y2="280" stroke="#8aa0ad" stroke-width="1"/>
+      <line x1="260" y1="0" x2="260" y2="280" stroke="#8aa0ad" stroke-width="1"/>
+      <rect x="100" y="80" width="160" height="120" fill="none" stroke="#36e0c4" stroke-width="2"/>
+      <text x="150" y="20" fill="#d7e1e8" font-size="11" font-family="Consolas">1001</text>
+      <text x="160" y="55" fill="#d7e1e8" font-size="11" font-family="Consolas">1000</text>
+      <text x="280" y="20" fill="#d7e1e8" font-size="11" font-family="Consolas">1010</text>
+      <text x="20" y="55" fill="#d7e1e8" font-size="11" font-family="Consolas">0001</text>
+      <text x="160" y="145" fill="#4ade80" font-size="12" font-family="Consolas">0000</text>
+      <text x="280" y="145" fill="#d7e1e8" font-size="11" font-family="Consolas">0010</text>
+      <text x="20" y="240" fill="#d7e1e8" font-size="11" font-family="Consolas">0101</text>
+      <text x="160" y="240" fill="#d7e1e8" font-size="11" font-family="Consolas">0100</text>
+      <text x="280" y="240" fill="#d7e1e8" font-size="11" font-family="Consolas">0110</text>
+    </svg>
+    <p class="cap">Fig 6: 9-Region Outcodes (bits: Top,Bottom,Right,Left)</p>
+  </div>
+
+  <div class="formula">
+    Bit 1 (Left):  x &lt; xmin → set to 1<br>
+    Bit 2 (Right): x &gt; xmax → set to 1<br>
+    Bit 3 (Bottom): y &lt; ymin → set to 1<br>
+    Bit 4 (Top):   y &gt; ymax → set to 1
+  </div>
+
+  <h3 class="sub">Algorithm Steps</h3>
+  <div class="steps">
+    <ol>
+      <li>Compute outcode for both endpoints P1, P2</li>
+      <li><strong>Trivial Accept:</strong> if (code1 OR code2) == 0000 → both points inside → draw line as-is</li>
+      <li><strong>Trivial Reject:</strong> if (code1 AND code2) ≠ 0000 → both points share an outside region → discard line entirely</li>
+      <li>Otherwise: pick an endpoint with non-zero code, find intersection with the corresponding boundary using line equation, replace that endpoint with intersection point</li>
+      <li>Recompute outcode for the new point and repeat from step 2 until accepted or rejected</li>
+    </ol>
+  </div>
+
+  <div class="card tip">
+    <div class="tag">Tip</div>
+    <p>Use parametric line equations to find intersection: for boundary x=xmin → y = y1 + (y2−y1)·(xmin−x1)/(x2−x1). Similarly for other boundaries.</p>
+  </div>
+
+  <div class="card example">
+    <div class="tag">Worked Example</div>
+    <p>Window: (10,10) to (50,50). Line from P1(5,40) to P2(30,60):</p>
+    <p>P1 outcode: x=5&lt;10 → Left=1; others 0 → <strong>0001</strong></p>
+    <p>P2 outcode: y=60&gt;50 → Top=1; others 0 → <strong>1000</strong></p>
+    <p>AND = 0000 → not trivial reject. OR ≠ 0000 → not trivial accept.</p>
+    <p>Clip against Left boundary (x=10) for P1: y = 40+(60−40)·(10−5)/(30−5) = 40+20·0.2=44 → new P1(10,44)</p>
+    <p>Clip against Top boundary (y=50) for P2: x = 5+(30−5)·(50−40)/(60−40)= 5+25·0.5=17.5 → new P2(17.5,50)</p>
+    <p>Final visible segment: <strong>(10,44) to (17.5,50)</strong></p>
+  </div>
+
+  <hr class="sep">
+
+  <h2 class="topic scroll-anchor" id="liang">
+    <span>13.</span> Liang–Barsky Line Clipping Algorithm
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p>The <strong>Liang-Barsky Algorithm</strong> is a parametric line-clipping method that represents the line as P(u) = P1 + u·(P2−P1), 0≤u≤1, and computes the range of parameter u for which the line lies inside the clip window, using a set of inequalities — making it computationally faster than Cohen-Sutherland.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Yeh algorithm line ko parametric form mein represent karta hai aur har boundary ke liye u ki valid range nikalta hai. Final visible segment uska intersection hota hai jahan saari ranges overlap karti hain. Yeh Cohen-Sutherland se <strong>fast</strong> hai kyunki repeated intersection calculation nahi hoti.
+  </div>
+
+  <div class="formula">
+    Line: x = x1 + u·Δx, &nbsp; y = y1 + u·Δy, &nbsp; where Δx=x2−x1, Δy=y2−y1, 0≤u≤1<br><br>
+    Boundary conditions (parametric form): &nbsp; u·pk ≤ qk &nbsp; for k = 1,2,3,4<br>
+    p1=−Δx, q1=x1−xmin &nbsp;(Left) &nbsp;|&nbsp; p2=Δx, q2=xmax−x1 &nbsp;(Right)<br>
+    p3=−Δy, q3=y1−ymin &nbsp;(Bottom) &nbsp;|&nbsp; p4=Δy, q4=ymax−y1 &nbsp;(Top)
+  </div>
+
+  <h3 class="sub">Algorithm Steps</h3>
+  <div class="steps">
+    <ol>
+      <li>Calculate Δx, Δy and the four pk, qk values</li>
+      <li>For each k: if pk = 0 and qk &lt; 0 → line parallel and outside → reject entirely</li>
+      <li>If pk ≠ 0: compute r = qk/pk. If pk &lt; 0 → update u1 = max(u1, r) (entering); if pk &gt; 0 → update u2 = min(u2, r) (leaving)</li>
+      <li>If at any point u1 &gt; u2 → line is completely outside → reject</li>
+      <li>Final visible line: from u1 to u2 using x=x1+u·Δx, y=y1+u·Δy</li>
+    </ol>
+  </div>
+
+  <table>
+    <tr><th>Feature</th><th>Cohen-Sutherland</th><th>Liang-Barsky</th></tr>
+    <tr><td>Approach</td><td>Region codes (outcodes)</td><td class="hi">Parametric equations</td></tr>
+    <tr><td>Speed</td><td>Slower (multiple intersection calcs)</td><td class="hi">Faster (single pass)</td></tr>
+    <tr><td>Clipping Boundary</td><td>Rectangular only</td><td>Rectangular only</td></tr>
+    <tr><td>Intersection Calculation</td><td>Repeated per boundary</td><td>Once using parameter u</td></tr>
+  </table>
+
+  <div class="card example">
+    <div class="tag">Example</div>
+    <p>Window (10,10)-(50,50). Line P1(15,15) to P2(60,60): Δx=45, Δy=45</p>
+    <p>p1=-45,q1=5 → r=−0.111 (pk&lt;0→u1) | p2=45,q2=35 → r=0.778(pk&gt;0→u2)</p>
+    <p>p3=-45,q3=5 → r=−0.111(pk&lt;0→u1) | p4=45,q4=35 → r=0.778(pk&gt;0→u2)</p>
+    <p>u1 = max(0,−0.111,−0.111) = 0, &nbsp; u2 = min(1,0.778,0.778) = 0.778</p>
+    <p>Visible segment from u=0 to u=0.778 → P1'(15,15) to P2'(15+45·0.778, 15+45·0.778) = <strong>(50,50)</strong></p>
+  </div>
+
+  <hr class="sep">
+
+  <h2 class="topic scroll-anchor" id="nln">
+    <span>14.</span> NLN (Nicholl-Lee-Nicholl) Line Clipping
+    <span class="imp m">MEDIUM</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p>The <strong>NLN Algorithm</strong> creates more regions around the clip window than Cohen-Sutherland (depending on the position of endpoint P1), and uses these regions along with visibility of edges/diagonals from P1 to determine clip boundaries — avoiding redundant intersection calculations and multiple clipping passes.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    NLN algorithm Cohen-Sutherland aur Liang-Barsky se zyada efficient hai kyunki yeh sirf <strong>ek hi intersection calculation</strong> karta hai per line, multiple regions banakar (P1 ki position ke according) aur P2 kahan padta hai usse directly clip line decide ho jaati hai.
+  </div>
+
+  <h3 class="sub">Key Idea</h3>
+  <div class="card">
+    <ul>
+      <li>Position of P1 relative to window is checked first (9 possible positions, same as Cohen-Sutherland regions)</li>
+      <li>Window edges and diagonals through P1 divide the plane into multiple sub-regions</li>
+      <li>Depending on which sub-region P2 lies in, the correct clip edge is selected directly — <strong>no trial-and-error</strong> as in Cohen-Sutherland</li>
+      <li>Only ONE intersection calculation needed (compared to possibly several in C-S)</li>
+    </ul>
+  </div>
+
+  <table>
+    <tr><th>Algorithm</th><th>Intersection Calculations</th><th>Complexity</th></tr>
+    <tr><td>Cohen-Sutherland</td><td>Multiple (iterative)</td><td>Simple to implement</td></tr>
+    <tr><td>Liang-Barsky</td><td>One per boundary (4 total)</td><td>Moderate</td></tr>
+    <tr><td class="hi">NLN</td><td class="hi">Minimum (often just 1)</td><td>Complex (more case analysis)</td></tr>
+  </table>
+
+  <div class="card tip">
+    <div class="tag">Exam Tip</div>
+    <p>NLN is mostly asked as a <strong>theory/short-note</strong> question (5 marks) — detailed numerical problems are rare in RTU papers. Focus on Cohen-Sutherland and Liang-Barsky numericals for 10-mark questions.</p>
+  </div>
+
+  <hr class="sep">
+
+  <h2 class="topic scroll-anchor" id="polygonclip">
+    <span>15.</span> Polygon Clipping — Sutherland-Hodgman Algorithm
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>Polygon Clipping</strong> clips a closed polygon boundary against a clip window, producing a new (possibly different-vertex-count) polygon. The <strong>Sutherland-Hodgman algorithm</strong> clips the polygon successively against each edge of the (convex) clip window, one edge at a time.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Polygon clipping mein line clipping se zyada complexity hoti hai kyunki naye vertices generate ho sakte hain. Sutherland-Hodgman algorithm polygon ko clip window ke <strong>har edge ke against ek-ek baar</strong> clip karta hai — output of one edge becomes input for the next edge.
+  </div>
+
+  <h3 class="sub">Algorithm Steps (For Each Clip Edge)</h3>
+  <div class="steps">
+    <ol>
+      <li>For each edge of the clip window (left, right, bottom, top), process all polygon edges one at a time</li>
+      <li>For each polygon edge (S → P): classify both S and P as inside or outside the current clip boundary</li>
+      <li>If both inside → output P</li>
+      <li>If S inside, P outside → output intersection point only</li>
+      <li>If S outside, P inside → output intersection point AND P</li>
+      <li>If both outside → output nothing</li>
+      <li>The output vertex list becomes the input for clipping against the next window edge</li>
+    </ol>
+  </div>
+
+  <table>
+    <tr><th>Case</th><th>S</th><th>P</th><th>Output</th></tr>
+    <tr><td>1</td><td>Inside</td><td>Inside</td><td class="hi">P</td></tr>
+    <tr><td>2</td><td>Inside</td><td>Outside</td><td class="hi">Intersection point</td></tr>
+    <tr><td>3</td><td>Outside</td><td>Inside</td><td class="hi">Intersection point, P</td></tr>
+    <tr><td>4</td><td>Outside</td><td>Outside</td><td class="hi">Nothing</td></tr>
+  </table>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:400px;">
+      <rect x="0" y="0" width="400" height="200" fill="#0d1820"/>
+      <rect x="100" y="40" width="180" height="120" fill="none" stroke="#36e0c4" stroke-width="2"/>
+      <polygon points="60,30 320,60 280,180 80,150" fill="none" stroke="#ff6b6b" stroke-width="2" stroke-dasharray="5,3"/>
+      <text x="100" y="25" fill="#36e0c4" font-size="11" font-family="Consolas">Clip Window</text>
+      <text x="60" y="20" fill="#ff6b6b" font-size="11" font-family="Consolas">Original Polygon</text>
+      <polygon points="118,40 280,55 280,160 100,150" fill="#36e0c4" fill-opacity="0.15" stroke="#4ade80" stroke-width="2"/>
+      <text x="150" y="100" fill="#4ade80" font-size="11" font-family="Consolas">Clipped Result</text>
+    </svg>
+    <p class="cap">Fig 7: Polygon Clipping using Sutherland-Hodgman</p>
+  </div>
+
+  <div class="card warn">
+    <div class="tag">⚠ Important Note</div>
+    <p>Sutherland-Hodgman works correctly only for <strong>convex clip windows</strong>. The subject polygon can be convex or concave, but for concave clip windows the algorithm may produce extraneous edges (needs Weiler-Atherton algorithm instead, which is beyond this unit).</p>
+  </div>
+
+  <div class="card example">
+    <div class="tag">Concept Example</div>
+    <p>Clipping a pentagon against a rectangular window: process edges of the pentagon against left boundary first (generating an intermediate vertex list), then that list is clipped against right boundary, then top, then bottom — each pass possibly adding intersection vertices and removing outside vertices.</p>
+  </div>
+
+  <hr class="sep">
+
+  <div class="qsection scroll-anchor" id="qa">
+    <div class="pyq-header">
+      <div>
+        <div class="pyq-title">📝 RTU Exam Question Bank — Unit 4</div>
+        <div class="pyq-sub">Based on previous year papers &amp; importance analysis — 2D Graphics</div>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q1 · 10 MARKS</div>
+      <span class="marks m10">10 MARKS</span>
+      <div class="q">Derive the transformation matrix for rotation of a point about an arbitrary pivot point. Explain with a suitable example.</div>
+      <div class="a">
+        <p><strong>Concept:</strong> Rotation about an arbitrary point (xp,yp) requires composite transformation since the basic rotation formula works only about origin.</p>
+        <p><strong>Steps (Derivation):</strong></p>
+        <ol>
+          <li>Translate pivot (xp,yp) to origin: T(−xp,−yp)</li>
+          <li>Rotate about origin by θ: R(θ)</li>
+          <li>Translate back to (xp,yp): T(xp,yp)</li>
+        </ol>
+        <div class="formula">
+          Composite Matrix M = T(xp,yp) · R(θ) · T(−xp,−yp)<br><br>
+          Final equations:<br>
+          x' = xp + (x−xp)cosθ − (y−yp)sinθ<br>
+          y' = yp + (x−xp)sinθ + (y−yp)cosθ
+        </div>
+        <p><strong>Example:</strong> Rotate P(4,2) by 90° about pivot (2,2):</p>
+        <p>x' = 2+(4−2)cos90−(2−2)sin90 = 2+0−0 = 2</p>
+        <p>y' = 2+(4−2)sin90+(2−2)cos90 = 2+2+0 = 4 → P'(2,4)</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q2 · 10 MARKS</div>
+      <span class="marks m10">10 MARKS</span>
+      <div class="q">Explain the Cohen-Sutherland line clipping algorithm in detail. Apply it to clip a line from P1(40,15) to P2(75,45) against a window with corners (20,10) and (60,40).</div>
+      <div class="a">
+        <p><strong>Theory:</strong> Region codes (4-bit outcodes: Top,Bottom,Right,Left) divide the plane into 9 regions. Trivial accept (both codes=0000), trivial reject (AND≠0000), else clip iteratively against boundaries.</p>
+        <p><strong>Numerical:</strong> Window: xmin=20,xmax=60,ymin=10,ymax=40</p>
+        <p>P1(40,15): inside all → code <strong>0000</strong></p>
+        <p>P2(75,45): x=75&gt;60→Right=1; y=45&gt;40→Top=1 → code <strong>1010</strong></p>
+        <p>AND(0000,1010)=0000 → not reject. OR≠0000 → not trivial accept.</p>
+        <p>Clip P2 against Top (y=40): x = 40+(75−40)·(40−15)/(45−15) = 40+35·0.833=69.17 → still &gt;60</p>
+        <p>Now clip against Right (x=60): y = 15+(45−15)·(60−40)/(75−40)=15+30·0.571=32.14 → new P2'(60,32.14)</p>
+        <p>Recheck P2'(60,32.14): inside window → code 0000</p>
+        <p><strong>Final visible line:</strong> P1(40,15) to P2'(60,32.14)</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q3 · 10 MARKS</div>
+      <span class="marks m10">10 MARKS</span>
+      <div class="q">What is the Liang-Barsky algorithm? Compare it with the Cohen-Sutherland algorithm. Solve a numerical example.</div>
+      <div class="a">
+        <p><strong>Theory:</strong> Uses parametric line representation P(u)=P1+u(P2−P1), 0≤u≤1. Computes valid range of u using inequalities for 4 boundaries (left, right, bottom, top), and intersects all ranges to get the visible portion.</p>
+        <p><strong>Comparison:</strong></p>
+        <table>
+          <tr><th>Feature</th><th>Cohen-Sutherland</th><th>Liang-Barsky</th></tr>
+          <tr><td>Method</td><td>Outcodes</td><td>Parametric (u)</td></tr>
+          <tr><td>Speed</td><td>Slower</td><td>Faster</td></tr>
+          <tr><td>Passes</td><td>Iterative, multiple</td><td>Single pass per boundary</td></tr>
+        </table>
+        <p><strong>Numerical:</strong> Window(0,0)-(20,20). Line P1(5,5) to P2(25,25): Δx=20,Δy=20</p>
+        <p>p1=−20,q1=5→r=0.25(u1); p2=20,q2=15→r=0.75(u2); p3=−20,q3=5→r=0.25(u1); p4=20,q4=15→r=0.75(u2)</p>
+        <p>u1=max(0,0.25,0.25)=0.25, u2=min(1,0.75,0.75)=0.75</p>
+        <p>Visible segment: x=5+0.25·20=10 to x=5+0.75·20=20 → <strong>(10,10) to (20,20)</strong></p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q4 · 10 MARKS</div>
+      <span class="marks m10">10 MARKS</span>
+      <div class="q">Explain the Sutherland-Hodgman polygon clipping algorithm with all four edge cases and a suitable diagram.</div>
+      <div class="a">
+        <p><strong>Theory:</strong> Polygon is clipped successively against each of the 4 window edges (left, right, bottom, top). For each edge, every polygon edge (S→P) is checked using 4 cases:</p>
+        <table>
+          <tr><th>Case</th><th>S</th><th>P</th><th>Action</th></tr>
+          <tr><td>1</td><td>In</td><td>In</td><td>Output P</td></tr>
+          <tr><td>2</td><td>In</td><td>Out</td><td>Output intersection</td></tr>
+          <tr><td>3</td><td>Out</td><td>In</td><td>Output intersection &amp; P</td></tr>
+          <tr><td>4</td><td>Out</td><td>Out</td><td>Output nothing</td></tr>
+        </table>
+        <p>The output vertex list of clipping against one edge becomes the input list for the next edge. After processing all 4 edges, the final list is the clipped polygon. Algorithm works correctly for convex clip regions.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q5 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">Differentiate between Window and Viewport.</div>
+      <div class="a">
+        <table>
+          <tr><th>Feature</th><th>Window</th><th>Viewport</th></tr>
+          <tr><td>Defined in</td><td>World coordinates</td><td>Device/screen coordinates</td></tr>
+          <tr><td>Purpose</td><td>Selects portion of scene to view</td><td>Defines where it's displayed</td></tr>
+          <tr><td>Coordinate Range</td><td>Real-world units</td><td>Pixel units</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q6 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">What are homogeneous coordinates? Why are they used in 2D transformations?</div>
+      <div class="a">
+        <p>Homogeneous coordinates represent a 2D point (x,y) as (x,y,1) — a 3-element vector. They are used because translation is an additive operation while rotation/scaling are multiplicative; representing all of them as 3×3 matrices allows <strong>uniform matrix multiplication</strong> for every transformation, making it possible to combine multiple transformations into a single composite matrix.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q7 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">Find the transformation matrix for scaling an object by Sx=2, Sy=3 with respect to a fixed point (1,1).</div>
+      <div class="a">
+        <div class="formula">
+          x' = xf + (x−xf)·Sx = 1 + (x−1)·2<br>
+          y' = yf + (y−yf)·Sy = 1 + (y−1)·3
+        </div>
+        <p>Composite Matrix = T(1,1) · S(2,3) · T(−1,−1)</p>
+        <p>For point (3,3): x'=1+(3−1)·2=5, y'=1+(3−1)·3=7 → <strong>(5,7)</strong></p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q8 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">Write short note on Shearing transformation with its types.</div>
+      <div class="a">
+        <p>Shearing slants the shape of an object. Two types:</p>
+        <p><strong>X-Shear:</strong> x'=x+Shx·y, y'=y — shifts x-coordinates proportional to y</p>
+        <p><strong>Y-Shear:</strong> x'=x, y'=y+Shy·x — shifts y-coordinates proportional to x</p>
+        <p>Used for effects like italic text or skewing shapes for animation.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q9 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">What is point clipping? State the conditions for a point to be inside a rectangular clip window.</div>
+      <div class="a">
+        <p>Point clipping checks whether a point lies inside or outside a given clip window. A point P(x,y) is inside the window (xmin,ymin)-(xmax,ymax) if:</p>
+        <div class="formula">xmin ≤ x ≤ xmax &nbsp;AND&nbsp; ymin ≤ y ≤ ymax</div>
+        <p>If any inequality fails, the point lies outside and is clipped (rejected/not displayed).</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q10 · 5 MARKS — Short Note</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">Write a short note on the NLN (Nicholl-Lee-Nicholl) line clipping algorithm.</div>
+      <div class="a">
+        <p>NLN improves on Cohen-Sutherland and Liang-Barsky by minimizing intersection calculations. It first determines the position of P1 (one of 9 regions, similar to Cohen-Sutherland). Based on this, it constructs additional regions using window edges and diagonals through P1. The region in which P2 lies directly determines which clip boundary to use — needing typically only <strong>one</strong> intersection calculation, making it more efficient, though more complex to implement due to extensive case analysis.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q11 · 10 MARKS</div>
+      <span class="marks m10">10 MARKS</span>
+      <div class="q">Explain the complete 2D viewing pipeline with a neat diagram, mentioning all the coordinate systems involved.</div>
+      <div class="a">
+        <p>The 2D viewing pipeline transforms a scene from world coordinates to device coordinates in these stages:</p>
+        <ol>
+          <li><strong>World Coordinates:</strong> Scene/objects defined in real-world units</li>
+          <li><strong>Window Selection:</strong> A rectangular region of world coordinates chosen for display</li>
+          <li><strong>Clipping:</strong> Remove portions of objects outside the window</li>
+          <li><strong>Window-to-Viewport Mapping:</strong> Map window coordinates to normalized/viewport coordinates using scale and translate</li>
+          <li><strong>Viewport:</strong> Region on output device where content appears</li>
+          <li><strong>Device/Screen Coordinates:</strong> Final pixel positions for display</li>
+        </ol>
+        <p>This pipeline allows the same scene to be viewed at different zoom levels/positions (window) and displayed at different parts of the screen (viewport) — fundamental for multi-window applications.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q12 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">A square with vertices A(0,0), B(1,0), C(1,1), D(0,1) is rotated by 45° about origin. Find new coordinates.</div>
+      <div class="a">
+        <p>cos45°=sin45°=0.707</p>
+        <p>A(0,0)→A'(0,0)</p>
+        <p>B(1,0): x'=1·0.707−0=0.707, y'=1·0.707+0=0.707 → B'(0.707,0.707)</p>
+        <p>C(1,1): x'=0.707−0.707=0, y'=0.707+0.707=1.414 → C'(0,1.414)</p>
+        <p>D(0,1): x'=0−0.707=−0.707, y'=0+0.707=0.707 → D'(−0.707,0.707)</p>
+      </div>
+    </div>
+
+  </div><div style="margin-top:60px; padding:20px 24px; border:1px dashed var(--line); border-radius:10px; color:var(--muted); font-size:13px;">
+    <div style="color:var(--accent); font-family:'Consolas',monospace; font-weight:700; margin-bottom:6px;">ZYREX // CGM_VAULT — UNIT 4 · Two Dimensional Graphics</div>
+    <p>RTU B.Tech CSE 5th Semester · 5CS4-04 Computer Graphics &amp; Multimedia · Unit 4 of 7</p>
+    <p style="margin-top:6px;">📌 Focus areas for exam: Composite transformations (pivot rotation), Cohen-Sutherland &amp; Liang-Barsky numericals, Sutherland-Hodgman polygon clipping.</p>
+    <p style="margin-top:6px;">Formulas to memorize: x'=x·cosθ−y·sinθ, y'=x·sinθ+y·cosθ &nbsp;|&nbsp; P'=M·P (homogeneous) &nbsp;|&nbsp; Sx=(xvmax−xvmin)/(xwmax−xwmin) &nbsp;|&nbsp; u1=max(...), u2=min(...) (Liang-Barsky)</p>
+  </div>
+
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:center;padding:30px 20px;flex-wrap:wrap;">
+      <a href="unit3.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+      <a href="../cgm/index.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">🏠 CGM Hub</a>
+      <a href="unit5.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+    </div>
+  </main>
+  <div class="cursor-dot" data-cursor-dot></div>
+  <div class="cursor-outline" data-cursor-outline></div>
+  <script>
+    const cursorDot = document.querySelector("[data-cursor-dot]");
+    const cursorOutline = document.querySelector("[data-cursor-outline]");
+    window.addEventListener("mousemove", function(e){
+      cursorDot.style.left=e.clientX+"px"; cursorDot.style.top=e.clientY+"px";
+      cursorOutline.animate({left:e.clientX+"px",top:e.clientY+"px"},{duration:400,fill:"forwards"});
+    });
+    document.querySelectorAll("a,button").forEach(el=>{
+      el.addEventListener("mouseenter",()=>cursorOutline.classList.add("cursor-hovering"));
+      el.addEventListener("mouseleave",()=>cursorOutline.classList.remove("cursor-hovering"));
+    });
+  </script>
+<script src="../splash-cursor.js"></script>\n</body>
+</html>

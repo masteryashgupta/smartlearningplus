@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Learning Plus // CD · Unit 6</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <main class="main-wrapper" style="width:100%;">
+    <div class="topbar">
+      <a href="../cd/index.html" class="back-btn">⬅ CD Hub</a>
+      <div class="brand">Smart<span>Learning</span>+ <span style="color:var(--muted);font-weight:400;font-size:14px;">// CD · Unit 6</span></div>
+      <div class="nav">
+        <a href="../cd/index.html">🏠 CD Hub</a>
+        <a href="#content">📖 Content</a>
+        <a href="#qa">❓ Q&amp;A</a>
+        <a href="unit5.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="hero">
+        <h1>⚙️ Unit 6 — Code Optimization &amp; Code Generation</h1>
+        <p>Basic Blocks &amp; Control Flow Graphs · DAG Representation · Loop Optimization · Global Data Flow Analysis · Peephole Optimization · Code Generation | Hours: 07</p>
+        <div class="badges" style="margin-top:14px;">
+          <a href="../cd/index.html" style="text-decoration:none;"><span class="badge b-teal">← Back to CD Hub</span></a>
+          <span class="badge b-gold">5CS4-02 · Compiler Design · RTU</span>
+        </div>
+      </div>
+      <div id="content">
+  <div class="hero" id="unit6">
+    <h1>UNIT 6 — CODE OPTIMIZATION &amp; CODE GENERATION</h1>
+    <div class="sub">5CS4-02 · Compiler Design · RTU Kota · III Year – V Sem · B.Tech CSE</div>
+    <div class="sub" style="margin-top:4px;">Credit: 3 &nbsp;|&nbsp; Max Marks: 100 (IA:30, ETE:70) &nbsp;|&nbsp; End Term: 3 Hours</div>
+    <div class="badges">
+      <span class="badge b-red">⚠ HIGH PRIORITY UNIT — FINAL UNIT</span>
+      <span class="badge b-gold">⭐ 5 &amp; 10 Mark Questions</span>
+      <span class="badge b-teal">✦ 7 Hours Weightage</span>
+    </div>
+  </div>
+
+  <div class="progress-bar"></div>
+
+  <div class="toc scroll-anchor" id="toc">
+    <h3>📋 UNIT 6 — CONTENTS</h3>
+    <ol>
+      <li><a href="#basicblock">Basic Blocks</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#cfg">Control Flow Graphs (CFG)</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#dag">DAG Representation of a Basic Block</a> <span class="sublabel">HIGH ★★★ — Most Asked</span></li>
+      <li><a href="#dagadv">Advantages of DAG</a> <span class="sublabel">MEDIUM ★★</span></li>
+      <li><a href="#sources">Sources of Optimization</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#loopopt">Loop Optimization</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#gdfa">Global Data Flow Analysis</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#loopinv">Loop Invariant Computation</a> <span class="sublabel">MEDIUM ★★</span></li>
+      <li><a href="#peephole">Peephole Optimization</a> <span class="sublabel">HIGH ★★★ — Most Asked</span></li>
+      <li><a href="#codegenissues">Issues in Design of Code Generator</a> <span class="sublabel">MEDIUM ★★</span></li>
+      <li><a href="#simplecg">A Simple Code Generator</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#cgfromdag">Code Generation from DAG</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#qa">RTU Exam Q&amp;A Bank (5-mark &amp; 10-mark)</a> <span class="sublabel">EXAM GOLD</span></li>
+    </ol>
+  </div>
+
+  <!-- 1. BASIC BLOCKS -->
+  <div class="unit-title scroll-anchor" id="basicblock">
+    <span style="color:var(--accent2);">01.</span> Basic Blocks
+    <span class="imp h">HIGH</span>
+  </div>
+  <div class="unit-sub">The fundamental unit of code optimization</div>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p>A <strong>Basic Block</strong> is a maximal sequence of consecutive three-address-code statements such that control enters the block only at the first statement (no jumps into the middle of the block) and leaves only after the last statement (no jumps out except at the end), with no possibility of branching except at the entry and exit.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish Explanation</div>
+    Basic block code ka ek "straight-line" hissa hai — jisme koi jump ya branch beech mein nahi hota. Execution sirf shuru se start hoti hai aur end tak chalti hai, koi entry/exit point beech mein nahi hota. Jaise ek non-stop train route, bina kisi beech station ke rukne ke.
+  </div>
+
+  <h3 class="sub">Algorithm to Find Leaders (Start of Basic Blocks) <span class="imp h">EXAM HOT</span></h3>
+  <div class="card">
+    <ol>
+      <li>The first statement of the program is a <strong>leader</strong>.</li>
+      <li>Any statement that is the target of a conditional or unconditional <strong>goto/jump</strong> is a leader.</li>
+      <li>Any statement that immediately follows a goto/conditional jump statement is a leader.</li>
+    </ol>
+    <p style="margin-top:8px;">Each basic block consists of a leader and all statements up to (but not including) the next leader.</p>
+  </div>
+
+  <div class="card example">
+    <div class="tag">Example</div>
+    <p>Three-address code: <code>1: t1=a+b  2: t2=t1*c  3: if t2&gt;0 goto 6  4: x=0  5: goto 7  6: x=1  7: y=x</code></p>
+    <p>Leaders: statement 1 (first), statement 4 (follows conditional jump), statement 6 (jump target), statement 7 (follows goto). This produces 4 basic blocks: {1,2,3}, {4,5}, {6}, {7}.</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- 2. CFG -->
+  <h2 class="topic scroll-anchor" id="cfg">
+    <span>02.</span> Control Flow Graphs (CFG)
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p>A <strong>Control Flow Graph (CFG)</strong> is a directed graph in which each node represents a basic block, and a directed edge from block B1 to block B2 exists if control can flow from B1 directly to B2 (i.e. B2 can immediately follow B1 in some execution path).</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    CFG ek graph hai jisme har node ek basic block hota hai, aur edges batate hain ki control flow kis block se kis block tak jaa sakta hai (jaise if-else ke branches, loops, etc.). Yeh compiler ko poore program ka "execution map" deta hai jisse optimization decisions liye ja sakte hain.
+  </div>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 360 320" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:300px;">
+      <rect x="0" y="0" width="360" height="320" fill="#0d1820"/>
+      <defs><marker id="a6" markerWidth="8" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#fff"/></marker></defs>
+      <rect x="130" y="10" width="100" height="40" fill="none" stroke="#36e0c4" stroke-width="1.5"/>
+      <text x="180" y="34" fill="#36e0c4" font-size="12" text-anchor="middle" font-family="Consolas">B1</text>
+      <line x1="180" y1="50" x2="180" y2="90" stroke="#fff" stroke-width="1.5" marker-end="url(#a6)"/>
+      <rect x="130" y="90" width="100" height="40" fill="none" stroke="#ffb454" stroke-width="1.5"/>
+      <text x="180" y="114" fill="#ffb454" font-size="12" text-anchor="middle" font-family="Consolas">B2 (cond)</text>
+      <line x1="150" y1="130" x2="80" y2="170" stroke="#fff" stroke-width="1.5" marker-end="url(#a6)"/>
+      <line x1="210" y1="130" x2="280" y2="170" stroke="#fff" stroke-width="1.5" marker-end="url(#a6)"/>
+      <rect x="30" y="170" width="100" height="40" fill="none" stroke="#b18cff" stroke-width="1.5"/>
+      <text x="80" y="194" fill="#b18cff" font-size="12" text-anchor="middle" font-family="Consolas">B3</text>
+      <rect x="230" y="170" width="100" height="40" fill="none" stroke="#b18cff" stroke-width="1.5"/>
+      <text x="280" y="194" fill="#b18cff" font-size="12" text-anchor="middle" font-family="Consolas">B4</text>
+      <line x1="80" y1="210" x2="160" y2="250" stroke="#fff" stroke-width="1.5" marker-end="url(#a6)"/>
+      <line x1="280" y1="210" x2="200" y2="250" stroke="#fff" stroke-width="1.5" marker-end="url(#a6)"/>
+      <rect x="130" y="250" width="100" height="40" fill="none" stroke="#ff6b6b" stroke-width="1.5"/>
+      <text x="180" y="274" fill="#ff6b6b" font-size="12" text-anchor="middle" font-family="Consolas">B5</text>
+    </svg>
+    <p class="cap">Fig 1: CFG showing an if-else structure — B2 branches to either B3 or B4, both merge at B5</p>
+  </div>
+
+  <div class="card warn">
+    <div class="tag">⚠ Important</div>
+    <p>The CFG is the foundation for almost all optimization techniques — loop detection (back edges), data flow analysis, and dead code elimination all operate directly on the CFG structure.</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- 3. DAG REPRESENTATION -->
+  <h2 class="topic scroll-anchor" id="dag">
+    <span>03.</span> DAG Representation of a Basic Block
+    <span class="imp h">HIGH — MOST ASKED</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p>A <strong>DAG (Directed Acyclic Graph)</strong> for a basic block is a graph representation where leaf nodes represent identifiers/constants, interior nodes represent operators, and the children of a node represent the operands — with shared sub-expressions represented by a single node having multiple parents, used to detect common sub-expressions and simplify a basic block.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    DAG basic block ko graph form mein represent karta hai jahan repeated/common calculations ko ek hi node se share kiya jata hai, instead of dobara calculate karne ke. Isse compiler ko pata chal jata hai ki kaunsi expressions already calculate ho chuki hain — unhe dobara calculate karne ki zaroorat nahi.
+  </div>
+
+  <h3 class="sub">Steps to Construct a DAG <span class="imp h">EXAM HOT</span></h3>
+  <div class="card">
+    <ol>
+      <li>For each statement, create (or reuse, if it already exists) a leaf node for each operand.</li>
+      <li>Check if an interior node already exists with the same operator and the same children (operands) — if so, reuse it instead of creating a duplicate.</li>
+      <li>If no such node exists, create a new interior node labelled with the operator, with the operand nodes as its children.</li>
+      <li>The node currently labelling each variable's value is updated to point to the latest assignment.</li>
+    </ol>
+  </div>
+
+  <div class="card example">
+    <div class="tag">Example</div>
+    <p>Code: <code>a=b+c<br>d=a-b<br>e=d+c<br>f=a-b</code></p>
+    <p>Since statement 4 (<code>f=a-b</code>) computes the same expression as statement 2 (<code>d=a-b</code>), the DAG reuses the same node for both <code>d</code> and <code>f</code> — this is the <strong>common sub-expression</strong> being eliminated automatically.</p>
+  </div>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 360 260" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:320px;">
+      <rect x="0" y="0" width="360" height="260" fill="#0d1820"/>
+      <g font-family="Consolas" font-size="12" fill="#d7e1e8">
+        <circle cx="180" cy="40" r="22" fill="none" stroke="#36e0c4" stroke-width="1.5"/>
+        <text x="180" y="45" text-anchor="middle" fill="#36e0c4">+</text>
+        <text x="200" y="30" font-size="10" fill="#8aa0ad">a</text>
+        <circle cx="120" cy="100" r="18" fill="none" stroke="#8aa0ad" stroke-width="1.5"/>
+        <text x="120" y="105" text-anchor="middle">b</text>
+        <circle cx="240" cy="100" r="18" fill="none" stroke="#8aa0ad" stroke-width="1.5"/>
+        <text x="240" y="105" text-anchor="middle">c</text>
+        <line x1="170" y1="58" x2="130" y2="85" stroke="#fff" stroke-width="1.2"/>
+        <line x1="190" y1="58" x2="232" y2="85" stroke="#fff" stroke-width="1.2"/>
+        <circle cx="180" cy="160" r="22" fill="none" stroke="#ffb454" stroke-width="1.5"/>
+        <text x="180" y="165" text-anchor="middle" fill="#ffb454">−</text>
+        <text x="208" y="155" font-size="10" fill="#8aa0ad">d, f</text>
+        <line x1="180" y1="62" x2="180" y2="138" stroke="#fff" stroke-width="1.2"/>
+        <line x1="160" y1="170" x2="125" y2="112" stroke="#fff" stroke-width="1.2"/>
+        <circle cx="280" cy="210" r="22" fill="none" stroke="#b18cff" stroke-width="1.5"/>
+        <text x="280" y="215" text-anchor="middle" fill="#b18cff">+</text>
+        <text x="305" y="220" font-size="10" fill="#8aa0ad">e</text>
+        <line x1="195" y1="172" x2="262" y2="200" stroke="#fff" stroke-width="1.2"/>
+        <line x1="260" y1="115" x2="278" y2="190" stroke="#fff" stroke-width="1.2"/>
+      </g>
+    </svg>
+    <p class="cap">Fig 2: DAG for the example — node "d" is reused as "f" since both compute a−b (common sub-expression)</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- 4. ADVANTAGES OF DAG -->
+  <h2 class="topic scroll-anchor" id="dagadv">
+    <span>04.</span> Advantages of DAG
+    <span class="imp m">MEDIUM</span>
+  </h2>
+
+  <table>
+    <tr><th>Advantage</th><th>Explanation</th></tr>
+    <tr><td class="hi">Common Sub-Expression Elimination</td><td>Automatically detects and reuses repeated computations, avoiding redundant evaluation</td></tr>
+    <tr><td class="hi">Dead Code Elimination</td><td>Nodes with no path to a "live" output variable can be safely removed</td></tr>
+    <tr><td>Determines Variable Use</td><td>Shows exactly which variables' values are used to compute each expression within the block</td></tr>
+    <tr><td>Reordering Information</td><td>Provides information about which statements can be safely reordered without changing the block's meaning</td></tr>
+    <tr><td>Optimal Code Generation</td><td>Helps generate more efficient target code by minimizing the number of temporaries and register usage</td></tr>
+  </table>
+
+  <hr class="sep">
+
+  <!-- 5. SOURCES OF OPTIMIZATION -->
+  <h2 class="topic scroll-anchor" id="sources">
+    <span>05.</span> Sources of Optimization
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>Sources of optimization</strong> refer to the general transformations a compiler applies to improve a program's running time, code size, or power consumption, while preserving its original semantic meaning (the output for any given input remains unchanged).</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Optimization ka matlab hai code ko fast/chhota banana, bina uska meaning change kiye. Compiler kai tarah ke "tricks" use karta hai jaise repeated calculations remove karna, useless code hatana, etc.
+  </div>
+
+  <h3 class="sub">Common Optimization Techniques <span class="imp h">EXAM HOT</span></h3>
+  <table>
+    <tr><th>Technique</th><th>Description</th></tr>
+    <tr><td class="hi">Common Sub-Expression Elimination</td><td>Avoid recomputing an expression whose value is already available</td></tr>
+    <tr><td class="hi">Dead Code Elimination</td><td>Remove statements whose results are never used</td></tr>
+    <tr><td class="hi">Constant Folding</td><td>Evaluate constant expressions at compile time instead of runtime, e.g. <code>x = 2 + 3</code> → <code>x = 5</code></td></tr>
+    <tr><td>Constant Propagation</td><td>Replace a variable with its known constant value wherever possible</td></tr>
+    <tr><td>Copy Propagation</td><td>Replace uses of a copied variable with the original, removing the copy where safe</td></tr>
+    <tr><td>Strength Reduction</td><td>Replace an expensive operation with a cheaper equivalent, e.g. <code>x*2</code> → <code>x+x</code> or a shift</td></tr>
+    <tr><td>Code Motion</td><td>Move loop-invariant computations outside the loop body</td></tr>
+    <tr><td>Induction Variable Elimination</td><td>Simplify/remove variables that change by a fixed amount on each loop iteration</td></tr>
+  </table>
+
+  <div class="card example">
+    <div class="tag">Example</div>
+    <p>Strength Reduction: <code>y = x * 2</code> is replaced by <code>y = x + x</code> (or a left-shift <code>x &lt;&lt; 1</code>), since addition/shift is typically faster than multiplication on most hardware.</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- 6. LOOP OPTIMIZATION -->
+  <h2 class="topic scroll-anchor" id="loopopt">
+    <span>06.</span> Loop Optimization
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>Loop optimization</strong> refers to a set of optimization techniques specifically targeted at loops, since loops are executed repeatedly and therefore offer the greatest potential performance improvement per line of optimized code.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Loops program ka sabse "hot" part hote hain — same code baar-baar execute hota hai. Isiliye loops ko optimize karna sabse zyada performance improvement deta hai, kyunki ek chhota sa improvement bhi har iteration mein repeat hota hai.
+  </div>
+
+  <h3 class="sub">Major Loop Optimization Techniques <span class="imp h">EXAM HOT</span></h3>
+  <table>
+    <tr><th>Technique</th><th>Description</th></tr>
+    <tr><td class="hi">Code Motion (Loop-Invariant Code Motion)</td><td>Move computations that produce the same result every iteration outside the loop</td></tr>
+    <tr><td class="hi">Induction Variable Elimination</td><td>Remove/simplify variables whose value changes by a constant amount each iteration, replacing expensive recomputation with simple increments</td></tr>
+    <tr><td>Strength Reduction</td><td>Replace expensive operations (multiplication) inside the loop with cheaper ones (addition)</td></tr>
+    <tr><td>Loop Unrolling</td><td>Replicate the loop body multiple times to reduce the overhead of loop control (test/branch) per iteration</td></tr>
+    <tr><td>Loop Fusion/Jamming</td><td>Combine two adjacent loops with the same iteration range into a single loop, reducing loop overhead</td></tr>
+  </table>
+
+  <hr class="sep">
+
+  <!-- 7. GLOBAL DATA FLOW ANALYSIS -->
+  <h2 class="topic scroll-anchor" id="gdfa">
+    <span>07.</span> Global Data Flow Analysis
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>Global Data Flow Analysis</strong> is the process of gathering information about how data (variable values) flows through the entire control flow graph of a program (across multiple basic blocks), used to enable optimizations that require knowledge beyond a single basic block.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Local optimization sirf ek basic block ke andar dekhta hai. Lekin kuch optimizations ke liye poore program ka pata hona chahiye ki variable ki value kaha-kaha use ho rahi hai, kaha define ho rahi hai — yeh hi global data flow analysis karta hai, poore CFG ko traverse karke.
+  </div>
+
+  <h3 class="sub">Key Data Flow Problems</h3>
+  <table>
+    <tr><th>Analysis</th><th>Question it Answers</th><th>Used For</th></tr>
+    <tr><td class="hi">Reaching Definitions</td><td>Which definitions of a variable can reach a given point in the program?</td><td>Constant propagation, optimization safety checks</td></tr>
+    <tr><td class="hi">Live Variable Analysis</td><td>Is a variable's value going to be used again before being redefined?</td><td>Dead code elimination, register allocation</td></tr>
+    <tr><td>Available Expressions</td><td>Has an expression already been computed and not yet invalidated?</td><td>Common sub-expression elimination (globally)</td></tr>
+    <tr><td>Busy Expressions</td><td>Will an expression definitely be computed along every path before any operand changes?</td><td>Code motion (hoisting expressions)</td></tr>
+  </table>
+
+  <div class="card warn">
+    <div class="tag">⚠ Important</div>
+    <p>Global data flow analysis works by solving <strong>data flow equations</strong> iteratively over the CFG until the information stabilizes (reaches a fixed point) — a classic 10-mark theory question.</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- 8. LOOP INVARIANT COMPUTATION -->
+  <h2 class="topic scroll-anchor" id="loopinv">
+    <span>08.</span> Loop Invariant Computation
+    <span class="imp m">MEDIUM</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p>A <strong>loop-invariant computation</strong> is a statement inside a loop that computes the same value on every iteration of the loop — meaning it can be safely moved (hoisted) outside the loop without changing the program's behaviour, an optimization called <strong>code motion</strong>.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Agar koi calculation loop ke andar har baar same result deta hai (operands loop ke andar change nahi hote), to use loop ke bahar nikal dena chahiye — isse loop har iteration mein unnecessary calculation repeat nahi karega.
+  </div>
+
+  <div class="card example">
+    <div class="tag">Example</div>
+    <p><code>for(i=0;i&lt;n;i++){ x = a*b; arr[i] = x+i; }</code> — here <code>x = a*b</code> doesn't depend on <code>i</code>, so it's loop-invariant; it gets hoisted: <code>x = a*b; for(i=0;i&lt;n;i++){ arr[i] = x+i; }</code> — now <code>a*b</code> is computed once instead of n times.</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- 9. PEEPHOLE OPTIMIZATION -->
+  <h2 class="topic scroll-anchor" id="peephole">
+    <span>09.</span> Peephole Optimization
+    <span class="imp h">HIGH — MOST ASKED</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>Peephole Optimization</strong> is a local, machine-dependent optimization technique performed on the final generated target code, examining a small, sliding "window" (peephole) of a few consecutive instructions at a time and replacing them with shorter/faster equivalent instruction sequences.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Peephole optimization compiler ka aakhri optimization step hota hai — yeh generated machine code ko ek chhote se "window" (jaise 2-3 instructions) mein dekhta hai aur agar koi redundant/inefficient pattern dikhe to use better instructions se replace kar deta hai. Naam "peephole" isiliye hai kyunki yeh ek chhote door ke peephole se dekhne jaisa hai — sirf paas ke instructions dikhte hain, poora code nahi.
+  </div>
+
+  <h3 class="sub">Peephole Optimization Techniques <span class="imp h">EXAM HOT</span></h3>
+  <table>
+    <tr><th>Technique</th><th>Description</th><th>Example</th></tr>
+    <tr><td class="hi">Redundant Instruction Elimination</td><td>Remove instructions whose effect is immediately undone or unused</td><td><code>MOV R0,a; MOV a,R0</code> → second instruction removed</td></tr>
+    <tr><td class="hi">Flow-of-Control Optimization</td><td>Eliminate unnecessary jumps, jumps to jumps</td><td><code>goto L1; ... L1: goto L2;</code> → directly <code>goto L2;</code></td></tr>
+    <tr><td>Algebraic Simplification</td><td>Simplify expressions using algebraic identities</td><td><code>x = x + 0</code> removed; <code>x = x * 1</code> removed</td></tr>
+    <tr><td>Strength Reduction</td><td>Replace expensive ops with cheaper equivalents</td><td><code>x * 2</code> → <code>x &lt;&lt; 1</code></td></tr>
+    <tr><td>Use of Machine Idioms</td><td>Replace instruction sequences with a single, equivalent target-specific instruction</td><td>Auto-increment/decrement addressing modes</td></tr>
+    <tr><td>Dead Code Elimination</td><td>Remove unreachable code (e.g. code after an unconditional return/jump)</td><td>Code after <code>return</code> statement removed</td></tr>
+  </table>
+
+  <div class="card warn">
+    <div class="tag">⚠ Important</div>
+    <p>Peephole optimization is applied <strong>after</strong> code generation (on the target/assembly code), unlike most other optimizations covered in this unit which apply on intermediate code — this distinction is frequently tested.</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- 10. ISSUES IN CODE GENERATOR DESIGN -->
+  <h2 class="topic scroll-anchor" id="codegenissues">
+    <span>10.</span> Issues in the Design of a Code Generator
+    <span class="imp m">MEDIUM</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p>The <strong>issues in code generator design</strong> are the key decisions and constraints a compiler writer must address when building the final phase that translates intermediate representation into target machine/assembly code.</p>
+  </div>
+
+  <h3 class="sub">Major Issues <span class="imp h">EXAM HOT</span></h3>
+  <table>
+    <tr><th>Issue</th><th>Description</th></tr>
+    <tr><td class="hi">Input to the Code Generator</td><td>Form of intermediate code (three-address code, DAG, postfix) the generator must accept</td></tr>
+    <tr><td class="hi">Target Program</td><td>Form of output — absolute machine code, relocatable machine code, or assembly code</td></tr>
+    <tr><td class="hi">Memory Management</td><td>Mapping of names in the source program to memory addresses/registers in the target machine</td></tr>
+    <tr><td class="hi">Instruction Selection</td><td>Choosing which target machine instructions to emit for each IR operation — affects code quality and speed</td></tr>
+    <tr><td class="hi">Register Allocation &amp; Assignment</td><td>Deciding which values to keep in (limited) CPU registers vs memory, and which specific register to use</td></tr>
+    <tr><td>Evaluation Order</td><td>Order in which computations are performed can affect efficiency of the generated code</td></tr>
+  </table>
+
+  <hr class="sep">
+
+  <!-- 11. SIMPLE CODE GENERATOR -->
+  <h2 class="topic scroll-anchor" id="simplecg">
+    <span>11.</span> A Simple Code Generator
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p>A <strong>simple code generator</strong> is an algorithm that translates a sequence of three-address statements into target machine code, using a <strong>register descriptor</strong> (tracks what value is currently in each register) and an <strong>address descriptor</strong> (tracks where the current value of each name is stored — register, memory, or both) to make instruction-selection decisions.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Ek simple code generator three-address code ko dekh kar machine instructions banata hai. Yeh do "descriptors" maintain karta hai: register descriptor (kaunsa register kya value rakhta hai) aur address descriptor (har variable ki current value kahan store hai — register ya memory mein). Inki madad se yeh efficient code generate karta hai.
+  </div>
+
+  <h3 class="sub">getReg Function — Register Selection Strategy</h3>
+  <div class="card">
+    <p>The <strong>getReg</strong> function decides which register to use for a computation's result, following this priority order:</p>
+    <ol>
+      <li>If an operand is already in a register and not needed afterward, reuse that register.</li>
+      <li>Otherwise, use an empty register if one is available.</li>
+      <li>Otherwise, pick a register whose current value is already stored in memory (no extra store needed) or that holds the least-used value, and spill (store) its content first if necessary.</li>
+    </ol>
+  </div>
+
+  <div class="card example">
+    <div class="tag">Example</div>
+    <p>For statement <code>x = y + z</code>: if y is already in register R1 and not used later, the generator emits <code>ADD R1, z</code> directly (reusing R1) instead of allocating a new register, minimizing register pressure and store/load instructions.</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- 12. CODE GENERATION FROM DAG -->
+  <h2 class="topic scroll-anchor" id="cgfromdag">
+    <span>12.</span> Code Generation from DAG
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>Code generation from a DAG</strong> involves choosing an evaluation order (a topological ordering of the DAG nodes) and then generating a machine instruction for each interior node, exploiting the DAG structure to minimize the number of registers used and to avoid recomputing shared sub-expressions.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    DAG se code generate karte waqt, hume decide karna hota hai ki kis order mein nodes ko evaluate karna hai (topological order), taaki minimum registers use hon aur shared nodes dobara calculate na hon.
+  </div>
+
+  <h3 class="sub">Heuristic Ordering Algorithm</h3>
+  <div class="card">
+    <p>A common heuristic for choosing evaluation order is: repeatedly select a node N such that all of N's parents (if any) have already been evaluated, or N's children's values are still needed for the longest, preferring to evaluate nodes whose results free up registers soonest. This minimizes the total register count needed during code generation.</p>
+  </div>
+
+  <table>
+    <tr><th>Strategy</th><th>Goal</th></tr>
+    <tr><td class="hi">Topological Sort</td><td>Ensures every operator node is generated only after its operand nodes are computed</td></tr>
+    <tr><td class="hi">Labeling Algorithm (Sethi-Ullman)</td><td>Computes the minimum number of registers required to evaluate the DAG with no extra stores, then orders subtree evaluation by register-need (larger subtree first)</td></tr>
+  </table>
+
+  <div class="card warn">
+    <div class="tag">⚠ Important</div>
+    <p>The <strong>Sethi-Ullman algorithm</strong> is the classic technique for generating optimal (minimum register count) code from an expression tree/DAG — frequently asked as a 10-mark numerical/theory question.</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- Q&A SECTION -->
+  <div class="qsection" id="qa">
+    <h2 class="topic" style="border:none;">❓ RTU Exam Q&amp;A Bank — Unit 6 <span class="imp h">EXAM GOLD</span></h2>
+
+    <div class="qcard">
+      <div class="qlabel">Q1 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">What is a Basic Block? Explain the algorithm to identify leaders.</div>
+      <div class="a">
+        <p>A Basic Block is a maximal sequence of consecutive statements with a single entry point (first statement) and single exit point (last statement), with no branches in or out except at these ends. Leaders are identified by: (1) the first statement is a leader; (2) any target of a conditional/unconditional jump is a leader; (3) any statement immediately following a jump/conditional jump is a leader. Each block runs from one leader up to (but not including) the next leader.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q2 · 10 MARKS</div>
+      <span class="marks m10">10 MARKS</span>
+      <div class="q">What is a DAG? Explain its construction and advantages with an example.</div>
+      <div class="a">
+        <p>A DAG (Directed Acyclic Graph) represents a basic block where leaf nodes are identifiers/constants, interior nodes are operators, and shared sub-expressions are represented by a single node with multiple parents. Construction: for each statement, reuse existing leaf/interior nodes wherever the same operator+operands already exist; otherwise create a new node. <strong>Advantages:</strong> automatic common sub-expression elimination, dead code elimination (unreachable nodes removed), determining variable usage, providing reordering information, and enabling more efficient code generation.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q3 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">Explain Peephole Optimization with examples of techniques used.</div>
+      <div class="a">
+        <p>Peephole optimization examines a small sliding window of target/assembly instructions and replaces inefficient patterns with better equivalents. Techniques: Redundant instruction elimination (e.g. removing a store immediately followed by a load of the same value), flow-of-control optimization (removing jumps to jumps), algebraic simplification (<code>x=x+0</code> removed), strength reduction (<code>x*2</code> → <code>x&lt;&lt;1</code>), use of machine idioms (auto-increment instructions), and dead code elimination (unreachable code after a return removed).</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q4 · 10 MARKS</div>
+      <span class="marks m10">10 MARKS</span>
+      <div class="q">Explain different loop optimization techniques used by compilers.</div>
+      <div class="a">
+        <p><strong>Code Motion (Loop-Invariant Code Motion):</strong> hoist computations that produce the same result every iteration outside the loop. <strong>Induction Variable Elimination:</strong> simplify variables that change by a fixed amount each iteration, replacing recomputation with cheap increments. <strong>Strength Reduction:</strong> replace expensive operations (multiplication) with cheaper ones (addition/shift) inside the loop. <strong>Loop Unrolling:</strong> replicate the loop body to reduce per-iteration control overhead. <strong>Loop Fusion:</strong> merge adjacent loops with the same iteration range into one, reducing total loop overhead. Loops are prioritized for optimization since their code executes repeatedly, multiplying the benefit of any single optimization.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q5 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">What is loop-invariant computation? Explain with an example.</div>
+      <div class="a">
+        <p>A loop-invariant computation is a statement inside a loop whose computed value does not change across iterations (its operands are not modified within the loop). Such computations can be safely moved (hoisted) outside the loop via code motion, since recomputing them every iteration is wasted work. Example: in <code>for(i=0;i&lt;n;i++){x=a*b; arr[i]=x+i;}</code>, <code>x=a*b</code> does not depend on i and is hoisted before the loop, computed only once instead of n times.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q6 · 10 MARKS</div>
+      <span class="marks m10">10 MARKS</span>
+      <div class="q">What is Global Data Flow Analysis? Explain the major data flow problems.</div>
+      <div class="a">
+        <p>Global Data Flow Analysis gathers information about variable values across the entire control flow graph (spanning multiple basic blocks), enabling optimizations that local (single-block) analysis cannot perform. Major problems: <strong>Reaching Definitions</strong> — which definitions of a variable can reach a given program point (used for constant propagation); <strong>Live Variable Analysis</strong> — whether a variable's value will be used again before redefinition (used for dead code elimination &amp; register allocation); <strong>Available Expressions</strong> — has an expression already been computed and not invalidated (used for global common sub-expression elimination); <strong>Busy Expressions</strong> — will an expression definitely be computed along every path (used for code motion). These are solved by iteratively applying data flow equations over the CFG until a fixed point is reached.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q7 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">List and explain the major issues in the design of a code generator.</div>
+      <div class="a">
+        <p>Key issues: (1) <strong>Input</strong> — form of intermediate representation accepted (3AC, DAG, postfix); (2) <strong>Target Program</strong> — output format (absolute, relocatable, or assembly code); (3) <strong>Memory Management</strong> — mapping source names to target addresses; (4) <strong>Instruction Selection</strong> — choosing which machine instructions to emit, affecting code quality; (5) <strong>Register Allocation &amp; Assignment</strong> — deciding which values stay in limited registers vs memory; (6) <strong>Evaluation Order</strong> — order of computation can affect code efficiency.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q8 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">What is a Control Flow Graph? How does it differ from a DAG?</div>
+      <div class="a">
+        <table>
+          <tr><th>Feature</th><th>Control Flow Graph (CFG)</th><th>DAG</th></tr>
+          <tr><td>Nodes represent</td><td>Basic blocks</td><td>Operators/operands within ONE basic block</td></tr>
+          <tr><td>Scope</td><td>Entire procedure/program</td><td>A single basic block</td></tr>
+          <tr><td>Edges represent</td><td>Possible control flow between blocks</td><td>Data dependency between expressions</td></tr>
+          <tr><td>Used for</td><td>Global optimizations, loop detection</td><td>Local optimizations (common sub-expressions)</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q9 · 10 MARKS</div>
+      <span class="marks m10">10 MARKS</span>
+      <div class="q">Explain the various sources of optimization with suitable examples.</div>
+      <div class="a">
+        <p><strong>Common Sub-Expression Elimination:</strong> avoid recomputing the same expression. <strong>Dead Code Elimination:</strong> remove statements whose results are never used. <strong>Constant Folding:</strong> evaluate constant expressions at compile time, e.g. <code>x=2+3</code>→<code>x=5</code>. <strong>Constant Propagation:</strong> replace variables with known constant values. <strong>Copy Propagation:</strong> replace copied variable uses with the original. <strong>Strength Reduction:</strong> replace expensive operations with cheaper equivalents, e.g. <code>x*2</code>→<code>x+x</code>. <strong>Code Motion:</strong> move loop-invariant computations out of loops. <strong>Induction Variable Elimination:</strong> simplify variables changing by fixed amounts per iteration. All preserve the program's semantic meaning while reducing time/space cost.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q10 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">Describe how code is generated from a DAG, mentioning register minimization.</div>
+      <div class="a">
+        <p>Code generation from a DAG selects a topological evaluation order (operators only generated after their operands are ready), generating one machine instruction per interior node while reusing values represented by shared nodes instead of recomputing them. The <strong>Sethi-Ullman labeling algorithm</strong> computes the minimum number of registers needed by evaluating the subtree requiring more registers first, ensuring optimal (minimum) register usage with no unnecessary spills/stores.</p>
+      </div>
+    </div>
+
+  </div><div style="margin-top:60px; padding:20px 24px; border:1px dashed var(--line); border-radius:10px; color:var(--muted); font-size:13px;">
+    <div style="color:var(--accent); font-family:'Consolas',monospace; font-weight:700; margin-bottom:6px;">ZYREX // CD_VAULT — UNIT 6 · Code Optimization &amp; Code Generation</div>
+    <p>RTU B.Tech CSE 5th Semester · 5CS4-02 Compiler Design · Unit 6 of 6 (Final Unit)</p>
+    <p style="margin-top:6px;">📌 Focus areas for exam: DAG construction &amp; advantages (10-mark regular), Peephole optimization techniques, Loop optimization techniques, Global data flow analysis problems, Sethi-Ullman code generation from DAG.</p>
+    <p style="margin-top:6px;">Key terms to memorize: Leader rules (3) &nbsp;|&nbsp; DAG = common sub-expr elimination &nbsp;|&nbsp; Peephole = post code-gen, machine-dependent &nbsp;|&nbsp; Reaching Defs / Live Vars / Available Exprs / Busy Exprs</p>
+    <p style="margin-top:12px;color:var(--accent);">🎉 This completes the full RTU syllabus for Compiler Design (5CS4-02) — Units 1 through 6.</p>
+  </div>
+
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:center;padding:30px 20px;flex-wrap:wrap;">
+      <a href="unit5.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+      <a href="../cd/index.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">🏠 CD Hub</a>
+    </div>
+  </main>
+  <div class="cursor-dot" data-cursor-dot></div>
+  <div class="cursor-outline" data-cursor-outline></div>
+  <script>
+    const cursorDot = document.querySelector("[data-cursor-dot]");
+    const cursorOutline = document.querySelector("[data-cursor-outline]");
+    window.addEventListener("mousemove", function(e){
+      cursorDot.style.left=e.clientX+"px"; cursorDot.style.top=e.clientY+"px";
+      cursorOutline.animate({left:e.clientX+"px",top:e.clientY+"px"},{duration:400,fill:"forwards"});
+    });
+    document.querySelectorAll("a,button").forEach(el=>{
+      el.addEventListener("mouseenter",()=>cursorOutline.classList.add("cursor-hovering"));
+      el.addEventListener("mouseleave",()=>cursorOutline.classList.remove("cursor-hovering"));
+    });
+  </script>
+<script src="../splash-cursor.js"></script>\n</body>
+</html>

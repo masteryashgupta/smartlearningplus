@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Learning Plus // AOA · Unit 2</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <main class="main-wrapper" style="width:100%;">
+    <div class="topbar">
+      <a href="index.html" class="back-btn">⬅ AOA Hub</a>
+      <div class="brand">Smart<span>Learning</span>+ <span style="color:var(--muted);font-weight:400;font-size:14px;">// AOA · Unit 2</span></div>
+      <div class="nav">
+        <a href="index.html">🏠 AOA Hub</a>
+        <a href="#content">📖 Content</a>
+        <a href="#qa">❓ Q&amp;A</a>
+        <a href="unit1.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+        <a href="unit3.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="hero">
+        <h1>🧮 Unit 2 — Background &amp; Divide and Conquer</h1>
+        <p>Review of Algorithm · Complexity &amp; Order (Asymptotic) Notations · Binary Search · Merge Sort · Quick Sort · Strassen's Matrix Multiplication | Hours: 06</p>
+        <div class="badges" style="margin-top:14px;">
+          <a href="index.html" style="text-decoration:none;"><span class="badge b-teal">← Back to AOA Hub</span></a>
+          <span class="badge b-gold">5CS4-05 · Analysis of Algorithms · RTU</span>
+        </div>
+      </div>
+      <div id="content">
+<div id="unit2">
+<div class="unit-title">🧮 Unit 2 — Background &amp; Divide and Conquer Method</div>
+<div class="unit-sub">Review of Algorithm &middot; Complexity &amp; Asymptotic (Order) Notations &middot; Calculating Time Complexity &middot; Divide and Conquer Strategy &middot; Binary Search &middot; Merge Sort &middot; Quick Sort &middot; Strassen's Matrix Multiplication</div>
+
+<div class="badge-row">
+  <span class="badge b-red">🔥 HIGH WEIGHT — Numerical + Theory Both Asked</span>
+  <span class="badge b-gold">⚠ 5-Mark: Recurrence Solving, Quick Sort Dry-Run</span>
+  <span class="badge b-teal">✅ Complexity Calculation is Asked Almost Every Year</span>
+</div>
+
+<div class="card" style="margin-bottom:28px;">
+  <div style="color:var(--accent2); font-weight:700; margin-bottom:10px;">📑 Unit 2 Quick Navigation</div>
+  <div class="toc" style="columns:2; column-gap:24px;">
+    <div><a href="#u2-algo">2.1 Review of Algorithm</a></div>
+    <div><a href="#u2-complexity">2.2 Complexity &amp; Calculating Complexity</a></div>
+    <div><a href="#u2-notations">2.3 Asymptotic (Order) Notations</a></div>
+    <div><a href="#u2-dac">2.4 Divide and Conquer Method</a></div>
+    <div><a href="#u2-binsearch">2.5 Binary Search</a></div>
+    <div><a href="#u2-mergesort">2.6 Merge Sort</a></div>
+    <div><a href="#u2-quicksort">2.7 Quick Sort</a></div>
+    <div><a href="#u2-strassen">2.8 Strassen's Matrix Multiplication</a></div>
+    <div><a href="#u2-tables">2.9 Comparison Tables</a></div>
+    <div><a href="#u2-qa">2.10 RTU Exam Q&amp;A</a></div>
+  </div>
+</div>
+
+<!-- 2.1 REVIEW OF ALGORITHM -->
+<h2 class="topic" id="u2-algo">2.1 Review of Algorithm <span class="imp h">FOUNDATION</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">An <strong>algorithm</strong> is a finite, well-defined sequence of unambiguous instructions that takes some input, processes it through a series of well-defined steps, and produces an output in a finite amount of time, used to solve a specific computational problem.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish Explanation</div>
+  <p style="margin-top:6px;">Algorithm ek step-by-step recipe hai kisi problem ko solve karne ke liye — jaise khana banane ki recipe mein steps fixed hote hain. Har algorithm ka ek input hota hai, kuch defined steps (jo clear aur unambiguous hone chahiye), aur ek output. Algorithm hamesha <strong>finite</strong> steps mein khatam hona chahiye — infinite loop nahi chal sakta.</p>
+</div>
+
+<h3 class="sub">Properties (Characteristics) of an Algorithm</h3>
+<div class="card">
+  <ul>
+    <li>🎯 <strong>Input:</strong> Zero or more well-defined inputs.</li>
+    <li>📤 <strong>Output:</strong> At least one well-defined output, related to the input.</li>
+    <li>🔢 <strong>Finiteness:</strong> Must terminate after a finite number of steps.</li>
+    <li>✅ <strong>Definiteness:</strong> Every step must be precisely and unambiguously defined.</li>
+    <li>⚙️ <strong>Effectiveness:</strong> Every step must be basic enough to be carried out, in principle, by a person using pen and paper.</li>
+  </ul>
+</div>
+
+<div class="keypoint">
+  <span class="icon">📌</span>
+  <span><strong>Algorithm vs Program:</strong> An algorithm is a language-independent, conceptual solution (pseudocode/flowchart), whereas a program is its concrete implementation in a specific programming language.</span>
+</div>
+
+<!-- 2.2 COMPLEXITY -->
+<h2 class="topic" id="u2-complexity">2.2 Complexity &amp; Calculating Complexity <span class="imp h">EXAM HOT — NUMERICAL</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">The <strong>complexity</strong> of an algorithm is a measure of the amount of <strong>time (time complexity)</strong> and <strong>memory/space (space complexity)</strong> it requires to run, expressed as a function of the input size <strong>n</strong>, independent of the machine or implementation.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Complexity batati hai ki input size (n) badhne par algorithm kitna time/memory lega. Hum machine-specific actual seconds nahi count karte, balki basic operations (comparisons, additions) ki count karte hain as a function of n. Time complexity zyada important hai exams mein, especially loops ke through calculate karna.</p>
+</div>
+
+<h3 class="sub">Steps to Calculate Time Complexity</h3>
+<div class="card">
+  <ul>
+    <li>1️⃣ Identify the <strong>basic operation</strong> (comparison, assignment, arithmetic op) that is executed most frequently.</li>
+    <li>2️⃣ Count how many times this operation executes as a function of input size n.</li>
+    <li>3️⃣ A single loop running n times → O(n); nested loop (n × n) → O(n²); loop that halves each time → O(log n); two separate loops → added (not multiplied) → O(n) overall.</li>
+    <li>4️⃣ Keep only the highest-order (dominant) term and drop constants — this gives the asymptotic complexity.</li>
+  </ul>
+</div>
+
+<div class="card example">
+  <div class="tag">💡 Example</div>
+  <p style="margin-top:8px;">For nested loops <code>for(i=0;i&lt;n;i++) for(j=0;j&lt;n;j++) sum++;</code> the inner statement executes n×n = n² times → Time Complexity = O(n²). For a loop where i doubles each time (<code>i=i*2</code>) until i&lt;n, it runs log₂n times → O(log n).</p>
+</div>
+
+<h3 class="sub">Best, Worst &amp; Average Case</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Case</th><th>Meaning</th><th>Example (Linear Search)</th></tr>
+    <tr><td>Best Case</td><td>Minimum time taken (most favorable input)</td><td>Element found at first position → O(1)</td></tr>
+    <tr><td>Worst Case</td><td>Maximum time taken (least favorable input)</td><td>Element at last position or absent → O(n)</td></tr>
+    <tr><td>Average Case</td><td>Expected time over all possible inputs</td><td>Element found somewhere in the middle → O(n)</td></tr>
+  </table>
+</div>
+
+<!-- 2.3 ASYMPTOTIC NOTATIONS -->
+<h2 class="topic" id="u2-notations">2.3 Asymptotic (Order) Notations <span class="imp h">MUST KNOW</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;"><strong>Asymptotic notations</strong> are mathematical tools (Big-O, Big-Omega, Big-Theta) used to describe the growth rate of an algorithm's running time as the input size n approaches infinity, allowing comparison of algorithms independent of hardware or constant factors.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Asymptotic notations ek tarah se "upper bound", "lower bound" aur "tight bound" batate hain algorithm ki growth rate ki — bina exact constant factors ki chinta kiye. Yeh humein bade n (input size) ke liye algorithm ka behavior samajhne mein madad karte hain.</p>
+</div>
+
+<h3 class="sub">Three Main Notations</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Notation</th><th>Bound Type</th><th>Mathematical Definition</th><th>Meaning</th></tr>
+    <tr><td><strong>O (Big-Oh)</strong></td><td>Upper bound</td><td>f(n) ≤ c·g(n) for n≥n₀</td><td>Worst-case growth rate (most commonly used)</td></tr>
+    <tr><td><strong>Ω (Omega)</strong></td><td>Lower bound</td><td>f(n) ≥ c·g(n) for n≥n₀</td><td>Best-case growth rate</td></tr>
+    <tr><td><strong>Θ (Theta)</strong></td><td>Tight bound</td><td>c₁·g(n) ≤ f(n) ≤ c₂·g(n)</td><td>Exact (average) growth rate, both bounds match</td></tr>
+  </table>
+</div>
+
+<div class="svgbox">
+<svg viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:560px;">
+  <line x1="40" y1="190" x2="560" y2="190" stroke="var(--muted)" stroke-width="1"/>
+  <line x1="40" y1="190" x2="40" y2="20" stroke="var(--muted)" stroke-width="1"/>
+  <path d="M40,180 Q300,100 560,30" fill="none" stroke="var(--accent)" stroke-width="3"/>
+  <path d="M40,180 Q300,140 560,90" fill="none" stroke="var(--accent2)" stroke-width="2" stroke-dasharray="5,3"/>
+  <path d="M40,180 Q300,60 560,10" fill="none" stroke="var(--red)" stroke-width="2" stroke-dasharray="2,3"/>
+  <text x="565" y="35" font-size="12" fill="var(--red)">O(g)</text>
+  <text x="565" y="95" font-size="12" fill="var(--accent2)">Ω(g)</text>
+  <text x="565" y="65" font-size="12" fill="var(--accent)">Θ(g)</text>
+  <text x="280" y="210" font-size="12">Input size n →</text>
+</svg>
+<div class="cap">Big-O (upper), Big-Omega (lower) and Big-Theta (tight) bounds on growth rate</div>
+</div>
+
+<h3 class="sub">Common Growth Rates (Increasing Order)</h3>
+<div class="card">
+  <div class="formula">O(1) < O(log n) < O(n) < O(n log n) < O(n&sup2;) < O(n&sup3;) < O(2&#x207F;) < O(n!)</div>
+</div>
+
+<!-- 2.4 DIVIDE AND CONQUER -->
+<h2 class="topic" id="u2-dac">2.4 Divide and Conquer Method <span class="imp h">EXAM HOT</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">The <strong>Divide and Conquer</strong> technique solves a problem by (1) <strong>dividing</strong> it into smaller sub-problems of the same type, (2) recursively <strong>conquering</strong> (solving) each sub-problem, and (3) <strong>combining</strong> the sub-solutions to form the solution to the original problem.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Divide and Conquer ka idea simple hai — bade problem ko chhote-chhote independent sub-problems mein todo, har sub-problem ko recursively solve karo (chhote hote hote base case tak), aur phir un sub-solutions ko combine karke final answer banao. Merge Sort, Quick Sort, Binary Search isi technique par based hain.</p>
+</div>
+
+<h3 class="sub">Three Steps of D&amp;C</h3>
+<div class="card">
+  <ul>
+    <li>✂️ <strong>Divide:</strong> Break the problem into smaller sub-problems of the same type.</li>
+    <li>⚔️ <strong>Conquer:</strong> Solve the sub-problems recursively; if small enough, solve directly (base case).</li>
+    <li>🔗 <strong>Combine:</strong> Merge the sub-problem solutions to get the solution of the original problem.</li>
+  </ul>
+</div>
+
+<h3 class="sub">General Recurrence Relation</h3>
+<div class="card">
+  <div class="formula">T(n) = a&middot;T(n/b) + f(n)
+where a = number of sub-problems, n/b = size of each sub-problem, f(n) = cost of divide+combine</div>
+  <p>Solved using the <strong>Master Theorem</strong>, recursion tree method, or substitution method to get the closed-form time complexity.</p>
+</div>
+
+<!-- 2.5 BINARY SEARCH -->
+<h2 class="topic" id="u2-binsearch">2.5 Binary Search <span class="imp h">EXAM HOT — NUMERICAL</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;"><strong>Binary Search</strong> is a Divide and Conquer searching algorithm that finds a target value in a <strong>sorted array</strong> by repeatedly comparing the target with the middle element and discarding the half of the array that cannot contain it.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Binary search sirf sorted array par kaam karta hai. Hum middle element check karte hain — agar target usse chhota hai toh left half mein search karo, bada hai toh right half mein, equal hai toh mil gaya. Har step par array aadha ho jaata hai, isliye yeh bahut fast hai.</p>
+</div>
+
+<h3 class="sub">Algorithm</h3>
+<div class="card">
+  <div class="formula">BinarySearch(A, low, high, key):
+  while low <= high:
+      mid = (low + high) / 2
+      if A[mid] == key:  return mid
+      else if A[mid] < key: low = mid + 1
+      else: high = mid - 1
+  return -1   (not found)</div>
+</div>
+
+<h3 class="sub">Recurrence &amp; Complexity</h3>
+<div class="card">
+  <div class="formula">T(n) = T(n/2) + O(1)  →  T(n) = O(log n)</div>
+  <table style="margin-top:10px;">
+    <tr><th>Case</th><th>Complexity</th></tr>
+    <tr><td>Best Case</td><td>O(1) (found at first middle)</td></tr>
+    <tr><td>Worst/Average Case</td><td>O(log n)</td></tr>
+    <tr><td>Space Complexity</td><td>O(1) iterative / O(log n) recursive (call stack)</td></tr>
+  </table>
+</div>
+
+<div class="card example">
+  <div class="tag">💡 Example</div>
+  <p style="margin-top:8px;">Search key=23 in sorted array [4,8,15,16,23,42,56]: low=0,high=6,mid=3→A[3]=16&lt;23→low=4; mid=5→A[5]=42&gt;23→high=4; mid=4→A[4]=23 → Found at index 4 in just 3 comparisons (vs up to 7 for linear search).</p>
+</div>
+
+<!-- 2.6 MERGE SORT -->
+<h2 class="topic" id="u2-mergesort">2.6 Merge Sort <span class="imp h">MUST KNOW — 10 MARK</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;"><strong>Merge Sort</strong> is a stable, Divide and Conquer sorting algorithm that recursively splits the array into two halves, sorts each half independently, and then <strong>merges</strong> the two sorted halves into a single sorted array.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Merge Sort array ko baar-baar aadha-aadha todhta hai jab tak single element na bach jaaye (jo already sorted hai), phir un chhote sorted pieces ko jodte (merge) hue wapas badi sorted array banata hai. Merging step mein dono sorted halves ko compare karke ek-ek element nikal kar final array banti hai.</p>
+</div>
+
+<h3 class="sub">Algorithm</h3>
+<div class="card">
+  <div class="formula">MergeSort(A, low, high):
+  if low < high:
+      mid = (low+high)/2
+      MergeSort(A, low, mid)
+      MergeSort(A, mid+1, high)
+      Merge(A, low, mid, high)
+
+Merge(A, low, mid, high):
+  Copy A[low..mid] and A[mid+1..high] into temp arrays L and R
+  Repeatedly pick the smaller front element of L/R into A, in order
+  Copy any remaining elements of L or R into A</div>
+</div>
+
+<h3 class="sub">Recurrence &amp; Complexity</h3>
+<div class="card">
+  <div class="formula">T(n) = 2T(n/2) + O(n)   →   T(n) = O(n log n)   (by Master Theorem)</div>
+  <table style="margin-top:10px;">
+    <tr><th>Case</th><th>Time Complexity</th></tr>
+    <tr><td>Best / Average / Worst</td><td>O(n log n) — same in all cases</td></tr>
+    <tr><td>Space Complexity</td><td>O(n) — needs extra array for merging</td></tr>
+    <tr><td>Stability</td><td>Stable (preserves relative order of equal elements)</td></tr>
+  </table>
+</div>
+
+<div class="svgbox">
+<svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:540px;">
+  <rect x="220" y="10" width="120" height="26" fill="rgba(34,211,238,0.15)" stroke="var(--accent)"/>
+  <text x="280" y="28" font-size="12" text-anchor="middle">[38,27,43,3,9,82,10]</text>
+  <line x1="280" y1="36" x2="140" y2="70" stroke="var(--muted)"/>
+  <line x1="280" y1="36" x2="420" y2="70" stroke="var(--muted)"/>
+  <rect x="80" y="70" width="120" height="26" fill="rgba(34,211,238,0.1)" stroke="var(--accent2)"/>
+  <text x="140" y="88" font-size="11" text-anchor="middle">[38,27,43]</text>
+  <rect x="360" y="70" width="120" height="26" fill="rgba(34,211,238,0.1)" stroke="var(--accent2)"/>
+  <text x="420" y="88" font-size="11" text-anchor="middle">[3,9,82,10]</text>
+  <line x1="280" y1="130" x2="280" y2="100" stroke="var(--muted)" stroke-dasharray="3,3"/>
+  <text x="200" y="150" font-size="11" fill="var(--muted)">... recursive split continues to single elements ...</text>
+  <rect x="220" y="180" width="120" height="26" fill="rgba(34,197,94,0.15)" stroke="var(--accent2)"/>
+  <text x="280" y="198" font-size="12" text-anchor="middle">[3,9,10,27,38,43,82]</text>
+  <text x="280" y="215" font-size="11" text-anchor="middle" fill="var(--muted)">Merged sorted result</text>
+</svg>
+<div class="cap">Merge sort: split into halves recursively, then merge sorted halves back together</div>
+</div>
+
+<!-- 2.7 QUICK SORT -->
+<h2 class="topic" id="u2-quicksort">2.7 Quick Sort <span class="imp h">EXAM HOT — NUMERICAL</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;"><strong>Quick Sort</strong> is a Divide and Conquer sorting algorithm that selects a <strong>pivot</strong> element, <strong>partitions</strong> the array so all elements smaller than the pivot go to its left and all larger elements go to its right, and then recursively sorts the two partitions.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Quick Sort ek pivot element choose karta hai (often last element), aur array ko is tarah rearrange karta hai ki pivot se chhote elements left mein aur bade elements right mein chale jaayein — yeh process "partitioning" kehlata hai. Phir dono partitions ko recursively quick-sort kiya jaata hai. In-place hone ki wajah se yeh memory-efficient hai, lekin worst case mein slow ho sakta hai (already sorted array par bad pivot choice se).</p>
+</div>
+
+<h3 class="sub">Algorithm (Lomuto Partition Scheme)</h3>
+<div class="card">
+  <div class="formula">QuickSort(A, low, high):
+  if low < high:
+      pi = Partition(A, low, high)
+      QuickSort(A, low, pi-1)
+      QuickSort(A, pi+1, high)
+
+Partition(A, low, high):
+  pivot = A[high]
+  i = low - 1
+  for j = low to high-1:
+      if A[j] < pivot:
+          i = i+1; swap(A[i], A[j])
+  swap(A[i+1], A[high])
+  return i+1</div>
+</div>
+
+<h3 class="sub">Complexity Analysis</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Case</th><th>Condition</th><th>Time Complexity</th></tr>
+    <tr><td>Best Case</td><td>Pivot always divides array into two equal halves</td><td>O(n log n)</td></tr>
+    <tr><td>Average Case</td><td>Random pivot positions</td><td>O(n log n)</td></tr>
+    <tr><td>Worst Case</td><td>Already sorted/reverse-sorted array + poor pivot choice (always smallest/largest)</td><td>O(n&sup2;)</td></tr>
+  </table>
+  <p style="margin-top:8px;">Space Complexity: O(log n) average (recursion stack) for in-place partitioning; Quick Sort is <strong>not stable</strong> by default.</p>
+</div>
+
+<div class="card example">
+  <div class="tag">💡 Numerical Example: Partition [10,80,30,90,40,50,70], pivot=70 (last element)</div>
+  <p style="margin-top:6px;">Scan j=0..5, swap whenever A[j]&lt;70: i tracks boundary of "smaller" zone.</p>
+  <div class="formula">j=0: 10<70 → i=0, swap(A[0],A[0]) → [10,80,30,90,40,50,70]
+j=1: 80≥70 → skip
+j=2: 30<70 → i=1, swap(A[1],A[2]) → [10,30,80,90,40,50,70]
+j=3: 90≥70 → skip
+j=4: 40<70 → i=2, swap(A[2],A[4]) → [10,30,40,90,80,50,70]
+j=5: 50<70 → i=3, swap(A[3],A[5]) → [10,30,40,50,80,90,70]
+Final: swap(A[4],A[6]) → [10,30,40,50,70,90,80]; pivot 70 placed at index 4</div>
+</div>
+
+<!-- 2.8 STRASSEN -->
+<h2 class="topic" id="u2-strassen">2.8 Strassen's Matrix Multiplication <span class="imp h">EXAM HOT — 10 MARK</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;"><strong>Strassen's Algorithm</strong> is a Divide and Conquer method to multiply two n×n matrices using only <strong>7 multiplications</strong> (instead of the conventional 8) of n/2 × n/2 sub-matrices, by cleverly combining sums and differences of sub-matrices, reducing the overall time complexity below the conventional O(n&sup3;).</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Normal matrix multiplication mein har 2×2 block-multiplication ke liye 8 multiplications lagti hain, jisse O(n&sup3;) complexity aati hai. Strassen ne ek clever trick nikala jisse sirf 7 multiplications (aur extra additions/subtractions) se kaam ho jaata hai. Multiplication, addition se zyada costly operation maana jaata hai, isliye multiplications kam karne se overall complexity improve ho jaati hai → O(n^2.81).</p>
+</div>
+
+<h3 class="sub">Strassen's 7 Multiplications</h3>
+<div class="card">
+  <p>For 2×2 matrices A and B divided into sub-matrices A11,A12,A21,A22 and B11,B12,B21,B22:</p>
+  <div class="formula">M1 = (A11+A22)(B11+B22)
+M2 = (A21+A22)·B11
+M3 = A11·(B12&#x2212;B22)
+M4 = A22·(B21&#x2212;B11)
+M5 = (A11+A12)·B22
+M6 = (A21&#x2212;A11)(B11+B12)
+M7 = (A12&#x2212;A22)(B21+B22)</div>
+  <p>Result quadrants are then computed from these 7 products:</p>
+  <div class="formula">C11 = M1+M4&#x2212;M5+M7
+C12 = M3+M5
+C21 = M2+M4
+C22 = M1&#x2212;M2+M3+M6</div>
+</div>
+
+<h3 class="sub">Recurrence &amp; Complexity</h3>
+<div class="card">
+  <div class="formula">T(n) = 7T(n/2) + O(n&sup2;)   →   T(n) = O(n^log&#x2082;7) &#x2248; O(n^2.81)</div>
+  <p>This is asymptotically faster than the conventional method's O(n&sup3;), especially noticeable for very large matrices.</p>
+</div>
+
+<!-- 2.9 TABLES -->
+<h2 class="topic" id="u2-tables">2.9 Important Comparison Tables <span class="imp h">RAPID REVISION</span></h2>
+
+<h3 class="sub">Merge Sort vs Quick Sort</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Basis</th><th>Merge Sort</th><th>Quick Sort</th></tr>
+    <tr><td>Worst-case Time</td><td>O(n log n)</td><td>O(n&sup2;)</td></tr>
+    <tr><td>Space</td><td>O(n) (extra array needed)</td><td>O(log n) (in-place)</td></tr>
+    <tr><td>Stability</td><td>Stable</td><td>Not stable</td></tr>
+    <tr><td>Approach</td><td>Divide equally, then merge (work in combine step)</td><td>Partition around pivot, then recurse (work in divide step)</td></tr>
+    <tr><td>Best suited for</td><td>Linked lists, external sorting, stability needed</td><td>In-memory arrays, average-case speed priority</td></tr>
+  </table>
+</div>
+
+<h3 class="sub">Conventional vs Strassen's Matrix Multiplication</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Basis</th><th>Conventional Method</th><th>Strassen's Method</th></tr>
+    <tr><td>Multiplications (per 2×2 split)</td><td>8</td><td>7</td></tr>
+    <tr><td>Time Complexity</td><td>O(n&sup3;)</td><td>O(n^2.81)</td></tr>
+    <tr><td>Additional Additions/Subtractions</td><td>Fewer</td><td>More (trade-off for fewer multiplications)</td></tr>
+  </table>
+</div>
+
+<!-- 2.10 Q&A -->
+<h2 class="topic" id="u2-qa">2.10 RTU Exam Questions &amp; Answers (Importance-Wise)</h2>
+<div id="qsection">
+
+  <div class="qcard">
+    <div class="qlabel">Q1</div>
+    <div class="q">Define algorithm and explain its characteristics. How is complexity of an algorithm calculated? <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>An algorithm is a finite sequence of unambiguous, well-defined steps that transforms given input into the desired output. Its key characteristics are input, output, finiteness, definiteness, and effectiveness. Complexity is calculated by identifying the basic operation in the algorithm, counting its frequency as a function of input size n (e.g., a single loop gives O(n), nested loops give O(n&sup2;), a halving loop gives O(log n)), and then retaining only the dominant term while ignoring constants, to express time complexity asymptotically.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q2</div>
+    <div class="q">Explain Big-O, Big-Omega, and Big-Theta asymptotic notations with examples. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>Big-O notation gives the asymptotic upper bound (worst-case growth) of a function, Big-Omega gives the asymptotic lower bound (best-case growth), and Big-Theta gives a tight bound that holds when the upper and lower bounds coincide, representing the average/exact growth rate. For example, linear search has O(n) worst case and Ω(1) best case, while binary search has Θ(log n) since its best, average, and worst cases all share the same logarithmic order.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q3</div>
+    <div class="q">Explain Merge Sort algorithm with example and derive its time complexity. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>Merge Sort recursively divides the array into two halves until single-element sub-arrays remain, then repeatedly merges adjacent sorted sub-arrays by comparing their front elements until the entire array is sorted, as illustrated by sorting [38,27,43,3,9,82,10] down to single elements and merging back up. Its recurrence is T(n) = 2T(n/2) + O(n), which by the Master Theorem resolves to T(n) = O(n log n) in all cases (best, worst, and average), with O(n) additional space required for merging.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q4</div>
+    <div class="q">Write the Quick Sort algorithm and explain its best, average, and worst-case time complexity. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>Quick Sort selects a pivot, partitions the array using a scheme such as Lomuto's (placing smaller elements before the pivot and larger ones after), and recursively sorts the two resulting partitions. When the pivot consistently splits the array into roughly equal halves, the recurrence T(n)=2T(n/2)+O(n) gives O(n log n) for best and average cases; however, if the pivot is always the smallest or largest element (e.g., on an already-sorted array), the recurrence becomes T(n)=T(n-1)+O(n), giving a worst case of O(n&sup2;).</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q5</div>
+    <div class="q">Explain Strassen's matrix multiplication algorithm and derive its time complexity. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>Strassen's algorithm divides each n×n matrix into four n/2×n/2 sub-matrices and computes the product using only 7 cleverly constructed multiplications (M1 through M7, combining sums/differences of sub-matrices) instead of the conventional 8, with the four result quadrants obtained by adding/subtracting these 7 products. The recurrence T(n)=7T(n/2)+O(n&sup2;) solves to T(n)=O(n^log₂7) ≈ O(n^2.81), which is asymptotically faster than the conventional O(n&sup3;) method, since multiplication is computationally costlier than addition.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q6</div>
+    <div class="q">Explain Binary Search algorithm and find its time complexity using recurrence relation. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>Binary Search operates on a sorted array by comparing the target key with the middle element; if equal it returns the index, if the key is smaller it recurses on the left half, otherwise on the right half, discarding the other half each time. Since each step reduces the problem size to n/2 with constant extra work, its recurrence is T(n)=T(n/2)+O(1), which resolves to T(n)=O(log n).</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q7</div>
+    <div class="q">Differentiate between Merge Sort and Quick Sort. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>Merge Sort guarantees O(n log n) time in all cases and is stable, but requires O(n) extra space for merging, making it well suited for linked lists and external sorting. Quick Sort sorts in-place with only O(log n) extra space and is typically faster in practice due to lower constant factors, but is not stable and can degrade to O(n&sup2;) in the worst case (e.g., poor pivot selection on sorted data).</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q8</div>
+    <div class="q">Explain the Divide and Conquer strategy with its general structure and recurrence relation. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>Divide and Conquer solves a problem by dividing it into smaller sub-problems of the same type, recursively conquering (solving) each sub-problem down to a base case, and combining the sub-solutions into the final answer. Its general time complexity follows the recurrence T(n) = a·T(n/b) + f(n), where a is the number of sub-problems, n/b is each sub-problem's size, and f(n) is the cost of dividing and combining; this is typically solved using the Master Theorem.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q9</div>
+    <div class="q">What are best case, worst case, and average case complexity? Explain with an example. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>Best case complexity is the minimum running time over all possible inputs of a given size (the most favorable scenario), worst case is the maximum running time (least favorable scenario), and average case is the expected running time averaged over all possible inputs. For linear search, the best case is O(1) when the key is found at the first position, the worst case is O(n) when it is at the last position or absent, and the average case is also O(n).</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q10</div>
+    <div class="q">Sort the array [10,80,30,90,40,50,70] using Quick Sort, showing the partition steps. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>Using the last element 70 as pivot, the Lomuto partition scan compares each element to 70 and swaps smaller elements into the front region: 10 stays, 80 is skipped, 30 swaps into position, 90 is skipped, 40 and 50 swap into position, finally placing the pivot at index 4, giving [10,30,40,50,<strong>70</strong>,90,80]. The algorithm then recursively quick-sorts the left partition [10,30,40,50] and the right partition [90,80], eventually producing the fully sorted array [10,30,40,50,70,80,90].</p>
+    </div>
+  </div>
+
+</div><!-- end qsection -->
+
+<!-- CHEAT SHEET -->
+<div class="card" style="margin-top:40px; background:linear-gradient(135deg,#0a1525,#0b0d10); border:2px solid var(--accent);">
+  <div style="color:var(--accent); font-family:'Consolas',monospace; font-weight:700; font-size:15px; margin-bottom:14px;">📌 UNIT 2 — MASTER FORMULA CHEAT SHEET</div>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+    <div class="formula" style="margin:3px 0; font-size:12px;">O = upper bound, Ω = lower bound, Θ = tight bound</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Growth: O(1)<O(log n)<O(n)<O(n log n)<O(n&sup2;)<O(2&#x207F;)</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">D&amp;C recurrence: T(n) = aT(n/b) + f(n)</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Binary Search: T(n)=T(n/2)+O(1) → O(log n)</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Merge Sort: T(n)=2T(n/2)+O(n) → O(n log n)</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Quick Sort best/avg: O(n log n); worst: O(n&sup2;)</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Strassen: T(n)=7T(n/2)+O(n&sup2;) → O(n^2.81)</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Strassen uses 7 multiplications (not 8)</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Merge Sort: stable, O(n) space</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Quick Sort: unstable, O(log n) space</div>
+  </div>
+</div>
+
+<!-- Unit 2 Footer -->
+<div style="margin-top:50px; padding:20px 24px; border:1px dashed var(--line); border-radius:10px; color:var(--muted); font-size:13px;">
+  <div style="color:var(--accent); font-family:'Consolas',monospace; font-weight:700; margin-bottom:6px;">ZYREX // AOA_VAULT — UNIT 2 · Background &amp; Divide and Conquer</div>
+  <p>RTU B.Tech CSE 5th Semester · 5CS4-05 Analysis of Algorithms · Unit 2 of 6</p>
+  <p style="margin-top:6px;">📌 Key formulas: Asymptotic notations · D&amp;C recurrence T(n)=aT(n/b)+f(n) · Merge/Quick Sort complexities · Strassen's 7-multiplication trick</p>
+  <p style="margin-top:6px;">⚡ Unit 3 — Greedy Method &amp; Dynamic Programming can be appended directly below this section.</p>
+</div>
+
+</div><!-- end unit2 -->
+
+<hr class="sep">
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:center;padding:30px 20px;flex-wrap:wrap;">
+      <a href="unit1.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+      <a href="index.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">🏠 AOA Hub</a>
+      <a href="unit3.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+    </div>
+  </main>
+  <div class="cursor-dot" data-cursor-dot></div>
+  <div class="cursor-outline" data-cursor-outline></div>
+  <script>
+    const cursorDot = document.querySelector("[data-cursor-dot]");
+    const cursorOutline = document.querySelector("[data-cursor-outline]");
+    window.addEventListener("mousemove", function(e){
+      cursorDot.style.left=e.clientX+"px"; cursorDot.style.top=e.clientY+"px";
+      cursorOutline.animate({left:e.clientX+"px",top:e.clientY+"px"},{duration:400,fill:"forwards"});
+    });
+    document.querySelectorAll("a,button").forEach(el=>{
+      el.addEventListener("mouseenter",()=>cursorOutline.classList.add("cursor-hovering"));
+      el.addEventListener("mouseleave",()=>cursorOutline.classList.remove("cursor-hovering"));
+    });
+  </script>
+<script src="../splash-cursor.js"></script>\n</body>
+</html>

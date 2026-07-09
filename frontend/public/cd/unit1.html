@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Learning Plus // CD · Unit 1</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <main class="main-wrapper" style="width:100%;">
+    <div class="topbar">
+      <a href="index.html" class="back-btn">⬅ CD Hub</a>
+      <div class="brand">Smart<span>Learning</span>+ <span style="color:var(--muted);font-weight:400;font-size:14px;">// CD · Unit 1</span></div>
+      <div class="nav">
+        <a href="index.html">🏠 CD Hub</a>
+        <a href="#content">📖 Content</a>
+        <a href="#qa">❓ Q&amp;A</a>
+        <a href="unit2.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="hero">
+        <h1>📘 Unit 1 — Introduction</h1>
+        <p>Objective, Scope and Outcome of the Course | Hours: 01</p>
+        <div class="badges" style="margin-top:14px;">
+          <a href="index.html" style="text-decoration:none;"><span class="badge b-teal">← Back to CD Hub</span></a>
+          <span class="badge b-gold">5CS4-02 · Compiler Design · RTU</span>
+        </div>
+      </div>
+      <div id="content">
+  <h1 class="unit-title" id="unit1">📘 UNIT 1 — Introduction</h1>
+  <p class="unit-sub">Objective, Scope and Outcome of the Course &nbsp;|&nbsp; Hours: 01</p>
+
+  <div class="card def">
+    <span class="tag">English</span>
+    <p><b>Compiler Design</b> is the field of computer science that studies how high-level programming language code (source code) is systematically translated into low-level machine code (target code) that a computer's processor can execute. It covers the theory, algorithms, and engineering techniques used to build language translators — compilers, interpreters, and assemblers.</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Compiler Design ka matlab — jab tum C/Java/Python mein code likhte ho, computer use directly samajh nahi sakta (computer sirf 0s aur 1s/machine code samajhta hai). <b>Compiler</b> ek special program hai jo tumhare human-readable code ko machine-understandable code mein convert karta hai. Ye subject batata hai ki ye conversion process internally <b>kaise</b> kaam karta hai — step by step, phase by phase.</p>
+  </div>
+
+  <h2 class="topic">Objective of the Course <span class="imp h">High</span></h2>
+  <div class="card">
+    <ul>
+      <li>To understand the fundamental phases of a compiler and how source code is transformed into machine code.</li>
+      <li>To study <b>lexical analysis</b> — tokenization using finite automata and tools like LEX.</li>
+      <li>To learn <b>syntax analysis (parsing)</b> — top-down (LL) and bottom-up (LR/SLR/LALR) parsing techniques, and parser generators like YACC.</li>
+      <li>To understand <b>syntax directed translation</b> — building syntax trees and generating intermediate code (TAC, DAG).</li>
+      <li>To study <b>storage organization</b> — activation records, symbol tables, and runtime memory management.</li>
+      <li>To explore <b>code optimization</b> techniques — basic blocks, DAG-based optimization, peephole optimization, and code generation.</li>
+    </ul>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Course ka goal — tumhe ye samjhana ki ek compiler internally kitne stages mein kaam karta hai. Pehle code ko tokens mein todna (lexical analysis), phir grammar check karna (parsing), phir intermediate representation banana, phir memory allocate karna, aur finally optimize karke machine code generate karna. Har stage ka apna algorithm aur theory hai — yahi is subject ka core hai.</p>
+  </div>
+
+  <h2 class="topic">Scope of the Course <span class="imp m">Medium</span></h2>
+  <div class="card">
+    <p>Compiler Design forms the theoretical backbone of:</p>
+    <ul>
+      <li><b>Programming Language Implementation</b> — Building compilers/interpreters for any language (GCC, JVM, Python interpreter, V8 JS engine).</li>
+      <li><b>Software Tools</b> — Linters, code formatters, static analyzers, IDEs all use parsing/lexical analysis concepts.</li>
+      <li><b>Domain Specific Languages (DSLs)</b> — SQL parsers, regex engines, configuration file parsers, template engines.</li>
+      <li><b>Modern Web Tech</b> — Babel (JS transpiler), TypeScript compiler, WebAssembly toolchains.</li>
+      <li><b>Theoretical CS Foundation</b> — Automata theory, formal languages, and grammars directly apply here.</li>
+    </ul>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Ye subject sirf academic nahi hai — practically tumhare daily-use tools (VS Code ka syntax highlighting, ESLint, Babel, TypeScript compiler) sab Compiler Design ke concepts use karte hain. Agar tumhe kabhi apni khud ki programming language, DSL, ya config parser banana ho — yahi subject foundation degi. Yeh TOC (Theory of Computation) ka direct practical application hai.</p>
+  </div>
+
+  <h2 class="topic">Outcome of the Course <span class="imp h">High</span></h2>
+  <div class="card">
+    <p>After completing this course, the student will be able to:</p>
+    <ul>
+      <li><b>CO1:</b> Explain the phases of a compiler and differentiate compiler, interpreter, and translator.</li>
+      <li><b>CO2:</b> Design lexical analyzers using finite automata and tools like LEX; recognize tokens.</li>
+      <li><b>CO3:</b> Construct LL(1), SLR, and LALR parsing tables; apply top-down and bottom-up parsing techniques.</li>
+      <li><b>CO4:</b> Build syntax trees and generate intermediate code (TAC, DAG, triples/quadruples).</li>
+      <li><b>CO5:</b> Design activation records and organize symbol tables for runtime storage management.</li>
+      <li><b>CO6:</b> Apply code optimization techniques (DAG, peephole optimization) and understand basic code generation.</li>
+    </ul>
+  </div>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 760 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0L6,3L0,6Z" fill="#7c3aed"/>
+        </marker>
+      </defs>
+      <style>
+        .pbox{fill:#141a20; stroke:#7c3aed; stroke-width:1.5;}
+        .plbl{fill:#d7e1e8; font-size:11px; font-family:Consolas,monospace; text-anchor:middle;}
+        .pln{stroke:#7c3aed; stroke-width:1.5; marker-end:url(#ar);}
+      </style>
+      <rect class="pbox" x="10" y="75" width="100" height="50" rx="8"/>
+      <text class="plbl" x="60" y="98">Source</text>
+      <text class="plbl" x="60" y="112">Code</text>
+      <line class="pln" x1="110" y1="100" x2="138" y2="100"/>
+      <rect class="pbox" x="140" y="75" width="100" height="50" rx="8"/>
+      <text class="plbl" x="190" y="98">Lexical</text>
+      <text class="plbl" x="190" y="112">Analyzer</text>
+      <line class="pln" x1="240" y1="100" x2="268" y2="100"/>
+      <rect class="pbox" x="270" y="75" width="100" height="50" rx="8"/>
+      <text class="plbl" x="320" y="98">Syntax</text>
+      <text class="plbl" x="320" y="112">Analyzer</text>
+      <line class="pln" x1="370" y1="100" x2="398" y2="100"/>
+      <rect class="pbox" x="400" y="75" width="110" height="50" rx="8"/>
+      <text class="plbl" x="455" y="98">Intermediate</text>
+      <text class="plbl" x="455" y="112">Code Gen</text>
+      <line class="pln" x1="510" y1="100" x2="538" y2="100"/>
+      <rect class="pbox" x="540" y="75" width="100" height="50" rx="8"/>
+      <text class="plbl" x="590" y="98">Code</text>
+      <text class="plbl" x="590" y="112">Optimizer</text>
+      <line class="pln" x1="640" y1="100" x2="668" y2="100"/>
+      <rect class="pbox" x="670" y="75" width="80" height="50" rx="8" stroke="#10b981"/>
+      <text class="plbl" x="710" y="98" style="fill:#10b981;">Target</text>
+      <text class="plbl" x="710" y="112" style="fill:#10b981;">Code</text>
+    </svg>
+    <p class="cap">Fig 1.1 — High-level overview of compiler phases (the "scope map" of the whole subject) — covered in detail across Units 2–6.</p>
+  </div>
+
+  <h2 class="topic">Why study Compiler Design? <span class="imp m">Medium</span></h2>
+  <div class="card">
+    <table style="margin:0;">
+      <thead><tr><th>Reason</th><th>Explanation</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Foundational CS knowledge</strong></td><td>Connects automata theory, formal grammars, and data structures into one real engineering system.</td></tr>
+        <tr><td><strong>Better programmer</strong></td><td>Understanding compilation helps write more efficient code and debug compiler errors faster.</td></tr>
+        <tr><td><strong>Tooling careers</strong></td><td>Compiler engineers are needed at companies building languages, IDEs, and dev tools.</td></tr>
+        <tr><td><strong>Interview relevance</strong></td><td>Parsing, grammars, and automata are common technical interview topics (especially for systems roles).</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Bahut students sochte hain "ye subject kabhi kaam nahi aayega" — lekin reality ye hai ki <b>parsing aur grammar concepts</b> bahut jagah use hote hain: JSON parsing, regex engines, SQL query parsing, configuration files (YAML/JSON) padhna — sab compiler design ke concepts hain. Plus, ye subject tumhari programming fundamentals ko bahut strong karta hai.</p>
+  </div>
+
+  <div class="qsection" id="qa">
+    <h1 class="unit-title">❓ Unit 1 — Q&amp;A (RTU Exam Pattern)</h1>
+
+    <div class="qcard">
+      <div class="qlabel">Unit 1 · Theory</div>
+      <div class="q">Q1. What is Compiler Design? Explain its objectives and scope. <span class="imp h">★★★ 5 Marks</span></div>
+      <span class="marks m5">5 Marks</span>
+      <div class="a">
+        <p>Compiler Design is the study of techniques and algorithms used to translate high-level source code into low-level machine/target code through a series of well-defined phases.</p>
+        <p><strong>Objectives:</strong> Understanding compiler phases, lexical analysis (finite automata, LEX), parsing (LL/LR techniques, YACC), syntax directed translation, storage organization, and code optimization.</p>
+        <p><strong>Scope:</strong> Programming language implementation, software development tools (linters, IDEs), domain-specific languages (SQL, regex), modern web toolchains (Babel, TypeScript), and as a direct application of automata theory.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Unit 1 · Theory</div>
+      <div class="q">Q2. List the course outcomes of Compiler Design (5CS4-02). <span class="imp m">★★ 3 Marks</span></div>
+      <span class="marks m5">3 Marks</span>
+      <div class="a">
+        <p>CO1: Explain compiler phases and differentiate compiler/interpreter/translator. CO2: Design lexical analyzers (finite automata, LEX). CO3: Construct LL(1)/SLR/LALR parsing tables. CO4: Build syntax trees and generate intermediate code (TAC, DAG). CO5: Design activation records and symbol tables. CO6: Apply code optimization and basic code generation.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Unit 1 · Conceptual</div>
+      <div class="q">Q3. Why is the study of Compiler Design important for a CS student? <span class="imp m">★★★ 5 Marks</span></div>
+      <span class="marks m5">5 Marks</span>
+      <div class="a">
+        <p>Compiler Design connects theoretical CS (automata theory, formal grammars) with real engineering systems. It's foundational for building any language tool, improves understanding of how programs actually execute, and the parsing/grammar concepts apply directly to widely-used technologies like JSON/SQL/regex parsers, query engines, and modern dev tools (Babel, TypeScript compiler). It is also a common technical interview topic for systems-level software roles.</p>
+      </div>
+    </div>
+  </div>
+
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:center;padding:30px 20px;flex-wrap:wrap;">
+      <a href="index.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">🏠 CD Hub</a>
+      <a href="unit2.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+    </div>
+  </main>
+  <div class="cursor-dot" data-cursor-dot></div>
+  <div class="cursor-outline" data-cursor-outline></div>
+  <script>
+    const cursorDot = document.querySelector("[data-cursor-dot]");
+    const cursorOutline = document.querySelector("[data-cursor-outline]");
+    window.addEventListener("mousemove", function(e){
+      cursorDot.style.left=e.clientX+"px"; cursorDot.style.top=e.clientY+"px";
+      cursorOutline.animate({left:e.clientX+"px",top:e.clientY+"px"},{duration:400,fill:"forwards"});
+    });
+    document.querySelectorAll("a,button").forEach(el=>{
+      el.addEventListener("mouseenter",()=>cursorOutline.classList.add("cursor-hovering"));
+      el.addEventListener("mouseleave",()=>cursorOutline.classList.remove("cursor-hovering"));
+    });
+  </script>
+<script src="../splash-cursor.js"></script>\n</body>
+</html>

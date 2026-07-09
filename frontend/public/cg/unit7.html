@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Learning Plus // CG&M · Unit 7</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <main class="main-wrapper" style="width:100%;">
+    <div class="topbar">
+      <a href="index.html" class="back-btn">⬅ CG&M Hub</a>
+      <div class="brand">Smart<span>Learning</span>+ <span style="color:var(--muted);font-weight:400;font-size:14px;">// CG&M · Unit 7</span></div>
+      <div class="nav">
+        <a href="index.html">🏠 CG&M Hub</a>
+        <a href="#content">📖 Content</a>
+        <a href="#qa">❓ Q&amp;A</a>
+        <a href="unit6.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="hero">
+        <h1>🎬 Unit 7 — Animations &amp; Computer Graphics Realism</h1>
+        <p>Animation Sequences &amp; Functions · Raster Animation · Key Frame Systems · Motion Specification · Morphing &amp; Tweening · Fractals &amp; Recursive Curves · Ray Tracing | Hours: 06</p>
+        <div class="badges" style="margin-top:14px;">
+          <a href="index.html" style="text-decoration:none;"><span class="badge b-teal">← Back to CG&M Hub</span></a>
+          <span class="badge b-gold">5CS4-04 · Computer Graphics &amp; Multimedia · RTU</span>
+        </div>
+      </div>
+      <div id="content">
+<div id="unit7">
+<div class="unit-title">&#x1F3AC; Unit 7 &#x2014; Animations &amp; Computer Graphics Realism</div>
+<div class="unit-sub">Design of Animation Sequences &middot; Animation Function &middot; Raster Animation &middot; Key Frame Systems &middot; Motion Specification &middot; Morphing &middot; Tweening &middot; Tiling the Plane &middot; Recursively Defined Curves &middot; Koch Curves &middot; C Curves &middot; Dragons &middot; Space Filling Curves &middot; Fractals &middot; Grammar Based Models &middot; Turtle Graphics &middot; Ray Tracing</div>
+
+<div class="badge-row">
+  <span class="badge b-red">&#x1F525; HIGH WEIGHT &#x2014; Last Unit, Frequently Skipped but Easy Marks</span>
+  <span class="badge b-gold">&#x26A0; 5-Mark: Key Frame, Morphing vs Tweening, Fractals, Ray Tracing</span>
+  <span class="badge b-teal">&#x2705; Unit 7 = 6 Hours (Final Unit of Course)</span>
+</div>
+
+<div class="card" style="margin-bottom:28px;">
+  <div style="color:var(--accent2); font-weight:700; margin-bottom:10px;">&#x1F4D1; Unit 7 Quick Navigation</div>
+  <div class="toc" style="columns:2; column-gap:24px;">
+    <div><a href="#u7-design">7.1 Design of Animation Sequences</a></div>
+    <div><a href="#u7-function">7.2 Animation Function</a></div>
+    <div><a href="#u7-raster">7.3 Raster Animation</a></div>
+    <div><a href="#u7-keyframe">7.4 Key Frame Systems</a></div>
+    <div><a href="#u7-motion">7.5 Motion Specification</a></div>
+    <div><a href="#u7-morph">7.6 Morphing &amp; Tweening</a></div>
+    <div><a href="#u7-tiling">7.7 Tiling the Plane</a></div>
+    <div><a href="#u7-recursive">7.8 Recursively Defined Curves</a></div>
+    <div><a href="#u7-koch">7.9 Koch, C Curves &amp; Dragons</a></div>
+    <div><a href="#u7-space">7.10 Space Filling Curves</a></div>
+    <div><a href="#u7-fractal">7.11 Fractals &amp; Grammar Based Models</a></div>
+    <div><a href="#u7-turtle">7.12 Turtle Graphics</a></div>
+    <div><a href="#u7-raytrace">7.13 Ray Tracing</a></div>
+    <div><a href="#u7-tables">7.14 Comparison Tables</a></div>
+    <div><a href="#u7-qa">7.15 RTU Exam Q&amp;A</a></div>
+  </div>
+</div>
+
+<!-- 7.1 DESIGN OF ANIMATION SEQUENCES -->
+<h2 class="topic" id="u7-design">7.1 Design of Animation Sequences <span class="imp h">EXAM HOT</span></h2>
+
+<div class="card def">
+  <div class="tag">&#x1F4D6; Definition</div>
+  <p style="margin-top:8px;"><strong>Computer Animation</strong> refers to the process of generating a sequence of images (frames) that, when displayed rapidly one after another, create the illusion of motion or change in shape, position, color, or structure of objects over time.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">&#x1F5E3; Hinglish Explanation</div>
+  <p style="margin-top:6px;">Animation matlab static pictures ko itni fast speed (typically 24-30 frames/second) mein dikhana ki aankhon ko lage jaise object move kar raha hai. Yeh "persistence of vision" ke principle par kaam karta hai &#x2014; humara brain consecutive images ko blend karke continuous motion samajh leta hai.</p>
+</div>
+
+<h3 class="sub">Steps in Designing an Animation Sequence</h3>
+<div class="card">
+  <ul>
+    <li><strong>1. Storyboard Layout:</strong> Outline of the action &#x2014; a sequence of rough sketches describing the motion plan, similar to a comic strip.</li>
+    <li><strong>2. Object Definitions:</strong> Defining each object in the animation in terms of its shape, structure (skeleton/wireframe), and associated motion data.</li>
+    <li><strong>3. Key-Frame Specification:</strong> Detailed drawings of the scene at certain key time instants in the animation.</li>
+    <li><strong>4. Generation of In-Between Frames:</strong> Intermediate frames between the keyframes are generated automatically (called <em>tweening</em>) to produce a smooth sequence.</li>
+  </ul>
+</div>
+
+<div class="card example">
+  <div class="tag">&#x1F4A1; Example</div>
+  <p style="margin-top:8px;">In a bouncing ball animation: storyboard shows the ball going up &amp; down, the object is defined as a circle, keyframes are drawn at the highest point and the ground-contact point, and the in-between frames showing the ball's path are generated by interpolation.</p>
+</div>
+
+<!-- 7.2 ANIMATION FUNCTION -->
+<h2 class="topic" id="u7-function">7.2 Animation Function <span class="imp m">5-MARK</span></h2>
+
+<div class="card def">
+  <div class="tag">&#x1F4D6; Definition</div>
+  <p style="margin-top:8px;">An <strong>animation function</strong> is a general-purpose routine used in an animation system that takes scene parameters (object positions, time, camera path, lighting) as input and outputs the values needed to construct each frame of the animation. These functions essentially link the time variable to the geometric and rendering properties of the scene.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">&#x1F5E3; Hinglish</div>
+  <p style="margin-top:6px;">Animation function ek tarah ka "control center" hota hai jo decide karta hai ki time ke har instant par object kahan hoga, kaisa dikhega. Yeh function camera movement, object transformation, color change &mdash; sab kuch time ke against define karta hai.</p>
+</div>
+
+<h3 class="sub">Common Animation Functions</h3>
+<div class="card">
+  <ul>
+    <li>&#x1F3A5; <strong>Camera Motion Function:</strong> Defines how viewing position/direction changes over time (pan, zoom, fly-through).</li>
+    <li>&#x1F4CF; <strong>Object Transformation Function:</strong> Defines translation/rotation/scaling of objects as a function of time t.</li>
+    <li>&#x1F308; <strong>Color/Shading Function:</strong> Controls color transitions, lighting changes across frames.</li>
+    <li>&#x1F4A5; <strong>Special Effect Function:</strong> Controls explosions, particle systems, fades, dissolves.</li>
+  </ul>
+  <div class="formula">Object_Position(t) = f(t),&nbsp;&nbsp; where t = time parameter, 0&le;t&le;T (total animation duration)</div>
+</div>
+
+<!-- 7.3 RASTER ANIMATION -->
+<h2 class="topic" id="u7-raster">7.3 Raster Animation <span class="imp h">MUST KNOW</span></h2>
+
+<div class="card def">
+  <div class="tag">&#x1F4D6; Definition</div>
+  <p style="margin-top:8px;"><strong>Raster Animation</strong> is a technique used on raster-scan display systems to generate real-time motion effects by rapidly manipulating pixel values stored in the frame buffer, without redrawing the entire scene from scratch for every frame.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">&#x1F5E3; Hinglish</div>
+  <p style="margin-top:6px;">Raster animation mein hum poori screen dobara nahi banate &mdash; bas frame buffer ke kuch specific pixels ko change karte hain ya pre-defined color table ko cycle karte hain. Yeh tarika real-time animation ke liye bahut fast aur efficient hai.</p>
+</div>
+
+<h3 class="sub">Raster Animation Techniques <span class="imp m">5-MARK</span></h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Technique</th><th>How it Works</th><th>Use Case</th></tr>
+    <tr><td>Color Table (Palette) Animation</td><td>Object pixels are pre-set to index values; only the color-table entries are cycled rapidly</td><td>Fire effects, water shimmer, blinking lights</td></tr>
+    <tr><td>Real-Time Object Repositioning</td><td>Object drawn at new frame-buffer position each frame; old position cleared</td><td>Small sprites, icons, cursors</td></tr>
+    <tr><td>Double Buffering (Page Flipping)</td><td>Next frame is drawn into an off-screen buffer while the current buffer is displayed; buffers are swapped instantly</td><td>Smooth, flicker-free games &amp; simulations</td></tr>
+  </table>
+</div>
+
+<div class="keypoint">
+  <span class="icon">&#x1F4CC;</span>
+  <span><strong>Color Table Animation</strong> is the fastest raster technique because it changes only the lookup-table values (a few bytes), not the actual pixel data in the frame buffer (which could be megabytes).</span>
+</div>
+
+<!-- 7.4 KEY FRAME SYSTEMS -->
+<h2 class="topic" id="u7-keyframe">7.4 Key Frame Systems <span class="imp h">EXAM HOT</span></h2>
+
+<div class="card def">
+  <div class="tag">&#x1F4D6; Definition</div>
+  <p style="margin-top:8px;">A <strong>keyframe</strong> is a detailed drawing/specification of the scene at a particular, important instant of time in the animation. A <strong>Key Frame System</strong> is software that allows an animator to specify only these critical keyframes, while the system automatically computes the in-between frames using interpolation.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">&#x1F5E3; Hinglish</div>
+  <p style="margin-top:6px;">Animator har frame manually nahi banata &mdash; sirf important poses (keyframes) banata hai, jaise ek character ka chalna shuru karna aur ek kadam poora karna. Beech ke saare intermediate frames computer khud generate kar deta hai interpolation se. Isse animator ka time bachta hai.</p>
+</div>
+
+<h3 class="sub">Key Frame Process</h3>
+<div class="svgbox">
+<svg viewBox="0 0 600 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:560px;">
+  <circle cx="60" cy="100" r="22" fill="var(--accent)" opacity="0.9"/>
+  <text x="60" y="145" font-size="12" text-anchor="middle">Keyframe 1</text>
+  <circle cx="200" cy="100" r="14" fill="var(--muted)" opacity="0.4"/>
+  <text x="200" y="145" font-size="11" text-anchor="middle" fill="var(--muted)">In-between</text>
+  <circle cx="340" cy="100" r="14" fill="var(--muted)" opacity="0.4"/>
+  <text x="340" y="145" font-size="11" text-anchor="middle" fill="var(--muted)">In-between</text>
+  <circle cx="480" cy="100" r="22" fill="var(--accent2)" opacity="0.9"/>
+  <text x="480" y="145" font-size="12" text-anchor="middle">Keyframe 2</text>
+  <line x1="82" y1="100" x2="466" y2="100" stroke="var(--line)" stroke-width="2" stroke-dasharray="5,5"/>
+  <text x="270" y="40" font-size="13" text-anchor="middle" fill="var(--accent)">Tweening / In-Betweening &#x2192;</text>
+</svg>
+<div class="cap">Animator draws only the keyframes; the system interpolates the in-between frames automatically</div>
+</div>
+
+<h3 class="sub">Key Frame System Tasks <span class="imp m">5-MARK</span></h3>
+<div class="card">
+  <ul>
+    <li><strong>1. Coordinate Storage:</strong> Storing object outlines/coordinates for each keyframe.</li>
+    <li><strong>2. Object Specifications:</strong> Allowing each object (or its parts) to be moved, scaled, or rotated independently.</li>
+    <li><strong>3. In-Betweening:</strong> Generating intermediate frames using linear or curve-fitting interpolation between keyframe parameter values.</li>
+    <li><strong>4. Motion Control:</strong> Allowing acceleration/deceleration (easing) so motion does not look mechanically uniform.</li>
+  </ul>
+</div>
+
+<!-- 7.5 MOTION SPECIFICATION -->
+<h2 class="topic" id="u7-motion">7.5 Motion Specification <span class="imp m">5-MARK</span></h2>
+
+<div class="card def">
+  <div class="tag">&#x1F4D6; Definition</div>
+  <p style="margin-top:8px;"><strong>Motion Specification</strong> refers to the methods used to define how an object moves through a scene over time &mdash; i.e., specifying its position, orientation, and velocity as functions of time so the animation system can compute each frame.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">&#x1F5E3; Hinglish</div>
+  <p style="margin-top:6px;">Motion specification batata hai ki ek object "kaise" move karega &mdash; seedha line mein, curve path par, ya physics ke rules follow karte hue (gravity, collision). Animator in tareekon mein se kisi ek ko choose karke object ki movement define karta hai.</p>
+</div>
+
+<h3 class="sub">Methods of Motion Specification</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Method</th><th>Description</th></tr>
+    <tr><td>Direct Motion Specification</td><td>Explicitly giving position/rotation equations as functions of time, e.g. x(t), y(t)</td></tr>
+    <tr><td>Goal-Directed Systems</td><td>Animator specifies general goals (e.g. "walk to the door") &amp; system computes the actual joint motions to achieve it</td></tr>
+    <tr><td>Kinematics-Based Systems</td><td>Position, velocity, acceleration of objects are specified without reference to the forces causing the motion</td></tr>
+    <tr><td>Dynamics-Based Systems</td><td>Motion is generated using physical laws &mdash; forces, torques, mass, friction (realistic physics simulation)</td></tr>
+  </table>
+</div>
+
+<div class="compare">
+  <div class="compare-card">
+    <h4 style="color:var(--accent);">Forward Kinematics</h4>
+    <p>Joint angles are specified directly; the end position of the limb/object is calculated as a result.</p>
+  </div>
+  <div class="compare-card">
+    <h4 style="color:var(--accent2);">Inverse Kinematics</h4>
+    <p>The desired end position is specified; the system calculates the required joint angles to reach it.</p>
+  </div>
+</div>
+
+<!-- 7.6 MORPHING & TWEENING -->
+<h2 class="topic" id="u7-morph">7.6 Morphing &amp; Tweening <span class="imp h">EXAM HOT</span></h2>
+
+<div class="card def">
+  <div class="tag">&#x1F4D6; Definition</div>
+  <p style="margin-top:8px;"><strong>Tweening (In-betweening)</strong> is the process of generating intermediate frames between two keyframes by interpolating the position/shape parameters. <strong>Morphing</strong> is a special, more advanced transformation technique that gradually and smoothly transforms one object's shape into a completely different object's shape over a sequence of frames.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">&#x1F5E3; Hinglish</div>
+  <p style="margin-top:6px;">Tweening simple hai &mdash; same object ke do positions/states ke beech ke frames banana. Morphing thoda advanced hai &mdash; ek cheez (jaise ek insaan ka chehra) ko dheere-dheere kisi bilkul alag cheez (jaise jaanwar ka chehra) mein badalna, jaisa movies mein dikhaya jata hai.</p>
+</div>
+
+<h3 class="sub">Tweening Process (Object with same number of vertices)</h3>
+<div class="card">
+  <p>If a keyframe shape K1 has vertices and a keyframe shape K2 has the same number of vertices, then for an in-between frame at parameter t (0&le;t&le;1):</p>
+  <div class="formula">P(t) = (1&#x2212;t)&middot;P1 + t&middot;P2,&nbsp;&nbsp; for each corresponding vertex pair (P1, P2)</div>
+  <p>This is simple <strong>Linear Interpolation (LERP)</strong> applied to vertex coordinates between two keyframes.</p>
+</div>
+
+<h3 class="sub">Steps in Morphing <span class="imp m">5-MARK</span></h3>
+<div class="card">
+  <ul>
+    <li><strong>1. Vertex/Edge Equalization:</strong> If the starting and ending shapes have a different number of vertices/edges, extra vertices/edges are added to the shape with fewer, so both have an equal count.</li>
+    <li><strong>2. Vertex Correspondence (Mapping):</strong> Each vertex of the starting shape is paired/mapped to a corresponding vertex on the ending shape.</li>
+    <li><strong>3. Interpolation:</strong> Intermediate shapes are generated by interpolating the position of each corresponding vertex pair across the sequence of frames.</li>
+  </ul>
+</div>
+
+<div class="card example">
+  <div class="tag">&#x1F4A1; Example</div>
+  <p style="margin-top:8px;">A triangle (3 vertices) morphing into a square (4 vertices): first, an extra vertex is added to the triangle (vertex equalization) by splitting one edge, making both shapes 4-vertex polygons. Then each of the 4 vertices is mapped and linearly interpolated across the in-between frames.</p>
+</div>
+
+<div class="keypoint">
+  <span class="icon">&#x1F4CC;</span>
+  <span><strong>Tweening vs Morphing:</strong> Tweening = interpolating between two states of the SAME object (e.g. ball moving up/down). Morphing = transforming one object's shape INTO a different object's shape (e.g. man &#x2192; wolf).</span>
+</div>
+
+<!-- 7.7 TILING THE PLANE -->
+<h2 class="topic" id="u7-tiling">7.7 Tiling the Plane <span class="imp m">5-MARK</span></h2>
+
+<div class="card def">
+  <div class="tag">&#x1F4D6; Definition</div>
+  <p style="margin-top:8px;"><strong>Tiling the plane</strong> (tessellation) is the process of covering a flat 2D plane completely with one or more geometric shapes (tiles), with no overlaps and no gaps, used in computer graphics for texture generation and procedural pattern design.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">&#x1F5E3; Hinglish</div>
+  <p style="margin-top:6px;">Tiling ka matlab hai ek pattern ko baar-baar repeat karke poori surface ko bina kisi gap ya overlap ke cover karna &mdash; jaise bathroom floor ke tiles. Computer graphics mein iska use textures aur patterns generate karne ke liye hota hai.</p>
+</div>
+
+<h3 class="sub">Types of Tiling</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Type</th><th>Description</th><th>Example</th></tr>
+    <tr><td>Regular Tiling</td><td>Plane covered using only one type of regular polygon</td><td>Squares, equilateral triangles, hexagons</td></tr>
+    <tr><td>Semi-Regular Tiling</td><td>Two or more types of regular polygons arranged in a repeating pattern</td><td>Octagons + squares combination</td></tr>
+    <tr><td>Penrose Tiling</td><td>Non-periodic tiling using two shapes that never repeat in a perfectly regular grid</td><td>Used in quasicrystal &amp; decorative pattern design</td></tr>
+  </table>
+</div>
+
+<div class="svgbox">
+<svg viewBox="0 0 600 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:480px;">
+  <g stroke="var(--accent)" stroke-width="1.5" fill="none">
+    <rect x="20" y="20" width="60" height="60"/><rect x="80" y="20" width="60" height="60"/><rect x="140" y="20" width="60" height="60"/>
+    <rect x="20" y="80" width="60" height="60"/><rect x="80" y="80" width="60" height="60"/><rect x="140" y="80" width="60" height="60"/>
+  </g>
+  <g stroke="var(--accent2)" stroke-width="1.5" fill="none">
+    <polygon points="260,140 290,80 320,140"/><polygon points="320,140 350,80 380,140"/><polygon points="380,140 410,80 440,140"/>
+    <polygon points="290,80 320,20 350,80"/><polygon points="350,80 380,20 410,80"/>
+  </g>
+</svg>
+<div class="cap">Regular tiling examples: squares (left) and triangles (right) covering the plane with no gaps</div>
+</div>
+
+<!-- 7.8 RECURSIVELY DEFINED CURVES -->
+<h2 class="topic" id="u7-recursive">7.8 Recursively Defined Curves <span class="imp h">MUST KNOW</span></h2>
+
+<div class="card def">
+  <div class="tag">&#x1F4D6; Definition</div>
+  <p style="margin-top:8px;">A <strong>recursively defined curve</strong> is a curve generated by repeatedly applying the same geometric construction rule (or a generator/motif) to each segment of the previous result, with the process continued for several iterations (levels of recursion) to build increasingly complex and self-similar shapes.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">&#x1F5E3; Hinglish</div>
+  <p style="margin-top:6px;">Recursive curve banane ka tarika simple hai &mdash; ek chhota sa basic pattern (generator) lo aur usi pattern ko bar-bar, chote scale par, har edge par apply karte jao. Jitni zyada baar (iterations) yeh process repeat hoga, utna hi complex aur detailed shape banega.</p>
+</div>
+
+<h3 class="sub">Basic Recursive Construction Process</h3>
+<div class="card">
+  <ul>
+    <li><strong>Initiator:</strong> The starting simple shape (e.g., a straight line segment or a triangle).</li>
+    <li><strong>Generator:</strong> The rule/motif applied to replace each segment of the initiator.</li>
+    <li><strong>Recursion/Iteration:</strong> The generator rule is applied again to every new segment created, repeated for n levels.</li>
+  </ul>
+  <p style="margin-top:10px;">As the number of iterations n &#x2192; &#x221E;, the resulting curve approaches a <strong>fractal</strong> with infinite detail at every scale.</p>
+</div>
+
+<!-- 7.9 KOCH, C CURVES, DRAGONS -->
+<h2 class="topic" id="u7-koch">7.9 Koch Curves, C Curves &amp; Dragon Curves <span class="imp h">EXAM HOT</span></h2>
+
+<div class="card def">
+  <div class="tag">&#x1F4D6; Definition</div>
+  <p style="margin-top:8px;">The <strong>Koch Curve</strong>, <strong>C Curve</strong>, and <strong>Dragon Curve</strong> are classic examples of recursively/self-similarly generated curves, each created by repeatedly replacing every line segment with a specific small generator pattern at each level of recursion.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">&#x1F5E3; Hinglish</div>
+  <p style="margin-top:6px;">Yeh teeno famous fractal curves hain jo same recursive idea use karte hain, bas inka generator pattern alag hota hai. Koch curve ek "bump" wala triangle pattern use karta hai, C-curve aur Dragon curve right-angle turns use karte hain &mdash; bas turn ki direction/sequence alag hoti hai.</p>
+</div>
+
+<h3 class="sub">Koch Curve Construction <span class="imp m">5-MARK</span></h3>
+<div class="card">
+  <p>Start with a straight line segment (initiator). At every iteration, divide each segment into 3 equal parts, and replace the middle part with two sides of an equilateral triangle pointing outward (the generator).</p>
+  <div class="formula">Number of segments after n iterations = 4&#x207F;
+Length of each segment after n iterations = (Original Length) / 3&#x207F;</div>
+</div>
+
+<div class="svgbox">
+<svg viewBox="0 0 600 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:560px;">
+  <polyline points="20,120 580,120" stroke="var(--muted)" stroke-width="2"/>
+  <text x="300" y="145" font-size="12" text-anchor="middle" fill="var(--muted)">Iteration 0 (Initiator)</text>
+  <polyline points="20,80 220,80 270,30 320,80 580,80" fill="none" stroke="var(--accent)" stroke-width="2"/>
+  <text x="300" y="60" font-size="12" text-anchor="middle" fill="var(--accent)">Iteration 1</text>
+</svg>
+<div class="cap">Koch curve generator: each line segment's middle third is replaced by two sides of an equilateral triangle</div>
+</div>
+
+<h3 class="sub">Koch Snowflake</h3>
+<div class="card">
+  <p>When the Koch curve generator is applied to all three sides of an equilateral triangle simultaneously, the result is the famous <strong>Koch Snowflake</strong> &mdash; a closed fractal curve with infinite perimeter but finite enclosed area.</p>
+</div>
+
+<h3 class="sub">C Curve &amp; Dragon Curve <span class="imp m">5-MARK</span></h3>
+<div class="card">
+  <ul>
+    <li><strong>C Curve:</strong> Each line segment is replaced by two segments at right angles, forming an increasingly complex "C"-shaped pattern as iterations increase.</li>
+    <li><strong>Dragon Curve (Heighway Dragon):</strong> Generated by repeatedly folding a strip of paper in half and unfolding each crease to a 90&deg; angle; the resulting recursive curve resembles a dragon silhouette and famously never crosses itself.</li>
+  </ul>
+</div>
+
+<!-- 7.10 SPACE FILLING CURVES -->
+<h2 class="topic" id="u7-space">7.10 Space Filling Curves <span class="imp m">5-MARK</span></h2>
+
+<div class="card def">
+  <div class="tag">&#x1F4D6; Definition</div>
+  <p style="margin-top:8px;">A <strong>Space Filling Curve</strong> is a recursively constructed curve whose path, as the number of iterations approaches infinity, passes arbitrarily close to every point within a bounded 2D region &mdash; effectively "filling" the entire area, even though a curve is mathematically one-dimensional.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">&#x1F5E3; Hinglish</div>
+  <p style="margin-top:6px;">Space filling curve ek aisi curve hai jo infinite iterations ke baad ek poore 2D area ko cover kar leti hai, jabki curve khud sirf 1-dimensional hoti hai. Yeh thoda counter-intuitive lagta hai lekin recursive zig-zag pattern se possible hota hai &mdash; jaise Hilbert curve.</p>
+</div>
+
+<h3 class="sub">Common Space Filling Curves</h3>
+<div class="card">
+  <ul>
+    <li><strong>Hilbert Curve:</strong> Uses a U-shaped recursive pattern; widely used in image processing and database indexing because nearby points on the curve map to nearby points in 2D space.</li>
+    <li><strong>Peano Curve:</strong> One of the first discovered space-filling curves, constructed using a 3&times;3 grid recursive subdivision.</li>
+  </ul>
+</div>
+
+<div class="keypoint">
+  <span class="icon">&#x1F4CC;</span>
+  <span><strong>Application:</strong> Space-filling curves are used in image compression, multi-dimensional database indexing, and load-balancing across processors because they preserve spatial locality.</span>
+</div>
+
+<!-- 7.11 FRACTALS & GRAMMAR BASED MODELS -->
+<h2 class="topic" id="u7-fractal">7.11 Fractals &amp; Grammar Based Models <span class="imp h">EXAM HOT</span></h2>
+
+<div class="card def">
+  <div class="tag">&#x1F4D6; Definition</div>
+  <p style="margin-top:8px;">A <strong>Fractal</strong> is an object or curve that exhibits <strong>self-similarity</strong> at every scale &mdash; meaning smaller portions of the structure look like (scaled-down) copies of the whole &mdash; and typically possesses a non-integer (fractal) dimension. <strong>Grammar-based models</strong> use a set of formal production rules (similar to a language grammar) to recursively generate complex fractal shapes, most notably plant-like structures.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">&#x1F5E3; Hinglish</div>
+  <p style="margin-top:6px;">Fractal ka matlab hai &mdash; chahe jitna bhi zoom-in karo, shape ka chhota part bhi poore shape jaisa hi dikhega (self-similarity). Grammar-based models mein hum letters/symbols ki ek "language" banate hain jisme production rules define karte hain ki har symbol ko kis se replace karna hai &mdash; isse complex plants, trees jaisi shapes generate hoti hain (L-systems).</p>
+</div>
+
+<h3 class="sub">Fractal Dimension <span class="imp m">5-MARK</span></h3>
+<div class="card">
+  <p>Unlike Euclidean geometry (dimension is always an integer: 1, 2, 3...), fractals have a <strong>fractal (Hausdorff) dimension</strong> that can be a non-integer value, calculated as:</p>
+  <div class="formula">D = log(N) / log(S)
+
+where N = number of self-similar pieces, S = scaling/magnification factor</div>
+  <p style="margin-top:8px;">Example: The Koch curve has N=4 pieces at scale S=3 each iteration, so D = log(4)/log(3) &asymp; 1.26 &mdash; between a line (D=1) and a plane (D=2).</p>
+</div>
+
+<h3 class="sub">L-Systems (Lindenmayer Systems) &mdash; Grammar Based Models</h3>
+<div class="card">
+  <p>An L-System is defined by an <strong>alphabet</strong> (symbols), an <strong>axiom</strong> (starting string), and <strong>production rules</strong> (replacement rules applied to every symbol simultaneously at each iteration).</p>
+  <div class="formula">Example L-System for a simple plant:
+Axiom: F
+Rule:  F &#x2192; F[+F]F[&#x2212;F]F
+(F = draw forward, + = turn left, &#x2212; = turn right, [ ] = push/pop branch position)</div>
+</div>
+
+<div class="card example">
+  <div class="tag">&#x1F4A1; Example</div>
+  <p style="margin-top:8px;">The famous "Sierpinski Triangle" and "Sierpinski Carpet" are grammar-based fractals built by recursively removing the middle portion of a shape and repeating the rule on the remaining sub-shapes.</p>
+</div>
+
+<!-- 7.12 TURTLE GRAPHICS -->
+<h2 class="topic" id="u7-turtle">7.12 Turtle Graphics <span class="imp m">5-MARK</span></h2>
+
+<div class="card def">
+  <div class="tag">&#x1F4D6; Definition</div>
+  <p style="margin-top:8px;"><strong>Turtle Graphics</strong> is a method of vector graphics generation in which a "turtle" (a cursor with a position and a heading/direction) moves around the screen according to simple relative commands (move forward, turn left, turn right), leaving a trail that traces out the shape &mdash; widely used to implement L-systems and fractal/recursive curve generation programmatically.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">&#x1F5E3; Hinglish</div>
+  <p style="margin-top:6px;">Turtle graphics ek simple aur intuitive way hai drawing ka &mdash; imagine karo ek kachhua (turtle) screen par hai, usko bolte ho "aage chalo X units", "left ghoomo Y degrees" &mdash; aur jaha-jaha woh chalta hai wahan line ban jaati hai. Recursive curves (Koch, Sierpinski) implement karne ke liye yeh perfect tool hai.</p>
+</div>
+
+<h3 class="sub">Basic Turtle Commands</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Command</th><th>Action</th></tr>
+    <tr><td>FORWARD(d)</td><td>Move turtle forward by distance d, drawing a line if pen is down</td></tr>
+    <tr><td>TURN(&theta;) / LEFT / RIGHT</td><td>Rotate the turtle's heading by angle &theta;</td></tr>
+    <tr><td>PENUP / PENDOWN</td><td>Stop/start drawing while the turtle still moves</td></tr>
+    <tr><td>PUSH / POP STATE</td><td>Save/restore the turtle's current position &amp; heading (used for branching in plant fractals)</td></tr>
+  </table>
+</div>
+
+<!-- 7.13 RAY TRACING -->
+<h2 class="topic" id="u7-raytrace">7.13 Ray Tracing <span class="imp h">10-MARK TOPIC</span></h2>
+
+<div class="card def">
+  <div class="tag">&#x1F4D6; Definition</div>
+  <p style="margin-top:8px;"><strong>Ray Tracing</strong> is a rendering technique that produces highly realistic images by tracing the path of light rays, simulating how they travel from a light source, interact with (reflect off / refract through) objects in a scene, and eventually reach the viewer's eye (or, more practically, by tracing rays backward from the eye/camera through each pixel into the scene).</p>
+</div>
+
+<div class="hin">
+  <div class="tag">&#x1F5E3; Hinglish</div>
+  <p style="margin-top:6px;">Ray tracing real life jaisa lighting simulate karta hai. Hum har pixel ke through ek imaginary "ray" (kirण) camera se scene mein bhejte hain, dekhte hain woh kis object se takrati hai, fir reflection/refraction/shadow calculate karte hain &mdash; yeh process bahut realistic images (jaise glass, mirror, shadows) banata hai, lekin computationally bahut expensive hai.</p>
+</div>
+
+<h3 class="sub">Ray Tracing Algorithm Steps <span class="imp h">EXAM HOT</span></h3>
+<div class="card">
+  <ul>
+    <li><strong>1. Ray Generation:</strong> For each pixel on the screen, a primary ray is cast from the camera/eye through that pixel into the 3D scene.</li>
+    <li><strong>2. Intersection Testing:</strong> The ray is tested against every object in the scene to find the nearest point of intersection.</li>
+    <li><strong>3. Shading Calculation:</strong> At the intersection point, the local color is calculated using the lighting model (ambient + diffuse + specular).</li>
+    <li><strong>4. Secondary Rays (Reflection/Refraction):</strong> Additional rays are spawned &mdash; a reflected ray (for shiny surfaces) and/or a refracted ray (for transparent surfaces) &mdash; and traced recursively.</li>
+    <li><strong>5. Shadow Rays:</strong> A ray is cast from the intersection point toward each light source; if it is blocked by another object, the point lies in shadow.</li>
+    <li><strong>6. Recursive Termination:</strong> The recursion stops after a maximum depth is reached or when ray contribution becomes negligible.</li>
+  </ul>
+</div>
+
+<div class="svgbox">
+<svg viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:560px;">
+  <rect x="20" y="90" width="40" height="40" fill="var(--panel2)" stroke="var(--line)"/>
+  <text x="40" y="145" font-size="11" text-anchor="middle">Eye</text>
+  <rect x="120" y="20" width="2" height="180" fill="var(--line)"/>
+  <text x="130" y="15" font-size="11">Screen / Pixel Plane</text>
+  <circle cx="350" cy="110" r="45" fill="none" stroke="var(--accent)" stroke-width="2"/>
+  <text x="350" y="170" font-size="11" text-anchor="middle">Object (Sphere)</text>
+  <line x1="60" y1="110" x2="305" y2="110" stroke="var(--accent2)" stroke-width="2"/>
+  <line x1="305" y1="110" x2="450" y2="50" stroke="var(--red)" stroke-width="2" stroke-dasharray="5,3"/>
+  <text x="460" y="45" font-size="11" fill="var(--red)">Reflected Ray</text>
+  <circle cx="500" cy="40" r="14" fill="var(--gold,#ffb454)"/>
+  <text x="500" y="20" font-size="11" text-anchor="middle">Light</text>
+  <line x1="305" y1="110" x2="500" y2="48" stroke="var(--gold,#ffb454)" stroke-width="1.5" stroke-dasharray="2,2"/>
+  <text x="180" y="100" font-size="11" fill="var(--accent2)">Primary Ray</text>
+</svg>
+<div class="cap">Ray tracing: primary ray from eye through pixel hits object, spawning reflected and shadow rays</div>
+</div>
+
+<h3 class="sub">Advantages &amp; Disadvantages <span class="imp m">5-MARK</span></h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Advantages</th><th>Disadvantages</th></tr>
+    <tr><td>Produces highly photorealistic images with accurate shadows, reflections, refractions</td><td>Computationally very expensive &amp; slow (not real-time without dedicated hardware)</td></tr>
+    <tr><td>Naturally handles global illumination effects</td><td>Aliasing artifacts can appear unless anti-aliasing/oversampling is used</td></tr>
+    <tr><td>Easily models transparent &amp; reflective materials (glass, mirrors)</td><td>Performance degrades quickly with scene complexity &amp; recursion depth</td></tr>
+  </table>
+</div>
+
+<!-- 7.14 COMPARISON TABLES -->
+<h2 class="topic" id="u7-tables">7.14 Key Comparison Tables <span class="imp h">EXAM HOT</span></h2>
+
+<h3 class="sub">Morphing vs Tweening</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Aspect</th><th>Tweening</th><th>Morphing</th></tr>
+    <tr><td>Definition</td><td>Generating in-between frames between two states of the SAME object</td><td>Transforming one object's shape into a DIFFERENT object's shape</td></tr>
+    <tr><td>Complexity</td><td>Simple linear/curve interpolation</td><td>Requires vertex equalization + correspondence + interpolation</td></tr>
+    <tr><td>Typical Use</td><td>Basic motion animation (walking, bouncing)</td><td>Special effects (face transformation, shape-shifting)</td></tr>
+  </table>
+</div>
+
+<h3 class="sub">Koch Curve vs Dragon Curve vs Space Filling Curve</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Curve</th><th>Generator Pattern</th><th>Key Property</th></tr>
+    <tr><td>Koch Curve</td><td>Middle 1/3 replaced by 2 sides of equilateral triangle</td><td>Infinite perimeter, finite area (as snowflake)</td></tr>
+    <tr><td>Dragon Curve</td><td>Repeated 90&deg; paper folding</td><td>Never self-intersects</td></tr>
+    <tr><td>Space Filling Curve</td><td>Recursive zig-zag subdivision (e.g. Hilbert)</td><td>Fills entire 2D area as iterations &#x2192; &#x221E;</td></tr>
+  </table>
+</div>
+
+<h3 class="sub">Key Frame vs Motion Capture Animation</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Aspect</th><th>Key Frame Animation</th><th>Motion Capture</th></tr>
+    <tr><td>Source of Motion</td><td>Manually drawn by animator</td><td>Captured from real actor movement using sensors</td></tr>
+    <tr><td>Realism</td><td>Depends on animator's skill</td><td>Highly realistic (real human motion)</td></tr>
+    <tr><td>Flexibility</td><td>Easy to exaggerate/stylize motion</td><td>Limited to what was physically captured</td></tr>
+  </table>
+</div>
+
+<!-- 7.15 Q&A SECTION -->
+<div class="qsection" id="u7-qa">
+<h2 class="topic" style="border:none;margin-bottom:6px;">7.15 RTU Exam Questions &amp; Answers <span class="imp h">EXAM PATTERN</span></h2>
+<p style="color:var(--muted);margin-bottom:24px;font-size:14px;">Questions arranged by RTU importance &mdash; covers 5-mark and 10-mark patterns from previous year papers.</p>
+
+  <div class="qcard">
+    <div class="qlabel">Q1</div>
+    <div class="q">What is computer animation? Explain the steps involved in designing an animation sequence. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>Computer animation is the process of generating a sequence of frames that, displayed rapidly, create the illusion of motion. The design steps are: (1) Storyboard layout &mdash; rough sketch sequence of the action; (2) Object definitions &mdash; defining shape and structure of each object; (3) Key-frame specification &mdash; detailed drawings at important time instants; (4) Generation of in-between frames &mdash; intermediate frames computed via interpolation (tweening) to complete the smooth sequence.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q2</div>
+    <div class="q">Differentiate between Morphing and Tweening with examples. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p><strong>Tweening</strong> generates intermediate frames between two states of the same object using interpolation, e.g. a ball moving from position A to B. <strong>Morphing</strong> gradually transforms one object's shape into an entirely different object's shape, requiring extra steps: vertex/edge equalization (matching vertex counts), vertex correspondence (mapping), and then interpolation, e.g. a human face morphing into an animal face.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q3</div>
+    <div class="q">What is a Key Frame System? Explain its main tasks. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>A Key Frame System is software that lets an animator specify only the critical poses (keyframes) of an animation, while the system computes the in-between frames automatically. Its main tasks are: storing object coordinates for each keyframe, allowing independent object/part specifications, performing in-betweening via interpolation, and providing motion control (easing/acceleration) for natural-looking movement.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q4</div>
+    <div class="q">Explain the construction of the Koch curve. Derive the formula for the number of segments after n iterations. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>The Koch curve starts with a straight line segment (initiator). At each iteration, every segment is divided into 3 equal parts and the middle part is replaced by two sides of an equilateral triangle pointing outward (the generator). Since each segment becomes 4 new segments per iteration, after n iterations the total number of segments is 4&#x207F;, and each segment's length is the original length divided by 3&#x207F;. Applying this generator to all three sides of an equilateral triangle produces the Koch Snowflake, which has infinite perimeter but encloses a finite area.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q5</div>
+    <div class="q">What is a fractal? Explain fractal dimension with a suitable example. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>A fractal is a shape exhibiting self-similarity at every scale, where smaller parts resemble the whole structure, and typically has a non-integer (fractal) dimension. The fractal dimension is calculated as D = log(N)/log(S), where N is the number of self-similar pieces and S is the scaling factor. For the Koch curve, each iteration produces N=4 pieces at scale S=3, giving D = log(4)/log(3) &asymp; 1.26, which lies between a 1D line and a 2D plane &mdash; reflecting its "rough," infinitely detailed structure.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q6</div>
+    <div class="q">Explain the Ray Tracing algorithm with a neat diagram. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>Ray tracing renders realistic images by tracing rays backward from the eye through each screen pixel into the scene. The algorithm: (1) generate a primary ray per pixel; (2) test intersection of the ray with all scene objects to find the nearest hit; (3) calculate local shading at that point using ambient, diffuse, and specular lighting; (4) spawn secondary reflected/refracted rays recursively for shiny/transparent surfaces; (5) cast shadow rays toward each light source to detect occlusion; (6) terminate the recursion at a maximum depth. This produces highly photorealistic results including accurate shadows, reflections, and refractions, though it is computationally expensive.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q7</div>
+    <div class="q">What are Grammar Based Models? Explain L-Systems with an example. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>Grammar-based models use formal production rules (like a language grammar) to recursively generate complex fractal shapes, especially plant-like structures. An L-System (Lindenmayer System) consists of an alphabet of symbols, an axiom (starting string), and production rules applied simultaneously to every symbol at each iteration. For example, with axiom "F" and rule F&#x2192;F[+F]F[&#x2212;F]F (where F=draw forward, +/&#x2212;=turn, []=branch save/restore), repeated application generates increasingly complex branching plant-like fractal structures.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q8</div>
+    <div class="q">What is Turtle Graphics? List its basic commands. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>Turtle graphics is a method of generating vector drawings using a "turtle" cursor that has a position and heading, controlled by simple relative commands. Basic commands include FORWARD(d) to move and draw, TURN/LEFT/RIGHT(&theta;) to rotate heading, PENUP/PENDOWN to stop/start drawing, and PUSH/POP STATE to save/restore position &amp; heading for branching. It is widely used to implement L-systems and recursive fractal curves like the Koch curve and Sierpinski triangle.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q9</div>
+    <div class="q">Explain Raster Animation techniques used in real-time display systems. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>Raster animation generates motion on raster-scan displays by manipulating frame-buffer pixel values rather than redrawing the whole scene. Key techniques are: Color Table (Palette) Animation, where object pixels hold index values and only the color-table entries are cycled (very fast, used for fire/water effects); Real-Time Object Repositioning, where an object is redrawn at a new frame-buffer location each frame; and Double Buffering (Page Flipping), where the next frame is rendered off-screen while the current buffer is displayed, then the two are swapped instantly to avoid flicker.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q10</div>
+    <div class="q">What is a Space Filling Curve? Name two examples and their applications. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>A space filling curve is a recursively constructed curve which, as the number of iterations approaches infinity, passes arbitrarily close to every point in a bounded 2D region, effectively filling the area despite being one-dimensional. Two examples are the Hilbert Curve, which uses a U-shaped recursive pattern and is applied in image processing and multi-dimensional database indexing due to its locality-preserving property, and the Peano Curve, one of the earliest discovered space-filling curves built using 3&times;3 grid recursive subdivision.</p>
+    </div>
+  </div>
+
+</div><!-- end qsection -->
+
+<!-- CHEAT SHEET -->
+<div class="card" style="margin-top:40px; background:linear-gradient(135deg,#0a1525,#0b0d10); border:2px solid var(--accent);">
+  <div style="color:var(--accent); font-family:'Consolas',monospace; font-weight:700; font-size:15px; margin-bottom:14px;">&#x1F4CC; UNIT 7 &#x2014; MASTER FORMULA &amp; CONCEPT CHEAT SHEET</div>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+    <div class="formula" style="margin:3px 0; font-size:12px;">Tweening: P(t)=(1&#x2212;t)P1+tP2</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Koch segments after n iter: 4&#x207F;</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Koch segment length: L/3&#x207F;</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Fractal Dimension: D=log(N)/log(S)</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Koch curve dimension: D&asymp;1.26</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Animation principle: Persistence of Vision</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Morphing steps: Equalize &#x2192; Map &#x2192; Interpolate</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Ray Tracing: Primary &#x2192; Intersect &#x2192; Shade &#x2192; Recurse</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Forward Kinematics: angles &#x2192; position</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Inverse Kinematics: position &#x2192; angles</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">L-System: Alphabet + Axiom + Production Rules</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Space-filling curve: Hilbert, Peano</div>
+  </div>
+</div>
+
+<!-- Unit 7 Footer -->
+<div style="margin-top:50px; padding:20px 24px; border:1px dashed var(--line); border-radius:10px; color:var(--muted); font-size:13px;">
+  <div style="color:var(--accent); font-family:'Consolas',monospace; font-weight:700; margin-bottom:6px;">ZYREX // CGM_VAULT &#x2014; UNIT 7 &#xB7; Animations &amp; Computer Graphics Realism</div>
+  <p>RTU B.Tech CSE 5th Semester &#xB7; 5CS4-04 Computer Graphics &amp; Multimedia &#xB7; Unit 7 of 7 (Final Unit)</p>
+  <p style="margin-top:6px;">&#x1F4CC; Key concepts: Keyframe systems &amp; tweening &#xB7; Morphing &#xB7; Koch/Dragon/Space-filling curves &#xB7; Fractal dimension &#xB7; L-Systems &amp; Turtle Graphics &#xB7; Ray Tracing pipeline</p>
+  <p style="margin-top:6px;">&#x1F389; This completes the full RTU syllabus for Computer Graphics &amp; Multimedia (5CS4-04) &mdash; Units 1 through 7.</p>
+</div>
+
+</div><!-- end unit7 -->
+
+<hr class="sep">
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:center;padding:30px 20px;flex-wrap:wrap;">
+      <a href="unit6.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+      <a href="index.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">🏠 CG&M Hub</a>
+    </div>
+  </main>
+  <div class="cursor-dot" data-cursor-dot></div>
+  <div class="cursor-outline" data-cursor-outline></div>
+  <script>
+    const cursorDot = document.querySelector("[data-cursor-dot]");
+    const cursorOutline = document.querySelector("[data-cursor-outline]");
+    window.addEventListener("mousemove", function(e){
+      cursorDot.style.left=e.clientX+"px"; cursorDot.style.top=e.clientY+"px";
+      cursorOutline.animate({left:e.clientX+"px",top:e.clientY+"px"},{duration:400,fill:"forwards"});
+    });
+    document.querySelectorAll("a,button").forEach(el=>{
+      el.addEventListener("mouseenter",()=>cursorOutline.classList.add("cursor-hovering"));
+      el.addEventListener("mouseleave",()=>cursorOutline.classList.remove("cursor-hovering"));
+    });
+  </script>
+<script src="../splash-cursor.js"></script>\n</body>
+</html>

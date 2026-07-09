@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Learning Plus // AOA · Unit 6 — NP Complexity</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <main class="main-wrapper" style="width:100%;">
+    <div class="topbar">
+      <a href="../aoa/index.html" class="back-btn">⬅ AOA Hub</a>
+      <div class="brand">Smart<span>Learning</span>+ <span style="color:var(--muted);font-weight:400;font-size:14px;">// AOA · Unit 6</span></div>
+      <div class="nav">
+        <a href="../aoa/index.html">🏠 AOA Hub</a>
+        <a href="#content">📖 Content</a>
+        <a href="#qa">❓ Q&amp;A</a>
+        <a href="unit5.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <div class="hero">
+        <h1>🧩 Unit 6 — Problem Classes: NP, NP-Hard &amp; NP-Complete</h1>
+        <p>P · NP · NP-Hard · NP-Complete · Decision Problems · Cook's Theorem · SAT · Vertex Cover · Approximation Algorithms | Hours: 06</p>
+        <div class="badges" style="margin-top:14px;">
+          <a href="../aoa/index.html" style="text-decoration:none;"><span class="badge b-teal">← Back to AOA Hub</span></a>
+          <span class="badge b-gold">5CS4-05 · AOA · RTU</span>
+        </div>
+      </div>
+
+      <div id="content">
+        <div class="hero" id="unit6">
+          <h1>UNIT 6 — PROBLEM CLASSES: NP, NP-HARD &amp; NP-COMPLETE</h1>
+          <div class="sub">5CS4-05 · Design &amp; Analysis of Algorithms · RTU Kota · III Year – V Sem · B.Tech CSE</div>
+          <div class="sub" style="margin-top:4px;">Credit: 3 &nbsp;|&nbsp; Max Marks: 100 (IA:30, ETE:70) &nbsp;|&nbsp; End Term: 3 Hours</div>
+          <div class="badges">
+            <span class="badge b-red">⚠ HIGH PRIORITY UNIT</span>
+            <span class="badge b-gold">⭐ 5 &amp; 10 Mark Questions</span>
+            <span class="badge b-teal">✦ 6 Hours Weightage</span>
+          </div>
+        </div>
+
+        <div class="progress-bar"></div>
+
+        <!-- ══ TABLE OF CONTENTS ══ -->
+        <div class="toc scroll-anchor" id="toc">
+          <h3>📋 UNIT 6 — CONTENTS</h3>
+          <ol>
+            <li><a href="#decision">Decision Problems</a> <span class="sublabel">MEDIUM ★★</span></li>
+            <li><a href="#pclass">Class P — Polynomial Time</a> <span class="sublabel">HIGH ★★★</span></li>
+            <li><a href="#np">Class NP — Non-deterministic Polynomial</a> <span class="sublabel">HIGH ★★★</span></li>
+            <li><a href="#pvsnp">P vs NP Problem</a> <span class="sublabel">HIGH ★★★</span></li>
+            <li><a href="#reduction">Polynomial Reduction</a> <span class="sublabel">HIGH ★★★</span></li>
+            <li><a href="#nphard">NP-Hard Problems</a> <span class="sublabel">HIGH ★★★</span></li>
+            <li><a href="#npcomplete">NP-Complete Problems</a> <span class="sublabel">HIGH ★★★</span></li>
+            <li><a href="#cooks">Cook's Theorem (SAT is NP-Complete)</a> <span class="sublabel">HIGH ★★★</span></li>
+            <li><a href="#sat">Satisfiability Problem (SAT)</a> <span class="sublabel">HIGH ★★★</span></li>
+            <li><a href="#vertexcover">Vertex Cover Problem</a> <span class="sublabel">HIGH ★★★</span></li>
+            <li><a href="#approxvc">Approximation Algorithm — Vertex Cover</a> <span class="sublabel">HIGH ★★★</span></li>
+            <li><a href="#setcover">Set Cover Problem &amp; Approximation</a> <span class="sublabel">MEDIUM ★★</span></li>
+            <li><a href="#qa">RTU Exam Q&amp;A Bank (5-mark &amp; 10-mark)</a> <span class="sublabel">EXAM GOLD</span></li>
+          </ol>
+        </div>
+
+        <!-- ══ 01. DECISION PROBLEMS ══ -->
+        <div class="unit-title scroll-anchor" id="decision">
+          <span style="color:var(--accent2);">01.</span> Decision Problems
+          <span class="imp m">MEDIUM</span>
+        </div>
+        <div class="unit-sub">The foundation of complexity theory — yes or no?</div>
+
+        <div class="card def">
+          <div class="tag">Definition</div>
+          <p>A <strong>Decision Problem</strong> is a computational problem whose answer is either <strong>YES</strong> or <strong>NO</strong> (i.e., it has a binary output). Complexity theory primarily studies decision problems because they are the simplest class of problems and any optimization problem can be converted into a corresponding decision problem.</p>
+        </div>
+
+        <div class="hin">
+          <div class="tag">🇮🇳 Hinglish Explanation</div>
+          Decision problem wo problem hai jiska answer sirf <strong>"Haan (YES)"</strong> ya <strong>"Nahi (NO)"</strong> hota hai. Yeh complexity theory ka base hai. Koi bhi optimization problem ko hum ek decision problem mein convert kar sakte hain.
+          <br><br>
+          <em>Example: "Kya is graph mein 5 se kum edges ke saath ek Hamiltonian cycle hai?" — yeh ek decision problem hai.</em>
+        </div>
+
+        <div class="card example">
+          <div class="tag">📌 Examples of Decision Problems</div>
+          <table>
+            <tr><th>Problem</th><th>Decision Version</th></tr>
+            <tr><td>Shortest Path</td><td>Is there a path from u to v with cost ≤ k?</td></tr>
+            <tr><td>Travelling Salesman</td><td>Does a TSP tour of cost ≤ k exist?</td></tr>
+            <tr><td>Graph Coloring</td><td>Can the graph be colored using ≤ k colors?</td></tr>
+            <tr><td>Knapsack</td><td>Is there a selection of items with value ≥ V and weight ≤ W?</td></tr>
+            <tr><td>Vertex Cover</td><td>Does a vertex cover of size ≤ k exist?</td></tr>
+          </table>
+        </div>
+
+        <div class="keypoint">
+          <div class="icon">💡</div>
+          <div><strong>Why Decision Problems?</strong> Because if we can solve the decision version efficiently, we can often solve the optimization version too. This conversion allows fair comparison of problem difficulty.</div>
+        </div>
+
+        <hr class="sep">
+
+        <!-- ══ 02. CLASS P ══ -->
+        <h2 class="topic scroll-anchor" id="pclass">
+          <span>02.</span> Class P — Polynomial Time Problems
+          <span class="imp h">HIGH</span>
+        </h2>
+
+        <div class="card def">
+          <div class="tag">Definition</div>
+          <p><strong>Class P</strong> (Polynomial Time) is the set of all decision problems that can be <strong>solved</strong> by a deterministic algorithm in polynomial time, i.e., in O(nᵏ) for some constant k, where n is the size of the input.</p>
+        </div>
+
+        <div class="hin">
+          <div class="tag">🇮🇳 Hinglish</div>
+          P class mein wo saari problems aati hain jo ek normal (deterministic) computer pe polynomial time mein <strong>solve</strong> ho sakti hain. Jaise O(n), O(n²), O(n³) — yeh sab polynomial hain.
+          <strong>Easy problems = P class.</strong>
+        </div>
+
+        <div class="card example">
+          <div class="tag">Examples of Class P</div>
+          <ul>
+            <li><strong>Sorting</strong> — Merge Sort is O(n log n)</li>
+            <li><strong>Shortest Path</strong> — Dijkstra's Algorithm is O(V²)</li>
+            <li><strong>Matrix Multiplication</strong> — O(n³)</li>
+            <li><strong>Primality Testing</strong> — AKS algorithm in O((log n)¹²)</li>
+            <li><strong>Linear Programming</strong> — Polynomial time solvable</li>
+          </ul>
+        </div>
+
+        <!-- SVG Diagram for P class -->
+        <div class="svgbox">
+          <svg viewBox="0 0 500 180" xmlns="http://www.w3.org/2000/svg" style="max-width:500px;width:100%">
+            <defs>
+              <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#4f46e5;stop-opacity:0.15"/>
+                <stop offset="100%" style="stop-color:#06b6d4;stop-opacity:0.15"/>
+              </linearGradient>
+            </defs>
+            <rect x="10" y="20" width="480" height="145" rx="12" fill="url(#grad1)" stroke="#4f46e5" stroke-width="1.5" stroke-dasharray="6,3"/>
+            <text x="250" y="50" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="#4f46e5">All Decision Problems</text>
+            <ellipse cx="250" cy="115" rx="195" ry="40" fill="rgba(6,182,212,0.12)" stroke="#06b6d4" stroke-width="1.5"/>
+            <text x="250" y="108" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#0891b2">NP (Verifiable in Poly Time)</text>
+            <ellipse cx="250" cy="118" rx="90" ry="22" fill="rgba(79,70,229,0.18)" stroke="#4f46e5" stroke-width="2"/>
+            <text x="250" y="122" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="800" fill="#4f46e5">P</text>
+            <text x="390" y="118" font-family="Inter,sans-serif" font-size="10" fill="#0891b2">NP-Complete</text>
+            <text x="50" y="75" font-family="Inter,sans-serif" font-size="10" fill="#64748b">NP-Hard</text>
+          </svg>
+          <div class="cap">Fig 1: Relationship between P, NP, NP-Complete and NP-Hard (assuming P ≠ NP)</div>
+        </div>
+
+        <hr class="sep">
+
+        <!-- ══ 03. CLASS NP ══ -->
+        <h2 class="topic scroll-anchor" id="np">
+          <span>03.</span> Class NP
+          <span class="imp h">HIGH</span>
+        </h2>
+
+        <div class="card def">
+          <div class="tag">Definition</div>
+          <p><strong>Class NP</strong> (Non-deterministic Polynomial Time) is the set of all decision problems for which a given <strong>solution (certificate)</strong> can be <strong>verified</strong> in polynomial time by a deterministic algorithm. Equivalently, NP problems can be <em>solved</em> in polynomial time on a <em>non-deterministic</em> Turing machine.</p>
+        </div>
+
+        <div class="hin">
+          <div class="tag">🇮🇳 Hinglish</div>
+          NP class mein wo problems hain jinka <strong>solution verify karna easy hai</strong> (polynomial time mein), lekin solution <strong>find karna hard ho sakta hai</strong>. 
+          <br><em>Example: Sudoku ka solution check karna aasaan hai, lekin khud solve karna mushkil.</em>
+          <br><br>
+          <strong>Non-Deterministic ka matlab:</strong> Sochiye ek aisa computer jo ek saath saare possible answers try karta hai simultaneously — agar koi bhi answer sahi nikla toh problem solved!
+        </div>
+
+        <div class="card example">
+          <div class="tag">Key Insight: Certificate-Based Verification</div>
+          <p>For a problem to be in NP, it must have a <strong>polynomial-length certificate</strong> (proof/witness) that can be verified in polynomial time.</p>
+          <table>
+            <tr><th>Problem</th><th>Certificate (Proof)</th><th>Verification</th></tr>
+            <tr><td class="hi">SAT</td><td>An assignment of TRUE/FALSE to variables</td><td>Check all clauses are satisfied — O(n)</td></tr>
+            <tr><td class="hi">TSP (Decision)</td><td>A complete tour</td><td>Check tour length ≤ k — O(n)</td></tr>
+            <tr><td class="hi">Hamiltonian Cycle</td><td>A sequence of vertices</td><td>Check each edge exists — O(n)</td></tr>
+            <tr><td class="hi">Clique</td><td>A set of k vertices</td><td>Check all edges exist between them — O(k²)</td></tr>
+          </table>
+        </div>
+
+        <div class="keypoint">
+          <div class="icon">⚠️</div>
+          <div><strong>Important:</strong> P ⊆ NP (every problem in P is also in NP), because if you can solve it in polynomial time, you can certainly verify a solution in polynomial time. The million-dollar question is: <strong>Does P = NP?</strong></div>
+        </div>
+
+        <hr class="sep">
+
+        <!-- ══ 04. P vs NP ══ -->
+        <h2 class="topic scroll-anchor" id="pvsnp">
+          <span>04.</span> P vs NP Problem
+          <span class="imp h">HIGH</span>
+        </h2>
+
+        <div class="card def">
+          <div class="tag">Definition</div>
+          <p>The <strong>P vs NP problem</strong> asks whether every problem whose solution can be quickly <em>verified</em> (NP) can also be quickly <em>solved</em> (P). It is one of the seven <strong>Millennium Prize Problems</strong> with a $1,000,000 prize for a correct solution. Currently it is believed (but not proven) that <strong>P ≠ NP</strong>.</p>
+        </div>
+
+        <div class="hin">
+          <div class="tag">🇮🇳 Hinglish</div>
+          P vs NP ka simple sawaal: <strong>"Agar koi cheez verify karna aasaan hai, toh kya usse solve karna bhi aasaan hai?"</strong>
+          <br><br>
+          Jaise — Ek lock ka combination check karna easy hai (bas try karo), lekin combination find karna bahut mushkil. Agar P = NP hota, toh check karna = find karna — encryption tod deta! Isliye duniya manta hai <strong>P ≠ NP</strong>.
+        </div>
+
+        <!-- Comparison Table -->
+        <table>
+          <tr><th>Feature</th><th>P</th><th>NP</th></tr>
+          <tr><td>Full Form</td><td>Polynomial Time</td><td>Non-deterministic Polynomial Time</td></tr>
+          <tr><td>Machine Type</td><td>Deterministic Turing Machine</td><td>Non-deterministic Turing Machine</td></tr>
+          <tr><td>What's Easy?</td><td class="hi">Solving the problem</td><td class="hi">Verifying a given solution</td></tr>
+          <tr><td>Time Complexity</td><td>O(nᵏ) for solving</td><td>O(nᵏ) for verifying</td></tr>
+          <tr><td>Examples</td><td>Sorting, Shortest Path, MST</td><td>SAT, TSP, Knapsack, Clique</td></tr>
+          <tr><td>Subset Relation</td><td>P ⊆ NP</td><td>NP ⊇ P</td></tr>
+          <tr><td>Open Question</td><td colspan="2" style="text-align:center;color:var(--red);font-weight:700;">Is P = NP? (Unsolved — believed NO)</td></tr>
+        </table>
+
+        <hr class="sep">
+
+        <!-- ══ 05. POLYNOMIAL REDUCTION ══ -->
+        <h2 class="topic scroll-anchor" id="reduction">
+          <span>05.</span> Polynomial Reduction (≤ₚ)
+          <span class="imp h">HIGH</span>
+        </h2>
+
+        <div class="card def">
+          <div class="tag">Definition</div>
+          <p>Problem A is <strong>polynomial-time reducible</strong> to Problem B (written A ≤ₚ B) if there exists a polynomial-time computable function f such that for every instance x of A, x is a YES-instance of A if and only if f(x) is a YES-instance of B. This means B is <em>at least as hard</em> as A.</p>
+        </div>
+
+        <div class="hin">
+          <div class="tag">🇮🇳 Hinglish</div>
+          Reduction ka matlab: <strong>"Problem A ko Problem B mein convert karna."</strong>
+          <br>Agar A ko B mein polynomial time mein convert kar sako, toh B utni hi mushkil hai jitni A ya usse bhi zyada.
+          <br><em>Real Life: Agar tum French jaante ho toh French-to-English translator se English mein bhi kaam kar sakte ho — French reduce ho gayi English mein!</em>
+        </div>
+
+        <!-- Flowchart for Reduction -->
+        <div class="svgbox">
+          <svg viewBox="0 0 560 130" xmlns="http://www.w3.org/2000/svg" style="max-width:560px;width:100%">
+            <rect x="20" y="45" width="120" height="44" rx="8" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.5"/>
+            <text x="80" y="65" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#4f46e5">Instance of A</text>
+            <text x="80" y="80" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#64748b">(Input x)</text>
+
+            <path d="M140 67 L200 67" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)"/>
+            <text x="170" y="57" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#4f46e5" font-weight="600">f(x)</text>
+            <text x="170" y="85" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#64748b">Poly-time</text>
+            <text x="170" y="95" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#64748b">transform</text>
+
+            <rect x="200" y="45" width="130" height="44" rx="8" fill="#ecfeff" stroke="#06b6d4" stroke-width="1.5"/>
+            <text x="265" y="65" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#0891b2">Instance of B</text>
+            <text x="265" y="80" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#64748b">(Output f(x))</text>
+
+            <path d="M330 67 L390 67" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)"/>
+            <text x="360" y="57" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#06b6d4" font-weight="600">Solve B</text>
+
+            <rect x="390" y="45" width="140" height="44" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+            <text x="460" y="65" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#059669">YES / NO for A</text>
+            <text x="460" y="80" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#64748b">= Answer for B</text>
+
+            <defs>
+              <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L8,3 z" fill="#64748b"/>
+              </marker>
+            </defs>
+          </svg>
+          <div class="cap">Fig 2: Polynomial Reduction — A ≤ₚ B (If we can solve B, we can solve A)</div>
+        </div>
+
+        <div class="keypoint">
+          <div class="icon">💡</div>
+          <div>
+            <strong>Key Properties of Reduction:</strong>
+            <ul>
+              <li>If A ≤ₚ B and B ∈ P, then A ∈ P</li>
+              <li>If A ≤ₚ B and A is NP-Hard, then B is NP-Hard</li>
+              <li>Reduction is <strong>transitive</strong>: A ≤ₚ B and B ≤ₚ C ⟹ A ≤ₚ C</li>
+            </ul>
+          </div>
+        </div>
+
+        <hr class="sep">
+
+        <!-- ══ 06. NP-HARD ══ -->
+        <h2 class="topic scroll-anchor" id="nphard">
+          <span>06.</span> NP-Hard Problems
+          <span class="imp h">HIGH</span>
+        </h2>
+
+        <div class="card def">
+          <div class="tag">Definition</div>
+          <p>A problem H is called <strong>NP-Hard</strong> if every problem in NP is polynomial-time reducible to H (i.e., L ≤ₚ H for all L ∈ NP). NP-Hard problems are <em>at least as hard</em> as the hardest problems in NP. <strong>NP-Hard problems need not themselves be in NP</strong> — they may not even be decision problems.</p>
+        </div>
+
+        <div class="hin">
+          <div class="tag">🇮🇳 Hinglish</div>
+          NP-Hard wo problems hain jo NP ki sabse mushkil problems se bhi zyada ya barabar mushkil hain.
+          <br><strong>NP-Hard ∉ NP necessarily</strong> — matlab unka solution verify karna bhi polynomial time mein possible nahi ho sakta!
+          <br><em>Simple: "Boss level ki mushkilaat" — solve karna NP-Hard hai, verify karna bhi mushkil.</em>
+        </div>
+
+        <div class="card example">
+          <div class="tag">Examples of NP-Hard Problems</div>
+          <ul>
+            <li><strong>Halting Problem</strong> — NP-Hard but not even decidable (not in NP)</li>
+            <li><strong>TSP Optimization</strong> — Find the minimum cost tour</li>
+            <li><strong>Graph Coloring (Optimization)</strong> — Minimum colors needed</li>
+            <li><strong>Knapsack (Optimization)</strong> — Maximum value subject to weight limit</li>
+          </ul>
+        </div>
+
+        <hr class="sep">
+
+        <!-- ══ 07. NP-COMPLETE ══ -->
+        <h2 class="topic scroll-anchor" id="npcomplete">
+          <span>07.</span> NP-Complete Problems
+          <span class="imp h">HIGH</span>
+        </h2>
+
+        <div class="card def">
+          <div class="tag">Definition</div>
+          <p>A decision problem C is <strong>NP-Complete</strong> if it satisfies <em>both</em> conditions:
+          <br>(1) C ∈ NP — the solution can be verified in polynomial time
+          <br>(2) C is NP-Hard — every other NP problem reduces to C in polynomial time
+          <br><br>NP-Complete problems are the <strong>hardest problems within NP</strong>. If any NP-Complete problem is solvable in polynomial time, then P = NP.</p>
+        </div>
+
+        <div class="hin">
+          <div class="tag">🇮🇳 Hinglish</div>
+          NP-Complete = NP ∩ NP-Hard
+          <br>Matlab ye problem:
+          <br>1. <strong>NP mein hai</strong> — solution verify karna poly time mein possible
+          <br>2. <strong>NP-Hard bhi hai</strong> — NP ki har problem isme reduce ho sakti hai
+          <br><br>
+          <em>Agar NP-Complete solve ho gayi polynomial time mein → P = NP → saari cryptography toot jaayegi!</em>
+        </div>
+
+        <!-- Big Comparison Table -->
+        <h3 class="sub">Difference: P vs NP vs NP-Hard vs NP-Complete</h3>
+        <table>
+          <tr><th>Feature</th><th>P</th><th>NP</th><th>NP-Hard</th><th>NP-Complete</th></tr>
+          <tr><td>Solvable in Poly Time?</td><td class="hi">YES</td><td>Unknown</td><td>Unlikely</td><td>Unlikely</td></tr>
+          <tr><td>Verifiable in Poly Time?</td><td class="hi">YES</td><td class="hi">YES</td><td>Not necessarily</td><td class="hi">YES</td></tr>
+          <tr><td>All NP reduce to it?</td><td>No</td><td>No</td><td class="hi">YES</td><td class="hi">YES</td></tr>
+          <tr><td>Is it in NP?</td><td class="hi">YES</td><td class="hi">YES</td><td>Not necessarily</td><td class="hi">YES</td></tr>
+          <tr><td>Example</td><td>Sorting, BFS</td><td>SAT, Clique</td><td>Halting Problem, TSP-OPT</td><td>SAT, Vertex Cover, TSP-DEC</td></tr>
+          <tr><td>Relation</td><td>P ⊆ NP</td><td>NP ⊇ P</td><td>NP-Hard ⊇ NP-Complete</td><td>NP-C = NP ∩ NP-Hard</td></tr>
+        </table>
+
+        <!-- Big Venn Diagram -->
+        <div class="svgbox">
+          <svg viewBox="0 0 540 300" xmlns="http://www.w3.org/2000/svg" style="max-width:540px;width:100%">
+            <!-- NP-Hard outer region label -->
+            <text x="30" y="30" font-family="Inter,sans-serif" font-size="14" font-weight="800" fill="#ef4444">NP-HARD</text>
+            <text x="30" y="48" font-family="Inter,sans-serif" font-size="10" fill="#64748b">(All problems at least</text>
+            <text x="30" y="61" font-family="Inter,sans-serif" font-size="10" fill="#64748b">as hard as NP)</text>
+            <!-- NP-Hard rectangle -->
+            <rect x="10" y="10" width="520" height="280" rx="16" fill="rgba(239,68,68,0.05)" stroke="#ef4444" stroke-width="2" stroke-dasharray="8,4"/>
+            <!-- NP ellipse -->
+            <ellipse cx="310" cy="155" rx="210" ry="120" fill="rgba(6,182,212,0.08)" stroke="#06b6d4" stroke-width="2"/>
+            <text x="480" y="80" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="#0891b2">NP</text>
+            <!-- P ellipse -->
+            <ellipse cx="270" cy="165" rx="100" ry="60" fill="rgba(79,70,229,0.12)" stroke="#4f46e5" stroke-width="2"/>
+            <text x="270" y="170" text-anchor="middle" font-family="Inter,sans-serif" font-size="14" font-weight="800" fill="#4f46e5">P</text>
+            <text x="230" y="188" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#4f46e5">Sorting, BFS</text>
+            <!-- NP-Complete band -->
+            <path d="M370 75 Q430 100 430 155 Q430 210 370 235" stroke="#8b5cf6" stroke-width="2" fill="none" stroke-dasharray="5,3"/>
+            <text x="405" y="145" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#7c3aed">NP-C</text>
+            <text x="405" y="160" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#7c3aed">SAT</text>
+            <text x="405" y="173" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#7c3aed">VC, Clique</text>
+            <!-- NP-Hard only label -->
+            <text x="55" y="185" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#ef4444">NP-Hard</text>
+            <text x="55" y="200" font-family="Inter,sans-serif" font-size="9" fill="#64748b">(not in NP)</text>
+            <text x="55" y="215" font-family="Inter,sans-serif" font-size="9" fill="#64748b">Halting Problem</text>
+            <text x="55" y="228" font-family="Inter,sans-serif" font-size="9" fill="#64748b">TSP Optimization</text>
+          </svg>
+          <div class="cap">Fig 3: Venn Diagram of Problem Classes (assuming P ≠ NP)</div>
+        </div>
+
+        <hr class="sep">
+
+        <!-- ══ 08. COOK'S THEOREM ══ -->
+        <h2 class="topic scroll-anchor" id="cooks">
+          <span>08.</span> Cook's Theorem
+          <span class="imp h">HIGH ⭐ Most Important</span>
+        </h2>
+
+        <div class="card def">
+          <div class="tag">Definition — Cook's Theorem (1971)</div>
+          <p><strong>Cook's Theorem</strong> states that the <strong>Boolean Satisfiability Problem (SAT)</strong> is NP-Complete. It was the <em>first problem ever proved to be NP-Complete</em>. Cook's theorem establishes that SAT ∈ NP and that every problem in NP can be polynomial-time reduced to SAT (SAT is NP-Hard).</p>
+        </div>
+
+        <div class="hin">
+          <div class="tag">🇮🇳 Hinglish</div>
+          Stephen Cook ne 1971 mein prove kiya ki <strong>SAT problem NP-Complete hai</strong> — yeh world's first NP-Complete problem thi!
+          <br><br>
+          Cook ka kamal: Unhone prove kiya ki <em>NP mein jo bhi problem hai</em>, usse polynomial time mein SAT mein convert kiya ja sakta hai.
+          Matlab: <strong>SAT = NP ka King!</strong>
+        </div>
+
+        <div class="card">
+          <div class="tag">Formal Statement</div>
+          <p><strong>Theorem (Cook, 1971):</strong> SAT is NP-Complete.</p>
+          <p><strong>Proof Sketch:</strong></p>
+          <div class="steps">
+            <ol>
+              <li><strong>SAT ∈ NP:</strong> Given an assignment of truth values to variables, we can verify in polynomial time whether all clauses are satisfied. Simply substitute and check each clause — O(n) verification.</li>
+              <li><strong>SAT is NP-Hard:</strong> For any problem L ∈ NP, there exists a non-deterministic Turing Machine M that accepts L in polynomial time p(n). For any input x of length n, construct a Boolean formula φ(M, x) that is satisfiable if and only if M accepts x. This construction is polynomial-time. Therefore L ≤ₚ SAT.</li>
+              <li><strong>Conclusion:</strong> Since SAT ∈ NP and L ≤ₚ SAT for all L ∈ NP, SAT is NP-Complete. ∎</li>
+            </ol>
+          </div>
+        </div>
+
+        <!-- Flowchart for proving NP-Completeness -->
+        <div class="svgbox">
+          <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg" style="max-width:560px;width:100%">
+            <defs>
+              <marker id="arr2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L8,3 z" fill="#4f46e5"/>
+              </marker>
+            </defs>
+            <text x="280" y="22" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="800" fill="#4f46e5">General Method: Proving X is NP-Complete</text>
+
+            <rect x="30" y="40" width="140" height="50" rx="10" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.5"/>
+            <text x="100" y="62" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#4f46e5">Step 1</text>
+            <text x="100" y="78" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#334155">Show X ∈ NP</text>
+            <text x="100" y="90" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#64748b">(Poly-time verifier)</text>
+
+            <path d="M170 65 L210 65" stroke="#4f46e5" stroke-width="1.5" marker-end="url(#arr2)"/>
+
+            <rect x="210" y="40" width="145" height="50" rx="10" fill="#ecfeff" stroke="#06b6d4" stroke-width="1.5"/>
+            <text x="282" y="62" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#0891b2">Step 2</text>
+            <text x="282" y="78" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#334155">Pick known NP-C</text>
+            <text x="282" y="90" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#64748b">(e.g. SAT, 3-SAT)</text>
+
+            <path d="M355 65 L395 65" stroke="#4f46e5" stroke-width="1.5" marker-end="url(#arr2)"/>
+
+            <rect x="395" y="40" width="145" height="50" rx="10" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="1.5"/>
+            <text x="467" y="62" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#7c3aed">Step 3</text>
+            <text x="467" y="78" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#334155">Show Known ≤ₚ X</text>
+            <text x="467" y="90" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#64748b">(Poly reduction)</text>
+
+            <path d="M280 90 L280 130" stroke="#10b981" stroke-width="1.5" marker-end="url(#greenarr)"/>
+            <rect x="170" y="130" width="220" height="50" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+            <text x="280" y="152" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="800" fill="#059669">✅ X is NP-Complete!</text>
+            <text x="280" y="170" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#064e3b">(Satisfies both conditions)</text>
+            <defs>
+              <marker id="greenarr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L8,3 z" fill="#10b981"/>
+              </marker>
+            </defs>
+          </svg>
+          <div class="cap">Fig 4: Standard 3-step method to prove any problem is NP-Complete</div>
+        </div>
+
+        <hr class="sep">
+
+        <!-- ══ 09. SAT PROBLEM ══ -->
+        <h2 class="topic scroll-anchor" id="sat">
+          <span>09.</span> Satisfiability Problem (SAT)
+          <span class="imp h">HIGH ⭐</span>
+        </h2>
+
+        <div class="card def">
+          <div class="tag">Definition</div>
+          <p>The <strong>Boolean Satisfiability Problem (SAT)</strong> asks: Given a Boolean formula φ in <strong>Conjunctive Normal Form (CNF)</strong> — a conjunction (AND) of clauses, where each clause is a disjunction (OR) of literals — does there exist an assignment of TRUE/FALSE values to the variables such that φ evaluates to TRUE?</p>
+        </div>
+
+        <div class="hin">
+          <div class="tag">🇮🇳 Hinglish</div>
+          SAT problem mein hume boolean variables (x₁, x₂, x₃...) ko TRUE ya FALSE assign karna hota hai taaki ek given formula TRUE ban jaaye.
+          <br><br>
+          <strong>CNF (Conjunctive Normal Form):</strong> Formula = (clause1) AND (clause2) AND ... AND (clauseₙ)
+          <br>
+          <strong>Clause:</strong> = (literal1 OR literal2 OR ...)
+          <br>
+          <strong>Literal:</strong> = variable (xᵢ) ya uska negation (¬xᵢ)
+        </div>
+
+        <div class="card example">
+          <div class="tag">📌 Example of SAT</div>
+          <p>Consider the formula: <code>φ = (x₁ ∨ ¬x₂) ∧ (¬x₁ ∨ x₃) ∧ (x₂ ∨ ¬x₃)</code></p>
+          <p>Is this satisfiable? Try: <strong>x₁ = TRUE, x₂ = FALSE, x₃ = TRUE</strong></p>
+          <ul>
+            <li>Clause 1: (TRUE ∨ TRUE) = TRUE ✅</li>
+            <li>Clause 2: (FALSE ∨ TRUE) = TRUE ✅</li>
+            <li>Clause 3: (FALSE ∨ FALSE) = FALSE ❌</li>
+          </ul>
+          <p>Try: <strong>x₁ = TRUE, x₂ = TRUE, x₃ = TRUE</strong></p>
+          <ul>
+            <li>Clause 1: (TRUE ∨ FALSE) = TRUE ✅</li>
+            <li>Clause 2: (FALSE ∨ TRUE) = TRUE ✅</li>
+            <li>Clause 3: (TRUE ∨ FALSE) = TRUE ✅</li>
+          </ul>
+          <p><strong>Answer: YES, satisfiable with x₁=T, x₂=T, x₃=T</strong></p>
+        </div>
+
+        <h3 class="sub">3-SAT</h3>
+        <div class="card def">
+          <div class="tag">Definition</div>
+          <p><strong>3-SAT</strong> is a restricted version of SAT where each clause contains <em>exactly 3 literals</em>. 3-SAT is also NP-Complete and is widely used to prove other problems NP-Complete via reduction.</p>
+        </div>
+
+        <table>
+          <tr><th>Version</th><th>Clauses</th><th>Complexity</th></tr>
+          <tr><td class="hi">2-SAT</td><td>Each clause has exactly 2 literals</td><td class="hi" style="color:var(--green)">In P (Polynomial)</td></tr>
+          <tr><td class="hi">3-SAT</td><td>Each clause has exactly 3 literals</td><td style="color:var(--red);font-weight:700">NP-Complete</td></tr>
+          <tr><td class="hi">k-SAT (k≥3)</td><td>Each clause has exactly k literals</td><td style="color:var(--red);font-weight:700">NP-Complete</td></tr>
+          <tr><td class="hi">General SAT</td><td>Clauses of any length</td><td style="color:var(--red);font-weight:700">NP-Complete</td></tr>
+        </table>
+
+        <hr class="sep">
+
+        <!-- ══ 10. VERTEX COVER ══ -->
+        <h2 class="topic scroll-anchor" id="vertexcover">
+          <span>10.</span> Vertex Cover Problem
+          <span class="imp h">HIGH ⭐</span>
+        </h2>
+
+        <div class="card def">
+          <div class="tag">Definition</div>
+          <p>Given an undirected graph G = (V, E) and an integer k, a <strong>Vertex Cover</strong> is a subset S ⊆ V such that for every edge (u, v) ∈ E, at least one of u or v belongs to S. The <strong>Vertex Cover Decision Problem</strong> asks: Does G have a vertex cover of size ≤ k?</p>
+        </div>
+
+        <div class="hin">
+          <div class="tag">🇮🇳 Hinglish</div>
+          Vertex Cover = Ek aise vertices ka set jisme har edge ki <em>kam se kam ek endpoint</em> honi chahiye.
+          <br><br>
+          <em>Real Life Analogy: Ek building ke corridors (edges) mein security cameras (vertices) lagaane hain. Minimum cameras kahan lagaao taaki har corridor cover ho jaaye? Yahi Vertex Cover hai!</em>
+        </div>
+
+        <!-- Graph Example -->
+        <div class="svgbox">
+          <svg viewBox="0 0 500 220" xmlns="http://www.w3.org/2000/svg" style="max-width:500px;width:100%">
+            <!-- Edges -->
+            <line x1="100" y1="60" x2="220" y2="60" stroke="#94a3b8" stroke-width="1.5"/>
+            <line x1="100" y1="60" x2="100" y2="160" stroke="#94a3b8" stroke-width="1.5"/>
+            <line x1="220" y1="60" x2="220" y2="160" stroke="#94a3b8" stroke-width="1.5"/>
+            <line x1="100" y1="160" x2="220" y2="160" stroke="#94a3b8" stroke-width="1.5"/>
+            <line x1="220" y1="60" x2="340" y2="110" stroke="#94a3b8" stroke-width="1.5"/>
+            <line x1="220" y1="160" x2="340" y2="110" stroke="#94a3b8" stroke-width="1.5"/>
+            <!-- Vertices NOT in cover — hollow -->
+            <circle cx="100" cy="60" r="18" fill="#f0f4ff" stroke="#94a3b8" stroke-width="2"/>
+            <text x="100" y="65" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#64748b">A</text>
+            <circle cx="100" cy="160" r="18" fill="#f0f4ff" stroke="#94a3b8" stroke-width="2"/>
+            <text x="100" y="165" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#64748b">D</text>
+            <!-- Vertices IN cover — filled -->
+            <circle cx="220" cy="60" r="18" fill="#4f46e5" stroke="#3730a3" stroke-width="2"/>
+            <text x="220" y="65" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="white">B</text>
+            <circle cx="220" cy="160" r="18" fill="#4f46e5" stroke="#3730a3" stroke-width="2"/>
+            <text x="220" y="165" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="white">C</text>
+            <circle cx="340" cy="110" r="18" fill="#4f46e5" stroke="#3730a3" stroke-width="2"/>
+            <text x="340" y="115" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="white">E</text>
+            <!-- Legend -->
+            <circle cx="390" cy="50" r="10" fill="#4f46e5"/>
+            <text x="410" y="55" font-family="Inter,sans-serif" font-size="11" fill="#334155">In Cover {B, C, E}</text>
+            <circle cx="390" cy="75" r="10" fill="#f0f4ff" stroke="#94a3b8" stroke-width="2"/>
+            <text x="410" y="80" font-family="Inter,sans-serif" font-size="11" fill="#334155">Not in Cover</text>
+            <text x="195" y="200" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#64748b">Every edge has ≥1 blue endpoint → Valid Cover of size 3</text>
+          </svg>
+          <div class="cap">Fig 5: Vertex Cover Example — S = {B, C, E} covers all 6 edges</div>
+        </div>
+
+        <h3 class="sub">Proving Vertex Cover is NP-Complete</h3>
+        <div class="card">
+          <div class="tag">NP-Completeness Proof</div>
+          <div class="steps">
+            <ol>
+              <li><strong>Vertex Cover ∈ NP:</strong> Given a set S of vertices, we can verify in O(E) time that every edge has at least one endpoint in S. So Vertex Cover ∈ NP.</li>
+              <li><strong>Reduce from 3-SAT (or Independent Set):</strong> It is known that INDEPENDENT SET ≤ₚ VERTEX COVER. A set S is an independent set of size k iff V−S is a vertex cover of size n−k. Since Independent Set is NP-Hard, Vertex Cover is also NP-Hard.</li>
+              <li><strong>Conclusion:</strong> Vertex Cover is NP-Complete. ∎</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="keypoint">
+          <div class="icon">⭐</div>
+          <div><strong>Key Relationship:</strong> In any graph G = (V, E), S is a Vertex Cover ⟺ V − S is an Independent Set. This gives a clean polynomial reduction between the two problems.</div>
+        </div>
+
+        <hr class="sep">
+
+        <!-- ══ 11. APPROXIMATION ALGORITHMS ══ -->
+        <h2 class="topic scroll-anchor" id="approxvc">
+          <span>11.</span> Approximation Algorithm for Vertex Cover
+          <span class="imp h">HIGH ⭐</span>
+        </h2>
+
+        <div class="card def">
+          <div class="tag">Definition</div>
+          <p>Since Vertex Cover is NP-Complete (exact solution in polynomial time is unlikely), we use <strong>approximation algorithms</strong> — algorithms that run in polynomial time and produce a solution whose value is guaranteed to be within a <em>factor</em> of the optimal solution. The approximation ratio for the algorithm below is <strong>2</strong> (called a 2-approximation).</p>
+        </div>
+
+        <div class="hin">
+          <div class="tag">🇮🇳 Hinglish</div>
+          Exact solution mushkil hai, toh hum <strong>approximation algorithm</strong> use karte hain — jo exact nahi but <em>guarantee karta hai ki answer optimal se zyada se zyada 2x bada hoga</em>.
+          <br><em>Yeh "good enough" solution hai NP-Hard problems ke liye!</em>
+        </div>
+
+        <h3 class="sub">2-Approximation Algorithm for Vertex Cover</h3>
+        <div class="card">
+          <div class="tag">Algorithm — APPROX-VERTEX-COVER</div>
+          <div class="formula" style="text-align:left;font-size:14px;line-height:2">
+            APPROX-VERTEX-COVER(G = (V, E)):<br>
+            &nbsp;&nbsp;C = ∅  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Cover set (initially empty)<br>
+            &nbsp;&nbsp;E' = E  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Copy of edge set<br>
+            &nbsp;&nbsp;while E' ≠ ∅ do<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;let (u, v) be any edge in E'<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;C = C ∪ {u, v}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Add both endpoints<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;Remove from E' all edges incident on u or v<br>
+            &nbsp;&nbsp;end while<br>
+            &nbsp;&nbsp;return C
+          </div>
+        </div>
+
+        <div class="card example">
+          <div class="tag">📌 Step-by-Step Example</div>
+          <p>Graph G: V = {A,B,C,D,E,F}, E = {(A,B),(B,C),(C,D),(D,E),(E,F),(F,A)}</p>
+          <table>
+            <tr><th>Step</th><th>Edge Picked</th><th>Vertices Added to C</th><th>Edges Removed</th></tr>
+            <tr><td>1</td><td>(A,B)</td><td class="hi">A, B</td><td>(A,B), (B,C), (F,A)</td></tr>
+            <tr><td>2</td><td>(C,D)</td><td class="hi">C, D</td><td>(C,D), (D,E)</td></tr>
+            <tr><td>3</td><td>(E,F)</td><td class="hi">E, F</td><td>(E,F)</td></tr>
+            <tr><td>Result</td><td colspan="3"><strong>C = {A,B,C,D,E,F}</strong> — All 6 vertices (Optimal is 3)</td></tr>
+          </table>
+          <p style="margin-top:10px;"><strong>Approximation Ratio:</strong> |C| / |OPT| ≤ 2 &nbsp;&nbsp;→ This is guaranteed.</p>
+        </div>
+
+        <h3 class="sub">Why is the Ratio ≤ 2?</h3>
+        <div class="card">
+          <div class="tag">Proof of 2-Approximation</div>
+          <p>Let A = set of edges chosen in the while loop (a maximal matching). Every edge in A is vertex-disjoint (no shared endpoints). So |A| independent edges need at least |A| vertices in any cover. Thus |OPT| ≥ |A|. Our algorithm adds both endpoints of each edge in A, so |C| = 2|A| ≤ 2·|OPT|. ∎</p>
+        </div>
+
+        <!-- Flowchart -->
+        <div class="svgbox">
+          <svg viewBox="0 0 420 340" xmlns="http://www.w3.org/2000/svg" style="max-width:420px;width:100%">
+            <defs>
+              <marker id="ar3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L8,3 z" fill="#4f46e5"/>
+              </marker>
+            </defs>
+            <!-- Start -->
+            <ellipse cx="210" cy="28" rx="80" ry="22" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.5"/>
+            <text x="210" y="33" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#4f46e5">START: C=∅, E'=E</text>
+            <!-- Arrow -->
+            <line x1="210" y1="50" x2="210" y2="80" stroke="#4f46e5" stroke-width="1.5" marker-end="url(#ar3)"/>
+            <!-- Decision diamond -->
+            <polygon points="210,80 310,110 210,140 110,110" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5"/>
+            <text x="210" y="107" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#b45309">E' ≠ ∅?</text>
+            <!-- YES path -->
+            <line x1="310" y1="110" x2="360" y2="110" stroke="#10b981" stroke-width="1.5"/>
+            <text x="340" y="105" font-family="Inter,sans-serif" font-size="10" fill="#059669">YES</text>
+            <line x1="360" y1="110" x2="360" y2="165" stroke="#10b981" stroke-width="1.5" marker-end="url(#ar3)"/>
+            <!-- Process box -->
+            <rect x="270" y="165" width="180" height="55" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+            <text x="360" y="185" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#059669">Pick edge (u,v)</text>
+            <text x="360" y="200" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#064e3b">C = C ∪ {u,v}</text>
+            <text x="360" y="213" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#064e3b">Remove adj. edges</text>
+            <!-- Loop back -->
+            <line x1="360" y1="220" x2="360" y2="270" stroke="#10b981" stroke-width="1.5"/>
+            <line x1="360" y1="270" x2="110" y2="270" stroke="#10b981" stroke-width="1.5"/>
+            <line x1="110" y1="270" x2="110" y2="110" stroke="#10b981" stroke-width="1.5" marker-end="url(#ar3)"/>
+            <!-- NO path -->
+            <line x1="210" y1="140" x2="210" y2="175" stroke="#ef4444" stroke-width="1.5" marker-end="url(#ar3)"/>
+            <text x="222" y="162" font-family="Inter,sans-serif" font-size="10" fill="#ef4444">NO</text>
+            <!-- End -->
+            <rect x="130" y="175" width="160" height="44" rx="10" fill="#ecfeff" stroke="#06b6d4" stroke-width="2"/>
+            <text x="210" y="195" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="800" fill="#0891b2">Return C</text>
+            <text x="210" y="211" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#064e3b">(2-Approximation)</text>
+          </svg>
+          <div class="cap">Fig 6: Flowchart of APPROX-VERTEX-COVER Algorithm</div>
+        </div>
+
+        <table>
+          <tr><th>Property</th><th>Details</th></tr>
+          <tr><td class="hi">Time Complexity</td><td>O(V + E) — Polynomial time</td></tr>
+          <tr><td class="hi">Approximation Ratio</td><td>2 (at most twice the optimal)</td></tr>
+          <tr><td class="hi">Guarantee</td><td>|C| ≤ 2 · |OPT|</td></tr>
+          <tr><td class="hi">Is it Optimal?</td><td>Not always — may produce larger than minimum cover</td></tr>
+          <tr><td class="hi">Better known?</td><td>No polynomial 2-ε approximation known (Unique Games Conjecture)</td></tr>
+        </table>
+
+        <hr class="sep">
+
+        <!-- ══ 12. SET COVER ══ -->
+        <h2 class="topic scroll-anchor" id="setcover">
+          <span>12.</span> Set Cover Problem &amp; Approximation
+          <span class="imp m">MEDIUM ★★</span>
+        </h2>
+
+        <div class="card def">
+          <div class="tag">Definition</div>
+          <p>Given a universe U of n elements and a collection S = {S₁, S₂, ..., Sₘ} of subsets of U (where ∪Sᵢ = U), and a cost function c(Sᵢ), the <strong>Set Cover Problem</strong> asks: Find the minimum cost sub-collection of S that covers all elements of U. The decision version asks: Is there a set cover of cost ≤ k?</p>
+        </div>
+
+        <div class="hin">
+          <div class="tag">🇮🇳 Hinglish</div>
+          Set Cover mein kuch sets diye hote hain. Hume <strong>minimum number of sets</strong> choose karne hote hain taaki <em>saare elements cover ho jaayein</em>.
+          <br><br>
+          <em>Real Life: Ek city mein fire stations (sets) laga rahe ho. Har station kuch areas cover karta hai. Minimum stations se saari city cover karo!</em>
+        </div>
+
+        <div class="card example">
+          <div class="tag">📌 Example</div>
+          <p>U = {1, 2, 3, 4, 5, 6, 7}</p>
+          <p>S₁ = {1,2,3,4}, S₂ = {2,4,5,6}, S₃ = {1,4,6,7}, S₄ = {3,5,7}</p>
+          <p>Optimal: {S₁, S₂, S₄} covers all elements with 3 sets.</p>
+          <p>Or: {S₁, S₃, S₄} also works.</p>
+        </div>
+
+        <h3 class="sub">Greedy Approximation Algorithm for Set Cover</h3>
+        <div class="card">
+          <div class="tag">Algorithm — GREEDY-SET-COVER</div>
+          <div class="formula" style="text-align:left;font-size:14px;line-height:2">
+            GREEDY-SET-COVER(U, S):<br>
+            &nbsp;&nbsp;C = ∅  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Selected sets<br>
+            &nbsp;&nbsp;U' = U  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Remaining uncovered elements<br>
+            &nbsp;&nbsp;while U' ≠ ∅ do<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;Select Sᵢ ∈ S maximizing |Sᵢ ∩ U'|<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;C = C ∪ {Sᵢ}<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;U' = U' \ Sᵢ<br>
+            &nbsp;&nbsp;end while<br>
+            &nbsp;&nbsp;return C
+          </div>
+        </div>
+
+        <div class="card example">
+          <div class="tag">Step-by-Step with Example</div>
+          <table>
+            <tr><th>Iteration</th><th>U' (Remaining)</th><th>Best Set</th><th>Covers</th></tr>
+            <tr><td>1</td><td>{1,2,3,4,5,6,7}</td><td class="hi">S₁={1,2,3,4}</td><td>4 elements</td></tr>
+            <tr><td>2</td><td>{5,6,7}</td><td class="hi">S₂={2,4,5,6} → covers {5,6}</td><td>2 elements</td></tr>
+            <tr><td>3</td><td>{7}</td><td class="hi">S₄={3,5,7} → covers {7}</td><td>1 element</td></tr>
+            <tr><td>Done</td><td>∅</td><td colspan="2"><strong>C = {S₁, S₂, S₄} — 3 sets (optimal here!)</strong></td></tr>
+          </table>
+        </div>
+
+        <table>
+          <tr><th>Property</th><th>Greedy Set Cover</th></tr>
+          <tr><td class="hi">Time Complexity</td><td>O(|U| · |S|) — Polynomial</td></tr>
+          <tr><td class="hi">Approximation Ratio</td><td>H(max|Sᵢ|) = 1 + 1/2 + 1/3 + ... + 1/d ≈ ln(n) + 1</td></tr>
+          <tr><td class="hi">Guarantee</td><td>|C| ≤ ln(n) · |OPT|</td></tr>
+          <tr><td class="hi">Is Optimal?</td><td>Not always — greedy picks locally best</td></tr>
+        </table>
+
+        <h3 class="sub">Comparison: Vertex Cover vs Set Cover Approximation</h3>
+        <table>
+          <tr><th>Feature</th><th>Vertex Cover (2-Approx)</th><th>Set Cover (Greedy)</th></tr>
+          <tr><td>Approx Ratio</td><td class="hi">2</td><td class="hi">O(ln n)</td></tr>
+          <tr><td>Strategy</td><td>Pick maximal matching</td><td>Greedy — pick most covering set</td></tr>
+          <tr><td>Poly-time?</td><td class="hi">Yes — O(V+E)</td><td class="hi">Yes — O(|U|·|S|)</td></tr>
+          <tr><td>Better lower bound possible?</td><td>Likely not (UGC)</td><td>Likely not (NP-Hard to do better)</td></tr>
+          <tr><td>NP-Completeness</td><td>NP-Complete (decision)</td><td>NP-Complete (decision)</td></tr>
+        </table>
+
+        <hr class="sep">
+
+        <!-- ══ Q&A SECTION ══ -->
+        <div class="qsection scroll-anchor" id="qa">
+          <h2 style="font-size:22px;font-weight:800;margin-bottom:6px;">❓ RTU Exam Q&amp;A Bank — Unit 6</h2>
+          <div style="color:var(--muted);font-size:14px;margin-bottom:24px;">Design &amp; Analysis of Algorithms · Based on RTU PYQs and Syllabus Importance</div>
+
+          <!-- Q1 -->
+          <div class="qcard">
+            <div class="qlabel">Q1 · 10 MARKS — Most Repeated</div>
+            <span class="marks m10">10 MARKS</span>
+            <div class="q">What are P, NP, NP-Hard, and NP-Complete problem classes? Explain with examples and their inter-relationships.</div>
+            <div class="a">
+              <p><strong>Class P (Polynomial Time):</strong> Set of decision problems solvable in O(nᵏ) time on a deterministic machine. Examples: Sorting (O(n log n)), Shortest Path (O(V²)), Primality Testing.</p>
+              <p><strong>Class NP (Non-deterministic Polynomial):</strong> Set of decision problems whose given solutions can be verified in polynomial time. Examples: SAT, TSP-Decision, Vertex Cover, Hamiltonian Cycle. P ⊆ NP.</p>
+              <p><strong>NP-Hard:</strong> A problem H is NP-Hard if every L ∈ NP satisfies L ≤ₚ H (all NP problems reduce to it in polynomial time). NP-Hard problems need not be in NP. Examples: Halting Problem, TSP-Optimization.</p>
+              <p><strong>NP-Complete:</strong> Problems that are both in NP AND NP-Hard. The hardest problems within NP. Examples: SAT, 3-SAT, Vertex Cover, Clique, TSP-Decision. If any NP-Complete problem is in P, then P = NP.</p>
+              <p><strong>Relationships:</strong> P ⊆ NP, NP-Complete = NP ∩ NP-Hard. Assuming P ≠ NP, these form four distinct regions. The P vs NP question (does P = NP?) is a $1,000,000 unsolved Millennium Prize Problem.</p>
+              <table>
+                <tr><th>Class</th><th>In NP?</th><th>All NP reduce to it?</th><th>Solvable in Poly Time?</th></tr>
+                <tr><td>P</td><td>YES</td><td>NO</td><td>YES</td></tr>
+                <tr><td>NP</td><td>YES</td><td>NO</td><td>Unknown</td></tr>
+                <tr><td>NP-Hard</td><td>Not necessarily</td><td>YES</td><td>Unlikely</td></tr>
+                <tr><td>NP-Complete</td><td>YES</td><td>YES</td><td>Unlikely</td></tr>
+              </table>
+            </div>
+          </div>
+
+          <!-- Q2 -->
+          <div class="qcard">
+            <div class="qlabel">Q2 · 10 MARKS</div>
+            <span class="marks m10">10 MARKS</span>
+            <div class="q">State and prove Cook's Theorem. Why is it significant?</div>
+            <div class="a">
+              <p><strong>Cook's Theorem (1971):</strong> The Boolean Satisfiability Problem (SAT) is NP-Complete.</p>
+              <p><strong>Proof — Part 1: SAT ∈ NP.</strong> Given any truth assignment to the variables, we can substitute values into all clauses and check if each evaluates to TRUE. This verification takes O(n) time (linear in the size of the formula). Hence SAT ∈ NP.</p>
+              <p><strong>Proof — Part 2: SAT is NP-Hard.</strong> Let L be any problem in NP. Then there exists a Non-deterministic Turing Machine M that accepts L in time p(n) (polynomial). For any input x, we construct a Boolean formula φ(M, x) in CNF such that:</p>
+              <ul>
+                <li>The formula encodes all possible configurations of M on input x as Boolean variables</li>
+                <li>Each transition rule of M becomes a clause</li>
+                <li>φ is satisfiable ⟺ M accepts x ⟺ x ∈ L</li>
+                <li>Construction of φ takes polynomial time O(p(n)²)</li>
+              </ul>
+              <p>Therefore L ≤ₚ SAT for any L ∈ NP, making SAT NP-Hard.</p>
+              <p><strong>Conclusion:</strong> SAT ∈ NP and SAT is NP-Hard ⟹ SAT is NP-Complete. ∎</p>
+              <p><strong>Significance:</strong> Cook's theorem was the first proof of NP-Completeness, establishing SAT as a universal hard problem. It gave researchers a starting point — any NP problem can be shown NP-Complete by reducing SAT (or a known NP-Complete problem) to it.</p>
+            </div>
+          </div>
+
+          <!-- Q3 -->
+          <div class="qcard">
+            <div class="qlabel">Q3 · 10 MARKS</div>
+            <span class="marks m10">10 MARKS</span>
+            <div class="q">Explain the Vertex Cover Problem. Prove it is NP-Complete. Write a 2-approximation algorithm for it.</div>
+            <div class="a">
+              <p><strong>Vertex Cover:</strong> A vertex cover of graph G = (V,E) is a subset S ⊆ V such that every edge (u,v) ∈ E has at least one of u, v in S. The decision problem: Does G have a vertex cover of size ≤ k?</p>
+              <p><strong>NP-Completeness Proof:</strong></p>
+              <p>Step 1 — <em>VC ∈ NP:</em> Given a set S, check each edge (u,v) to see if u ∈ S or v ∈ S. This takes O(E) time → polynomial. So VC ∈ NP.</p>
+              <p>Step 2 — <em>VC is NP-Hard:</em> We show Independent Set (IS) ≤ₚ VC. Observation: S is an independent set of size k in G ⟺ V−S is a vertex cover of size n−k. Given IS instance (G, k), construct VC instance (G, n−k) — same graph, different k. This is a polynomial transformation. Since IS is NP-Complete, VC is NP-Hard. ∎</p>
+              <p><strong>2-Approximation Algorithm (APPROX-VERTEX-COVER):</strong></p>
+              <div class="formula" style="text-align:left">
+                C = ∅; E' = E<br>
+                while E' ≠ ∅:<br>
+                &nbsp;&nbsp;pick any edge (u,v) from E'<br>
+                &nbsp;&nbsp;C = C ∪ {u, v}<br>
+                &nbsp;&nbsp;remove all edges incident on u or v from E'<br>
+                return C
+              </div>
+              <p><strong>Analysis:</strong> Let A = edges chosen in the while loop. A is a matching (vertex-disjoint). Any VC must include ≥1 vertex per edge in A, so |OPT| ≥ |A|. Our algorithm adds 2 vertices per edge, so |C| = 2|A| ≤ 2|OPT|. Time complexity: O(V + E).</p>
+            </div>
+          </div>
+
+          <!-- Q4 -->
+          <div class="qcard">
+            <div class="qlabel">Q4 · 10 MARKS</div>
+            <span class="marks m10">10 MARKS</span>
+            <div class="q">Explain the Set Cover Problem. Describe a greedy approximation algorithm and analyze its approximation ratio.</div>
+            <div class="a">
+              <p><strong>Set Cover Problem:</strong> Given universe U of n elements and collection S of subsets of U with ∪S = U, find the minimum number of sets from S whose union equals U. Decision version: Is there a set cover of size ≤ k?</p>
+              <p><strong>Set Cover is NP-Complete:</strong> Vertex Cover ≤ₚ Set Cover (special case where sets are neighborhoods of vertices).</p>
+              <p><strong>Greedy Approximation Algorithm:</strong></p>
+              <div class="formula" style="text-align:left">
+                C = ∅; U' = U<br>
+                while U' ≠ ∅:<br>
+                &nbsp;&nbsp;Select Sᵢ with maximum |Sᵢ ∩ U'|<br>
+                &nbsp;&nbsp;C = C ∪ {Sᵢ}; U' = U' \ Sᵢ<br>
+                return C
+              </div>
+              <p><strong>Approximation Ratio Analysis:</strong></p>
+              <p>Let OPT = k (optimal cover size). The greedy always picks the set covering the most uncovered elements. At any step with r elements remaining, the best set covers ≥ r/k elements. Using the harmonic series analysis:</p>
+              <div class="formula">|C| ≤ k · H(max|Sᵢ|) = k · (1 + 1/2 + 1/3 + ... + 1/d) ≤ k · (ln n + 1)</div>
+              <p>So greedy gives an O(ln n) approximation. While worse than the vertex cover's 2-approximation, it is the best known polynomial-time approximation for the general Set Cover problem (under the Unique Games Conjecture).</p>
+              <p><strong>Example:</strong> U = {1..7}, S₁={1,2,3,4}, S₂={2,4,5,6}, S₄={3,5,7}. Greedy picks S₁ (4 elements), then S₂ (covers 5,6), then S₄ (covers 7). Cover = {S₁,S₂,S₄} with 3 sets.</p>
+            </div>
+          </div>
+
+          <!-- Q5 -->
+          <div class="qcard">
+            <div class="qlabel">Q5 · 5 MARKS</div>
+            <span class="marks m5">5 MARKS</span>
+            <div class="q">What is a Decision Problem? Give examples and explain its significance in complexity theory.</div>
+            <div class="a">
+              <p>A decision problem is a computational problem with a YES/NO answer. It takes an input instance and a parameter k, and asks whether a certain property holds.</p>
+              <p><strong>Significance:</strong> Complexity theory (P, NP, NP-Hard) is formally defined for decision problems. Any optimization problem can be converted to a decision problem by adding a threshold k. If the decision version is in P, the optimization version is usually also in P.</p>
+              <p><strong>Examples:</strong></p>
+              <table>
+                <tr><th>Optimization</th><th>Decision Version</th></tr>
+                <tr><td>Find shortest path</td><td>Is there a path of length ≤ k?</td></tr>
+                <tr><td>Minimum vertex cover</td><td>Is there a vertex cover of size ≤ k?</td></tr>
+                <tr><td>Min TSP tour</td><td>Is there a tour of cost ≤ k?</td></tr>
+              </table>
+            </div>
+          </div>
+
+          <!-- Q6 -->
+          <div class="qcard">
+            <div class="qlabel">Q6 · 5 MARKS</div>
+            <span class="marks m5">5 MARKS</span>
+            <div class="q">What is the Boolean Satisfiability Problem (SAT)? Solve a given CNF formula.</div>
+            <div class="a">
+              <p>SAT asks: Given a CNF formula φ (AND of clauses, where each clause is an OR of literals), does there exist a truth assignment making φ = TRUE?</p>
+              <p><strong>SAT is NP-Complete</strong> (first proved by Cook, 1971). Verification: Given an assignment, check each clause → O(n). Solving: No polynomial algorithm known.</p>
+              <p><strong>Example:</strong> φ = (x₁ ∨ ¬x₂) ∧ (¬x₁ ∨ x₂ ∨ x₃) ∧ (x₂ ∨ ¬x₃)</p>
+              <p>Try x₁=T, x₂=T, x₃=F:</p>
+              <ul>
+                <li>Clause 1: (T ∨ F) = T ✅</li>
+                <li>Clause 2: (F ∨ T ∨ F) = T ✅</li>
+                <li>Clause 3: (T ∨ T) = T ✅</li>
+              </ul>
+              <p>φ is <strong>SATISFIABLE</strong> with x₁=TRUE, x₂=TRUE, x₃=FALSE.</p>
+            </div>
+          </div>
+
+          <!-- Q7 -->
+          <div class="qcard">
+            <div class="qlabel">Q7 · 5 MARKS</div>
+            <span class="marks m5">5 MARKS</span>
+            <div class="q">What is polynomial time reduction? Explain with an example how it is used to prove NP-Completeness.</div>
+            <div class="a">
+              <p><strong>Polynomial Reduction (A ≤ₚ B):</strong> A is polynomial-time reducible to B if there exists a polynomial-time computable function f such that x ∈ A ⟺ f(x) ∈ B. This means B is at least as hard as A.</p>
+              <p><strong>Use in NP-Completeness:</strong> To prove problem X is NP-Complete:</p>
+              <ol>
+                <li>Show X ∈ NP (poly-time verifier exists)</li>
+                <li>Pick a known NP-Complete problem Y</li>
+                <li>Show Y ≤ₚ X (polynomial reduction from Y to X)</li>
+              </ol>
+              <p><strong>Example — Independent Set ≤ₚ Vertex Cover:</strong></p>
+              <p>Given IS instance (G, k), construct VC instance (G, n−k). S is an independent set of size k ⟺ V−S is a vertex cover of size n−k. Transformation: O(1) — same graph, different parameter. Hence VC is NP-Hard (since IS is NP-Complete).</p>
+            </div>
+          </div>
+
+          <!-- Q8 -->
+          <div class="qcard">
+            <div class="qlabel">Q8 · 5 MARKS</div>
+            <span class="marks m5">5 MARKS</span>
+            <div class="q">What is an approximation algorithm? Why are approximation algorithms important for NP-Hard problems?</div>
+            <div class="a">
+              <p>An <strong>approximation algorithm</strong> is a polynomial-time algorithm that finds a solution whose value is guaranteed to be within a constant factor (approximation ratio ρ) of the optimal solution. For minimization: ALG(I) ≤ ρ · OPT(I). For maximization: OPT(I) ≤ ρ · ALG(I).</p>
+              <p><strong>Importance:</strong> Since NP-Complete/NP-Hard problems likely have no polynomial-time exact solutions, approximation algorithms provide the best practical alternative — fast solutions that are provably close to optimal.</p>
+              <p><strong>Examples:</strong></p>
+              <table>
+                <tr><th>Problem</th><th>Best Approximation</th></tr>
+                <tr><td>Vertex Cover</td><td>2-approximation (poly-time)</td></tr>
+                <tr><td>Set Cover</td><td>O(ln n)-approximation (greedy)</td></tr>
+                <tr><td>TSP (metric)</td><td>1.5-approximation (Christofides)</td></tr>
+                <tr><td>Max 3-SAT</td><td>7/8-approximation (randomized)</td></tr>
+              </table>
+            </div>
+          </div>
+
+          <!-- Q9 -->
+          <div class="qcard">
+            <div class="qlabel">Q9 · 5 MARKS</div>
+            <span class="marks m5">5 MARKS</span>
+            <div class="q">Differentiate between NP-Hard and NP-Complete problems. Give two examples of each.</div>
+            <div class="a">
+              <table>
+                <tr><th>Feature</th><th>NP-Hard</th><th>NP-Complete</th></tr>
+                <tr><td>Must be in NP?</td><td>❌ No</td><td>✅ Yes (by definition)</td></tr>
+                <tr><td>All NP reduce to it?</td><td>✅ Yes</td><td>✅ Yes</td></tr>
+                <tr><td>Decision Problem?</td><td>Not necessarily</td><td>✅ Yes (always)</td></tr>
+                <tr><td>Verifiable in poly time?</td><td>Not necessarily</td><td>✅ Yes</td></tr>
+                <tr><td>Examples</td><td>Halting Problem, TSP-Opt</td><td>SAT, Vertex Cover</td></tr>
+                <tr><td>Relation</td><td>NP-Hard ⊇ NP-Complete</td><td>NP-C ⊂ NP-Hard</td></tr>
+              </table>
+              <p><strong>NP-Hard Examples:</strong></p>
+              <ul>
+                <li>Halting Problem — undecidable, not even in NP</li>
+                <li>TSP Optimization — find minimum tour cost</li>
+              </ul>
+              <p><strong>NP-Complete Examples:</strong></p>
+              <ul>
+                <li>SAT — first NP-Complete problem (Cook, 1971)</li>
+                <li>Vertex Cover Decision — is there a cover of size ≤ k?</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Q10 -->
+          <div class="qcard">
+            <div class="qlabel">Q10 · 5 MARKS</div>
+            <span class="marks m5">5 MARKS</span>
+            <div class="q">Show that 2-SAT ∈ P but 3-SAT is NP-Complete. Why does one extra literal per clause make such a difference?</div>
+            <div class="a">
+              <p><strong>2-SAT ∈ P:</strong> In 2-SAT each clause has exactly 2 literals. A clause (a ∨ b) is equivalent to two implications: ¬a → b and ¬b → a. Construct an implication graph with 2n nodes (one per variable and its negation). 2-SAT is SATISFIABLE iff no variable and its negation belong to the same Strongly Connected Component (SCC). SCC computation takes O(V+E) → polynomial. So 2-SAT ∈ P.</p>
+              <p><strong>3-SAT is NP-Complete:</strong> Every clause in SAT can be converted to clauses of 3 literals (introduce auxiliary variables for clauses with more literals, split into 3-literal clauses). This shows SAT ≤ₚ 3-SAT, and since 3-SAT ≤ₚ SAT trivially, 3-SAT is NP-Complete.</p>
+              <p><strong>Why the difference?</strong> The implication graph trick works for 2-SAT because each clause gives exactly 2 implications, keeping the problem structurally tractable. With 3 literals, the exponential case branching kicks in — no known polynomial algorithm can handle the combinatorial explosion of possible assignments.</p>
+            </div>
+          </div>
+
+          <!-- Q11 -->
+          <div class="qcard">
+            <div class="qlabel">Q11 · 5 MARKS — Short Note</div>
+            <span class="marks m5">5 MARKS</span>
+            <div class="q">Write a short note on the P vs NP problem and its implications.</div>
+            <div class="a">
+              <p>The <strong>P vs NP problem</strong> asks whether every problem whose solution can be quickly verified (NP) can also be quickly solved (P). It is one of the seven Millennium Prize Problems with a $1,000,000 reward.</p>
+              <p><strong>If P = NP:</strong></p>
+              <ul>
+                <li>All NP-Complete problems become efficiently solvable</li>
+                <li>RSA encryption (based on factoring hardness) would be broken</li>
+                <li>Drug discovery, logistics optimization would become trivial</li>
+                <li>The entire field of cryptography would collapse</li>
+              </ul>
+              <p><strong>If P ≠ NP (widely believed):</strong></p>
+              <ul>
+                <li>NP-Complete problems have no efficient solution</li>
+                <li>Encryption remains secure</li>
+                <li>Approximation algorithms remain important</li>
+              </ul>
+              <p>Despite decades of research, no proof exists either way. The best known algorithms for NP-Complete problems still require exponential time in the worst case.</p>
+            </div>
+          </div>
+
+        </div><!-- end qsection -->
+
+        <!-- Footer Note -->
+        <div style="margin-top:60px; padding:20px 24px; border:1px dashed var(--border); border-radius:10px; color:var(--muted); font-size:13px;">
+          <div style="color:var(--accent); font-family:'JetBrains Mono',monospace; font-weight:700; margin-bottom:6px;">SMART LEARNING+ // AOA_VAULT — UNIT 6 · NP Complexity</div>
+          <p>RTU B.Tech CSE 5th Semester · Design &amp; Analysis of Algorithms · Unit 6 of 7</p>
+          <p style="margin-top:6px;">📌 <strong>Focus areas for exam:</strong> P/NP/NP-Hard/NP-Complete definitions &amp; differences (10-mark), Cook's Theorem proof (10-mark), Vertex Cover NP-Completeness + 2-Approx Algorithm (10-mark), SAT example (5-mark), Set Cover greedy (5-mark).</p>
+          <p style="margin-top:6px;"><strong>Key facts to memorize:</strong> SAT = first NP-Complete (Cook 1971) | 2-SAT ∈ P, 3-SAT NP-C | VC 2-approx ratio | Set Cover O(ln n) approx | IS ≤ₚ VC (same graph, complement) | P ⊆ NP ⊆ NP-Hard (with NP-C = intersection)</p>
+        </div>
+
+      </div><!-- end #content -->
+    </div><!-- end .wrap -->
+
+    <div style="display:flex;gap:12px;justify-content:center;padding:30px 20px;flex-wrap:wrap;">
+      <a href="unit5.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+      <a href="../aoa/index.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">🏠 AOA Hub</a>
+
+    </div>
+  </main>
+
+  <div class="cursor-dot" data-cursor-dot></div>
+  <div class="cursor-outline" data-cursor-outline></div>
+  <script>
+    const cursorDot = document.querySelector("[data-cursor-dot]");
+    const cursorOutline = document.querySelector("[data-cursor-outline]");
+    window.addEventListener("mousemove", function(e){
+      cursorDot.style.left = e.clientX + "px";
+      cursorDot.style.top = e.clientY + "px";
+      cursorOutline.animate(
+        { left: e.clientX + "px", top: e.clientY + "px" },
+        { duration: 400, fill: "forwards" }
+      );
+    });
+    document.querySelectorAll("a,button").forEach(el => {
+      el.addEventListener("mouseenter", () => cursorOutline.classList.add("cursor-hovering"));
+      el.addEventListener("mouseleave", () => cursorOutline.classList.remove("cursor-hovering"));
+    });
+  </script>
+<script src="../splash-cursor.js"></script>\n</body>
+</html>

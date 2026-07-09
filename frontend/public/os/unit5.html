@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Learning Plus // OS · Unit 5</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <main class="main-wrapper" style="width:100%;">
+    <div class="topbar">
+      <a href="index.html" class="back-btn">⬅ OS Hub</a>
+      <div class="brand">Smart<span>Learning</span>+ <span style="color:var(--muted);font-weight:400;font-size:14px;">// OS · Unit 5</span></div>
+      <div class="nav">
+        <a href="index.html">🏠 OS Hub</a>
+        <a href="#content">📖 Content</a>
+        <a href="#qa5">❓ Q&amp;A</a>
+        <a href="unit6.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="hero">
+        <h1>📒 UNIT 5 — File Management</h1>
+        <p>File Concept · Types & Structures · Directory Structure · Access Methods & Matrices · File Security · User Authentication · Case Studies | Hours: 07</p>
+        <div class="badges" style="margin-top:14px;">
+          <a href="index.html" style="text-decoration:none;"><span class="badge b-teal">← Back to OS Hub</span></a>
+          <span class="badge b-gold">5CS4-03 · OS · RTU</span>
+        </div>
+      </div>
+      <div id="content">
+      <h1 class="unit-title" id="unit5">📒 UNIT 5 — File Management</h1>
+      <p class="unit-sub">File Concept · Types &amp; Structures · Directory Structure · Access Methods &amp; Matrices · File Security · User Authentication · Case Studies &nbsp;|&nbsp; Hours: 07</p>
+
+      <div class="keypoint"><span class="icon">🔥</span><span>Directory structures (Tree, Acyclic Graph) + File attributes + Access methods + Protection matrix — all are exam favourites from this unit.</span></div>
+
+      <h2 class="topic">1. File Concept <span class="imp h">High ⭐⭐⭐⭐</span></h2>
+      <div class="card def">
+        <span class="tag">English</span>
+        <p>A <b>file</b> is a named collection of related information stored on secondary storage (disk). It is the smallest allotment of logical secondary storage. The OS provides a uniform logical view of information storage through the file system.</p>
+      </div>
+      <div class="hin">
+        <span class="tag">Hinglish</span>
+        <p>File ek named collection hai data ki — jaise ek folder mein papers hote hain, waise hi secondary storage pe data organized form mein store hota hai. OS iske saath deal karta hai as a unit — create, open, read, write, close, delete.</p>
+      </div>
+
+      <h3 class="sub">File Attributes <span class="imp h">High — RTU Frequently Asked</span></h3>
+      <table>
+        <tr><th>Attribute</th><th>Description</th><th>Example</th></tr>
+        <tr><td><code>Name</code></td><td>Human-readable symbolic name</td><td>report.pdf</td></tr>
+        <tr><td><code>Identifier</code></td><td>Unique tag (inode number) assigned by OS</td><td>inode #4821</td></tr>
+        <tr><td><code>Type</code></td><td>File extension or type info</td><td>.txt, .exe, .jpg</td></tr>
+        <tr><td><code>Location</code></td><td>Pointer to device &amp; location on disk</td><td>Block 0x2F4</td></tr>
+        <tr><td><code>Size</code></td><td>Current size of file in bytes</td><td>2.4 MB</td></tr>
+        <tr><td><code>Protection</code></td><td>Access control (rwx)</td><td>rw-r--r--</td></tr>
+        <tr><td><code>Time &amp; Date</code></td><td>Creation, modification, last access</td><td>2024-01-15</td></tr>
+        <tr><td><code>User ID</code></td><td>Owner of the file</td><td>user: rahul</td></tr>
+      </table>
+
+      <h3 class="sub">File Operations</h3>
+      <div class="compare">
+        <div class="compare-card"><h4>Basic Operations</h4><ul><li><b>Create</b> — Naya file banao, space allocate karo</li><li><b>Write</b> — Data file mein likho (write pointer use hota hai)</li><li><b>Read</b> — Data file se padho (read pointer use hota hai)</li><li><b>Seek</b> — File pointer ko specific position pe move karo</li></ul></div>
+        <div class="compare-card"><h4>Management Operations</h4><ul><li><b>Delete</b> — File hatao, space release karo</li><li><b>Truncate</b> — File content clear karo but file rakhna hai</li><li><b>Open</b> — File ko use ke liye ready karo (FCB memory mein laao)</li><li><b>Close</b> — FCB wapas disk pe save karo</li></ul></div>
+      </div>
+
+      <h2 class="topic">2. File Types &amp; Structures <span class="imp m">Medium ⭐⭐⭐</span></h2>
+      <table>
+        <tr><th>File Type</th><th>Description</th><th>Extension</th></tr>
+        <tr><td><b>Ordinary/Regular</b></td><td>Contains user data — text, binary, executable</td><td>.txt, .exe, .c, .jpg</td></tr>
+        <tr><td><b>Directory</b></td><td>List of file names + metadata; special file managed by OS</td><td>/ /home /etc</td></tr>
+        <tr><td><b>Special/Device</b></td><td>Represents physical devices (block or character)</td><td>/dev/sda, /dev/tty</td></tr>
+        <tr><td><b>Socket</b></td><td>IPC via network — process communication endpoint</td><td>.sock</td></tr>
+        <tr><td><b>Symbolic Link</b></td><td>Pointer to another file path</td><td>.lnk, symlink</td></tr>
+      </table>
+
+      <h3 class="sub">File Internal Structures</h3>
+      <table>
+        <tr><th>Structure</th><th>Description</th><th>Analogy</th></tr>
+        <tr><td><b>No structure</b></td><td>Sequence of bytes — OS puts no meaning on file content</td><td>Raw binary blob</td></tr>
+        <tr><td><b>Simple record structure</b></td><td>Fixed-length or variable-length records</td><td>Database rows</td></tr>
+        <tr><td><b>Complex structures</b></td><td>Formatted files: PDF, DOCX, ELF executables — understood by specific programs</td><td>Word document</td></tr>
+      </table>
+
+      <h2 class="topic">3. Directory Structure <span class="imp h">High ⭐⭐⭐⭐⭐ 🔥</span></h2>
+      <div class="card def">
+        <span class="tag">English</span>
+        <p>A <b>Directory</b> is a collection of nodes containing information about all files organized in a structured way. It maps file names to file control blocks (FCBs/inodes).</p>
+      </div>
+
+      <h3 class="sub">Types of Directory Structures</h3>
+      <table>
+        <tr><th>Structure</th><th>Sharing</th><th>Same Name Files?</th><th>Complexity</th><th>Example</th></tr>
+        <tr><td><b>Single-Level</b></td><td>❌ No</td><td>❌ No (all files in one dir)</td><td>Low</td><td>Early MS-DOS</td></tr>
+        <tr><td><b>Two-Level</b></td><td>Limited</td><td>✅ Across users</td><td>Medium</td><td>Old UNIX</td></tr>
+        <tr><td><b>Tree-Structured</b></td><td>❌ No</td><td>✅ In different dirs</td><td>High</td><td>Windows, Linux</td></tr>
+        <tr><td><b>Acyclic Graph</b></td><td>✅ Yes</td><td>✅ Yes</td><td>Higher</td><td>UNIX hard links, symlinks</td></tr>
+        <tr><td><b>General Graph</b></td><td>✅ Yes</td><td>✅ Yes</td><td>Highest</td><td>Research OSes</td></tr>
+      </table>
+      <div class="hin">
+        <span class="tag">Hinglish</span>
+        <p>Single-level = sab files ek hi drawer mein — chaos! Two-level = har user ka alag drawer. Tree = modern OS wala structure (Windows C:\Users\Rahul, Linux /home/rahul). Acyclic Graph = ek file do jagah "dikh" sakti hai bina copy banaye (UNIX links). General Graph = cycle allowed, rarely used.</p>
+      </div>
+
+      <div class="keypoint"><span class="icon">💡</span><span><b>Absolute Path:</b> /home/rahul/code.c (root se shuru) &nbsp;|&nbsp; <b>Relative Path:</b> ../priya/notes.txt (current dir se relative)</span></div>
+
+      <h2 class="topic">4. Access Methods <span class="imp h">High ⭐⭐⭐</span></h2>
+      <table>
+        <tr><th>Access Method</th><th>Description</th><th>Use Case</th></tr>
+        <tr><td><b>Sequential Access</b></td><td>Data read/written in order, one record after another. Read pointer advances automatically.</td><td>Text files, log files, tape drives</td></tr>
+        <tr><td><b>Direct (Random) Access</b></td><td>Any block can be read/written directly using block number. File = fixed-length records.</td><td>Databases, disk files</td></tr>
+        <tr><td><b>Index Sequential</b></td><td>Index file maps keys to block locations; combine sequential + direct access.</td><td>ISAM databases</td></tr>
+      </table>
+
+      <h2 class="topic">5. Access Matrix (Protection Matrix) <span class="imp h">High ⭐⭐⭐⭐</span></h2>
+      <div class="card def">
+        <span class="tag">English</span>
+        <p>An <b>Access Matrix</b> is a security model that defines access rights. Rows represent <b>domains (users/processes)</b> and columns represent <b>objects (files/resources)</b>. Each cell [domain, object] specifies the allowed operations (read, write, execute).</p>
+      </div>
+      <div class="hin">
+        <span class="tag">Hinglish</span>
+        <p>Access Matrix ek table hai — row mein users, columns mein files. Har cell mein likha hota hai ki us user ko us file pe kya permission hai (r=read, w=write, x=execute). Jaise Linux mein rwxr-xr-- — owner ko rwx, group ko r-x, others ko r--.</p>
+      </div>
+      <table>
+        <tr><th></th><th>File1 (exam.txt)</th><th>File2 (grades.db)</th><th>File3 (prog.exe)</th></tr>
+        <tr><td><b>Rahul (User)</b></td><td>read, write</td><td>read</td><td>execute</td></tr>
+        <tr><td><b>Priya (User)</b></td><td>read</td><td>—</td><td>execute</td></tr>
+        <tr><td><b>Admin</b></td><td>read, write, execute</td><td>read, write</td><td>read, write, execute</td></tr>
+      </table>
+      <div class="card">
+        <p><b>Implementation methods:</b></p>
+        <ul>
+          <li><b>Access Control List (ACL)</b> — Column of access matrix stored with each object (file). UNIX permission bits are simplified ACL.</li>
+          <li><b>Capability List</b> — Row of access matrix stored with each domain (user/process). Process has a list of capabilities (tickets) it can use.</li>
+        </ul>
+      </div>
+
+      <h2 class="topic">6. File Security <span class="imp h">High ⭐⭐⭐</span></h2>
+      <div class="card def">
+        <span class="tag">English</span>
+        <p><b>File Security</b> is the protection of files from unauthorized access, modification, or destruction. Main threats: unauthorized access (confidentiality), unauthorized modification (integrity), unauthorized deletion (availability).</p>
+      </div>
+      <div class="card">
+        <p><b>Security Mechanisms:</b></p>
+        <ul>
+          <li><b>Access Control Lists (ACL)</b> — Per-file list of who can do what.</li>
+          <li><b>Encryption</b> — Data encrypted so only authorized users can read (AES, RSA).</li>
+          <li><b>Audit Logs</b> — Record all file access/modification attempts for forensics.</li>
+          <li><b>Backup</b> — Regular copies to recover from accidental deletion or ransomware.</li>
+          <li><b>File Permissions (UNIX rwx)</b> — Owner, Group, Others each get read/write/execute bits.</li>
+        </ul>
+      </div>
+
+      <h2 class="topic">7. User Authentication <span class="imp h">High ⭐⭐⭐</span></h2>
+      <div class="card def">
+        <span class="tag">English</span>
+        <p><b>User Authentication</b> is the process of verifying the identity of a user before granting access to system resources. It answers the question "Who are you?" before authorization answers "What can you do?"</p>
+      </div>
+      <table>
+        <tr><th>Factor</th><th>Type</th><th>Example</th></tr>
+        <tr><td><b>Something you know</b></td><td>Password, PIN, passphrase</td><td>Login password</td></tr>
+        <tr><td><b>Something you have</b></td><td>Smart card, OTP token, phone</td><td>OTP on mobile</td></tr>
+        <tr><td><b>Something you are</b></td><td>Biometrics (fingerprint, iris, face)</td><td>Face ID, Touch ID</td></tr>
+        <tr><td><b>Multi-Factor (MFA)</b></td><td>Combining 2+ factors</td><td>Password + OTP</td></tr>
+      </table>
+      <div class="hin">
+        <span class="tag">Hinglish</span>
+        <p>Authentication = "prove karo ki tum wohi ho jo tum claim kar rahe ho." Password sabse common hai lekin weakest bhi — isiliye MFA (Multi-Factor Authentication) use hota hai jaise bank mein password + OTP. Biometrics = fingerprint ya face, ye hardest to fake hote hain.</p>
+      </div>
+
+      <!-- Q&A UNIT 5 -->
+      <div class="qsection scroll-anchor" id="qa5">
+        <h1 class="unit-title">❓ Unit 5 — Q&amp;A (RTU Exam Pattern)</h1>
+
+        <div class="qcard">
+          <div class="qlabel">RTU EXAM Q&amp;A</div>
+          <div class="q">Q1. Define file. List and explain file attributes. <span class="imp h">★★★★ 5 Marks</span></div>
+          <span class="marks m5">5 Marks</span>
+          <div class="a"><p>File = named collection of related data on secondary storage. Attributes: Name (human-readable), Identifier (inode), Type (extension), Location (disk block pointer), Size (bytes), Protection (rwx permissions), Time &amp; Date (creation/modification), User ID (owner). Full attribute table above.</p></div>
+        </div>
+
+        <div class="qcard">
+          <div class="qlabel">RTU EXAM Q&amp;A</div>
+          <div class="q">Q2. Explain directory structures with diagrams: Single-Level, Two-Level, Tree, Acyclic Graph. <span class="imp h">★★★★★ 10 Marks — guaranteed</span></div>
+          <span class="marks m10">10 Marks</span>
+          <div class="a"><p>Single-level = all files in one directory (no organization, name conflicts). Two-level = one UFD per user under master MFD (path: /user/file). Tree = hierarchical, subdirectories, absolute/relative paths (modern OS standard). Acyclic Graph = shared files via hard links / symlinks without cycles. Full comparison table above.</p></div>
+        </div>
+
+        <div class="qcard">
+          <div class="qlabel">RTU EXAM Q&amp;A</div>
+          <div class="q">Q3. Explain access matrix. Distinguish ACL and Capability List. <span class="imp h">★★★★ 7 Marks</span></div>
+          <span class="marks m10">7 Marks</span>
+          <div class="a"><p>Access Matrix = table of domain × object where each cell = allowed operations (read/write/execute). ACL = column of matrix stored with each object (file) — "who can access this file." Capability List = row stored with each process/user — "what files can this process access." UNIX permission bits (rwxr-xr--) = simplified ACL per file for owner, group, others.</p></div>
+        </div>
+
+        <div class="qcard">
+          <div class="qlabel">RTU EXAM Q&amp;A</div>
+          <div class="q">Q4. What are file access methods? Explain sequential, direct, and indexed sequential. <span class="imp m">★★★ 5 Marks</span></div>
+          <span class="marks m5">5 Marks</span>
+          <div class="a"><p>Sequential = read/write records in order (pointer advances); used for log files. Direct = any record accessible by block/record number; used for databases. Index Sequential = index file maps keys to blocks — hybrid of both; used in ISAM. Sequential most common for streaming data; direct for random-access applications.</p></div>
+        </div>
+
+        <div class="qcard">
+          <div class="qlabel">RTU EXAM Q&amp;A</div>
+          <div class="q">Q5. What is file security? Explain its threats and mechanisms. <span class="imp h">★★★★ 5 Marks</span></div>
+          <span class="marks m5">5 Marks</span>
+          <div class="a"><p>File security = protecting files from unauthorized access/modification/deletion. Threats: confidentiality breach (unauthorized read), integrity attack (unauthorized modify), availability attack (delete/ransomware). Mechanisms: ACL, encryption, audit logs, backup, UNIX permission bits (rwx for owner/group/others).</p></div>
+        </div>
+
+        <div class="qcard">
+          <div class="qlabel">RTU EXAM Q&amp;A</div>
+          <div class="q">Q6. Define user authentication. What are its types? <span class="imp h">★★★ 5 Marks</span></div>
+          <span class="marks m5">5 Marks</span>
+          <div class="a"><p>Authentication = verifying user identity before granting access. Types: (1) Knowledge-based — passwords, PINs. (2) Possession-based — smart cards, OTP tokens. (3) Biometric-based — fingerprint, iris scan, face recognition. (4) Multi-Factor Authentication (MFA) — combining 2+ types. MFA is strongest since attacker needs to compromise multiple factors.</p></div>
+        </div>
+      </div>
+
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:center;padding:30px 20px;flex-wrap:wrap;">
+      <a href="index.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">🏠 OS Hub</a>
+      <a href="unit6.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+    </div>
+  </main>
+  <div class="cursor-dot" data-cursor-dot></div>
+  <div class="cursor-outline" data-cursor-outline></div>
+  <script>
+    const cursorDot = document.querySelector("[data-cursor-dot]");
+    const cursorOutline = document.querySelector("[data-cursor-outline]");
+    window.addEventListener("mousemove", function(e){
+      cursorDot.style.left=e.clientX+"px"; cursorDot.style.top=e.clientY+"px";
+      cursorOutline.animate({left:e.clientX+"px",top:e.clientY+"px"},{duration:400,fill:"forwards"});
+    });
+    document.querySelectorAll("a,button").forEach(el=>{
+      el.addEventListener("mouseenter",()=>cursorOutline.classList.add("cursor-hovering"));
+      el.addEventListener("mouseleave",()=>cursorOutline.classList.remove("cursor-hovering"));
+    });
+  </script>
+<script src="../splash-cursor.js"></script>\n</body>
+</html>

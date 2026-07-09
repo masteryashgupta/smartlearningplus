@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Learning Plus // OS · Unit 6</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <main class="main-wrapper" style="width:100%;">
+    <div class="topbar">
+      <a href="index.html" class="back-btn">⬅ OS Hub</a>
+      <div class="brand">Smart<span>Learning</span>+ <span style="color:var(--muted);font-weight:400;font-size:14px;">// OS · Unit 6</span></div>
+      <div class="nav">
+        <a href="index.html">🏠 OS Hub</a>
+        <a href="#content">📖 Content</a>
+        <a href="#qa6">❓ Q&amp;A</a>
+        <a href="nk.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">NK PYQ →</a>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="hero">
+        <h1>🖥️ UNIT 6 — UNIX, Linux, RTOS & Mobile OS Case Studies</h1>
+        <p>UNIX Architecture · Linux · Shell & Kernel · Real-Time OS (RTOS) · Mobile OS (Android/iOS) | Hours: 08</p>
+        <div class="badges" style="margin-top:14px;">
+          <a href="index.html" style="text-decoration:none;"><span class="badge b-teal">← Back to OS Hub</span></a>
+          <span class="badge b-gold">5CS4-03 · OS · RTU</span>
+        </div>
+      </div>
+      <div id="content">
+      <h1 class="unit-title" id="unit6">🖥️ UNIT 6 — UNIX, Linux, RTOS &amp; Mobile OS Case Studies</h1>
+      <p class="unit-sub">UNIX Architecture · Linux · Shell &amp; Kernel · Real-Time OS (RTOS) · Mobile OS (Android/iOS) &nbsp;|&nbsp; Hours: 08</p>
+
+      <div class="keypoint"><span class="icon">🔥</span><span>UNIX vs Linux difference + RTOS types (Hard/Soft) + Android architecture — asked almost every year. Concrete real-world examples earn marks from examiners!</span></div>
+
+      <!-- ── 6.1 UNIX ── -->
+      <h2 class="topic">6.1 UNIX — Introduction <span class="imp h">High ⭐⭐⭐⭐</span></h2>
+      <div class="card def">
+        <span class="tag">English</span>
+        <p><b>UNIX</b> is a multiuser, multitasking operating system originally developed at Bell Labs (AT&amp;T) by Ken Thompson and Dennis Ritchie (1969). It follows the philosophy <i>"everything is a file"</i> and provides a hierarchical file system, layered architecture, and a rich set of small, composable utility programs. Rewritten in C in 1973 (making it portable).</p>
+      </div>
+      <div class="hin">
+        <span class="tag">Hinglish</span>
+        <p>UNIX ek aisa OS hai jisme ek hi time pe multiple users kaam kar sakte hain (multiuser) aur ek user multiple programs chala sakta hai (multitasking). Iska core idea hai ki "sab kuch file hai" — chahe wo hardware device ho ya directory, sab ko file jaisa treat kiya jata hai. Linux is UNIX ka hi inspired open-source version hai.</p>
+      </div>
+
+      <h3 class="sub">UNIX History Timeline <span class="imp m">Medium</span></h3>
+      <div class="svgbox">
+        <svg viewBox="0 0 760 180" xmlns="http://www.w3.org/2000/svg">
+          <line x1="40" y1="80" x2="720" y2="80" stroke="#e2e8f0" stroke-width="2"/>
+          <g font-family="Inter,sans-serif" font-size="11">
+            <circle cx="80" cy="80" r="6" fill="#10b981"/>
+            <text x="80" y="62" fill="#0f172a" text-anchor="middle" font-weight="700">1969</text>
+            <text x="80" y="100" fill="#64748b" text-anchor="middle">Ken Thompson</text>
+            <text x="80" y="115" fill="#64748b" text-anchor="middle">&amp; Ritchie</text>
+            <text x="80" y="130" fill="#64748b" text-anchor="middle">Bell Labs</text>
+            <circle cx="240" cy="80" r="6" fill="#10b981"/>
+            <text x="240" y="62" fill="#0f172a" text-anchor="middle" font-weight="700">1973</text>
+            <text x="240" y="100" fill="#64748b" text-anchor="middle">Rewritten in C</text>
+            <text x="240" y="115" fill="#64748b" text-anchor="middle">(portable)</text>
+            <circle cx="400" cy="80" r="6" fill="#10b981"/>
+            <text x="400" y="62" fill="#0f172a" text-anchor="middle" font-weight="700">1977</text>
+            <text x="400" y="100" fill="#64748b" text-anchor="middle">BSD &amp; System V</text>
+            <text x="400" y="115" fill="#64748b" text-anchor="middle">branches split</text>
+            <circle cx="560" cy="80" r="6" fill="#f59e0b"/>
+            <text x="560" y="62" fill="#0f172a" text-anchor="middle" font-weight="700">1991</text>
+            <text x="560" y="100" fill="#64748b" text-anchor="middle">Linus Torvalds</text>
+            <text x="560" y="115" fill="#64748b" text-anchor="middle">releases Linux</text>
+            <circle cx="700" cy="80" r="6" fill="#4f46e5"/>
+            <text x="700" y="62" fill="#0f172a" text-anchor="middle" font-weight="700">Today</text>
+            <text x="700" y="100" fill="#64748b" text-anchor="middle">Linux everywhere</text>
+            <text x="700" y="115" fill="#64748b" text-anchor="middle">(servers, Android)</text>
+          </g>
+        </svg>
+        <p class="cap">Fig 6.1 — UNIX/Linux Timeline</p>
+      </div>
+
+      <h3 class="sub">UNIX Architecture <span class="imp h">High</span></h3>
+      <div class="svgbox">
+        <svg viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg">
+          <rect x="50" y="10" width="500" height="40" rx="8" fill="#f0fdf4" stroke="#10b981" stroke-width="1.5"/>
+          <text x="300" y="35" text-anchor="middle" fill="#0f172a" font-size="13" font-family="Inter" font-weight="700">User Programs / Applications (User Space)</text>
+          <rect x="50" y="60" width="500" height="40" rx="8" fill="#ecfeff" stroke="#06b6d4" stroke-width="1.5"/>
+          <text x="300" y="85" text-anchor="middle" fill="#0f172a" font-size="13" font-family="Inter" font-weight="700">Shell / Utilities (ls, cp, vi, gcc...)</text>
+          <rect x="50" y="110" width="500" height="40" rx="8" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.5"/>
+          <text x="300" y="135" text-anchor="middle" fill="#0f172a" font-size="13" font-family="Inter" font-weight="700">System Call Interface</text>
+          <rect x="50" y="160" width="500" height="40" rx="8" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5"/>
+          <text x="300" y="185" text-anchor="middle" fill="#0f172a" font-size="13" font-family="Inter" font-weight="700">UNIX Kernel (Process Mgmt, Memory Mgmt, File System, I/O)</text>
+          <line x1="300" y1="50" x2="300" y2="60" stroke="#64748b" stroke-width="1.5"/>
+          <line x1="300" y1="100" x2="300" y2="110" stroke="#64748b" stroke-width="1.5"/>
+          <line x1="300" y1="150" x2="300" y2="160" stroke="#64748b" stroke-width="1.5"/>
+        </svg>
+        <p class="cap">Fig 6.2 — UNIX Layered Architecture</p>
+      </div>
+
+      <h3 class="sub">UNIX File System (inode structure)</h3>
+      <div class="card">
+        <p>UNIX uses an <b>inode-based hierarchical file system</b>. Each file has an inode (index node) containing metadata (size, permissions, timestamps, pointers to data blocks). The directory maps file names to inode numbers.</p>
+        <ul>
+          <li><b>Root directory (/)</b> — top of directory tree</li>
+          <li><b>Key directories:</b> /bin (executables), /etc (config files), /home (user dirs), /dev (device files), /var (variable data), /tmp (temporary)</li>
+          <li><b>Everything is a file</b> — devices (/dev/sda), pipes, sockets treated as files</li>
+        </ul>
+      </div>
+
+      <h3 class="sub">UNIX Process Management</h3>
+      <div class="card">
+        <table>
+          <tr><th>Concept</th><th>Description</th></tr>
+          <tr><td><b>fork()</b></td><td>Creates a copy of the calling process (child process). Child gets copy of parent's address space.</td></tr>
+          <tr><td><b>exec()</b></td><td>Replaces current process image with a new program. Used after fork() to run a different program.</td></tr>
+          <tr><td><b>wait()</b></td><td>Parent waits for child to finish. Prevents zombie processes from accumulating.</td></tr>
+          <tr><td><b>Zombie Process</b></td><td>Child has finished but parent hasn't called wait() — entry still in process table.</td></tr>
+          <tr><td><b>Orphan Process</b></td><td>Parent has terminated but child still running — adopted by init process (PID 1).</td></tr>
+        </table>
+      </div>
+
+      <h2 class="topic">6.2 Linux — Introduction &amp; Architecture <span class="imp h">High ⭐⭐⭐⭐⭐ — guaranteed every year</span></h2>
+      <div class="card def">
+        <span class="tag">English</span>
+        <p><b>Linux</b> is a free, open-source, UNIX-like monolithic kernel created by Linus Torvalds in 1991, distributed as complete operating systems called <b>distributions</b> (Ubuntu, Fedora, Debian, etc.) that bundle the kernel with GNU utilities and a package manager.</p>
+      </div>
+      <div class="hin">
+        <span class="tag">Hinglish</span>
+        <p>Linux khud ek poora OS nahi hai — yeh sirf "kernel" hai. Jab is kernel ko GNU tools, shell, aur package manager ke saath bundle kiya jata hai, tab wo ek "distribution" (distro) banta hai — jaise Ubuntu ya Fedora. Linux UNIX se inspired hai isliye dono ke commands similar lagte hain, lekin Linux ka source code free hai.</p>
+      </div>
+
+      <h3 class="sub">UNIX vs Linux — Comparison <span class="imp h">High ⭐⭐⭐⭐⭐ — asked almost every year (5 marks)</span></h3>
+      <table>
+        <tr><th>Aspect</th><th>UNIX</th><th>Linux</th></tr>
+        <tr><td>Source code</td><td>Proprietary (mostly closed-source)</td><td>Open-source (GPL license)</td></tr>
+        <tr><td>Cost</td><td>Commercially licensed, costly</td><td>Mostly free</td></tr>
+        <tr><td>Developed by</td><td>AT&amp;T Bell Labs (1969)</td><td>Linus Torvalds + global community (1991)</td></tr>
+        <tr><td>Portability</td><td>Limited, vendor-specific (Solaris, AIX, HP-UX)</td><td>Highly portable — PCs, servers, phones, IoT</td></tr>
+        <tr><td>Kernel type</td><td>Varies (often monolithic)</td><td>Monolithic, modular (loadable kernel modules)</td></tr>
+        <tr><td>File system</td><td>UFS, JFS, etc.</td><td>ext2/ext3/ext4, Btrfs, XFS</td></tr>
+        <tr><td>Customizability</td><td>Low — vendor controlled</td><td>Very high — full source access</td></tr>
+        <tr><td>Examples</td><td>Solaris, AIX, HP-UX, macOS (BSD-based)</td><td>Ubuntu, Fedora, Debian, Android</td></tr>
+      </table>
+      <div class="keypoint"><span class="icon">💡</span><span>Key one-liner for exam: <em>"Linux is a UNIX-like, open-source kernel; UNIX is the original proprietary family."</em></span></div>
+
+      <h3 class="sub">Shell &amp; Kernel Relationship <span class="imp m">Medium</span></h3>
+      <div class="card def">
+        <span class="tag">English</span>
+        <p>The <b>Shell</b> is a command-line interpreter program that takes user commands, parses them, and requests the kernel to execute them — it is a user program, not part of the kernel itself. Common shells: <code>sh</code>, <code>bash</code>, <code>csh</code>, <code>zsh</code>.</p>
+      </div>
+      <div class="hin">
+        <span class="tag">Hinglish</span>
+        <p>Shell = translator between user aur kernel. Tum type karte ho <code>ls -la</code>, shell isko parse karki kernel ko bolta hai — "ye command execute karo." Kernel actual kaam karta hai, shell sirf interpreter hai. Multiple shells ek hi kernel ke upar chal sakti hain.</p>
+      </div>
+
+      <div class="card example">
+        <span class="tag">Shell Script Example (Bash)</span>
+        <div class="formula">#!/bin/bash
+echo "Enter your name:"
+read name
+if [ "$name" == "admin" ]; then
+    echo "Welcome, Admin!"
+else
+    echo "Hello, $name"
+fi</div>
+      </div>
+
+      <!-- ── 6.3 RTOS ── -->
+      <h2 class="topic">6.3 Real-Time Operating System (RTOS) <span class="imp h">High ⭐⭐⭐⭐ — define + types = 5-7 marks</span></h2>
+      <div class="card def">
+        <span class="tag">English</span>
+        <p>A <b>Real-Time Operating System (RTOS)</b> is an OS designed to process data and respond to inputs within a <b>strict, predictable time constraint (deadline)</b>. Correctness depends not just on logical output but on <b>meeting the deadline</b>.</p>
+      </div>
+      <div class="hin">
+        <span class="tag">Hinglish</span>
+        <p>RTOS ka sabse important point yeh hai — yahan "fast hona" kaafi nahi hai, <b>"time pe hona" zaroori hai</b>. Agar ek airbag system ko 50ms mein deploy hona chahiye aur wo 60ms mein deploy hota hai, to result galat maana jaayega chahe output correct kyun na ho. Normal OS (jaise Windows) mein deadline miss hone se sirf lag hota hai, RTOS mein deadline miss = system failure.</p>
+      </div>
+
+      <h3 class="sub">Hard vs Soft Real-Time Systems <span class="imp h">High — must diff</span></h3>
+      <table>
+        <tr><th>Aspect</th><th>Hard Real-Time</th><th>Soft Real-Time</th></tr>
+        <tr><td>Deadline miss consequence</td><td>Catastrophic / system failure</td><td>Degraded quality, but tolerable</td></tr>
+        <tr><td>Jitter tolerance</td><td>Almost zero</td><td>Some tolerance allowed</td></tr>
+        <tr><td>Examples</td><td>Airbags, pacemakers, missile guidance, ABS brakes</td><td>Video streaming, audio playback, online gaming</td></tr>
+        <tr><td>Scheduling</td><td>Rate Monotonic, EDF (Earliest Deadline First)</td><td>Priority-based, soft guarantees</td></tr>
+        <tr><td>OS needed</td><td>Dedicated RTOS (VxWorks, FreeRTOS, QNX)</td><td>General OS with real-time extensions (Linux PREEMPT_RT)</td></tr>
+      </table>
+
+      <h3 class="sub">RTOS Key Features</h3>
+      <div class="card">
+        <ul>
+          <li><b>Determinism</b> — Response time is predictable and bounded.</li>
+          <li><b>Low Latency</b> — Interrupt handling is extremely fast (microseconds).</li>
+          <li><b>Priority Scheduling</b> — Highest priority task always runs first.</li>
+          <li><b>Priority Inversion</b> — Low-priority task blocking high-priority task (solved by priority inheritance).</li>
+          <li><b>Small footprint</b> — Designed for embedded systems with limited RAM (FreeRTOS runs in &lt;10KB RAM).</li>
+        </ul>
+      </div>
+
+      <!-- ── 6.4 Mobile OS ── -->
+      <h2 class="topic">6.4 Mobile OS Case Studies — Android &amp; iOS <span class="imp h">High ⭐⭐⭐⭐</span></h2>
+      <div class="card def">
+        <span class="tag">English</span>
+        <p><b>Mobile OS</b> are operating systems specifically designed for mobile devices (smartphones, tablets). They are optimized for touch input, battery life, wireless connectivity, and application sandboxing. Key examples: <b>Android</b> (Google, Linux-based) and <b>iOS</b> (Apple, BSD/XNU-based).</p>
+      </div>
+
+      <h3 class="sub">Android Architecture <span class="imp h">High ⭐⭐⭐⭐</span></h3>
+      <div class="svgbox">
+        <svg viewBox="0 0 600 260" xmlns="http://www.w3.org/2000/svg">
+          <rect x="30" y="10" width="540" height="44" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+          <text x="300" y="36" text-anchor="middle" fill="#0f172a" font-size="13" font-family="Inter" font-weight="700">Applications (Gmail, Chrome, WhatsApp, Camera...)</text>
+          <rect x="30" y="64" width="540" height="44" rx="8" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.5"/>
+          <text x="300" y="90" text-anchor="middle" fill="#0f172a" font-size="13" font-family="Inter" font-weight="700">Application Framework (Activity Mgr, Content Providers, Resource Mgr...)</text>
+          <rect x="30" y="118" width="260" height="44" rx="8" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5"/>
+          <text x="160" y="144" text-anchor="middle" fill="#0f172a" font-size="12" font-family="Inter" font-weight="700">Android Runtime (ART + Core Libs)</text>
+          <rect x="310" y="118" width="260" height="44" rx="8" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5"/>
+          <text x="440" y="144" text-anchor="middle" fill="#0f172a" font-size="12" font-family="Inter" font-weight="700">Native Libraries (SQLite, WebKit, OpenGL...)</text>
+          <rect x="30" y="172" width="540" height="44" rx="8" fill="#fff1f2" stroke="#ef4444" stroke-width="1.5"/>
+          <text x="300" y="198" text-anchor="middle" fill="#0f172a" font-size="13" font-family="Inter" font-weight="700">Linux Kernel (Drivers, Memory Mgmt, Power Mgmt, Security)</text>
+          <line x1="300" y1="54" x2="300" y2="64" stroke="#64748b" stroke-width="1.5"/>
+          <line x1="300" y1="108" x2="300" y2="118" stroke="#64748b" stroke-width="1.5"/>
+          <line x1="300" y1="162" x2="300" y2="172" stroke="#64748b" stroke-width="1.5"/>
+        </svg>
+        <p class="cap">Fig 6.3 — Android Architecture (5 Layers)</p>
+      </div>
+
+      <h3 class="sub">Android vs iOS — Comparison <span class="imp h">High</span></h3>
+      <table>
+        <tr><th>Aspect</th><th>Android</th><th>iOS</th></tr>
+        <tr><td>Developer</td><td>Google (open-source, AOSP)</td><td>Apple (closed-source)</td></tr>
+        <tr><td>Kernel</td><td>Linux kernel (modified)</td><td>XNU (BSD + Mach hybrid)</td></tr>
+        <tr><td>Programming lang</td><td>Java/Kotlin (apps), C/C++ (native)</td><td>Swift/Objective-C</td></tr>
+        <tr><td>App distribution</td><td>Google Play Store (also side-loading)</td><td>Apple App Store only</td></tr>
+        <tr><td>Customization</td><td>Very high (open ecosystem)</td><td>Low (closed ecosystem)</td></tr>
+        <tr><td>Security</td><td>Good (app sandbox, SELinux)</td><td>Very high (strict sandboxing, Secure Enclave)</td></tr>
+        <tr><td>Market share</td><td>~72% worldwide</td><td>~27% worldwide</td></tr>
+        <tr><td>Examples</td><td>Samsung, OnePlus, Pixel, most phones</td><td>iPhone, iPad</td></tr>
+      </table>
+
+      <h3 class="sub">UNIX Memory Layout — Process Address Space <span class="imp m">Medium</span></h3>
+      <div class="svgbox">
+        <svg viewBox="0 0 300 280" xmlns="http://www.w3.org/2000/svg">
+          <rect x="50" y="20" width="160" height="40" rx="4" fill="#f1f5f9" stroke="#334155" stroke-width="1.5"/>
+          <text x="130" y="44" text-anchor="middle" fill="#0f172a" font-size="11" font-family="Consolas">Stack (↓ grows down)</text>
+          <rect x="50" y="60" width="160" height="100" rx="0" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+          <text x="130" y="110" text-anchor="middle" fill="#64748b" font-size="11" font-family="Consolas">Free space</text>
+          <rect x="50" y="160" width="160" height="40" rx="4" fill="#f0fdf4" stroke="#10b981" stroke-width="1.5"/>
+          <text x="130" y="184" text-anchor="middle" fill="#0f172a" font-size="11" font-family="Consolas">Heap (↑ grows up)</text>
+          <rect x="50" y="200" width="160" height="40" rx="4" fill="#ecfeff" stroke="#06b6d4" stroke-width="1.5"/>
+          <text x="130" y="224" text-anchor="middle" fill="#0f172a" font-size="11" font-family="Consolas">Data (globals/statics)</text>
+          <rect x="50" y="240" width="160" height="35" rx="4" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5"/>
+          <text x="130" y="262" text-anchor="middle" fill="#0f172a" font-size="11" font-family="Consolas">Text (code, read-only)</text>
+          <text x="225" y="42" fill="#64748b" font-size="10" font-family="Inter">High addr</text>
+          <text x="225" y="262" fill="#64748b" font-size="10" font-family="Inter">Low addr</text>
+        </svg>
+        <p class="cap">Fig 6.4 — UNIX Process Virtual Address Space Layout</p>
+      </div>
+
+      <!-- Q&A UNIT 6 -->
+      <div class="qsection scroll-anchor" id="qa6">
+        <h1 class="unit-title">❓ Unit 6 — Q&amp;A (RTU Exam Pattern)</h1>
+
+        <div class="qcard">
+          <div class="qlabel">RTU EXAM Q&amp;A</div>
+          <div class="q">Q1. Define UNIX. Explain its architecture and key features. <span class="imp h">★★★★ 7 Marks</span></div>
+          <span class="marks m10">7 Marks</span>
+          <div class="a"><p>UNIX = multiuser, multitasking OS developed at Bell Labs (1969) by Thompson &amp; Ritchie, rewritten in C in 1973. Philosophy: "everything is a file." Architecture (4 layers): Hardware → UNIX Kernel (process/memory/file/device mgmt) → System Call Interface → Shell/Utilities → User Applications. Key features: hierarchical file system, multiprogramming, portability (C-based), pipes &amp; filters, multiuser.</p></div>
+        </div>
+
+        <div class="qcard">
+          <div class="qlabel">RTU EXAM Q&amp;A</div>
+          <div class="q">Q2. Differentiate between UNIX and Linux. <span class="imp h">★★★★★ 5 Marks — asked almost every year</span></div>
+          <span class="marks m5">5 Marks</span>
+          <div class="a"><p>Key differences: UNIX = proprietary, costly, AT&amp;T Bell Labs (1969), limited portability, vendor-specific (Solaris, AIX). Linux = open-source (GPL), free, Linus Torvalds (1991), highly portable (PCs, servers, phones), monolithic modular kernel, distributions (Ubuntu, Fedora, Android). One-liner: "Linux is a UNIX-like, open-source kernel; UNIX is the original proprietary family." Full table above.</p></div>
+        </div>
+
+        <div class="qcard">
+          <div class="qlabel">RTU EXAM Q&amp;A</div>
+          <div class="q">Q3. Define RTOS. Explain Hard and Soft Real-Time systems with examples. <span class="imp h">★★★★★ 7 Marks — asked almost every year</span></div>
+          <span class="marks m10">7 Marks</span>
+          <div class="a"><p>RTOS = OS where correctness depends on meeting strict time deadlines. Hard Real-Time = deadline miss = catastrophic failure (airbag must deploy in 50ms; pacemaker must fire in 0.5ms). Soft Real-Time = deadline miss = degraded quality but tolerable (video streaming can drop frames; game may lag). RTOS features: determinism, low interrupt latency, priority scheduling, small footprint. Examples: VxWorks, FreeRTOS, QNX (hard); Linux with PREEMPT_RT (soft). Full table above.</p></div>
+        </div>
+
+        <div class="qcard">
+          <div class="qlabel">RTU EXAM Q&amp;A</div>
+          <div class="q">Q4. Explain Android architecture with diagram. <span class="imp h">★★★★ 7 Marks</span></div>
+          <span class="marks m10">7 Marks</span>
+          <div class="a"><p>Android = 5-layer stack. Layer 1 (bottom): Linux Kernel — device drivers, memory mgmt, power mgmt, security (SELinux). Layer 2: Native Libraries (SQLite, OpenGL, WebKit) + Android Runtime (ART — compiles app bytecode to native). Layer 3: Application Framework (Activity Manager, Content Providers, Resource Manager, Location Manager). Layer 4 (top): Applications (Gmail, Chrome, WhatsApp). Uses Linux kernel but is NOT standard Linux — adds Binder IPC, Android-specific drivers, ART runtime. Diagram (Fig 6.3) above.</p></div>
+        </div>
+
+        <div class="qcard">
+          <div class="qlabel">RTU EXAM Q&amp;A</div>
+          <div class="q">Q5. What are the differences between Android and iOS? <span class="imp h">★★★★ 5 Marks</span></div>
+          <span class="marks m5">5 Marks</span>
+          <div class="a"><p>Android = Google, open-source (AOSP), Linux kernel, Java/Kotlin apps, Play Store + side-loading, very customizable, ~72% market share. iOS = Apple, closed-source, XNU (BSD+Mach) kernel, Swift/Obj-C apps, App Store only, highly restricted, ~27% market share. Android = open ecosystem, iOS = security + privacy focused. Full comparison table above.</p></div>
+        </div>
+
+        <div class="qcard">
+          <div class="qlabel">RTU EXAM Q&amp;A</div>
+          <div class="q">Q6. Explain UNIX process management: fork(), exec(), zombie and orphan processes. <span class="imp h">★★★★ 5-7 Marks</span></div>
+          <span class="marks m5">5 Marks</span>
+          <div class="a"><p>fork() = creates child process (copy of parent). exec() = replaces current process with a new program (used after fork to run a different binary). wait() = parent waits for child completion. Zombie process = child finished but parent hasn't called wait() — stays in process table. Orphan process = parent terminated, child still running — adopted by init (PID 1). All UNIX process creation uses fork-exec pattern.</p></div>
+        </div>
+
+        <div class="qcard">
+          <div class="qlabel">RTU EXAM Q&amp;A</div>
+          <div class="q">Q7. Explain Linux kernel architecture. What is a kernel module? <span class="imp m">★★★ 5 Marks</span></div>
+          <span class="marks m5">5 Marks</span>
+          <div class="a"><p>Linux kernel is monolithic but modular. Monolithic = all core functions run in one address space (kernel space). Modular = features can be added/removed at runtime via Loadable Kernel Modules (LKMs, e.g. device drivers — <code>modprobe</code> / <code>insmod</code>). Key subsystems: Process Scheduler (CFS — Completely Fair Scheduler), Memory Manager, VFS (Virtual File System — abstracts ext4, NTFS under one interface), Network Stack, Device Drivers. Commands: <code>lsmod</code> (list modules), <code>modprobe wifi_driver</code> (load driver).</p></div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:center;padding:30px 20px;flex-wrap:wrap;">
+      <a href="index.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">🏠 OS Hub</a>
+      <a href="nk.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">NK PYQ →</a>
+    </div>
+  </main>
+  <div class="cursor-dot" data-cursor-dot></div>
+  <div class="cursor-outline" data-cursor-outline></div>
+  <script>
+    const cursorDot = document.querySelector("[data-cursor-dot]");
+    const cursorOutline = document.querySelector("[data-cursor-outline]");
+    window.addEventListener("mousemove", function(e){
+      cursorDot.style.left=e.clientX+"px"; cursorDot.style.top=e.clientY+"px";
+      cursorOutline.animate({left:e.clientX+"px",top:e.clientY+"px"},{duration:400,fill:"forwards"});
+    });
+    document.querySelectorAll("a,button").forEach(el=>{
+      el.addEventListener("mouseenter",()=>cursorOutline.classList.add("cursor-hovering"));
+      el.addEventListener("mouseleave",()=>cursorOutline.classList.remove("cursor-hovering"));
+    });
+  </script>
+<script src="../splash-cursor.js"></script>\n</body>
+</html>

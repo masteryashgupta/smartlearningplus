@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Learning Plus // ITC · Unit 1</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <main class="main-wrapper" style="width:100%;">
+    <div class="topbar">
+      <a href="../itc/index.html" class="back-btn">⬅ ITC Hub</a>
+      <div class="brand">Smart<span>Learning</span>+ <span style="color:var(--muted);font-weight:400;font-size:14px;">// ITC · Unit 1</span></div>
+      <div class="nav">
+        <a href="../itc/index.html">🏠 ITC Hub</a>
+        <a href="#content">📖 Content</a>
+        <a href="#qa">❓ Q&amp;A</a>
+        
+        <a href="unit2.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="hero">
+        <h1>📘 Unit 1 — Introduction</h1>
+        <p>Objective, Scope and Outcome of the Course | Hours: 01</p>
+        <div class="badges" style="margin-top:14px;">
+          <a href="../itc/index.html" style="text-decoration:none;"><span class="badge b-teal">← Back to ITC Hub</span></a>
+          <span class="badge b-gold">5CS3-01 · ITC · RTU</span>
+        </div>
+      </div>
+      <div id="content">
+  <h1 class="unit-title" id="unit1">📘 UNIT 1 — Introduction</h1>
+  <p class="unit-sub">Objective, Scope and Outcome of the Course &nbsp;|&nbsp; Hours: 01</p>
+
+  <div class="card def">
+    <span class="tag">English</span>
+    <p><b>Information Theory &amp; Coding (ITC)</b> is the mathematical study of how information is quantified, encoded, transmitted, and decoded reliably and efficiently over noisy or noiseless communication channels and storage media.</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Simple bhasha mein — ye subject batata hai ki <b>"information"</b> ko number mein kaise measure karein (entropy/bits), data ko <b>compress</b> kaise karein (kam space le), aur jab data <b>noisy channel</b> (jaise WiFi, satellite, CD/QR) se bheja jaaye to usme errors ko detect/correct kaise karein.</p>
+  </div>
+
+  <h2 class="topic">Objective of the Course <span class="imp h">High</span></h2>
+  <div class="card">
+    <ul>
+      <li>To introduce the mathematical foundation of <b>information measurement</b> — uncertainty, entropy, mutual information.</li>
+      <li>To study <b>source coding</b> techniques (Huffman, Shannon-Fano, Lempel-Ziv) for data compaction.</li>
+      <li>To understand <b>channel coding</b> theorems and the limits of reliable communication (Shannon limit, channel capacity).</li>
+      <li>To design and analyze <b>error-control codes</b>: Linear Block Codes, Cyclic Codes, Convolutional Codes.</li>
+    </ul>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Course ka goal hai — tumhe ye samjhana ki kisi message mein "kitni naye baat / information" hai, use kaise efficiently bhejen (compression), aur agar transmission ke beech mein noise se error aa jaaye to use pakdo aur fix karo (error correcting codes — jo tumhare QR code, CD, satellite comm mein use hote hain).</p>
+  </div>
+
+  <h2 class="topic">Scope of the Course <span class="imp m">Medium</span></h2>
+  <div class="card">
+    <p>ITC forms the theoretical backbone of:</p>
+    <ul>
+      <li><b>Data Compression</b> — ZIP, JPEG, MP3, video codecs (entropy coding).</li>
+      <li><b>Reliable Digital Communication</b> — mobile networks, satellite links, deep-space comm (Voyager used convolutional + Golay codes).</li>
+      <li><b>Storage Systems</b> — CD/DVD/Hard-disk error correction (Reed-Solomon, cyclic codes).</li>
+      <li><b>Cryptography &amp; Machine Learning</b> — entropy concepts used in security and decision-tree/ML feature selection.</li>
+    </ul>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Ye subject sirf "theory" nahi — practically tumhare phone ke <code>WiFi</code>, <code>4G/5G</code>, file <code>.zip</code> karna, <code>QR code</code> scan karna — sab ke peeche yahi concepts kaam karte hain. Isliye ye CS ka core fundamental subject hai, jaise DBMS ya OS.</p>
+  </div>
+
+  <h2 class="topic">Outcome of the Course <span class="imp h">High</span></h2>
+  <div class="card">
+    <p>After completing this course, the student will be able to:</p>
+    <ul>
+      <li><b>CO1:</b> Define and compute information, entropy, and mutual information for discrete/continuous sources.</li>
+      <li><b>CO2:</b> Apply source coding theorem and design optimal codes (Huffman, Shannon-Fano).</li>
+      <li><b>CO3:</b> Analyze discrete memoryless channels and compute channel capacity.</li>
+      <li><b>CO4:</b> Design and decode Linear Block Codes and Cyclic Codes.</li>
+      <li><b>CO5:</b> Understand Convolutional Codes and Viterbi decoding algorithm.</li>
+    </ul>
+  </div>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 760 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrow1" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+          <path d="M0,0 L8,3 L0,6 Z" fill="#36e0c4"/>
+        </marker>
+      </defs>
+      <style>
+        .box{fill:#141a20; stroke:#36e0c4; stroke-width:1.5; rx:8;}
+        .lbl{fill:#d7e1e8; font-size:12px; font-family:Consolas,monospace; text-anchor:middle;}
+        .ln{stroke:#36e0c4; stroke-width:1.5; marker-end:url(#arrow1);}
+        .noise{fill:#ff6b6b; font-size:11px; text-anchor:middle;}
+      </style>
+      <rect class="box" x="10" y="70" width="90" height="50"/>
+      <text class="lbl" x="55" y="99">Source</text>
+      <line class="ln" x1="100" y1="95" x2="135" y2="95"/>
+      <rect class="box" x="140" y="70" width="100" height="50"/>
+      <text class="lbl" x="190" y="92">Source</text>
+      <text class="lbl" x="190" y="106">Encoder</text>
+      <line class="ln" x1="240" y1="95" x2="275" y2="95"/>
+      <rect class="box" x="280" y="70" width="100" height="50"/>
+      <text class="lbl" x="330" y="92">Channel</text>
+      <text class="lbl" x="330" y="106">Encoder</text>
+      <line class="ln" x1="380" y1="95" x2="415" y2="95"/>
+      <rect class="box" x="420" y="70" width="90" height="50" stroke="#ff6b6b"/>
+      <text class="lbl" x="465" y="99">Channel</text>
+      <text class="noise" x="465" y="60">⚡ Noise</text>
+      <line class="ln" x1="510" y1="95" x2="545" y2="95"/>
+      <rect class="box" x="550" y="70" width="100" height="50"/>
+      <text class="lbl" x="600" y="92">Channel</text>
+      <text class="lbl" x="600" y="106">Decoder</text>
+      <line class="ln" x1="650" y1="95" x2="685" y2="95"/>
+      <rect class="box" x="690" y="70" width="60" height="50"/>
+      <text class="lbl" x="720" y="99">Sink</text>
+    </svg>
+    <p class="cap">Fig 1.1 — Block diagram of a general communication system (this is the "scope map" of the whole subject)</p>
+  </div>
+
+  <div class="qsection" id="qa1">
+    <h1 class="unit-title">❓ Unit 1 — Q&amp;A (RTU Exam Pattern)</h1>
+    <div class="qa">
+      <div class="q">Q1. Explain the objective and scope of Information Theory and Coding. <span class="imp h">★★★ 5 Marks</span></div>
+      <div class="a">See "Objective of the Course" + "Scope of the Course" sections above — explain quantifying information, source coding, channel coding, error control, with real-world applications (ZIP, QR, satellite comm).</div>
+    </div>
+    <div class="qa">
+      <div class="q">Q2. List the course outcomes of ITC. <span class="imp m">★★ 2-3 Marks</span></div>
+      <div class="a">CO1–CO5 as listed above: define information measures, apply source coding theorem, analyze channel capacity, design linear block/cyclic codes, understand convolutional codes &amp; Viterbi decoding.</div>
+    </div>
+    <div class="qa">
+      <div class="q">Q3. Draw and explain the block diagram of a digital communication system. <span class="imp h">★★★ 5 Marks</span></div>
+      <div class="a">Refer Fig 1.1 — Source → Source Encoder → Channel Encoder → Channel (with noise) → Channel Decoder → Source Decoder → Sink. Explain role of each block briefly.</div>
+    </div>
+  </div>
+
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:center;padding:30px 20px;flex-wrap:wrap;">
+      
+      <a href="../itc/index.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">🏠 ITC Hub</a>
+      <a href="unit2.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+    </div>
+  </main>
+  <div class="cursor-dot" data-cursor-dot></div>
+  <div class="cursor-outline" data-cursor-outline></div>
+  <script>
+    const cursorDot = document.querySelector("[data-cursor-dot]");
+    const cursorOutline = document.querySelector("[data-cursor-outline]");
+    window.addEventListener("mousemove", function(e){
+      cursorDot.style.left=e.clientX+"px"; cursorDot.style.top=e.clientY+"px";
+      cursorOutline.animate({left:e.clientX+"px",top:e.clientY+"px"},{duration:400,fill:"forwards"});
+    });
+    document.querySelectorAll("a,button").forEach(el=>{
+      el.addEventListener("mouseenter",()=>cursorOutline.classList.add("cursor-hovering"));
+      el.addEventListener("mouseleave",()=>cursorOutline.classList.remove("cursor-hovering"));
+    });
+  </script>
+<script src="../splash-cursor.js"></script>\n</body>
+</html>

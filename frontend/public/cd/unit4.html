@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Learning Plus // CD · Unit 4</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <main class="main-wrapper" style="width:100%;">
+    <div class="topbar">
+      <a href="../cd/index.html" class="back-btn">⬅ CD Hub</a>
+      <div class="brand">Smart<span>Learning</span>+ <span style="color:var(--muted);font-weight:400;font-size:14px;">// CD · Unit 4</span></div>
+      <div class="nav">
+        <a href="../cd/index.html">🏠 CD Hub</a>
+        <a href="#content">📖 Content</a>
+        <a href="#qa">❓ Q&amp;A</a>
+        <a href="unit3.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+        <a href="unit5.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="hero">
+        <h1>🌳 Unit 4 — Syntax Directed Definitions &amp; Intermediate Code Generation</h1>
+        <p>Syntax Trees · S-Attributed &amp; L-Attributed Definitions · Top Down Translation · Postfix · DAG · Three Address Code · Triples &amp; Quadruples · Boolean Expressions | Hours: 10</p>
+        <div class="badges" style="margin-top:14px;">
+          <a href="../cd/index.html" style="text-decoration:none;"><span class="badge b-teal">← Back to CD Hub</span></a>
+          <span class="badge b-gold">5CS4-02 · Compiler Design · RTU</span>
+        </div>
+      </div>
+      <div id="content">
+  <div class="hero" id="unit4">
+    <h1>UNIT 4 — SYNTAX DIRECTED DEFINITIONS &amp; INTERMEDIATE CODE</h1>
+    <div class="sub">5CS4-02 · Compiler Design · RTU Kota · III Year – V Sem · B.Tech CSE</div>
+    <div class="sub" style="margin-top:4px;">Credit: 3 &nbsp;|&nbsp; Max Marks: 100 (IA:30, ETE:70) &nbsp;|&nbsp; End Term: 3 Hours</div>
+    <div class="badges">
+      <span class="badge b-red">⚠ HIGH PRIORITY UNIT</span>
+      <span class="badge b-gold">⭐ 5 &amp; 10 Mark Questions</span>
+      <span class="badge b-teal">✦ 10 Hours Weightage — Largest Unit</span>
+    </div>
+  </div>
+
+  <div class="progress-bar"></div>
+
+  <div class="toc scroll-anchor" id="toc">
+    <h3>📋 UNIT 4 — CONTENTS</h3>
+    <ol>
+      <li><a href="#sdd">Syntax Directed Definitions (SDD)</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#syntaxtree">Construction of Syntax Trees</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#sattr">S-Attributed Definitions</a> <span class="sublabel">HIGH ★★★ — Most Asked</span></li>
+      <li><a href="#lattr">L-Attributed Definitions</a> <span class="sublabel">HIGH ★★★ — Most Asked</span></li>
+      <li><a href="#topdown">Top Down Translation</a> <span class="sublabel">MEDIUM ★★</span></li>
+      <li><a href="#postfix">Postfix Notation</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#dag-icg">DAG (Intermediate Code Form)</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#tac">Three Address Code (TAC)</a> <span class="sublabel">HIGH ★★★★ — Backbone of Unit</span></li>
+      <li><a href="#tac-control">TAC for Control Structures</a> <span class="sublabel">HIGH ★★★★ — Most Asked</span></li>
+      <li><a href="#triples-quads">Triples &amp; Quadruples</a> <span class="sublabel">HIGH ★★★ — Most Asked</span></li>
+      <li><a href="#boolean">Boolean Expressions &amp; Control Structures</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#qa">RTU Exam Q&amp;A Bank (5-mark &amp; 10-mark)</a> <span class="sublabel">EXAM GOLD</span></li>
+    </ol>
+  </div>
+
+  <!-- 1. SYNTAX DIRECTED DEFINITIONS -->
+  <div class="unit-title scroll-anchor" id="sdd">
+    <span style="color:var(--accent2);">01.</span> Syntax Directed Definitions (SDD)
+    <span class="imp h">HIGH</span>
+  </div>
+  <div class="unit-sub">How grammar rules carry "meaning" along with syntax</div>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p>A <strong>Syntax Directed Definition (SDD)</strong> is a context-free grammar in which each grammar symbol is associated with a set of <strong>attributes</strong>, and each production rule is associated with a set of <strong>semantic rules</strong> that define how to compute the attribute values, allowing the grammar to specify both the syntax and the "meaning" (translation) of a language simultaneously.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish Explanation</div>
+    SDD ek tarika hai grammar ke saath-saath "meaning" bhi attach karne ka. Normal grammar sirf batati hai ki valid sentence kaisa dikhega, lekin SDD har grammar symbol ke saath kuch extra information (attributes) jodti hai aur batati hai ki har production rule apply hone par yeh information kaise calculate hogi — jaise expression ka value, ya variable ka type.
+  </div>
+
+  <h3 class="sub">Types of Attributes</h3>
+  <table>
+    <tr><th>Type</th><th>Description</th><th>Computed Using</th></tr>
+    <tr><td class="hi">Synthesized Attribute</td><td>Value computed from the attribute values of its <strong>children</strong> (bottom-up flow)</td><td>Information flows UP the parse tree</td></tr>
+    <tr><td class="hi">Inherited Attribute</td><td>Value computed from the attribute values of its <strong>parent and/or siblings</strong> (top-down/left-right flow)</td><td>Information flows DOWN/ACROSS the parse tree</td></tr>
+  </table>
+
+  <div class="card example">
+    <div class="tag">Example</div>
+    <p>For <code>E → E1 + T { E.val = E1.val + T.val }</code> — E.val is a <strong>synthesized</strong> attribute, computed from its children E1.val and T.val.</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- 2. SYNTAX TREES -->
+  <h2 class="topic scroll-anchor" id="syntaxtree">
+    <span>02.</span> Construction of Syntax Trees
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p>A <strong>Syntax Tree</strong> (abstract syntax tree) is a condensed/compressed form of a parse tree in which operators appear as interior nodes and their operands as children, with chain productions and unnecessary grammar-specific detail removed — capturing only the essential hierarchical structure of an expression/statement.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Syntax tree, parse tree ka simplified version hai. Parse tree mein har grammar rule ka ek node hota hai (bahut detailed), lekin syntax tree sirf important operators aur operands ko rakhta hai — extra/unnecessary nodes hata diye jaate hain. Yeh compiler ke liye zyada compact aur useful representation hai.
+  </div>
+
+  <h3 class="sub">Constructing Syntax Tree via SDD <span class="imp h">EXAM HOT</span></h3>
+  <table>
+    <tr><th>Production</th><th>Semantic Rule</th></tr>
+    <tr><td><code>E → E1 + T</code></td><td><code>E.node = mknode('+', E1.node, T.node)</code></td></tr>
+    <tr><td><code>E → E1 − T</code></td><td><code>E.node = mknode('−', E1.node, T.node)</code></td></tr>
+    <tr><td><code>E → ( E1 )</code></td><td><code>E.node = E1.node</code></td></tr>
+    <tr><td><code>E → id</code></td><td><code>E.node = mkleaf(id, id.entry)</code></td></tr>
+  </table>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:280px;">
+      <rect x="0" y="0" width="320" height="220" fill="#0d1820"/>
+      <g font-family="Consolas" font-size="13" fill="#d7e1e8">
+        <circle cx="160" cy="30" r="20" fill="none" stroke="#36e0c4" stroke-width="1.5"/>
+        <text x="160" y="35" text-anchor="middle" fill="#36e0c4">+</text>
+        <line x1="145" y1="48" x2="90" y2="85" stroke="#fff" stroke-width="1.2"/>
+        <line x1="175" y1="48" x2="230" y2="85" stroke="#fff" stroke-width="1.2"/>
+        <circle cx="80" cy="100" r="20" fill="none" stroke="#ffb454" stroke-width="1.5"/>
+        <text x="80" y="105" text-anchor="middle" fill="#ffb454">*</text>
+        <circle cx="240" cy="100" r="20" fill="none" stroke="#8aa0ad" stroke-width="1.5"/>
+        <text x="240" y="105" text-anchor="middle">c</text>
+        <line x1="65" y1="117" x2="40" y2="155" stroke="#fff" stroke-width="1.2"/>
+        <line x1="95" y1="117" x2="120" y2="155" stroke="#fff" stroke-width="1.2"/>
+        <circle cx="30" cy="170" r="18" fill="none" stroke="#8aa0ad" stroke-width="1.5"/>
+        <text x="30" y="175" text-anchor="middle">a</text>
+        <circle cx="130" cy="170" r="18" fill="none" stroke="#8aa0ad" stroke-width="1.5"/>
+        <text x="130" y="175" text-anchor="middle">b</text>
+      </g>
+    </svg>
+    <p class="cap">Fig 1: Syntax tree for expression <code>a*b + c</code> — operators as interior nodes, operands as leaves</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- 3. S-ATTRIBUTED -->
+  <h2 class="topic scroll-anchor" id="sattr">
+    <span>03.</span> S-Attributed Definitions
+    <span class="imp h">HIGH — MOST ASKED</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p>An SDD is called <strong>S-Attributed</strong> if every attribute used in it is a <strong>synthesized attribute</strong> — i.e., every attribute's value depends only on the attribute values of its children, never on its parent or siblings, allowing values to be computed entirely bottom-up during a single post-order traversal of the parse tree.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    S-attributed SDD mein sirf synthesized attributes hote hain — matlab har node ki value sirf uske children se aati hai, kabhi parent se nahi. Isiliye yeh bottom-up parsing (jaise LR parsing) ke saath bahut aasani se kaam karta hai, kyunki values niche se upar ki taraf calculate hoti jaati hain.
+  </div>
+
+  <h3 class="sub">Implementation: Bottom-Up Evaluation with a Parser Stack <span class="imp h">EXAM HOT</span></h3>
+  <div class="card">
+    <p>S-attributed SDDs can be implemented conveniently along with an <strong>LR-parser</strong>. Each grammar symbol's attribute value is stored alongside it on the parser stack. When a reduction occurs (production used), the semantic rule computes the new synthesized attribute using values already present on the stack for the children.</p>
+  </div>
+
+  <table>
+    <tr><th>Production</th><th>Semantic Rule (Synthesized)</th></tr>
+    <tr><td><code>E → E1 + T</code></td><td><code>E.val = E1.val + T.val</code></td></tr>
+    <tr><td><code>T → T1 * F</code></td><td><code>T.val = T1.val * F.val</code></td></tr>
+    <tr><td><code>F → ( E )</code></td><td><code>F.val = E.val</code></td></tr>
+    <tr><td><code>F → digit</code></td><td><code>F.val = digit.lexval</code></td></tr>
+  </table>
+
+  <div class="card warn">
+    <div class="tag">⚠ Important</div>
+    <p>S-attributed SDDs are a <strong>subset</strong> of L-attributed SDDs (since synthesized-only is a special/simpler case). All S-attributed grammars are L-attributed, but not vice-versa.</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- 4. L-ATTRIBUTED -->
+  <h2 class="topic scroll-anchor" id="lattr">
+    <span>04.</span> L-Attributed Definitions
+    <span class="imp h">HIGH — MOST ASKED</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p>An SDD is called <strong>L-Attributed</strong> if, for each production <code>A → X1 X2 ... Xn</code>, every inherited attribute of Xi depends ONLY on: (a) the attributes of X1, X2, ..., Xi−1 (symbols to its <strong>left</strong>), and/or (b) the inherited attributes of A itself — never on attributes of symbols to the right.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    L-attributed SDD thoda flexible hai — yeh synthesized AND inherited dono attributes allow karta hai, lekin ek rule ke saath: koi bhi inherited attribute sirf apne LEFT side ke symbols ya parent se information le sakta hai, RIGHT side (aage waale symbols) se nahi. "L" isiliye kyunki information sirf Left-to-right flow follow karti hai, jaise hum bayein se dayein padhte hain.
+  </div>
+
+  <h3 class="sub">Why "L"-Attributed? — Single Left-to-Right Pass</h3>
+  <div class="card">
+    <p>The "L" restriction (no looking right) ensures that attribute values can be computed in a <strong>single left-to-right, depth-first traversal</strong> of the parse tree — making L-attributed SDDs implementable with predictive (top-down, LL) parsers as well as during bottom-up parsing.</p>
+  </div>
+
+  <div class="card example">
+    <div class="tag">Example</div>
+    <p><code>D → T L { L.inh = T.type }</code> &nbsp; <code>L → L1 , id { L1.inh = L.inh; addtype(id.entry, L.inh) }</code> &nbsp; <code>L → id { addtype(id.entry, L.inh) }</code></p>
+    <p>Here L.inh (inherited) is passed from the parent D (a symbol to the left in the production) — this is valid L-attributed flow used for declarations like <code>int a, b, c;</code>.</p>
+  </div>
+
+  <h3 class="sub">S-Attributed vs L-Attributed <span class="imp h">EXAM HOT — Comparison Guaranteed</span></h3>
+  <table>
+    <tr><th>Feature</th><th>S-Attributed</th><th>L-Attributed</th></tr>
+    <tr><td>Attribute Types Allowed</td><td>Only Synthesized</td><td>Synthesized + Inherited (restricted)</td></tr>
+    <tr><td>Information Flow</td><td>Bottom-up only</td><td>Left-to-right, top-down &amp; bottom-up</td></tr>
+    <tr><td>Compatible Parsers</td><td>Bottom-up (LR) parsers</td><td>Both Top-down (LL) and Bottom-up parsers</td></tr>
+    <tr><td>Generality</td><td>Subset (more restrictive)</td><td>Superset (more general)</td></tr>
+  </table>
+
+  <hr class="sep">
+
+  <!-- 5. TOP DOWN TRANSLATION -->
+  <h2 class="topic scroll-anchor" id="topdown">
+    <span>05.</span> Top Down Translation
+    <span class="imp m">MEDIUM</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>Top Down Translation</strong> refers to performing syntax-directed translation while doing top-down (predictive/recursive-descent) parsing — the semantic actions associated with grammar productions are executed as the parser expands non-terminals from the start symbol downward.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Top-down translation matlab — jab parser grammar ko top (start symbol) se expand karte hue niche jaata hai, usi waqt semantic actions (translation rules) bhi execute hote jaate hain. Yeh recursive-descent parsers ke saath naturally fit hota hai.
+  </div>
+
+  <h3 class="sub">Requirements for Top-Down Translation</h3>
+  <div class="card">
+    <ul>
+      <li>The SDD must be <strong>L-attributed</strong> (since top-down parsing processes symbols left-to-right).</li>
+      <li>Left recursion must first be eliminated from the grammar (top-down parsers cannot handle left recursion).</li>
+      <li>Each non-terminal is implemented as a <strong>procedure/function</strong>; inherited attributes are passed as parameters, synthesized attributes are returned as the function's result.</li>
+    </ul>
+  </div>
+
+  <div class="card example">
+    <div class="tag">Example</div>
+    <p>A recursive-descent parser procedure for non-terminal E might look like: <code>function E(inh_attr) { call T(...); call Eprime(T.val, ...); return Eprime.val; }</code> — each procedure call corresponds to expanding a non-terminal in the parse tree.</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- 6. POSTFIX NOTATION -->
+  <h2 class="topic scroll-anchor" id="postfix">
+    <span>06.</span> Postfix Notation (Reverse Polish Notation)
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>Postfix Notation</strong> is a form of intermediate code in which every operator appears immediately AFTER its operands (rather than between them, as in infix), eliminating the need for parentheses to indicate operator precedence and making expression evaluation straightforward using a stack.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Postfix notation mein operator hamesha operands ke baad aata hai (jaise <code>ab+</code> for <code>a+b</code>). Isme bracket ki zaroorat nahi padti kyunki order khud hi precedence batata hai. Compiler isse easily ek stack use karke evaluate kar sakta hai — left se right padho, operand mile to push karo, operator mile to top do values pop karke operate karo.
+  </div>
+
+  <h3 class="sub">Infix to Postfix Conversion <span class="imp h">EXAM HOT — Numerical</span></h3>
+  <table>
+    <tr><th>Infix Expression</th><th>Postfix Expression</th></tr>
+    <tr><td><code>a + b</code></td><td><code>a b +</code></td></tr>
+    <tr><td><code>a + b * c</code></td><td><code>a b c * +</code></td></tr>
+    <tr><td><code>(a + b) * c</code></td><td><code>a b + c *</code></td></tr>
+    <tr><td><code>a * b + c * d</code></td><td><code>a b * c d * +</code></td></tr>
+  </table>
+
+  <h3 class="sub">Stack-Based Evaluation of Postfix</h3>
+  <div class="card">
+    <p>Algorithm: scan left to right; if symbol is an operand, push onto stack; if symbol is an operator, pop the required number of operands, apply the operator, and push the result back. At the end, the stack contains exactly one value — the final result.</p>
+  </div>
+
+  <div class="card example">
+    <div class="tag">Example</div>
+    <p>Evaluate postfix <code>3 4 + 2 *</code>: push 3, push 4 → stack[3,4]; see '+', pop 4,3 → 3+4=7, push 7 → stack[7]; push 2 → stack[7,2]; see '*', pop 2,7 → 7*2=14, push 14 → stack[14]. Result = <strong>14</strong> (equivalent to infix <code>(3+4)*2</code>).</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- 7. DAG IN INTERMEDIATE CODE -->
+  <h2 class="topic scroll-anchor" id="dag-icg">
+    <span>07.</span> DAG as an Intermediate Code Form
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p>As an intermediate code representation, a <strong>DAG (Directed Acyclic Graph)</strong> represents an expression such that each interior node is labelled with an operator, its children are its operands, and identical sub-expressions are represented by a SHARED single node — directly exposing common sub-expressions that postfix or plain syntax trees would otherwise duplicate.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    DAG bhi syntax tree jaisa hi hota hai, lekin ismein agar same expression baar-baar use ho raha ho, to usse sirf ek hi node se represent kiya jata hai (reuse hota hai), tree ki tarah dobara nahi banaya jata. Isse redundant calculations avoid hoti hain.
+  </div>
+
+  <h3 class="sub">Syntax Tree vs DAG <span class="imp h">EXAM HOT — Comparison Guaranteed</span></h3>
+  <table>
+    <tr><th>Feature</th><th>Syntax Tree</th><th>DAG</th></tr>
+    <tr><td>Repeated Sub-expressions</td><td>Each occurrence gets a separate, duplicate node</td><td>Shared — single node with multiple parents</td></tr>
+    <tr><td>Structure</td><td>Always a tree (no node has &gt;1 parent)</td><td>Graph (nodes can have multiple parents)</td></tr>
+    <tr><td>Detects Common Sub-expr?</td><td>No</td><td>Yes</td></tr>
+    <tr><td>Memory Usage</td><td>Higher (duplicates)</td><td>Lower (sharing)</td></tr>
+  </table>
+
+  <div class="card example">
+    <div class="tag">Example</div>
+    <p>For <code>a = (b+c)*(b+c)</code>: a syntax tree creates TWO separate <code>b+c</code> subtrees, but a DAG creates only ONE <code>b+c</code> node and points to it twice from the <code>*</code> node — saving computation.</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- 8. THREE ADDRESS CODE -->
+  <h2 class="topic scroll-anchor" id="tac">
+    <span>08.</span> Three Address Code (TAC)
+    <span class="imp h">HIGH — BACKBONE OF THIS UNIT</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>Three Address Code</strong> is an intermediate code representation in which each statement contains AT MOST three addresses (operands) — typically two operands and one result — and at most one operator per statement, resembling assembly-like instructions while remaining machine-independent.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Three Address Code (TAC) ek aisa intermediate code hai jisme har statement mein zyada se zyada 3 addresses hoti hain (do operands + ek result) aur sirf ek operator. Yeh complex expressions ko simple, ek-ek operation waale chhote statements mein todta hai — jaise <code>x = y + z</code>.
+  </div>
+
+  <h3 class="sub">General Form of TAC Statement</h3>
+  <div class="formula">x = y op z</div>
+  <p style="margin-top:6px;color:var(--muted);font-size:13px;">where x, y, z are names, constants, or compiler-generated temporaries, and op is a single binary/unary operator.</p>
+
+  <h3 class="sub">Common TAC Statement Types <span class="imp h">EXAM HOT</span></h3>
+  <table>
+    <tr><th>Type</th><th>Form</th><th>Example</th></tr>
+    <tr><td class="hi">Assignment (binary op)</td><td><code>x = y op z</code></td><td><code>t1 = a + b</code></td></tr>
+    <tr><td class="hi">Assignment (unary op)</td><td><code>x = op y</code></td><td><code>t2 = −a</code></td></tr>
+    <tr><td>Copy Statement</td><td><code>x = y</code></td><td><code>a = t1</code></td></tr>
+    <tr><td class="hi">Unconditional Jump</td><td><code>goto L</code></td><td><code>goto L1</code></td></tr>
+    <tr><td class="hi">Conditional Jump</td><td><code>if x relop y goto L</code></td><td><code>if a &lt; b goto L2</code></td></tr>
+    <tr><td>Indexed Assignment</td><td><code>x = y[i]</code> / <code>x[i] = y</code></td><td><code>t3 = arr[i]</code></td></tr>
+    <tr><td>Address &amp; Pointer</td><td><code>x = &amp;y</code> / <code>x = *y</code> / <code>*x = y</code></td><td><code>p = &amp;a</code></td></tr>
+    <tr><td>Procedure Call</td><td><code>param x</code> / <code>call p,n</code></td><td><code>param a; call f,1</code></td></tr>
+  </table>
+
+  <div class="card example">
+    <div class="tag">Example — Expression to TAC</div>
+    <p>For <code>a = b * −c + b * −c</code>:</p>
+    <div class="formula">
+      t1 = −c
+      t2 = b * t1
+      t3 = −c
+      t4 = b * t3
+      t5 = t2 + t4
+      a  = t5
+    </div>
+  </div>
+
+  <hr class="sep">
+
+  <!-- 9. TAC FOR CONTROL STRUCTURES -->
+  <h2 class="topic scroll-anchor" id="tac-control">
+    <span>09.</span> Three Address Code for Various Control Structures
+    <span class="imp h">HIGH — MOST ASKED</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p>Generating TAC for control structures (if-else, while, for) involves using <strong>conditional and unconditional jumps</strong>, along with compiler-generated <strong>labels</strong>, to translate the high-level control flow into a sequence of TAC statements that achieve the same branching behaviour.</p>
+  </div>
+
+  <h3 class="sub">TAC for if-then-else <span class="imp h">EXAM HOT</span></h3>
+  <div class="card">
+    <p>Source: <code>if (B) S1 else S2</code></p>
+    <div class="formula">
+        code for B (true → L1, false → L2)
+    L1: code for S1
+        goto L3
+    L2: code for S2
+    L3:  (next statement)
+    </div>
+  </div>
+
+  <h3 class="sub">TAC for while Loop <span class="imp h">EXAM HOT</span></h3>
+  <div class="card">
+    <p>Source: <code>while (B) S</code></p>
+    <div class="formula">
+    L1: code for B (true → L2, false → L3)
+    L2: code for S
+        goto L1
+    L3:  (next statement)
+    </div>
+  </div>
+
+  <h3 class="sub">TAC for for Loop</h3>
+  <div class="card">
+    <p>Source: <code>for (i=init; i&lt;limit; i++) S</code> — translated by rewriting as an equivalent while-loop pattern:</p>
+    <div class="formula">
+        i = init
+    L1: if i &lt; limit goto L2
+        goto L3
+    L2: code for S
+        i = i + 1
+        goto L1
+    L3:  (next statement)
+    </div>
+  </div>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 360 240" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:300px;">
+      <rect x="0" y="0" width="360" height="240" fill="#0d1820"/>
+      <defs><marker id="a4" markerWidth="8" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#fff"/></marker></defs>
+      <g font-family="Consolas" font-size="11" fill="#d7e1e8">
+        <rect x="120" y="10" width="120" height="36" fill="none" stroke="#36e0c4" stroke-width="1.5"/>
+        <text x="180" y="33" text-anchor="middle" fill="#36e0c4">L1: test B</text>
+        <line x1="150" y1="46" x2="150" y2="80" stroke="#fff" stroke-width="1.3" marker-end="url(#a4)"/>
+        <text x="105" y="65" fill="#8aa0ad" font-size="10">true</text>
+        <rect x="100" y="80" width="100" height="36" fill="none" stroke="#ffb454" stroke-width="1.5"/>
+        <text x="150" y="103" text-anchor="middle" fill="#ffb454">L2: body S</text>
+        <line x1="100" y1="98" x2="40" y2="98" stroke="#fff" stroke-width="1.3"/>
+        <line x1="40" y1="98" x2="40" y2="28" stroke="#fff" stroke-width="1.3" marker-end="url(#a4)"/>
+        <text x="5" y="65" fill="#8aa0ad" font-size="10">goto L1</text>
+        <line x1="210" y1="46" x2="270" y2="80" stroke="#fff" stroke-width="1.3" marker-end="url(#a4)"/>
+        <text x="225" y="65" fill="#8aa0ad" font-size="10">false</text>
+        <rect x="220" y="150" width="100" height="36" fill="none" stroke="#b18cff" stroke-width="1.5"/>
+        <text x="270" y="173" text-anchor="middle" fill="#b18cff">L3: next stmt</text>
+        <line x1="270" y1="80" x2="270" y2="150" stroke="#fff" stroke-width="1.3" marker-end="url(#a4)"/>
+      </g>
+    </svg>
+    <p class="cap">Fig 2: Control flow for while-loop TAC — L1 tests condition, L2 is the body, L3 is exit</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- 10. TRIPLES & QUADRUPLES -->
+  <h2 class="topic scroll-anchor" id="triples-quads">
+    <span>10.</span> Representing TAC Using Triples &amp; Quadruples
+    <span class="imp h">HIGH — MOST ASKED</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>Quadruples</strong> and <strong>Triples</strong> are two record-structure implementations used to physically store three-address code statements internally within the compiler. A <strong>Quadruple</strong> has 4 fields (operator, arg1, arg2, result); a <strong>Triple</strong> has only 3 fields (operator, arg1, arg2) and refers to the result of a triple by its position/index, rather than storing it as a named temporary.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Compiler ke andar TAC ko actually store karne ke 2 main tarike hain — Quadruple aur Triple. Quadruple mein 4 columns hote hain (operator, operand1, operand2, result), jisme result ko ek naam diya jaata hai (temporary variable). Triple mein sirf 3 columns hote hain — result ko naam nahi diya jaata, balki uska reference us statement ke position number (index) se diya jaata hai.
+  </div>
+
+  <h3 class="sub">Quadruple Representation <span class="imp h">EXAM HOT</span></h3>
+  <div class="card">
+    <p>For <code>a = b * −c + b * −c</code>, the quadruples are:</p>
+    <table style="margin-top:8px;">
+      <tr><th>#</th><th>op</th><th>arg1</th><th>arg2</th><th>result</th></tr>
+      <tr><td>0</td><td>uminus</td><td>c</td><td>—</td><td>t1</td></tr>
+      <tr><td>1</td><td>*</td><td>b</td><td>t1</td><td>t2</td></tr>
+      <tr><td>2</td><td>uminus</td><td>c</td><td>—</td><td>t3</td></tr>
+      <tr><td>3</td><td>*</td><td>b</td><td>t3</td><td>t4</td></tr>
+      <tr><td>4</td><td>+</td><td>t2</td><td>t4</td><td>t5</td></tr>
+      <tr><td>5</td><td>=</td><td>t5</td><td>—</td><td>a</td></tr>
+    </table>
+  </div>
+
+  <h3 class="sub">Triple Representation <span class="imp h">EXAM HOT</span></h3>
+  <div class="card">
+    <p>Same expression using triples (result referred to by statement number in parentheses, not a named temporary):</p>
+    <table style="margin-top:8px;">
+      <tr><th>#</th><th>op</th><th>arg1</th><th>arg2</th></tr>
+      <tr><td>0</td><td>uminus</td><td>c</td><td>—</td></tr>
+      <tr><td>1</td><td>*</td><td>b</td><td>(0)</td></tr>
+      <tr><td>2</td><td>uminus</td><td>c</td><td>—</td></tr>
+      <tr><td>3</td><td>*</td><td>b</td><td>(2)</td></tr>
+      <tr><td>4</td><td>+</td><td>(1)</td><td>(3)</td></tr>
+      <tr><td>5</td><td>=</td><td>a</td><td>(4)</td></tr>
+    </table>
+  </div>
+
+  <h3 class="sub">Quadruple vs Triple <span class="imp h">EXAM HOT — Comparison Guaranteed</span></h3>
+  <table>
+    <tr><th>Feature</th><th>Quadruple</th><th>Triple</th></tr>
+    <tr><td>Number of Fields</td><td>4 (op, arg1, arg2, result)</td><td>3 (op, arg1, arg2)</td></tr>
+    <tr><td>Result Reference</td><td>Named temporary variable</td><td>Position/index of the statement</td></tr>
+    <tr><td>Rearranging Statements</td><td>Easy — temporaries are named, order-independent</td><td>Hard — moving a statement changes its index, breaking references</td></tr>
+    <tr><td>Memory Usage</td><td>Higher (extra result field + temp names)</td><td>Lower (no named temporaries needed)</td></tr>
+    <tr><td>Used For</td><td>Optimizing compilers (where code is reordered)</td><td>Simpler / non-optimizing compilers</td></tr>
+  </table>
+
+  <h3 class="sub">Indirect Triples (Improvement over Triples)</h3>
+  <div class="card">
+    <p><strong>Indirect Triples</strong> add a separate list of pointers to triples, listed in the desired execution order. This allows statement reordering (for optimization) by simply rearranging the pointer list, without modifying the triples themselves — combining the compactness of triples with the reorderability of quadruples.</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- 11. BOOLEAN EXPRESSIONS & CONTROL STRUCTURES -->
+  <h2 class="topic scroll-anchor" id="boolean">
+    <span>11.</span> Boolean Expressions and Control Structures
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p>Translation of <strong>Boolean expressions</strong> can be done in two ways: (a) <strong>Numerical representation</strong> — encoding true as 1 and false as 0, evaluating left-to-right like an arithmetic expression; or (b) <strong>Flow-of-control (short-circuit) translation</strong> — representing the value of a Boolean expression implicitly by the position reached in the program (i.e., which branch of code executes), generating jump instructions instead of explicitly computing 1/0.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Boolean expressions ko translate karne ke 2 tarike hain. Pehla: simple — true/false ko 1/0 maan kar normal arithmetic expression jaisa treat karo. Dusra (zyada efficient): "short-circuit" tarika — jaha hum value ko explicitly calculate nahi karte, balki seedha jump instructions generate karte hain jo decide karte hain ki code kis path pe jayega — yeh tarika compilers mein zyada use hota hai kyunki yeh fast hai aur unnecessary evaluation avoid karta hai.
+  </div>
+
+  <h3 class="sub">Short-Circuit (Jumping) Code for Boolean Operators <span class="imp h">EXAM HOT</span></h3>
+  <table>
+    <tr><th>Expression</th><th>Translation Strategy</th></tr>
+    <tr><td class="hi"><code>B1 && B2</code></td><td>If B1 is false, jump directly to false-label (skip evaluating B2). Only evaluate B2 if B1 is true.</td></tr>
+    <tr><td class="hi"><code>B1 || B2</code></td><td>If B1 is true, jump directly to true-label (skip evaluating B2). Only evaluate B2 if B1 is false.</td></tr>
+    <tr><td><code>!B</code></td><td>Simply swap the true-label and false-label targets of B.</td></tr>
+  </table>
+
+  <div class="card example">
+    <div class="tag">Example — TAC for <code>if (a&lt;b && c&lt;d) x=1; else x=0;</code></div>
+    <div class="formula">
+        if a &lt; b goto L1
+        goto L3
+    L1: if c &lt; d goto L2
+        goto L3
+    L2: x = 1
+        goto L4
+    L3: x = 0
+    L4:
+    </div>
+    <p style="margin-top:8px;">Notice how <code>c&lt;d</code> is only checked if <code>a&lt;b</code> is true — this is the short-circuit behaviour, achieved purely through jump targets, with no Boolean value ever explicitly stored.</p>
+  </div>
+
+  <div class="card warn">
+    <div class="tag">⚠ Important</div>
+    <p>The flow-of-control translation method is preferred in real compilers (used in if/while statements) because it produces more efficient code by avoiding evaluation of the right operand when the left operand already determines the result — this is precisely "short-circuit evaluation" as seen in C/C++/Java (<code>&amp;&amp;</code>, <code>||</code>).</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- Q&A SECTION -->
+  <div class="qsection" id="qa">
+    <h2 class="topic" style="border:none;">❓ RTU Exam Q&amp;A Bank — Unit 4 <span class="imp h">EXAM GOLD</span></h2>
+
+    <div class="qcard">
+      <div class="qlabel">Q1 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">What is a Syntax Directed Definition (SDD)? Differentiate between synthesized and inherited attributes.</div>
+      <div class="a">
+        <p>An SDD is a context-free grammar augmented with attributes for grammar symbols and semantic rules for productions, specifying both syntax and meaning/translation together. <strong>Synthesized attributes</strong> are computed from a node's children (bottom-up flow), e.g. <code>E.val = E1.val + T.val</code>. <strong>Inherited attributes</strong> are computed from a node's parent and/or left siblings (top-down/left-to-right flow), e.g. passing a declared type down to identifiers in a declaration list.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q2 · 10 MARKS</div>
+      <span class="marks m10">10 MARKS</span>
+      <div class="q">Define S-Attributed and L-Attributed definitions. Differentiate between them with examples.</div>
+      <div class="a">
+        <p>An SDD is <strong>S-Attributed</strong> if it uses only synthesized attributes — values are computed entirely bottom-up, suitable for LR (bottom-up) parsers, evaluated during a single post-order traversal. An SDD is <strong>L-Attributed</strong> if every inherited attribute of a symbol depends only on attributes of symbols to its left in the production (or the parent's inherited attributes) — never on symbols to its right. This restriction allows evaluation in a single left-to-right depth-first traversal, making L-attributed SDDs usable with both top-down (LL) and bottom-up parsers. Every S-attributed SDD is also L-attributed, but not vice versa, since L-attributed permits inherited attributes flowing left-to-right while S-attributed allows only synthesized (bottom-up) flow.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q3 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">What is a syntax tree? How does it differ from a parse tree?</div>
+      <div class="a">
+        <p>A syntax tree (abstract syntax tree) is a compact representation of a program's structure where operators are interior nodes and operands are their children — it omits the unnecessary grammar-rule detail present in a full parse tree (e.g. chain productions, parentheses tokens). A parse tree shows every step of the derivation according to the grammar (verbose), while a syntax tree shows only the essential semantic structure (compact), making it more suitable for further compiler phases like code generation.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q4 · 10 MARKS</div>
+      <span class="marks m10">10 MARKS</span>
+      <div class="q">What is Three Address Code? Explain its various statement forms with examples.</div>
+      <div class="a">
+        <p>Three Address Code (TAC) is an intermediate representation where each statement has at most three addresses (two operands + one result) and at most one operator, in the general form <code>x = y op z</code>. Common forms: assignment with binary/unary operator (<code>t1=a+b</code>, <code>t2=−a</code>), copy statement (<code>a=t1</code>), unconditional jump (<code>goto L</code>), conditional jump (<code>if a&lt;b goto L</code>), indexed assignment (<code>t=arr[i]</code>), address/pointer operations (<code>p=&amp;a</code>, <code>x=*p</code>), and procedure call sequences (<code>param a; call f,1</code>). TAC breaks complex expressions into a sequence of simple, single-operation steps, close to assembly but still machine-independent.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q5 · 10 MARKS</div>
+      <span class="marks m10">10 MARKS</span>
+      <div class="q">Generate Three Address Code for an if-then-else statement and a while loop.</div>
+      <div class="a">
+        <p><strong>if(B) S1 else S2:</strong> code for B with (true→L1, false→L2); L1: code for S1; goto L3; L2: code for S2; L3: (next statement). <strong>while(B) S:</strong> L1: code for B with (true→L2, false→L3); L2: code for S; goto L1; L3: (next statement). In both cases, the Boolean expression B is translated using jumps to the appropriate labels rather than computing an explicit true/false value, and labels mark the start/end points of each control path.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q6 · 10 MARKS</div>
+      <span class="marks m10">10 MARKS</span>
+      <div class="q">What are Triples and Quadruples? Represent the expression a = b*−c + b*−c using both.</div>
+      <div class="a">
+        <p>A <strong>Quadruple</strong> is a 4-field record (op, arg1, arg2, result) used to store a TAC statement, where the result is a named temporary. A <strong>Triple</strong> is a 3-field record (op, arg1, arg2) where the result is referred to by the statement's position/index, not a name. For <code>a=b*−c+b*−c</code>: Quadruples — (0)uminus,c,−,t1; (1)*,b,t1,t2; (2)uminus,c,−,t3; (3)*,b,t3,t4; (4)+,t2,t4,t5; (5)=,t5,−,a. Triples — (0)uminus,c,−; (1)*,b,(0); (2)uminus,c,−; (3)*,b,(2); (4)+,(1),(3); (5)=,a,(4).</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q7 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">Differentiate between Quadruples and Triples.</div>
+      <div class="a">
+        <table>
+          <tr><th>Feature</th><th>Quadruple</th><th>Triple</th></tr>
+          <tr><td>Fields</td><td>4 (op, arg1, arg2, result)</td><td>3 (op, arg1, arg2)</td></tr>
+          <tr><td>Result Reference</td><td>Named temporary</td><td>Statement position/index</td></tr>
+          <tr><td>Reordering Statements</td><td>Easy</td><td>Difficult (breaks index references)</td></tr>
+        </table>
+        <p>Indirect Triples solve the reordering problem by adding a separate pointer list, allowing reordering without modifying the triples themselves.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q8 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">What is postfix notation? Convert the infix expression (a+b)*(c−d) to postfix.</div>
+      <div class="a">
+        <p>Postfix notation places the operator immediately after its operands, eliminating the need for parentheses since operator order is implicit. It's evaluated using a stack — push operands, and on encountering an operator, pop the required operands, apply the operation, and push the result back. For <code>(a+b)*(c−d)</code>: postfix = <strong>a b + c d − *</strong>.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q9 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">Explain how Boolean expressions are translated using flow-of-control (short-circuit) translation.</div>
+      <div class="a">
+        <p>In flow-of-control translation, a Boolean expression's value is represented implicitly by which branch of the generated code is reached, rather than computing an explicit true/false value. For <code>B1 &amp;&amp; B2</code>: if B1 is false, the code jumps directly to the false-label without evaluating B2 (short-circuit); only if B1 is true is B2 evaluated. For <code>B1 || B2</code>: if B1 is true, the code jumps directly to the true-label, skipping B2. This matches the short-circuit evaluation behaviour of <code>&amp;&amp;</code>/<code>||</code> in languages like C/C++/Java and produces more efficient generated code.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q10 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">What is a DAG? How is it used as an intermediate code form? Differentiate it from a syntax tree.</div>
+      <div class="a">
+        <p>A DAG (Directed Acyclic Graph) represents an expression with operators as interior nodes and operands as leaves, but UNLIKE a syntax tree, identical sub-expressions are represented by a single SHARED node (multiple parents), directly exposing common sub-expressions. A syntax tree, by contrast, creates a separate duplicate subtree for every occurrence of a repeated expression. For example, in <code>a=(b+c)*(b+c)</code>, a syntax tree builds two separate <code>b+c</code> subtrees, while a DAG builds only one, referenced twice — reducing both memory usage and redundant computation.</p>
+      </div>
+    </div>
+
+  </div><div style="margin-top:60px; padding:20px 24px; border:1px dashed var(--line); border-radius:10px; color:var(--muted); font-size:13px;">
+    <div style="color:var(--accent); font-family:'Consolas',monospace; font-weight:700; margin-bottom:6px;">ZYREX // CD_VAULT — UNIT 4 · Syntax Directed Definitions &amp; Intermediate Code</div>
+    <p>RTU B.Tech CSE 5th Semester · 5CS4-02 Compiler Design · Unit 4 of 6</p>
+    <p style="margin-top:6px;">📌 Focus areas for exam: S-Attributed vs L-Attributed comparison (10-mark regular), TAC for if/while loops, Triples vs Quadruples representation, Boolean short-circuit translation.</p>
+    <p style="margin-top:6px;">Key terms to memorize: Synthesized = bottom-up only &nbsp;|&nbsp; L-attributed = left-to-right inherited + synthesized &nbsp;|&nbsp; TAC form: x=y op z &nbsp;|&nbsp; Quadruple=4 fields, Triple=3 fields (index-based result)</p>
+  </div>
+
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:center;padding:30px 20px;flex-wrap:wrap;">
+      <a href="unit3.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+      <a href="../cd/index.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">🏠 CD Hub</a>
+      <a href="unit5.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+    </div>
+  </main>
+  <div class="cursor-dot" data-cursor-dot></div>
+  <div class="cursor-outline" data-cursor-outline></div>
+  <script>
+    const cursorDot = document.querySelector("[data-cursor-dot]");
+    const cursorOutline = document.querySelector("[data-cursor-outline]");
+    window.addEventListener("mousemove", function(e){
+      cursorDot.style.left=e.clientX+"px"; cursorDot.style.top=e.clientY+"px";
+      cursorOutline.animate({left:e.clientX+"px",top:e.clientY+"px"},{duration:400,fill:"forwards"});
+    });
+    document.querySelectorAll("a,button").forEach(el=>{
+      el.addEventListener("mouseenter",()=>cursorOutline.classList.add("cursor-hovering"));
+      el.addEventListener("mouseleave",()=>cursorOutline.classList.remove("cursor-hovering"));
+    });
+  </script>
+<script src="../splash-cursor.js"></script>\n</body>
+</html>

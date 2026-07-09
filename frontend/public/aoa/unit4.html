@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Learning Plus // AOA · Unit 4</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <main class="main-wrapper" style="width:100%;">
+    <div class="topbar">
+      <a href="index.html" class="back-btn">⬅ AOA Hub</a>
+      <div class="brand">Smart<span>Learning</span>+ <span style="color:var(--muted);font-weight:400;font-size:14px;">// AOA · Unit 4</span></div>
+      <div class="nav">
+        <a href="index.html">🏠 AOA Hub</a>
+        <a href="#content">📖 Content</a>
+        <a href="#qa">❓ Q&amp;A</a>
+        <a href="unit3.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+        <a href="unit5.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="hero">
+        <h1>♟️ Unit 4 — Branch &amp; Bound, Backtracking and Pattern Matching</h1>
+        <p>Traveling Salesman Problem · Lower Bound Theory · Backtracking &amp; N-Queens Problem · Naïve, Rabin-Karp, KMP &amp; Boyer-Moore String Matching | Hours: 08</p>
+        <div class="badges" style="margin-top:14px;">
+          <a href="index.html" style="text-decoration:none;"><span class="badge b-teal">← Back to AOA Hub</span></a>
+          <span class="badge b-gold">5CS4-05 · Analysis of Algorithms · RTU</span>
+        </div>
+      </div>
+      <div id="content">
+<div id="unit4">
+<div class="unit-title">♟️ Unit 4 — Branch &amp; Bound, Backtracking and Pattern Matching Algorithms</div>
+<div class="unit-sub">Branch and Bound &middot; Traveling Salesman Problem (TSP) &middot; Lower Bound Theory &middot; Backtracking Algorithms &middot; N-Queens Problem &middot; Naïve String Matching &middot; Rabin-Karp Algorithm &middot; KMP Matcher &middot; Boyer-Moore Algorithm</div>
+
+<div class="badge-row">
+  <span class="badge b-red">🔥 HIGH WEIGHT — 12-14 Marks Expected</span>
+  <span class="badge b-gold">⚠ 10-Mark: TSP B&amp;B, N-Queens Backtracking, KMP Failure Function</span>
+  <span class="badge b-teal">✅ String Matching Comparison Table = Frequent 5-Mark Q</span>
+</div>
+
+<div class="card" style="margin-bottom:28px;">
+  <div style="color:var(--accent2); font-weight:700; margin-bottom:10px;">📑 Unit 4 Quick Navigation</div>
+  <div class="toc" style="columns:2; column-gap:24px;">
+    <div><a href="#u4-bb">4.1 Branch and Bound — Concept</a></div>
+    <div><a href="#u4-tsp">4.2 Traveling Salesman Problem (B&amp;B)</a></div>
+    <div><a href="#u4-lb">4.3 Lower Bound Theory</a></div>
+    <div><a href="#u4-backtrack">4.4 Backtracking Algorithms — Concept</a></div>
+    <div><a href="#u4-queens">4.5 N-Queens Problem</a></div>
+    <div><a href="#u4-pattern">4.6 Pattern Matching — Overview</a></div>
+    <div><a href="#u4-naive">4.7 Naïve String Matching</a></div>
+    <div><a href="#u4-rk">4.8 Rabin-Karp Algorithm</a></div>
+    <div><a href="#u4-kmp">4.9 KMP Matcher</a></div>
+    <div><a href="#u4-bm">4.10 Boyer-Moore Algorithm</a></div>
+    <div><a href="#u4-tables">4.11 Comparison Tables</a></div>
+    <div><a href="#u4-qa">4.12 RTU Exam Q&amp;A</a></div>
+  </div>
+</div>
+
+<!-- 4.1 BRANCH AND BOUND -->
+<h2 class="topic" id="u4-bb">4.1 Branch and Bound — Concept <span class="imp h">FOUNDATION</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;"><strong>Branch and Bound (B&amp;B)</strong> is a systematic search technique for solving optimization problems by exploring the solution space as a <strong>tree of partial solutions (branching)</strong>, computing a <strong>bound</strong> on the best possible solution achievable from each node, and <strong>pruning</strong> any branch whose bound cannot beat the best solution found so far.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish Explanation</div>
+  <p style="margin-top:6px;">Branch and Bound bhi backtracking jaisa hi exploration karta hai, lekin yeh sirf optimization problems (minimum/maximum dhoondhne wale) ke liye use hota hai. Har node par ek "bound" (estimate) calculate karte hain ki is path se aage jaake best kitna achha solution mil sakta hai. Agar yeh bound already mile hue best solution se kharab hai, toh us poori branch ko explore hi nahi karte (prune kar dete hain) — isse bahut computation bach jaata hai.</p>
+</div>
+
+<h3 class="sub">Branch and Bound vs Plain Backtracking</h3>
+<div class="card">
+  <ul>
+    <li>🎯 <strong>Purpose:</strong> B&amp;B is used for optimization problems (minimize cost / maximize profit); Backtracking is used for decision/feasibility problems (find any/all valid solutions).</li>
+    <li>✂️ <strong>Pruning basis:</strong> B&amp;B prunes using a numeric bound comparison; Backtracking prunes using a feasibility/constraint check.</li>
+    <li>🔍 <strong>Search order:</strong> B&amp;B commonly explores the most promising node first (Least Cost / Best-First search) rather than strict depth-first order.</li>
+  </ul>
+</div>
+
+<!-- 4.2 TSP -->
+<h2 class="topic" id="u4-tsp">4.2 Traveling Salesman Problem — Branch &amp; Bound <span class="imp h">EXAM HOT — 10 MARK</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">The <strong>Traveling Salesman Problem (TSP)</strong> requires finding the minimum-cost <strong>Hamiltonian cycle</strong> that visits every city exactly once and returns to the starting city, given a cost matrix between all pairs of cities; the Branch &amp; Bound approach solves it by building partial tours and pruning branches whose lower-bound cost exceeds the best complete tour found so far.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">TSP mein ek salesman ko saare cities ek baar visit karke wapas start city aana hota hai, minimum total cost mein. Yeh NP-Hard problem hai, isliye brute-force mein (n-1)! routes check karne padte (bahut slow). B&amp;B is state-space tree banata hai jisme har node ek partial tour represent karta hai, aur har node ka lower bound nikal kar un branches ko discard karte hain jo best-known tour se kabhi behtar nahi ho sakti.</p>
+</div>
+
+<h3 class="sub">B&amp;B Approach for TSP</h3>
+<div class="card">
+  <div class="formula">1. Compute initial lower bound for the root (sum of 2 minimum edges
+   from each city / 2, rounded up)
+2. Build a state-space tree: each node = partial tour (subset of edges fixed)
+3. For each child node, compute its reduced-cost lower bound
+4. Use a priority queue (least-bound-first) to expand the most promising node
+5. Prune (discard) any node whose bound >= current best complete tour cost
+6. Update "best tour" whenever a cheaper complete tour is found
+7. Continue until all live nodes are pruned or expanded</div>
+</div>
+
+<div class="card example">
+  <div class="tag">💡 Example</div>
+  <p style="margin-top:8px;">For a 4-city TSP with a given cost matrix, the root lower bound is computed by summing, for every city, its two smallest outgoing edge costs and halving the total. As the tree branches on "include edge (i,j)" vs "exclude edge (i,j)" decisions, nodes with a bound worse than the current best complete tour are pruned, and the search continues until the cheapest complete Hamiltonian cycle is confirmed as optimal.</p>
+</div>
+
+<!-- 4.3 LOWER BOUND THEORY -->
+<h2 class="topic" id="u4-lb">4.3 Lower Bound Theory <span class="imp m">5-MARK</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;"><strong>Lower Bound Theory</strong> provides a mathematically guaranteed minimum cost (a value that the true optimal solution can never be cheaper than) for a partial or complete solution in a Branch &amp; Bound search, allowing the algorithm to safely prune any branch whose lower bound is already worse than the best solution found so far.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Lower bound ek "optimistic estimate" hota hai — yeh guarantee karta hai ki is node se aage chal kar bhi cost is value se kam kabhi nahi ho sakti. Agar yeh estimate khud hi current best solution se zyada hai, toh us node ko explore karne ka koi fayda nahi — usse prune kar dete hain. Better (tighter) lower bound ka matlab hai zyada branches prune hongi, aur algorithm fast chalega.</p>
+</div>
+
+<h3 class="sub">Computing a Lower Bound (TSP example)</h3>
+<div class="card">
+  <div class="formula">For each city i, find its two smallest-cost outgoing edges.
+Lower Bound = ( Σ (sum of 2 smallest edges for each city) ) / 2  [rounded up]</div>
+  <p>As edges are fixed/excluded while branching, the bound is incrementally tightened (recomputed) for each child node, always remaining a valid (never-overestimating) bound on the true minimum cost achievable from that node.</p>
+</div>
+
+<div class="keypoint">
+  <span class="icon">📌</span>
+  <span><strong>Why lower bounds matter:</strong> A tighter (higher, closer to the true optimum) lower bound prunes more branches and makes Branch &amp; Bound far faster than exhaustive search, while still guaranteeing the optimal solution is never missed.</span>
+</div>
+
+<!-- 4.4 BACKTRACKING -->
+<h2 class="topic" id="u4-backtrack">4.4 Backtracking Algorithms — Concept <span class="imp h">EXAM HOT</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;"><strong>Backtracking</strong> is a systematic trial-and-error technique that builds a solution incrementally, one component at a time, and abandons (<strong>"backtracks" from</strong>) a partial solution as soon as it determines that the partial solution cannot possibly be extended to a valid complete solution, then tries the next alternative.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Backtracking ek tarah ka organized "trial and error" hai. Hum solution ko step-by-step build karte hain, aur har step par check karte hain ki abhi tak ka partial solution valid hai ya nahi (constraint check). Agar invalid ho jaata hai, toh hum waapas (backtrack) jaate hain pichle step par aur dusra option try karte hain — isse pure search tree explore nahi karna padta, sirf promising paths hi explore hote hain.</p>
+</div>
+
+<h3 class="sub">General Backtracking Algorithm</h3>
+<div class="card">
+  <div class="formula">Backtrack(partial_solution):
+  if partial_solution is a complete valid solution:
+      record/output it; return
+  for each candidate choice c (extending partial_solution):
+      if c satisfies the constraints (is "safe"):
+          add c to partial_solution
+          Backtrack(partial_solution)        // recurse
+          remove c from partial_solution     // BACKTRACK (undo choice)</div>
+</div>
+
+<!-- 4.5 N-QUEENS -->
+<h2 class="topic" id="u4-queens">4.5 N-Queens Problem (Backtracking) <span class="imp h">MOST IMPORTANT — 10 MARK</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">The <strong>N-Queens Problem</strong> requires placing N queens on an N×N chessboard such that no two queens attack each other — i.e., <strong>no two queens share the same row, column, or diagonal</strong> — solved using backtracking by placing queens one column (or row) at a time and backtracking whenever a placement leads to a conflict.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">N-Queens mein N queens ko N×N board par is tarah rakhna hota hai ki koi bhi do queens ek dusre ko attack na kar sakein (same row, column, ya diagonal mein na hों). Backtracking approach: ek-ek karke har row mein queen place karte jaao (column choose karke), agar current placement safe hai toh aage badho, nahi toh backtrack karke dusra column try karo.</p>
+</div>
+
+<h3 class="sub">Algorithm</h3>
+<div class="card">
+  <div class="formula">NQueens(board, row, n):
+  if row == n:
+      print/record solution; return true (if only one solution needed)
+  for col = 0 to n-1:
+      if isSafe(board, row, col):
+          place queen at (row, col)
+          if NQueens(board, row+1, n): return true
+          remove queen at (row, col)     // backtrack
+  return false
+
+isSafe(board, row, col):
+  Check column above is free, and both upper-left and
+  upper-right diagonals are free of any previously placed queen</div>
+</div>
+
+<div class="svgbox">
+<svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:300px;">
+  <g>
+    <!-- 4x4 chessboard -->
+    <rect x="20" y="20" width="280" height="280" fill="none" stroke="var(--muted)" stroke-width="2"/>
+    <rect x="20" y="20" width="70" height="70" fill="#1e293b"/>
+    <rect x="160" y="20" width="70" height="70" fill="#1e293b"/>
+    <rect x="90" y="90" width="70" height="70" fill="#1e293b"/>
+    <rect x="230" y="90" width="70" height="70" fill="#1e293b"/>
+    <rect x="20" y="160" width="70" height="70" fill="#1e293b"/>
+    <rect x="160" y="160" width="70" height="70" fill="#1e293b"/>
+    <rect x="90" y="230" width="70" height="70" fill="#1e293b"/>
+    <rect x="230" y="230" width="70" height="70" fill="#1e293b"/>
+    <!-- Queens for the classic 4-queens solution: (0,1),(1,3),(2,0),(3,2) -->
+    <text x="125" y="68" font-size="34" text-anchor="middle" fill="var(--accent)">♛</text>
+    <text x="265" y="138" font-size="34" text-anchor="middle" fill="var(--accent)">♛</text>
+    <text x="55" y="208" font-size="34" text-anchor="middle" fill="var(--accent)">♛</text>
+    <text x="195" y="278" font-size="34" text-anchor="middle" fill="var(--accent)">♛</text>
+  </g>
+</svg>
+<div class="cap">A valid 4-Queens solution — no two queens share a row, column, or diagonal</div>
+</div>
+
+<div class="card example">
+  <div class="tag">💡 Example: 4-Queens Backtracking Trace</div>
+  <p style="margin-top:8px;">Placing queens row by row: Q1 at (0,0) → Q2 cannot be at (1,0) or (1,1) (column/diagonal conflict) → try (1,2) → Q3 has no safe column in row 2 → backtrack to Q2, try (1,3) → Q3 at (2,1) → Q4 has no safe column → backtrack further... eventually the algorithm finds the valid solution (0,1),(1,3),(2,0),(3,2) shown above, after multiple backtracks.</p>
+</div>
+
+<div class="keypoint">
+  <span class="icon">📌</span>
+  <span><strong>Complexity:</strong> The N-Queens backtracking search has a worst-case time complexity of O(N!) since up to N choices are tried per row across N rows, but pruning unsafe placements early makes it far faster in practice than checking all N^N raw placements.</span>
+</div>
+
+<!-- 4.6 PATTERN MATCHING -->
+<h2 class="topic" id="u4-pattern">4.6 Pattern Matching Algorithms — Overview <span class="imp h">FOUNDATION</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;"><strong>String/Pattern Matching</strong> is the problem of finding all occurrences of a given <strong>pattern</strong> string P (length m) within a larger <strong>text</strong> string T (length n). Different algorithms (Naïve, Rabin-Karp, KMP, Boyer-Moore) trade off pre-processing time, average-case speed, and worst-case guarantees.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Pattern matching ka kaam hai ek badi text string mein ek chhoti pattern string ko dhoondhna — jaise Ctrl+F search. Sabse simple tareeka (Naïve) har possible position par character-by-character match check karta hai, jo slow hai. Smarter algorithms (Rabin-Karp hashing use karta hai, KMP pattern ke andar ke repeated prefixes ka use karta hai, Boyer-Moore text ko right-to-left scan karke bade jumps leta hai) bahut fast hote hain.</p>
+</div>
+
+<!-- 4.7 NAIVE -->
+<h2 class="topic" id="u4-naive">4.7 Naïve String Matching Algorithm <span class="imp m">5-MARK</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">The <strong>Naïve (Brute-Force) String Matching</strong> algorithm checks for the pattern at <strong>every possible starting position</strong> in the text by comparing characters one by one, sliding the pattern forward by exactly one position after each attempt (successful or not).</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Naïve method sabse simple hai — har position s (0 se n-m tak) par pattern ko text ke saath character-by-character compare karte hain. Match na hone par bhi sirf 1 position aage shift karte hain. Simple hai but bahut slow ho sakta hai worst case mein (jaise text = "aaaa...a", pattern = "aaa...b").</p>
+</div>
+
+<h3 class="sub">Algorithm</h3>
+<div class="card">
+  <div class="formula">NaiveSearch(T, P):           // n = len(T), m = len(P)
+  for s = 0 to n-m:
+      if T[s..s+m-1] == P[0..m-1]:
+          print "Pattern found at shift s"</div>
+</div>
+
+<h3 class="sub">Complexity</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Case</th><th>Time Complexity</th></tr>
+    <tr><td>Best Case</td><td>O(n) (mismatches found quickly at each shift)</td></tr>
+    <tr><td>Worst Case</td><td>O((n&#x2212;m+1)&middot;m) ≈ O(nm) (e.g., text and pattern of repeated characters)</td></tr>
+  </table>
+</div>
+
+<!-- 4.8 RABIN-KARP -->
+<h2 class="topic" id="u4-rk">4.8 Rabin-Karp Algorithm <span class="imp h">EXAM HOT — NUMERICAL</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">The <strong>Rabin-Karp Algorithm</strong> uses a <strong>hash function</strong> to compute a numeric fingerprint of the pattern and of each text window of the same length; it compares hash values first, and only performs a full character-by-character comparison when hash values match, using a <strong>rolling hash</strong> to update each window's hash in O(1) time.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Rabin-Karp pattern aur text ke har window ka ek hash value (number) calculate karta hai. Agar dono ke hash match karte hain tabhi actual characters compare karte hain (kyunki different strings ka hash kabhi-kabhi accidentally same ho sakta hai — "spurious hit"). Rolling hash ka use karke next window ka hash purane hash se O(1) mein nikal liya jaata hai (poora dobara calculate nahi karna padta) — isse yeh average case mein bahut fast ho jaata hai, especially multiple pattern search mein.</p>
+</div>
+
+<h3 class="sub">Rolling Hash Formula</h3>
+<div class="card">
+  <div class="formula">hash(s) = ( T[s]&middot;d^(m-1) + T[s+1]&middot;d^(m-2) + ... + T[s+m-1] ) mod q
+
+Rolling update:
+hash(s+1) = ( d&middot;( hash(s) &#x2212; T[s]&middot;d^(m-1) ) + T[s+m] ) mod q
+
+where d = number of characters in alphabet (e.g., 256), q = a large prime</div>
+</div>
+
+<h3 class="sub">Algorithm</h3>
+<div class="card">
+  <div class="formula">RabinKarp(T, P, d, q):
+  compute hash(P) and hash(T[0..m-1])
+  for s = 0 to n-m:
+      if hash(T window) == hash(P):
+          verify by direct character comparison (avoid false positive)
+          if match: print "Pattern found at shift s"
+      if s < n-m: roll the hash to next window in O(1)</div>
+</div>
+
+<div class="card example">
+  <div class="tag">💡 Example</div>
+  <p style="margin-top:8px;">Searching pattern "26" in text "31415926..." with d=10, q=11: hash("26")=26 mod 11=4. Each text window's hash is similarly computed and rolled forward; whenever a window's hash equals 4, a direct character check confirms whether it's a true match or a rare spurious hash collision.</p>
+</div>
+
+<h3 class="sub">Complexity</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Case</th><th>Time Complexity</th></tr>
+    <tr><td>Average Case</td><td>O(n+m)</td></tr>
+    <tr><td>Worst Case</td><td>O(nm) (many spurious hash collisions, e.g., poor choice of q)</td></tr>
+  </table>
+  <p style="margin-top:8px;">Particularly efficient for <strong>multiple pattern matching</strong> problems (plagiarism detection, etc.).</p>
+</div>
+
+<!-- 4.9 KMP -->
+<h2 class="topic" id="u4-kmp">4.9 KMP (Knuth-Morris-Pratt) Matcher <span class="imp h">MOST IMPORTANT — 10 MARK</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">The <strong>KMP Algorithm</strong> avoids re-examining previously matched text characters by pre-computing a <strong>prefix function (failure function) π</strong> for the pattern, which records the length of the longest proper prefix of the pattern that is also a suffix at each position, allowing the matcher to skip ahead intelligently after a mismatch instead of restarting from the next text position.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">KMP ka core idea hai: jab mismatch ho, toh hum text mein wapas pichhe nahi jaate — balki pattern ke andar pehle se match hue hisse ki "self-similarity" (prefix=suffix property) use karke seedha aage badh jaate hain. Iske liye pehle ek failure function (π array) precompute karte hain jo batata hai ki har position tak pattern ka sabse lamba prefix kya hai jo suffix bhi hai. Isse text ko ek baar hi scan karna padta hai — O(n+m) guaranteed, koi worst case slowdown nahi.</p>
+</div>
+
+<h3 class="sub">Computing the Prefix (Failure) Function π</h3>
+<div class="card">
+  <div class="formula">ComputePrefixFunction(P):     // m = len(P)
+  π[0] = 0;  k = 0
+  for q = 1 to m-1:
+      while k > 0 and P[k] != P[q]:
+          k = π[k-1]
+      if P[k] == P[q]:
+          k = k+1
+      π[q] = k
+  return π</div>
+</div>
+
+<div class="card example">
+  <div class="tag">💡 Example: Failure function for P = "ABABCABAB"</div>
+  <table style="margin-top:10px;">
+    <tr><th>i</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th></tr>
+    <tr><th>P[i]</th><td>A</td><td>B</td><td>A</td><td>B</td><td>C</td><td>A</td><td>B</td><td>A</td><td>B</td></tr>
+    <tr><th>π[i]</th><td>0</td><td>0</td><td>1</td><td>2</td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td></tr>
+  </table>
+</div>
+
+<h3 class="sub">KMP Matching Algorithm</h3>
+<div class="card">
+  <div class="formula">KMPMatcher(T, P):     // n = len(T), m = len(P)
+  π = ComputePrefixFunction(P)
+  q = 0    // number of characters matched so far
+  for i = 0 to n-1:
+      while q > 0 and P[q] != T[i]:
+          q = π[q-1]            // use failure fn to fall back smartly
+      if P[q] == T[i]:
+          q = q+1
+      if q == m:                 // entire pattern matched
+          print "Pattern found ending at index i"
+          q = π[q-1]</div>
+</div>
+
+<h3 class="sub">Complexity</h3>
+<div class="card">
+  <div class="formula">Pre-processing (prefix function): O(m)
+Matching phase: O(n)
+Total: O(n + m)   — guaranteed in ALL cases (best, average, worst)</div>
+</div>
+
+<!-- 4.10 BOYER MOORE -->
+<h2 class="topic" id="u4-bm">4.10 Boyer-Moore Algorithm <span class="imp h">EXAM HOT</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">The <strong>Boyer-Moore Algorithm</strong> compares the pattern against the text <strong>right-to-left</strong> at each alignment, and on a mismatch, uses two pre-computed heuristics — the <strong>Bad Character heuristic</strong> and the <strong>Good Suffix heuristic</strong> — to shift the pattern forward by more than one position, often skipping large portions of the text entirely.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Boyer-Moore pattern ko text ke saath right-to-left compare karta hai (ulta — pattern ke last character se start karta hai). Jab mismatch hota hai, yeh do smart heuristics use karta hai: Bad Character (jo text character mismatch hua hai, uske basis par pattern ko jitna door tak shift kar sakte hain) aur Good Suffix (jo portion already match ho chuka tha, uska use karke shift decide karna). In dono mein se jo bada shift deta hai, woh use hota hai — isliye practical mein yeh sabse fast algorithm maana jaata hai, especially large alphabets (English text) ke liye.</p>
+</div>
+
+<h3 class="sub">Bad Character Heuristic</h3>
+<div class="card">
+  <p>On a mismatch at text character c, shift the pattern so that the <strong>last occurrence of c in the pattern</strong> (to the left of the mismatch point) aligns with the mismatched text position; if c doesn't occur in the pattern at all, shift the pattern entirely past the mismatch point.</p>
+</div>
+
+<h3 class="sub">Good Suffix Heuristic</h3>
+<div class="card">
+  <p>When a mismatch occurs after matching a suffix (the already-matched tail of the pattern), shift the pattern to align the next occurrence of that matched suffix elsewhere in the pattern (or align the widest matching prefix-suffix overlap if no other occurrence exists).</p>
+</div>
+
+<div class="card example">
+  <div class="tag">💡 Example</div>
+  <p style="margin-top:8px;">Searching pattern "EXAMPLE" in a text: comparison starts from the pattern's last character 'E' against the aligned text character; on a mismatch, the bad-character rule may allow skipping several positions at once (e.g., jumping past a long stretch where the mismatched character doesn't appear anywhere in the pattern) instead of shifting by just one position as Naïve search would.</p>
+</div>
+
+<h3 class="sub">Complexity</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Case</th><th>Time Complexity</th></tr>
+    <tr><td>Best Case</td><td>O(n/m) — sub-linear, large skips possible</td></tr>
+    <tr><td>Worst Case</td><td>O(nm) (rare, mitigated further with good-suffix rule)</td></tr>
+  </table>
+  <p style="margin-top:8px;">In practice, Boyer-Moore is considered the <strong>fastest general-purpose string-matching algorithm</strong> for large alphabets like English text.</p>
+</div>
+
+<!-- 4.11 TABLES -->
+<h2 class="topic" id="u4-tables">4.11 Important Comparison Tables <span class="imp h">RAPID REVISION</span></h2>
+
+<h3 class="sub">Naïve vs Rabin-Karp vs KMP vs Boyer-Moore</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Basis</th><th>Naïve</th><th>Rabin-Karp</th><th>KMP</th><th>Boyer-Moore</th></tr>
+    <tr><td>Core idea</td><td>Direct character-by-character check at every shift</td><td>Hash-based comparison + rolling hash</td><td>Prefix/failure function avoids re-checking matched chars</td><td>Right-to-left scan with bad-character &amp; good-suffix shifts</td></tr>
+    <tr><td>Pre-processing</td><td>None</td><td>O(m) hash computation</td><td>O(m) prefix function</td><td>O(m + alphabet) heuristic tables</td></tr>
+    <tr><td>Worst-case time</td><td>O(nm)</td><td>O(nm) (rare collisions)</td><td>O(n+m) — guaranteed</td><td>O(nm) (rare)</td></tr>
+    <tr><td>Best/Practical case</td><td>O(n)</td><td>O(n+m)</td><td>O(n+m)</td><td>O(n/m) — sub-linear</td></tr>
+    <tr><td>Best suited for</td><td>Small texts, simplicity</td><td>Multiple pattern matching</td><td>Guaranteed linear-time matching</td><td>Large alphabets, large texts (fastest in practice)</td></tr>
+  </table>
+</div>
+
+<h3 class="sub">Branch &amp; Bound vs Backtracking</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Basis</th><th>Branch and Bound</th><th>Backtracking</th></tr>
+    <tr><td>Problem type</td><td>Optimization (min/max)</td><td>Decision / feasibility (find valid solution(s))</td></tr>
+    <tr><td>Pruning criterion</td><td>Numeric bound comparison</td><td>Constraint/feasibility check</td></tr>
+    <tr><td>Search strategy</td><td>Often best-first / least-cost</td><td>Typically depth-first</td></tr>
+    <tr><td>Example</td><td>Traveling Salesman Problem</td><td>N-Queens Problem</td></tr>
+  </table>
+</div>
+
+<!-- 4.12 Q&A -->
+<h2 class="topic" id="u4-qa">4.12 RTU Exam Questions &amp; Answers (Importance-Wise)</h2>
+<div id="qsection">
+
+  <div class="qcard">
+    <div class="qlabel">Q1</div>
+    <div class="q">Explain the Branch and Bound approach to solve the Traveling Salesman Problem, including lower bound calculation. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>Branch and Bound solves TSP by building a state-space tree of partial tours, where each node's lower bound is computed by summing the two smallest outgoing edge costs for every city and halving the total, giving an optimistic minimum cost for completing the tour from that node. Using a least-cost-first expansion strategy, the algorithm prunes any node whose bound is no better than the cheapest complete tour found so far, continuing until all live nodes are either expanded into a complete tour or pruned, guaranteeing the optimal Hamiltonian cycle is found without exhaustively checking all (n-1)! routes.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q2</div>
+    <div class="q">Write the backtracking algorithm for the N-Queens problem and explain with a 4-Queens example. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>The backtracking algorithm places queens row by row, trying each column in turn and checking via isSafe() that no previously placed queen shares the same column or diagonal; if safe, it places the queen and recurses to the next row, and if no column in a row is safe, it backtracks to the previous row and tries the next alternative there. For 4-Queens, after several conflicting attempts and backtracks, the algorithm eventually finds the valid solution placing queens at (0,1),(1,3),(2,0),(3,2), where no two queens attack each other.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q3</div>
+    <div class="q">Explain the KMP string matching algorithm. Compute the failure function for the pattern "ABABCABAB" and explain how matching proceeds. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>KMP pre-computes a failure function π, where π[q] gives the length of the longest proper prefix of the pattern that is also a suffix ending at position q, allowing the matcher to skip re-comparison of already-matched characters after a mismatch by falling back to π[q-1] instead of restarting. For pattern "ABABCABAB", the computed failure function values are [0,0,1,2,0,1,2,3,4], and during matching, whenever a mismatch occurs after partially matching characters, the algorithm uses this table to resume comparison at the correct offset, giving an overall guaranteed time complexity of O(n+m).</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q4</div>
+    <div class="q">Explain the Rabin-Karp string matching algorithm with its rolling hash formula. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>Rabin-Karp computes a numeric hash for the pattern and for each equal-length window of the text, comparing hash values first and only performing a full character comparison when hashes match (to rule out spurious collisions). The rolling hash formula hash(s+1) = (d·(hash(s) − T[s]·d^(m-1)) + T[s+m]) mod q allows each subsequent window's hash to be computed in O(1) from the previous one, giving an average-case time complexity of O(n+m), though the worst case remains O(nm) if many spurious hash collisions occur.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q5</div>
+    <div class="q">Explain the Boyer-Moore string matching algorithm and its bad-character and good-suffix heuristics. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>Boyer-Moore compares the pattern against the text from right to left at each alignment; on a mismatch, the bad-character heuristic shifts the pattern so the last occurrence of the mismatched text character in the pattern aligns with that position (or skips past it entirely if the character doesn't appear in the pattern), while the good-suffix heuristic uses the already-matched suffix to find the next valid alignment elsewhere in the pattern. The larger of the two suggested shifts is used at each step, giving Boyer-Moore a best-case sub-linear time of O(n/m) and making it the fastest general-purpose string matcher in practice, despite a rare worst case of O(nm).</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q6</div>
+    <div class="q">Differentiate between Branch and Bound and Backtracking techniques. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>Branch and Bound is used for optimization problems and prunes branches using a numeric lower/upper bound comparison against the current best solution, often expanding the most promising node first. Backtracking is used for decision/feasibility problems and prunes branches purely based on whether a partial solution still satisfies the problem's constraints, typically following a strict depth-first exploration order.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q7</div>
+    <div class="q">Explain the Naïve string matching algorithm and derive its worst-case time complexity. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>The Naïve algorithm checks the pattern against the text at every possible starting shift (0 to n−m), comparing characters one by one and sliding forward by exactly one position regardless of match success. Its worst case occurs when the text and pattern consist of highly repetitive characters causing almost-full comparisons at every shift, giving a worst-case time complexity of O((n−m+1)·m), commonly approximated as O(nm).</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q8</div>
+    <div class="q">What is Lower Bound Theory in Branch and Bound? Why is a tighter lower bound preferred? <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>Lower Bound Theory provides a guaranteed minimum achievable cost from a given partial solution node, ensuring that the true optimal completion of that branch can never cost less than this bound. A tighter (higher) lower bound is preferred because it allows the algorithm to prune more branches whose bound already exceeds the current best solution, reducing the search space and speeding up the overall Branch and Bound process without sacrificing optimality.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q9</div>
+    <div class="q">Compare the four string matching algorithms (Naïve, Rabin-Karp, KMP, Boyer-Moore) on the basis of time complexity and use cases. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>Naïve matching needs no pre-processing but has a worst case of O(nm); Rabin-Karp adds O(m) hash pre-processing and achieves O(n+m) on average via rolling hashes, suiting multiple-pattern search, though it can degrade to O(nm) with hash collisions. KMP guarantees O(n+m) in every case using its O(m) failure-function pre-processing, making it reliable for worst-case-sensitive applications, while Boyer-Moore, using bad-character and good-suffix heuristics, achieves sub-linear O(n/m) best-case performance and is generally the fastest in practice for large-alphabet text such as English.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q10</div>
+    <div class="q">Explain the general backtracking algorithm structure with a flow describing how partial solutions are extended and discarded. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>Backtracking builds a solution incrementally by trying each available candidate choice to extend the current partial solution, checking at every step whether the choice keeps the partial solution "safe" (consistent with the problem's constraints). If safe, the choice is added and the algorithm recurses to extend it further; if a complete valid solution is reached it is recorded, and whenever no candidate choice remains safe at a given step, the algorithm backtracks by undoing the most recent choice and trying the next alternative at the previous level.</p>
+    </div>
+  </div>
+
+</div><!-- end qsection -->
+
+<!-- CHEAT SHEET -->
+<div class="card" style="margin-top:40px; background:linear-gradient(135deg,#0a1525,#0b0d10); border:2px solid var(--accent);">
+  <div style="color:var(--accent); font-family:'Consolas',monospace; font-weight:700; font-size:15px; margin-bottom:14px;">📌 UNIT 4 — MASTER FORMULA CHEAT SHEET</div>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+    <div class="formula" style="margin:3px 0; font-size:12px;">TSP Lower Bound = (Σ 2 smallest edges per city) / 2</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">B&amp;B prunes when bound ≥ current best complete solution</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">N-Queens: O(N!) worst case with pruning</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Naïve search: O(nm) worst, O(n) best</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Rabin-Karp rolling hash: O(n+m) average</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">hash(s+1)=(d(hash(s)&#x2212;T[s]d^(m-1))+T[s+m]) mod q</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">KMP: π[q] = longest prefix=suffix at q; O(n+m) always</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Boyer-Moore: bad-character + good-suffix shifts</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Boyer-Moore best case: O(n/m) — sub-linear</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">KMP is the only algorithm with guaranteed O(n+m) worst case</div>
+  </div>
+</div>
+
+<!-- Unit 4 Footer -->
+<div style="margin-top:50px; padding:20px 24px; border:1px dashed var(--line); border-radius:10px; color:var(--muted); font-size:13px;">
+  <div style="color:var(--accent); font-family:'Consolas',monospace; font-weight:700; margin-bottom:6px;">ZYREX // AOA_VAULT — UNIT 4 · Branch &amp; Bound, Backtracking and Pattern Matching</div>
+  <p>RTU B.Tech CSE 5th Semester · 5CS4-05 Analysis of Algorithms · Unit 4 of 6</p>
+  <p style="margin-top:6px;">📌 Key formulas: TSP lower bound · N-Queens safe-placement check · KMP failure function · Rabin-Karp rolling hash · Boyer-Moore heuristics</p>
+  <p style="margin-top:6px;">⚡ Unit 5 — Assignment Problems &amp; Randomized Algorithms can be appended directly below this section.</p>
+</div>
+
+</div><!-- end unit4 -->
+
+<hr class="sep">
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:center;padding:30px 20px;flex-wrap:wrap;">
+      <a href="unit3.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+      <a href="index.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">🏠 AOA Hub</a>
+      <a href="unit5.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+    </div>
+  </main>
+  <div class="cursor-dot" data-cursor-dot></div>
+  <div class="cursor-outline" data-cursor-outline></div>
+  <script>
+    const cursorDot = document.querySelector("[data-cursor-dot]");
+    const cursorOutline = document.querySelector("[data-cursor-outline]");
+    window.addEventListener("mousemove", function(e){
+      cursorDot.style.left=e.clientX+"px"; cursorDot.style.top=e.clientY+"px";
+      cursorOutline.animate({left:e.clientX+"px",top:e.clientY+"px"},{duration:400,fill:"forwards"});
+    });
+    document.querySelectorAll("a,button").forEach(el=>{
+      el.addEventListener("mouseenter",()=>cursorOutline.classList.add("cursor-hovering"));
+      el.addEventListener("mouseleave",()=>cursorOutline.classList.remove("cursor-hovering"));
+    });
+  </script>
+<script src="../splash-cursor.js"></script>\n</body>
+</html>

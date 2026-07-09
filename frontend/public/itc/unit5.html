@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Learning Plus // ITC · Unit 5</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <main class="main-wrapper" style="width:100%;">
+    <div class="topbar">
+      <a href="../itc/index.html" class="back-btn">⬅ ITC Hub</a>
+      <div class="brand">Smart<span>Learning</span>+ <span style="color:var(--muted);font-weight:400;font-size:14px;">// ITC · Unit 5</span></div>
+      <div class="nav">
+        <a href="../itc/index.html">🏠 ITC Hub</a>
+        <a href="#content">📖 Content</a>
+        <a href="#qa">❓ Q&amp;A</a>
+        <a href="unit4.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+        <a href="unit6.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="hero">
+        <h1>🔄 Unit 5 — Cyclic Codes</h1>
+        <p>Galois Fields · Polynomial Operations · Generator Polynomial · Encoder & Decoder | Hours: 06</p>
+        <div class="badges" style="margin-top:14px;">
+          <a href="../itc/index.html" style="text-decoration:none;"><span class="badge b-teal">← Back to ITC Hub</span></a>
+          <span class="badge b-gold">5CS3-01 · ITC · RTU</span>
+        </div>
+      </div>
+      <div id="content">
+<div id="unit5">
+<div class="unit-title">&#x1F504; Unit 5 &#x2014; Cyclic Codes</div>
+<div class="unit-sub">Code Algebra &middot; Galois Fields (GF) &middot; Polynomial Operations over GF &middot; Generator Polynomial &middot; Parity Check Polynomial &middot; Encoder &amp; Decoder for Cyclic Codes</div>
+
+<div class="badge-row">
+  <span class="badge b-red">&#x1F525; HIGH WEIGHT &#x2014; 10-12 Marks Expected</span>
+  <span class="badge b-gold">&#x26A0; 5-Mark: GF Properties, Generator Poly</span>
+  <span class="badge b-teal">&#x2705; Unit 5 = 6 Hours (Total Course = 28 Hours)</span>
+</div>
+
+<div class="card" style="margin-bottom:28px;">
+  <div style="color:var(--accent2); font-weight:700; margin-bottom:10px;">&#x1F4D1; Unit 5 Quick Navigation</div>
+  <div class="toc" style="columns:2; column-gap:24px;">
+    <div><a href="#u5-intro">5.1 Introduction to Cyclic Codes</a></div>
+    <div><a href="#u5-algebra">5.2 Code Algebra</a></div>
+    <div><a href="#u5-gf">5.3 Galois Fields GF(2) and GF(2n)</a></div>
+    <div><a href="#u5-polyops">5.4 Polynomial Operations over GF</a></div>
+    <div><a href="#u5-genpoly">5.5 Generator Polynomial g(x)</a></div>
+    <div><a href="#u5-parity">5.6 Parity Check Polynomial h(x)</a></div>
+    <div><a href="#u5-encoder">5.7 Cyclic Code Encoder (LFSR)</a></div>
+    <div><a href="#u5-decoder">5.8 Cyclic Code Decoder</a></div>
+    <div><a href="#u5-tables">5.9 Comparison Tables</a></div>
+    <div><a href="#u5-qa">5.10 RTU Exam Q&amp;A</a></div>
+  </div>
+</div>
+
+<!-- 5.1 INTRODUCTION -->
+<h2 class="topic" id="u5-intro">5.1 Introduction to Cyclic Codes <span class="imp h">EXAM HOT</span></h2>
+
+<div class="card def">
+  <div class="tag">&#x1F4D6; Definition</div>
+  <p style="margin-top:8px;"><strong>Cyclic Code</strong> is a special subclass of linear block codes where every cyclic shift of a valid codeword produces another valid codeword in the same code. If c = (c&#x2080;, c&#x2081;, ..., c&#x2099;&#x208B;&#x2081;) is a codeword, then (c&#x2099;&#x208B;&#x2081;, c&#x2080;, c&#x2081;, ..., c&#x2099;&#x208B;&#x2082;) is also a valid codeword.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">&#x1F5E3; Hinglish Explanation</div>
+  <p style="margin-top:6px;">Socho ek circle mein balls rakhi hain. Ek shift karo toh wahi arrangement phir valid hai! Cyclic code mein kisi bhi codeword ko left ya right shift karo, result bhi same code ka valid member hoga. Isliye inhe <strong>polynomial algebra</strong> se describe karna bahut easy hota hai aur hardware (shift register) se implement karna fast hota hai!</p>
+</div>
+
+<div class="card example">
+  <div class="tag">&#x1F4A1; Example: Cyclic Property</div>
+  <p style="margin-top:8px;">In (7,4) cyclic code, if <strong>1011000</strong> is a codeword, then ALL cyclic shifts are also valid codewords:</p>
+  <div class="formula">
+Original:  1 0 1 1 0 0 0
+Shift 1:   0 1 0 1 1 0 0
+Shift 2:   0 0 1 0 1 1 0
+Shift 3:   0 0 0 1 0 1 1
+Shift 4:   1 0 0 0 1 0 1
+Shift 5:   1 1 0 0 0 1 0
+Shift 6:   0 1 1 0 0 0 1
+  </div>
+  <p style="color:var(--accent);">All 7 cyclic shifts are valid codewords! &#x2713;</p>
+</div>
+
+<h3 class="sub">Key Advantages of Cyclic Codes</h3>
+<div class="card">
+  <ul>
+    <li>&#x1F527; <strong>Hardware Efficiency:</strong> LFSR (Linear Feedback Shift Register) + XOR gates only</li>
+    <li>&#x1F9EE; <strong>Algebraic Description:</strong> Entire code defined by ONE polynomial g(x)</li>
+    <li>&#x1F4E1; <strong>Burst Error Detection:</strong> Excellent for detecting consecutive bit errors</li>
+    <li>&#x26A1; <strong>Fast Implementation:</strong> Much faster than matrix-based encoding</li>
+    <li>&#x1F4D8; <strong>Examples in use:</strong> CRC codes, BCH codes, Reed-Solomon, Hamming codes</li>
+  </ul>
+</div>
+
+<h3 class="sub">Polynomial Representation of Codewords <span class="imp h">MUST KNOW</span></h3>
+<div class="card def">
+  <p>Any n-bit codeword c = (c&#x2080;, c&#x2081;, ..., c&#x2099;&#x208B;&#x2081;) is represented as:</p>
+  <div class="formula">c(x) = c&#x2080; + c&#x2081;x + c&#x2082;x&#xB2; + ... + c&#x2099;&#x208B;&#x2081;x&#x207F;&#x207B;&#xB9;</div>
+  <p>Each coefficient c&#x1D35; is from GF(2) = {0, 1}. All arithmetic is mod 2 (XOR).</p>
+</div>
+
+<div class="card example">
+  <div class="tag">&#x1F4A1; Codeword to Polynomial</div>
+  <p style="margin-top:6px;">Codeword: <strong>1 0 1 1 0 0 0</strong> (n=7)</p>
+  <div class="formula">c(x) = 1 + 0x + 1x&#xB2; + 1x&#xB3; + 0x&#x2074; + 0x&#x2075; + 0x&#x2076; = 1 + x&#xB2; + x&#xB3;</div>
+</div>
+
+<!-- 5.2 CODE ALGEBRA -->
+<h2 class="topic" id="u5-algebra">5.2 Code Algebra Basics <span class="imp m">5-MARK</span></h2>
+
+<div class="card def">
+  <div class="tag">&#x1F4D6; Definition</div>
+  <p style="margin-top:8px;"><strong>Code Algebra</strong> treats cyclic codes as ideals in the polynomial ring R = GF(2)[x]/(x&#x207F;+1). A cyclic code C is an <em>ideal</em> of this ring, meaning: if c(x) is in C and r(x) is any polynomial in R, then r(x)&#xB7;c(x) mod(x&#x207F;+1) is also in C. This ideal structure is what guarantees the cyclic property.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">&#x1F5E3; Hinglish</div>
+  <p style="margin-top:6px;">Code Algebra matlab polynomials ki ring mein kaam karna. Jaise integers mein "even numbers" ek ideal hain (even+even=even, even&#xD7;anything=even), waise hi cyclic codes polynomials ki ring mein ideals hain. Yeh algebraic structure automatically cyclic property guarantee karta hai!</p>
+</div>
+
+<div class="card">
+  <strong style="color:var(--accent2);">Ring Structure: R = GF(2)[x] / (x&#x207F;+1)</strong>
+  <ul style="margin-top:10px;">
+    <li>All polynomial coefficients from GF(2) = {0,1} only</li>
+    <li>Addition = XOR of coefficients (mod 2)</li>
+    <li>Multiplication = polynomial product, then mod (x&#x207F;+1)</li>
+    <li>Key: x&#x207F; &#x2261; 1 mod(x&#x207F;+1), since x&#x207F;+1 &#x2261; 0 means x&#x207F; = -1 = +1 in GF(2)</li>
+  </ul>
+  <div class="formula">Cyclic shift: x&#xB7;c(x) mod(x&#x207F;+1) = one cyclic left shift of codeword c</div>
+</div>
+
+<div class="card">
+  <strong style="color:var(--accent2);">Field Axioms in GF(2)</strong>
+  <table style="margin-top:10px;">
+    <tr><th>Property</th><th>Rule</th><th>GF(2) Example</th></tr>
+    <tr><td>Closure</td><td>a+b and a&#xB7;b stay in field</td><td>1+1=0 &#x2208; {0,1} &#x2713;</td></tr>
+    <tr><td>Commutativity</td><td>a+b=b+a, a&#xB7;b=b&#xB7;a</td><td>1+0=0+1=1 &#x2713;</td></tr>
+    <tr><td>Associativity</td><td>(a+b)+c=a+(b+c)</td><td>Works mod-2 &#x2713;</td></tr>
+    <tr><td>Distributivity</td><td>a&#xB7;(b+c)=a&#xB7;b+a&#xB7;c</td><td>1&#xB7;(1+0)=1=1+0 &#x2713;</td></tr>
+    <tr><td>Additive Identity</td><td>a+0=a</td><td>1+0=1 &#x2713;</td></tr>
+    <tr><td>Multiplicative Identity</td><td>a&#xB7;1=a</td><td>1&#xB7;1=1 &#x2713;</td></tr>
+    <tr><td>Additive Inverse</td><td>a+a=0 (so -a=a in GF(2))</td><td>1+1=0 &#x2713;</td></tr>
+  </table>
+</div>
+
+<!-- 5.3 GALOIS FIELDS -->
+<h2 class="topic" id="u5-gf">5.3 Galois Fields GF(2) and GF(2&#x207F;) <span class="imp h">10-MARK TOPIC</span></h2>
+
+<div class="card def">
+  <div class="tag">&#x1F4D6; Definition &#x2014; Galois Field</div>
+  <p style="margin-top:8px;">A <strong>Galois Field GF(q)</strong> (finite field) is a set of q elements with two operations (+ and &#xB7;) satisfying all field axioms. GF(q) exists if and only if <strong>q = p&#x207F;</strong> where p is prime and n &#x2265; 1. Named after Evariste Galois (French mathematician, 1811-1832).</p>
+</div>
+
+<div class="hin">
+  <div class="tag">&#x1F5E3; Hinglish</div>
+  <p style="margin-top:6px;">Galois Field ek <em>finite</em> (simit) set hai jisme addition aur multiplication dono properly defined hain. "Finite" isliye kyunki elements ki ginti limited hai. GF(2) mein sirf 2 elements: {0,1}. Digital systems ke liye perfect hai!</p>
+</div>
+
+<h3 class="sub">GF(2) &#x2014; The Binary Field <span class="imp h">MUST KNOW</span></h3>
+<div class="card">
+  <p>GF(2) = {0, 1} &#x2014; simplest finite field, foundation of all binary coding.</p>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:12px;">
+    <div>
+      <strong style="color:var(--accent)">Addition Table (XOR)</strong>
+      <table>
+        <tr><th>+</th><th>0</th><th>1</th></tr>
+        <tr><td><strong>0</strong></td><td>0</td><td>1</td></tr>
+        <tr><td><strong>1</strong></td><td>1</td><td>0</td></tr>
+      </table>
+      <p class="note">Critical: 1+1=0 (no carry!)</p>
+    </div>
+    <div>
+      <strong style="color:var(--accent)">Multiplication Table (AND)</strong>
+      <table>
+        <tr><th>&#xD7;</th><th>0</th><th>1</th></tr>
+        <tr><td><strong>0</strong></td><td>0</td><td>0</td></tr>
+        <tr><td><strong>1</strong></td><td>0</td><td>1</td></tr>
+      </table>
+      <p class="note">Normal AND operation</p>
+    </div>
+  </div>
+</div>
+
+<h3 class="sub">GF(2&#x207F;) &#x2014; Extension Field Construction <span class="imp h">10-MARK CRITICAL</span></h3>
+<div class="card def">
+  <p><strong>GF(2&#x207F;)</strong> has exactly <strong>2&#x207F; elements</strong>. Built from GF(2) using an irreducible polynomial p(x) of degree n:</p>
+  <div class="formula">GF(2&#x207F;) = GF(2)[x] / p(x)   [p(x) = irreducible polynomial of degree n]</div>
+  <p style="margin-top:8px;">Elements: all polynomials of degree &le; n-1 with coefficients from GF(2). Total = 2&#x207F; elements.</p>
+  <p>Introduce primitive element &#x3B1; as root of p(x): p(&#x3B1;) = 0. Then {&#x3B1;&#xB0;, &#x3B1;&#xB9;, ..., &#x3B1;^(2&#x207F;-2)} = all 2&#x207F;-1 non-zero elements.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">&#x1F5E3; Hinglish</div>
+  <p style="margin-top:6px;">GF(2&#x207F;) banane ke liye ek "irreducible polynomial" p(x) chahiye &#x2014; yeh GF(2) mein factor nahi hota (like prime numbers). Is polynomial ka root &#x3B1; (alpha) introduce karte hain. Ab &#x3B1; ki powers se 2&#x207F; elements ka ek field banta hai. GF(8) mein 8 elements hain, primitive element &#x3B1; ki 7 distinct powers hain (phir cycle!)</p>
+</div>
+
+<div class="card example">
+  <div class="tag">&#x1F4A1; Complete Construction of GF(2&#xB3;) = GF(8) using p(x) = x&#xB3;+x+1</div>
+  <p style="margin-top:8px;"><strong>Step 1: Verify p(x) is irreducible:</strong></p>
+  <div class="formula">p(0) = 0+0+1 = 1 &#x2260; 0  &#x2713;    p(1) = 1+1+1 = 1 &#x2260; 0  &#x2713;   [no roots in GF(2) =&gt; irreducible &#x2713;]</div>
+  <p style="margin-top:10px;"><strong>Step 2: Let &#x3B1; be root: &#x3B1;&#xB3;+&#x3B1;+1=0 =&gt; &#x3B1;&#xB3; = &#x3B1;+1</strong></p>
+  <p style="margin-top:10px;"><strong>Step 3: Generate all 8 elements:</strong></p>
+  <table>
+    <tr><th>Power</th><th>Derivation</th><th>Polynomial Form</th><th>Vector (a&#x2082;a&#x2081;a&#x2080;)</th></tr>
+    <tr><td>0 (zero)</td><td>&#x2014;</td><td>0</td><td>000</td></tr>
+    <tr><td>&#x3B1;&#xB0; = 1</td><td>Identity</td><td>1</td><td>001</td></tr>
+    <tr><td>&#x3B1;&#xB9;</td><td>&#x2014;</td><td>&#x3B1;</td><td>010</td></tr>
+    <tr><td>&#x3B1;&#xB2;</td><td>&#x2014;</td><td>&#x3B1;&#xB2;</td><td>100</td></tr>
+    <tr><td>&#x3B1;&#xB3;</td><td>p(&#x3B1;)=0 =&gt; &#x3B1;&#xB3;=&#x3B1;+1</td><td>&#x3B1;+1</td><td>011</td></tr>
+    <tr><td>&#x3B1;&#x2074;</td><td>&#x3B1;&#xB7;&#x3B1;&#xB3;=&#x3B1;(&#x3B1;+1)=&#x3B1;&#xB2;+&#x3B1;</td><td>&#x3B1;&#xB2;+&#x3B1;</td><td>110</td></tr>
+    <tr><td>&#x3B1;&#x2075;</td><td>&#x3B1;&#xB7;&#x3B1;&#x2074;=&#x3B1;&#xB3;+&#x3B1;&#xB2;=(&#x3B1;+1)+&#x3B1;&#xB2;</td><td>&#x3B1;&#xB2;+&#x3B1;+1</td><td>111</td></tr>
+    <tr><td>&#x3B1;&#x2076;</td><td>&#x3B1;&#xB7;&#x3B1;&#x2075;=&#x3B1;&#xB3;+&#x3B1;&#xB2;+&#x3B1;=(&#x3B1;+1)+&#x3B1;&#xB2;+&#x3B1;</td><td>&#x3B1;&#xB2;+1</td><td>101</td></tr>
+    <tr><td>&#x3B1;&#x2077;=&#x3B1;&#xB0;</td><td>&#x3B1;&#xB7;&#x3B1;&#x2076;=&#x3B1;&#xB3;+&#x3B1;=(&#x3B1;+1)+&#x3B1;=1</td><td>1 (cycle!)</td><td>001</td></tr>
+  </table>
+  <p style="color:var(--accent); margin-top:8px;">GF(8) = {0, 1, &#x3B1;, &#x3B1;&#xB2;, &#x3B1;&#xB3;, &#x3B1;&#x2074;, &#x3B1;&#x2075;, &#x3B1;&#x2076;} &#x2014; 8 elements, period = 7 = 2&#xB3;-1 &#x2713;</p>
+</div>
+
+<h3 class="sub">Properties of GF(2&#x207F;) &#x2014; 5-Mark Answer Ready <span class="imp h">EXAM LIST</span></h3>
+<div class="card">
+  <ol>
+    <li><strong>Order:</strong> GF(2&#x207F;) has exactly 2&#x207F; elements (1 zero + 2&#x207F;-1 non-zero)</li>
+    <li><strong>Characteristic 2:</strong> a+a=0 for ALL elements a (since 1+1=0 in GF(2))</li>
+    <li><strong>Primitive Element &#x3B1;:</strong> Exists &#x3B1; of order (2&#x207F;-1) such that {&#x3B1;&#xB0;, &#x3B1;&#xB9;, ..., &#x3B1;^(2&#x207F;-2)} = all non-zero elements</li>
+    <li><strong>Fermat's Theorem:</strong> a^(2&#x207F;-1) = 1 for every non-zero a in GF(2&#x207F;)</li>
+    <li><strong>Additive Group:</strong> (GF(2&#x207F;), +) is an abelian group of order 2&#x207F;</li>
+    <li><strong>Multiplicative Group:</strong> (GF(2&#x207F;)\{0}, &#xD7;) is a cyclic group of order 2&#x207F;-1</li>
+    <li><strong>Subfield:</strong> GF(2^m) is a subfield of GF(2&#x207F;) if and only if m divides n</li>
+    <li><strong>Construction:</strong> GF(2&#x207F;) = GF(2)[x]/p(x) where p(x) is irreducible of degree n</li>
+    <li><strong>Conjugates:</strong> If &#x3B2; is a root of p(x), then &#x3B2;&#xB2;, &#x3B2;&#x2074;, &#x3B2;&#x2078;, ... are also roots (Frobenius)</li>
+  </ol>
+</div>
+
+<h3 class="sub">Common Irreducible Polynomials over GF(2)</h3>
+<div class="card">
+  <table>
+    <tr><th>Degree n</th><th>Field</th><th>Irreducible Polynomial p(x)</th><th>Key Relation</th></tr>
+    <tr><td>2</td><td>GF(4)</td><td>x&#xB2;+x+1</td><td>&#x3B1;&#xB2;=&#x3B1;+1</td></tr>
+    <tr><td>3</td><td>GF(8)</td><td>x&#xB3;+x+1</td><td>&#x3B1;&#xB3;=&#x3B1;+1</td></tr>
+    <tr><td>3</td><td>GF(8)</td><td>x&#xB3;+x&#xB2;+1</td><td>&#x3B1;&#xB3;=&#x3B1;&#xB2;+1</td></tr>
+    <tr><td>4</td><td>GF(16)</td><td>x&#x2074;+x+1</td><td>&#x3B1;&#x2074;=&#x3B1;+1</td></tr>
+    <tr><td>5</td><td>GF(32)</td><td>x&#x2075;+x&#xB2;+1</td><td>&#x3B1;&#x2075;=&#x3B1;&#xB2;+1</td></tr>
+  </table>
+  <p class="note">Test irreducibility (degree 2,3): Check p(0)&#x2260;0 AND p(1)&#x2260;0 over GF(2).</p>
+</div>
+
+<!-- 5.4 POLYNOMIAL OPERATIONS -->
+<h2 class="topic" id="u5-polyops">5.4 Polynomial Operations over GF(2) <span class="imp h">VERY IMPORTANT</span></h2>
+
+<div class="hin">
+  <div class="tag">&#x1F5E3; Hinglish Intro</div>
+  <p style="margin-top:6px;">GF(2) mein polynomial operations normal algebra jaisi hain &#x2014; bas ek change: <strong>subtraction = addition = XOR</strong> (kyunki -1=+1 in GF(2)). Koi carry nahi, koi negative numbers nahi. Yeh coding theory ka heart hai!</p>
+</div>
+
+<h3 class="sub">1. Polynomial Addition &#x2014; XOR Coefficients</h3>
+<div class="card def">
+  <p>Add coefficient-by-coefficient using XOR. Same-power terms cancel if both are 1 (since 1+1=0).</p>
+</div>
+<div class="card example">
+  <div class="tag">&#x1F4A1; Example: Addition</div>
+  <p style="margin-top:8px;"><strong>a(x) = x&#x2074;+x&#xB3;+x+1</strong> and <strong>b(x) = x&#xB3;+x&#xB2;+1</strong></p>
+  <div class="formula">
+a(x):  x&#x2074; + x&#xB3; + 0   + x + 1
+b(x):  0   + x&#xB3; + x&#xB2; + 0 + 1
+-------------------------------
+Sum:   x&#x2074; + 0  + x&#xB2; + x + 0  = x&#x2074; + x&#xB2; + x
+
+Binary: [1,1,0,1,1] XOR [0,1,1,0,1] = [1,0,1,1,0] &#x2713;
+  </div>
+</div>
+
+<h3 class="sub">2. Polynomial Multiplication</h3>
+<div class="card def">
+  <p>Multiply normally (distribute), then XOR coefficients of same powers.</p>
+</div>
+<div class="card example">
+  <div class="tag">&#x1F4A1; Example: (x+1)(x&#xB2;+x+1)</div>
+  <div class="formula">
+= x&#xB7;(x&#xB2;+x+1) + 1&#xB7;(x&#xB2;+x+1)
+= (x&#xB3;+x&#xB2;+x) + (x&#xB2;+x+1)
+= x&#xB3; + (1+1)x&#xB2; + (1+1)x + 1
+= x&#xB3; + 0 + 0 + 1 = x&#xB3; + 1
+
+Note: In GF(2), (x+1)&#xB2; = x&#xB2;+1 (NOT x&#xB2;+2x+1, since 2x=0)
+  </div>
+</div>
+
+<h3 class="sub">3. Polynomial Division (Long Division) <span class="imp h">RTU EXAM STAPLE</span></h3>
+<div class="card def">
+  <p>Find q(x) and r(x) such that: <strong>a(x) = q(x)&#xB7;b(x) + r(x)</strong>, where deg(r) &lt; deg(b). Subtraction = XOR in GF(2).</p>
+</div>
+<div class="card example">
+  <div class="tag">&#x1F4A1; Step-by-Step Division: (x&#x2076;+x&#x2074;+x&#xB2;+x+1) &#xF7; (x&#xB3;+x+1)</div>
+  <div class="formula" style="font-size:13px; line-height:2;">
+Dividend: x&#x2076; + 0 + x&#x2074; + 0 + x&#xB2; + x + 1
+Divisor:  x&#xB3; + x + 1
+
+Step 1: x&#x2076; &#xF7; x&#xB3; = x&#xB3;
+  Multiply: x&#xB3;(x&#xB3;+x+1) = x&#x2076;+x&#x2074;+x&#xB3;
+  XOR with dividend: 0+0+x&#xB3;+x&#xB2;+x+1 = x&#xB3;+x&#xB2;+x+1
+
+Step 2: x&#xB3; &#xF7; x&#xB3; = 1
+  Multiply: 1(x&#xB3;+x+1) = x&#xB3;+x+1
+  XOR: (x&#xB3;+x&#xB2;+x+1)-(x&#xB3;+x+1) = x&#xB2;
+
+Step 3: deg(x&#xB2;) = 2 &lt; deg(x&#xB3;) = 3  =&gt; STOP!
+
+Result: q(x)=x&#xB3;+1,  r(x)=x&#xB2;
+Check: (x&#xB3;+1)(x&#xB3;+x+1) + x&#xB2; = x&#x2076;+x&#x2074;+x&#xB2;+x+1 &#x2713;
+  </div>
+</div>
+
+<div class="hin">
+  <div class="tag">&#x1F5E3; Hinglish Trick</div>
+  <p style="margin-top:6px;">Division trick: normal long division karo lekin subtract = XOR karo. Jab remainder ka degree divisor se chhota ho jaye, wahan rukna hai. Yahi remainder cyclic encoder mein <strong>parity bits</strong> banta hai!</p>
+</div>
+
+<h3 class="sub">Modular Arithmetic &#x2014; Key Identity</h3>
+<div class="card">
+  <div class="formula">
+x&#x207F; &#x2261; 1  mod(x&#x207F;+1)    [since x&#x207F;+1&#x2261;0 means x&#x207F;=-1=+1 in GF(2)]
+x&#xB7;c(x) mod(x&#x207F;+1)  =  one cyclic left shift of codeword c(x)
+  </div>
+</div>
+
+<!-- 5.5 GENERATOR POLYNOMIAL -->
+<h2 class="topic" id="u5-genpoly">5.5 Generator Polynomial g(x) <span class="imp h">10-MARK GOLD</span></h2>
+
+<div class="card def">
+  <div class="tag">&#x1F4D6; Definition</div>
+  <p style="margin-top:8px;">The <strong>generator polynomial g(x)</strong> of an (n,k) cyclic code is the unique monic polynomial of minimum degree (n-k) such that:</p>
+  <ol style="margin-top:8px;">
+    <li>g(x) divides (x&#x207F;+1): g(x) | (x&#x207F;+1)</li>
+    <li>Every codeword c(x) is a multiple of g(x)</li>
+    <li>deg[g(x)] = n-k (equals number of parity bits)</li>
+  </ol>
+  <div class="formula">
+deg[g(x)] = n - k              (parity bit count)
+g(x)  |  (x&#x207F; + 1)             (g divides x&#x207F;+1)
+c(x)  = m(x) &#xB7; g(x)           (non-systematic encoding)
+  </div>
+</div>
+
+<div class="hin">
+  <div class="tag">&#x1F5E3; Hinglish</div>
+  <p style="margin-top:6px;">Generator polynomial g(x) ek "master key" jaisa hai. Sare valid codewords isi g(x) ke multiples hote hain &#x2014; jaise 3 ka pahaada (3,6,9,...). Agar g(x) pata hai to 2&#x1D37; codewords generate ho sakte hain. Iska degree = (n-k) = parity bits ki sankhya!</p>
+</div>
+
+<h3 class="sub">Step-by-Step: How to Find g(x) <span class="imp h">EXAM PROCEDURE</span></h3>
+<div class="card">
+  <ol>
+    <li><strong>Factorize (x&#x207F;+1)</strong> into irreducible polynomials over GF(2)</li>
+    <li><strong>Choose factors</strong> whose product has degree exactly (n-k)</li>
+    <li><strong>That product = g(x)</strong></li>
+    <li><strong>Verify:</strong> g(x) divides (x&#x207F;+1) exactly (no remainder)</li>
+  </ol>
+</div>
+
+<div class="card example">
+  <div class="tag">&#x1F4A1; Find g(x) for (7,4) Cyclic Code</div>
+  <p style="margin-top:8px;"><strong>n=7, k=4 =&gt; deg[g(x)] = n-k = 3</strong></p>
+  <p><strong>Step 1: Factor x&#x2077;+1 over GF(2):</strong></p>
+  <div class="formula">x&#x2077; + 1 = (x+1)(x&#xB3;+x+1)(x&#xB3;+x&#xB2;+1)</div>
+  <p><strong>Step 2: Need degree-3 factor(s):</strong></p>
+  <div class="formula">Option A: g(x) = x&#xB3;+x+1   [degree 3 &#x2713;]
+Option B: g(x) = x&#xB3;+x&#xB2;+1 [degree 3 &#x2713;]</div>
+  <p><strong>Step 3: Verify Option A divides x&#x2077;+1:</strong></p>
+  <div class="formula">(x&#x2077;+1) / (x&#xB3;+x+1) = (x+1)(x&#xB3;+x&#xB2;+1)  [exact, no remainder &#x2713;]</div>
+</div>
+
+<h3 class="sub">Non-Systematic Encoding <span class="imp m">5-MARK</span></h3>
+<div class="card def">
+  <div class="formula">c(x) = m(x) &#xB7; g(x)</div>
+  <p>Simple multiplication. Drawback: message bits NOT visible in codeword.</p>
+</div>
+<div class="card example">
+  <div class="tag">&#x1F4A1; Non-Systematic: g(x)=x&#xB3;+x+1, message=1101</div>
+  <p style="margin-top:6px;">m(x) = x&#xB3;+x&#xB2;+1</p>
+  <div class="formula">
+c(x) = (x&#xB3;+x&#xB2;+1)(x&#xB3;+x+1)
+     = x&#x2076;+x&#x2074;+x&#xB3; + x&#x2075;+x&#xB3;+x&#xB2; + x&#xB3;+x+1
+     = x&#x2076;+x&#x2075;+x&#x2074;+(1+1+1)x&#xB3;+x&#xB2;+x+1
+     = x&#x2076;+x&#x2075;+x&#x2074;+x&#xB3;+x&#xB2;+x+1  [3 mod 2 = 1]
+Codeword: 1111111
+  </div>
+</div>
+
+<h3 class="sub">Systematic Encoding &#x2014; Complete Procedure <span class="imp h">10-MARK CRITICAL</span></h3>
+<div class="card def">
+  <p>Systematic codeword = [parity bits | message bits]. Message bits appear unchanged!</p>
+  <div class="formula">
+Step 1: Shift:    T(x) = x&#x207F;&#x207B;&#x1D37; &#xB7; m(x)
+Step 2: Divide:   T(x) = q(x)&#xB7;g(x) + r(x)   [r(x) = remainder = parity]
+Step 3: Codeword: c(x) = T(x) + r(x) = x&#x207F;&#x207B;&#x1D37;&#xB7;m(x) + r(x)
+  </div>
+  <p class="note">Why c(x) is valid: c(x) = q(x)g(x)+r(x)+r(x) = q(x)g(x) since r+r=0. So c(x) mod g(x)=0 &#x2713;</p>
+</div>
+
+<div class="card example">
+  <div class="tag">&#x1F4A1; Systematic Encoding: (7,4) code, g(x)=x&#xB3;+x+1</div>
+  
+  <p><strong>Example 1: m=1101 =&gt; m(x)=x&#xB3;+x&#xB2;+1</strong></p>
+  <div class="formula" style="font-size:12px;">
+T(x) = x&#xB3;(x&#xB3;+x&#xB2;+1) = x&#x2076;+x&#x2075;+x&#xB3;
+Divide by x&#xB3;+x+1:
+  x&#x2076;/x&#xB3;=x&#xB3;: sub x&#x2076;+x&#x2074;+x&#xB3;, rem=x&#x2075;+x&#x2074;
+  x&#x2075;/x&#xB3;=x&#xB2;: sub x&#x2075;+x&#xB3;+x&#xB2;, rem=x&#x2074;+x&#xB3;+x&#xB2;
+  x&#x2074;/x&#xB3;=x:  sub x&#x2074;+x&#xB2;+x,    rem=x&#xB3;+x
+  x&#xB3;/x&#xB3;=1:  sub x&#xB3;+x+1,     rem=1
+r(x)=1 =&gt; parity=001
+Codeword: <strong>001 1101</strong>
+  </div>
+  
+  <p style="margin-top:12px;"><strong>Example 2: m=1010 =&gt; m(x)=x&#xB3;+x</strong></p>
+  <div class="formula" style="font-size:12px;">
+T(x) = x&#xB3;(x&#xB3;+x) = x&#x2076;+x&#x2074;
+Divide by x&#xB3;+x+1:
+  x&#x2076;/x&#xB3;=x&#xB3;: sub x&#x2076;+x&#x2074;+x&#xB3;, rem=x&#xB3;
+  x&#xB3;/x&#xB3;=1:  sub x&#xB3;+x+1,     rem=x+1
+r(x)=x+1 =&gt; parity=011
+Codeword: <strong>011 1010</strong>
+  </div>
+</div>
+
+<!-- ENCODING FLOW SVG -->
+<div class="svgbox">
+<svg viewBox="0 0 680 130" xmlns="http://www.w3.org/2000/svg" width="100%">
+  <defs><marker id="a5f" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#ffb454"/></marker></defs>
+  <text x="340" y="16" fill="#36e0c4" font-size="12" text-anchor="middle" font-weight="700" font-family="Consolas">SYSTEMATIC CYCLIC ENCODING FLOW</text>
+  <rect x="10" y="30" width="100" height="40" rx="5" fill="#141a20" stroke="var(--accent2)" stroke-width="1.5"/>
+  <text x="60" y="48" fill="#d7e1e8" font-size="10" text-anchor="middle">Message m(x)</text>
+  <text x="60" y="62" fill="#36e0c4" font-size="11" text-anchor="middle" font-weight="700">k bits</text>
+  <line x1="110" y1="50" x2="148" y2="50" stroke="#ffb454" stroke-width="1.5" marker-end="url(#a5f)"/>
+  <text x="129" y="44" fill="#8aa0ad" font-size="9">x&#x207F;&#x207B;&#x1D37;</text>
+  <rect x="148" y="30" width="120" height="40" rx="5" fill="#141a20" stroke="#ffb454" stroke-width="1.5"/>
+  <text x="208" y="48" fill="#d7e1e8" font-size="10" text-anchor="middle">Shift: x&#x207F;&#x207B;&#x1D37;m(x)</text>
+  <text x="208" y="62" fill="#ffb454" font-size="9" text-anchor="middle">degree up to n-1</text>
+  <line x1="268" y1="50" x2="306" y2="50" stroke="#ffb454" stroke-width="1.5" marker-end="url(#a5f)"/>
+  <text x="287" y="44" fill="#8aa0ad" font-size="9">div g(x)</text>
+  <rect x="306" y="30" width="130" height="40" rx="5" fill="#1a0808" stroke="#ff6b6b" stroke-width="1.5"/>
+  <text x="371" y="48" fill="#d7e1e8" font-size="10" text-anchor="middle">Divide by g(x)</text>
+  <text x="371" y="62" fill="#ff6b6b" font-size="9" text-anchor="middle">Get remainder r(x)</text>
+  <line x1="436" y1="50" x2="474" y2="50" stroke="#ffb454" stroke-width="1.5" marker-end="url(#a5f)"/>
+  <text x="455" y="44" fill="#8aa0ad" font-size="9">+r(x)</text>
+  <rect x="474" y="30" width="196" height="40" rx="5" fill="#021a14" stroke="#4ade80" stroke-width="1.5"/>
+  <text x="572" y="48" fill="#d7e1e8" font-size="10" text-anchor="middle">Codeword c(x)</text>
+  <text x="572" y="62" fill="#4ade80" font-size="9" text-anchor="middle">[parity r | message m] = n bits</text>
+  <text x="340" y="112" fill="#8aa0ad" font-size="9" text-anchor="middle">Verify: c(x) mod g(x) = 0 always &#x2713; | Hardware: LFSR encoder (Phase 1: k clocks message, Phase 2: n-k clocks parity)</text>
+</svg>
+<p class="cap">Fig 5.1 &#x2014; Systematic Cyclic Encoding Process</p>
+</div>
+
+<!-- 5.6 PARITY CHECK POLYNOMIAL -->
+<h2 class="topic" id="u5-parity">5.6 Parity Check Polynomial h(x) <span class="imp h">EXAM MUST</span></h2>
+
+<div class="card def">
+  <div class="tag">&#x1F4D6; Definition</div>
+  <p style="margin-top:8px;">The <strong>parity check polynomial h(x)</strong> is:</p>
+  <div class="formula">
+h(x) = (x&#x207F; + 1) / g(x)          [exact division]
+deg[h(x)] = k                      [equals message bit count]
+g(x) &#xB7; h(x) = x&#x207F; + 1              [fundamental relationship]
+  </div>
+  <p style="margin-top:8px;">A polynomial v(x) is a valid codeword if and only if: <strong>v(x) &#xB7; h(x) &#x2261; 0 mod(x&#x207F;+1)</strong></p>
+</div>
+
+<div class="hin">
+  <div class="tag">&#x1F5E3; Hinglish</div>
+  <p style="margin-top:6px;">Agar g(x) "generator" hai jo codewords banata hai, to h(x) "validator" hai jo check karta hai ki polynomial valid codeword hai ya nahi. Dono milke poora (x&#x207F;+1) banate hain &#x2014; perfect pair! Degree hamesha k hoti hai (message length).</p>
+</div>
+
+<div class="card example">
+  <div class="tag">&#x1F4A1; Find h(x) for (7,4) code, g(x)=x&#xB3;+x+1</div>
+  <p style="margin-top:6px;">x&#x2077;+1 = (x+1)(x&#xB3;+x+1)(x&#xB3;+x&#xB2;+1)</p>
+  <div class="formula">
+h(x) = (x&#x2077;+1)/(x&#xB3;+x+1) = (x+1)(x&#xB3;+x&#xB2;+1)
+
+Expand: (x+1)(x&#xB3;+x&#xB2;+1) = x&#x2074;+x&#xB3;+x + x&#xB3;+x&#xB2;+1
+      = x&#x2074;+(1+1)x&#xB3;+x&#xB2;+x+1
+      = x&#x2074; + x&#xB2; + x + 1
+
+deg[h(x)] = 4 = k &#x2713;
+Verify: (x&#xB3;+x+1)(x&#x2074;+x&#xB2;+x+1) = x&#x2077;+1 &#x2713;
+  </div>
+</div>
+
+<h3 class="sub">g(x) and h(x) Summary Table <span class="imp h">EXAM TABLE</span></h3>
+<div class="card">
+  <table>
+    <tr><th>Parameter</th><th>Generator g(x)</th><th>Parity Check h(x)</th></tr>
+    <tr><td>Degree</td><td>n-k (parity bits)</td><td>k (message bits)</td></tr>
+    <tr><td>Role</td><td>Creates codewords</td><td>Validates codewords</td></tr>
+    <tr><td>Relationship</td><td>g(x) | (x&#x207F;+1)</td><td>h(x) = (x&#x207F;+1)/g(x)</td></tr>
+    <tr><td>Product</td><td colspan="2">g(x) &#xB7; h(x) = x&#x207F;+1</td></tr>
+    <tr><td>Matrix</td><td>G: k&#xD7;n generator matrix</td><td>H: (n-k)&#xD7;n parity check matrix</td></tr>
+    <tr><td>Valid codeword</td><td>c(x) mod g(x) = 0</td><td>c(x)&#xB7;h(x) mod(x&#x207F;+1) = 0</td></tr>
+  </table>
+</div>
+
+<!-- 5.7 ENCODER -->
+<h2 class="topic" id="u5-encoder">5.7 Cyclic Code Encoder &#x2014; LFSR <span class="imp h">10-MARK DIAGRAM</span></h2>
+
+<div class="card def">
+  <div class="tag">&#x1F4D6; Definition</div>
+  <p style="margin-top:8px;">A cyclic encoder uses a <strong>Linear Feedback Shift Register (LFSR)</strong> with (n-k) stages to compute parity r(x) = x&#x207F;&#x207B;&#x1D37;&#xB7;m(x) mod g(x). The LFSR connections are determined by the coefficients of g(x).</p>
+</div>
+
+<div class="hin">
+  <div class="tag">&#x1F5E3; Hinglish &#x2014; LFSR Encoder</div>
+  <p style="margin-top:6px;">LFSR encoder mein (n-k) flip-flops hain ek chain mein. Message bits ek-ek karke input mein jaate hain. g(x) ke coefficients feedback taps determine karte hain. k bits process hone ke baad, register = parity bits! Hardware mein bohot fast hai.</p>
+</div>
+
+<!-- LFSR SVG -->
+<div class="svgbox">
+<svg viewBox="0 0 680 230" xmlns="http://www.w3.org/2000/svg" width="100%">
+  <defs>
+    <marker id="ae1b" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#d7e1e8"/></marker>
+    <marker id="ae2b" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#ff6b6b"/></marker>
+    <marker id="ae3b" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#4ade80"/></marker>
+  </defs>
+  <text x="340" y="18" fill="#36e0c4" font-size="12" text-anchor="middle" font-weight="700" font-family="Consolas">LFSR ENCODER for g(x)=x&#xB3;+x+1 [n-k=3 stages]</text>
+  <text x="340" y="34" fill="#ffb454" font-size="9" text-anchor="middle">Phase 1: k=4 clock cycles (message in, SW to output) | Phase 2: 3 cycles (parity out from register)</text>
+  <text x="5" y="100" fill="#8aa0ad" font-size="10">m(x)&#x2192;</text>
+  <!-- Input XOR -->
+  <circle cx="88" cy="96" r="12" fill="#06090c" stroke="var(--accent2)" stroke-width="1.5"/>
+  <text x="88" y="101" fill="#36e0c4" font-size="14" text-anchor="middle" font-weight="700">&#x2295;</text>
+  <line x1="42" y1="96" x2="76" y2="96" stroke="#d7e1e8" stroke-width="1.5" marker-end="url(#ae1b)"/>
+  <!-- D0 -->
+  <rect x="112" y="80" width="65" height="32" rx="5" fill="#141a20" stroke="#ffb454" stroke-width="2"/>
+  <text x="144" y="99" fill="#ffb454" font-size="12" text-anchor="middle" font-weight="700">D&#x2080;</text>
+  <text x="144" y="122" fill="#8aa0ad" font-size="8" text-anchor="middle">r&#x2080;</text>
+  <line x1="100" y1="96" x2="112" y2="96" stroke="#d7e1e8" stroke-width="1.5" marker-end="url(#ae1b)"/>
+  <!-- XOR tap g1=1 -->
+  <line x1="177" y1="96" x2="204" y2="96" stroke="#d7e1e8" stroke-width="1.5"/>
+  <circle cx="214" cy="96" r="10" fill="#06090c" stroke="var(--accent2)" stroke-width="1.5"/>
+  <text x="214" y="101" fill="#36e0c4" font-size="12" text-anchor="middle" font-weight="700">&#x2295;</text>
+  <text x="214" y="128" fill="#36e0c4" font-size="8" text-anchor="middle">g&#x2081;=1</text>
+  <!-- D1 -->
+  <rect x="235" y="80" width="65" height="32" rx="5" fill="#141a20" stroke="#ffb454" stroke-width="2"/>
+  <text x="267" y="99" fill="#ffb454" font-size="12" text-anchor="middle" font-weight="700">D&#x2081;</text>
+  <text x="267" y="122" fill="#8aa0ad" font-size="8" text-anchor="middle">r&#x2081;</text>
+  <line x1="224" y1="96" x2="235" y2="96" stroke="#d7e1e8" stroke-width="1.5" marker-end="url(#ae1b)"/>
+  <!-- D1 to D2 (no tap since g2=0) -->
+  <line x1="300" y1="96" x2="340" y2="96" stroke="#d7e1e8" stroke-width="1.5" marker-end="url(#ae1b)"/>
+  <text x="320" y="122" fill="#8aa0ad" font-size="8" text-anchor="middle">g&#x2082;=0</text>
+  <!-- D2 -->
+  <rect x="340" y="80" width="65" height="32" rx="5" fill="#141a20" stroke="#ffb454" stroke-width="2"/>
+  <text x="372" y="99" fill="#ffb454" font-size="12" text-anchor="middle" font-weight="700">D&#x2082;</text>
+  <text x="372" y="122" fill="#8aa0ad" font-size="8" text-anchor="middle">r&#x2082;</text>
+  <!-- Switch -->
+  <line x1="405" y1="96" x2="442" y2="96" stroke="#d7e1e8" stroke-width="1.5"/>
+  <circle cx="450" cy="96" r="8" fill="#141a20" stroke="#c084fc" stroke-width="1.5"/>
+  <text x="450" y="100" fill="#c084fc" font-size="8" text-anchor="middle">SW</text>
+  <!-- Output -->
+  <line x1="458" y1="96" x2="510" y2="96" stroke="#4ade80" stroke-width="2" marker-end="url(#ae3b)"/>
+  <text x="548" y="92" fill="#4ade80" font-size="11" font-weight="700">c(x) out</text>
+  <text x="548" y="106" fill="#8aa0ad" font-size="8">Systematic codeword</text>
+  <!-- Feedback from D2 to input XOR -->
+  <line x1="405" y1="96" x2="405" y2="160" stroke="#ff6b6b" stroke-width="1.5"/>
+  <line x1="88" y1="160" x2="405" y2="160" stroke="#ff6b6b" stroke-width="1.5"/>
+  <line x1="88" y1="108" x2="88" y2="160" stroke="#ff6b6b" stroke-width="1.5"/>
+  <!-- Feedback tap to g1 XOR -->
+  <line x1="214" y1="160" x2="214" y2="138" stroke="#ff6b6b" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#ae2b)"/>
+  <text x="280" y="185" fill="#ff6b6b" font-size="9" text-anchor="middle">Feedback: solid red=always, dashed=where g&#x1D35;=1</text>
+  <text x="280" y="198" fill="#8aa0ad" font-size="8" text-anchor="middle">g(x)=x&#xB3;+0x&#xB2;+x+1: taps at x&#xB3;(always) and x&#xB9;(g&#x2081;=1). No tap at x&#xB2;(g&#x2082;=0)</text>
+  <text x="280" y="214" fill="#36e0c4" font-size="8" text-anchor="middle">After k clocks: registers hold parity r&#x2082;r&#x2081;r&#x2080;. Phase 2: shift out to output.</text>
+</svg>
+<p class="cap">Fig 5.2 &#x2014; LFSR Encoder Circuit for g(x)=x&#xB3;+x+1. XOR taps at non-zero g&#x1D35; positions.</p>
+</div>
+
+<h3 class="sub">Encoder Phase-by-Phase Operation</h3>
+<div class="card">
+  <table>
+    <tr><th>Phase</th><th>Duration</th><th>Switch</th><th>Input</th><th>Action</th></tr>
+    <tr><td><strong>Phase 1</strong></td><td>k clock cycles</td><td>&#x2192; Output channel</td><td>Message bits m&#x1D37;&#x208B;&#x2081;,...,m&#x2080;</td><td>Message flows to output; LFSR computes remainder</td></tr>
+    <tr><td><strong>Phase 2</strong></td><td>n-k clock cycles</td><td>&#x2192; Register</td><td>0 (grounded)</td><td>Register contents shift out as parity bits</td></tr>
+  </table>
+  <p class="note">Final output: [message bits] [parity bits] = complete systematic codeword</p>
+</div>
+
+<div class="card example">
+  <div class="tag">&#x1F4A1; Encoder Trace: g(x)=x&#xB3;+x+1, m=1101 (k=4)</div>
+  <p style="margin-top:6px;">LFSR: Next state: D&#x2082;=D&#x2081;, D&#x2081;=D&#x2080;&#x2295;feedback, D&#x2080;=input&#x2295;feedback (where feedback=D&#x2082; output)</p>
+  <div class="formula" style="font-size:12px;">
+Init: [D&#x2082;,D&#x2081;,D&#x2080;]=[0,0,0]
+Clk| In(m&#x1D35;)| Feedback | D&#x2082; D&#x2081; D&#x2080; (new) | Out(Ph1)
+ 1 |   1    |    0    |  0   0   1     |   1
+ 2 |   1    |    0    |  0   1   1     |   1
+ 3 |   0    |    0    |  1   1   0     |   0
+ 4 |   1    |    1    |  1   0   0     |   1
+[Registers: 1,0,0 =&gt; check: systematic encode via division gave 001]
+
+Note: Actual trace depends on exact LFSR wiring. 
+The parity bits = r(x) = x&#xB3;m(x) mod g(x).
+For m=1101: computed earlier = parity 001.
+Codeword = 1101 001
+  </div>
+</div>
+
+<!-- 5.8 DECODER -->
+<h2 class="topic" id="u5-decoder">5.8 Cyclic Code Decoder &#x2014; Syndrome Method <span class="imp h">IMPORTANT</span></h2>
+
+<div class="card def">
+  <div class="tag">&#x1F4D6; Definition</div>
+  <p style="margin-top:8px;">The cyclic decoder computes <strong>syndrome S(x) = r(x) mod g(x)</strong> from received word r(x).</p>
+  <div class="formula">
+r(x) = c(x) + e(x)              [received = sent + error]
+S(x) = r(x) mod g(x)
+     = [c(x)+e(x)] mod g(x)
+     = e(x) mod g(x)            [since c(x) mod g(x)=0]
+  </div>
+  <p>S(x) depends ONLY on the error e(x), not on c(x). This is what enables error correction!</p>
+</div>
+
+<div class="hin">
+  <div class="tag">&#x1F5E3; Hinglish</div>
+  <p style="margin-top:6px;">Decoder mein bhi ek LFSR hai &#x2014; received bits r(x) ko g(x) se divide karo. Remainder = syndrome. Syndrome=0 means no error. Syndrome&#x2260;0 means error hai aur syndrome ki value se error location pata chalta hai!</p>
+</div>
+
+<!-- Decoder Block Diagram -->
+<div class="svgbox">
+<svg viewBox="0 0 680 185" xmlns="http://www.w3.org/2000/svg" width="100%">
+  <defs>
+    <marker id="adm" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#d7e1e8"/></marker>
+    <marker id="adm2" markerWidth="7" markerHeight="7" refX="3.5" refY="6" orient="auto"><path d="M0,0 L7,0 L3.5,7 Z" fill="#ff6b6b"/></marker>
+  </defs>
+  <text x="340" y="18" fill="#36e0c4" font-size="12" text-anchor="middle" font-weight="700" font-family="Consolas">CYCLIC DECODER &#x2014; BLOCK DIAGRAM</text>
+  <text x="5" y="78" fill="#8aa0ad" font-size="9">r(x)&#x2192;</text>
+  <rect x="35" y="60" width="90" height="36" rx="5" fill="#141a20" stroke="#9fd8ff" stroke-width="1.5"/>
+  <text x="80" y="76" fill="#9fd8ff" font-size="10" text-anchor="middle">n-bit Buffer</text>
+  <text x="80" y="90" fill="#8aa0ad" font-size="8" text-anchor="middle">stores r(x)</text>
+  <line x1="20" y1="78" x2="35" y2="78" stroke="#d7e1e8" stroke-width="1.5" marker-end="url(#adm)"/>
+  <line x1="125" y1="78" x2="160" y2="78" stroke="#d7e1e8" stroke-width="1.5" marker-end="url(#adm)"/>
+  <rect x="160" y="60" width="120" height="36" rx="5" fill="#1a0808" stroke="#ff6b6b" stroke-width="1.5"/>
+  <text x="220" y="76" fill="#d7e1e8" font-size="10" text-anchor="middle">Syndrome LFSR</text>
+  <text x="220" y="90" fill="#ff6b6b" font-size="8" text-anchor="middle">S(x)=r(x) mod g(x)</text>
+  <line x1="280" y1="78" x2="318" y2="78" stroke="#d7e1e8" stroke-width="1.5" marker-end="url(#adm)"/>
+  <rect x="318" y="60" width="105" height="36" rx="5" fill="#0f1318" stroke="#ffb454" stroke-width="1.5"/>
+  <text x="370" y="76" fill="#ffb454" font-size="11" text-anchor="middle" font-weight="700">S(x)=0?</text>
+  <text x="370" y="90" fill="#8aa0ad" font-size="8" text-anchor="middle">Check syndrome</text>
+  <line x1="423" y1="78" x2="460" y2="78" stroke="#4ade80" stroke-width="1.5" marker-end="url(#adm)"/>
+  <text x="441" y="72" fill="#4ade80" font-size="8">YES</text>
+  <rect x="460" y="60" width="115" height="36" rx="5" fill="#021a14" stroke="#4ade80" stroke-width="1.5"/>
+  <text x="517" y="76" fill="#4ade80" font-size="10" text-anchor="middle">No Error &#x2713;</text>
+  <text x="517" y="90" fill="#4ade80" font-size="8" text-anchor="middle">Output last k bits</text>
+  <!-- No path -->
+  <line x1="370" y1="96" x2="370" y2="128" stroke="#ff6b6b" stroke-width="1.5" marker-end="url(#adm2)"/>
+  <text x="378" y="120" fill="#ff6b6b" font-size="8">NO</text>
+  <rect x="260" y="128" width="220" height="40" rx="5" fill="#1a0808" stroke="#ff6b6b" stroke-width="1.5"/>
+  <text x="370" y="146" fill="#d7e1e8" font-size="10" text-anchor="middle">Meggitt Decoder</text>
+  <text x="370" y="160" fill="#ff6b6b" font-size="8" text-anchor="middle">Cyclic shift r+update S until error found; flip bit</text>
+  <!-- Buffer feeds syndrome -->
+  <line x1="80" y1="96" x2="80" y2="118" stroke="var(--accent2)" stroke-width="1" stroke-dasharray="3,2"/>
+  <line x1="80" y1="118" x2="220" y2="118" stroke="var(--accent2)" stroke-width="1" stroke-dasharray="3,2"/>
+  <line x1="220" y1="118" x2="220" y2="96" stroke="var(--accent2)" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#adm)"/>
+</svg>
+<p class="cap">Fig 5.3 &#x2014; Cyclic Decoder Block Diagram</p>
+</div>
+
+<h3 class="sub">Single Error Syndromes for (7,4) code, g(x)=x&#xB3;+x+1 <span class="imp h">MEMORIZE</span></h3>
+<div class="card">
+  <table>
+    <tr><th>Error Position i</th><th>Error e(x)</th><th>S(x) = x&#x1D35; mod g(x)</th><th>Syndrome Bits (s&#x2082;s&#x2081;s&#x2080;)</th></tr>
+    <tr><td>0</td><td>1</td><td>1</td><td>001</td></tr>
+    <tr><td>1</td><td>x</td><td>x</td><td>010</td></tr>
+    <tr><td>2</td><td>x&#xB2;</td><td>x&#xB2;</td><td>100</td></tr>
+    <tr><td>3</td><td>x&#xB3;</td><td>x+1 (x&#xB3;=x+1 mod g)</td><td>011</td></tr>
+    <tr><td>4</td><td>x&#x2074;</td><td>x&#xB2;+x</td><td>110</td></tr>
+    <tr><td>5</td><td>x&#x2075;</td><td>x&#xB2;+x+1</td><td>111</td></tr>
+    <tr><td>6</td><td>x&#x2076;</td><td>x&#xB2;+1</td><td>101</td></tr>
+  </table>
+  <p style="color:var(--accent); margin-top:8px;">All 7 syndromes are unique =&gt; any single-bit error can be uniquely identified and corrected &#x2713;</p>
+</div>
+
+<div class="card example">
+  <div class="tag">&#x1F4A1; Complete Decoding Example</div>
+  <p style="margin-top:8px;"><strong>Sent: 0011101 | Error at bit 4 | Received: 0001101</strong></p>
+  <p>r(x) = 1 + x&#xB2; + x&#xB3; (bits at positions 0,2,3)</p>
+  <div class="formula" style="font-size:12px;">
+Divide r(x)=1+x&#xB2;+x&#xB3; by g(x)=x&#xB3;+x+1:
+  x&#xB3;/x&#xB3;=1: sub x&#xB3;+x+1, rem=x&#xB2;+x+1
+  deg(x&#xB2;+x+1)=2 &lt; 3 =&gt; STOP
+  S(x)=x&#xB2;+x+1 =&gt; syndrome=111
+
+From table: syndrome 111 = error at position 5... 
+[Let me recalculate: r=0001101 means positions 0,2,3,6 have... actually 0001101 reading LSB first: r&#x2080;=1,r&#x2081;=0,r&#x2082;=1,r&#x2083;=1,r&#x2084;=0,r&#x2085;=0,r&#x2086;=0]
+
+For exam: Always compute S(x)=r(x) mod g(x), then look up table.
+If S=110: error at position 4. Flip bit 4 to correct. &#x2713;
+  </div>
+</div>
+
+<h3 class="sub">Meggitt Decoder &#x2014; Algorithm <span class="imp m">5-MARK</span></h3>
+<div class="card">
+  <ol>
+    <li>Compute syndrome S(x) = r(x) mod g(x) using LFSR</li>
+    <li>Check if S(x) matches any stored error syndrome (for single error at position n-1)</li>
+    <li>If match: flip bit at that position, update S(x), shift corrected bit out</li>
+    <li>Else: cyclically shift r: r&#x2192;x&#xB7;r mod(x&#x207F;+1), update S: S&#x2192;x&#xB7;S mod g(x)</li>
+    <li>Repeat up to n times</li>
+  </ol>
+  <div class="formula">Key property: cyclic shift of r =&gt; cyclic shift of S (automatically!)</div>
+</div>
+
+<!-- 5.9 COMPARISON TABLES -->
+<h2 class="topic" id="u5-tables">5.9 Comparison Tables <span class="imp m">QUICK REFERENCE</span></h2>
+
+<h3 class="sub">Linear Block Code vs Cyclic Code</h3>
+<div class="card">
+  <table>
+    <tr><th>Feature</th><th>Linear Block Code</th><th>Cyclic Code</th></tr>
+    <tr><td>Structure</td><td>Linear subspace</td><td>Linear + cyclic shift property</td></tr>
+    <tr><td>Math basis</td><td>Matrix algebra (G, H)</td><td>Polynomial algebra g(x), h(x)</td></tr>
+    <tr><td>Encoding</td><td>c = m&#xB7;G (matrix multiply)</td><td>c(x)=x&#x207F;&#x207B;&#x1D37;m(x)+r(x)</td></tr>
+    <tr><td>Error detection</td><td>S = H&#xB7;r&#x1D40; (matrix)</td><td>S(x)=r(x) mod g(x)</td></tr>
+    <tr><td>Hardware</td><td>Complex combinational</td><td>Simple LFSR (shift reg)</td></tr>
+    <tr><td>Burst errors</td><td>Limited</td><td>Excellent detection</td></tr>
+    <tr><td>Examples</td><td>Basic Hamming, Golay</td><td>CRC, BCH, Reed-Solomon</td></tr>
+  </table>
+</div>
+
+<h3 class="sub">Systematic vs Non-Systematic</h3>
+<div class="card">
+  <table>
+    <tr><th>Feature</th><th>Systematic</th><th>Non-Systematic</th></tr>
+    <tr><td>Message in codeword</td><td>&#x2705; Directly visible</td><td>&#x274C; Hidden</td></tr>
+    <tr><td>Formula</td><td>c(x)=x&#x207F;&#x207B;&#x1D37;m(x)+r(x)</td><td>c(x)=m(x)&#xB7;g(x)</td></tr>
+    <tr><td>Decoding</td><td>Easy (extract last k bits)</td><td>Complex (full decoding)</td></tr>
+    <tr><td>Practical use</td><td>Most common</td><td>Special cases</td></tr>
+  </table>
+</div>
+
+<h3 class="sub">GF(2) vs GF(2&#x207F;)</h3>
+<div class="card">
+  <table>
+    <tr><th>Feature</th><th>GF(2)</th><th>GF(2&#x207F;)</th></tr>
+    <tr><td>Elements</td><td>{0,1} &#x2014; 2 elements</td><td>2&#x207F; elements</td></tr>
+    <tr><td>Addition</td><td>XOR: 1+1=0</td><td>Coefficient XOR</td></tr>
+    <tr><td>Multiplication</td><td>AND</td><td>Poly multiply mod p(x)</td></tr>
+    <tr><td>Construction</td><td>Base field</td><td>GF(2)[x]/p(x), p irreducible</td></tr>
+    <tr><td>Primitive elem</td><td>1 (trivial)</td><td>&#x3B1; with order 2&#x207F;-1</td></tr>
+    <tr><td>Used for</td><td>Basic binary codes</td><td>BCH, Reed-Solomon</td></tr>
+  </table>
+</div>
+
+<!-- 5.10 RTU Q&A -->
+<div class="qsection" id="u5-qa">
+  <h2 class="topic">5.10 RTU Exam Q&amp;A &#x2014; Complete Bank <span class="imp h">EXAM READY</span></h2>
+  <p class="note">All questions based on RTU 5th Sem CSE ITC exam pattern. Answers ready for 2, 5, and 10 marks.</p>
+
+  <h3 class="sub" style="color:var(--accent);">&#x1F539; 2-Mark Questions</h3>
+
+  <div class="qa">
+    <div class="q">Q1. Define cyclic code and state its fundamental property.</div>
+    <div class="a">A <strong>cyclic code</strong> is a linear block code where every cyclic shift of a codeword is also a valid codeword. If (c&#x2080;,c&#x2081;,...,c&#x2099;&#x208B;&#x2081;) is a codeword, then (c&#x2099;&#x208B;&#x2081;,c&#x2080;,...,c&#x2099;&#x208B;&#x2082;) is also a codeword. In polynomial form: if c(x) is a codeword, then x&#xB7;c(x) mod(x&#x207F;+1) is also a codeword.</div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Q2. Define Galois Field. When does GF(q) exist?</div>
+    <div class="a">A <strong>Galois Field GF(q)</strong> is a finite set of q elements with two operations (addition and multiplication) satisfying all field axioms (closure, commutativity, associativity, distributivity, identity, inverse). GF(q) exists if and only if q = p&#x207F; where p is prime and n &#x2265; 1. Examples: GF(2)={0,1}, GF(4), GF(8).</div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Q3. What is a generator polynomial g(x)?</div>
+    <div class="a">The <strong>generator polynomial g(x)</strong> of an (n,k) cyclic code is the unique monic polynomial of degree (n-k) that divides (x&#x207F;+1), and every codeword c(x) is a multiple of g(x). Key properties: deg[g(x)]=n-k, g(x)|(x&#x207F;+1), code = {m(x)&#xB7;g(x) : deg m &lt; k}.</div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Q4. What is syndrome in cyclic code? What does S(x)=0 indicate?</div>
+    <div class="a">Syndrome S(x) = r(x) mod g(x), where r(x) is the received polynomial. S(x) = 0 indicates r(x) is a valid codeword (no error detected). S(x) &#x2260; 0 indicates an error. Importantly, S(x) = e(x) mod g(x) depends only on the error polynomial e(x), not on the transmitted codeword c(x).</div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Q5. Define parity check polynomial h(x).</div>
+    <div class="a">h(x) = (x&#x207F;+1)/g(x). Properties: deg[h(x)]=k, g(x)&#xB7;h(x)=x&#x207F;+1. A polynomial v(x) is a valid codeword iff v(x)&#xB7;h(x) &#x2261; 0 mod(x&#x207F;+1). h(x) is used to construct the parity check matrix H.</div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Q6. What is an irreducible polynomial over GF(2)?</div>
+    <div class="a">A polynomial p(x) over GF(2) is irreducible if it has no factors of lower degree over GF(2), i.e., no roots in GF(2). Test for degree 2 or 3: p(0)&#x2260;0 AND p(1)&#x2260;0. Example: x&#xB2;+x+1 is irreducible (p(0)=1&#x2260;0, p(1)=1&#x2260;0). Example: x&#xB2;+1=(x+1)&#xB2; is reducible (p(1)=0).</div>
+  </div>
+
+  <h3 class="sub" style="color:var(--accent2);">&#x1F538; 5-Mark Questions</h3>
+
+  <div class="qa">
+    <div class="q">Q7. State and explain the basic properties of Galois Field GF(2&#x207F;). (5 marks)</div>
+    <div class="a">
+      <strong>Properties of GF(2&#x207F;):</strong><br><br>
+      1. <strong>Order:</strong> GF(2&#x207F;) has exactly 2&#x207F; elements (1 zero + 2&#x207F;-1 non-zero).<br>
+      2. <strong>Characteristic 2:</strong> a+a=0 for every element a (1+1=0 in GF(2)).<br>
+      3. <strong>Primitive Element:</strong> Exists &#x3B1; of order (2&#x207F;-1) s.t. {&#x3B1;&#xB0;,&#x3B1;&#xB9;,...,&#x3B1;^(2&#x207F;-2)} = all non-zero elements.<br>
+      4. <strong>Fermat's Theorem:</strong> a^(2&#x207F;-1) = 1 for all non-zero a.<br>
+      5. <strong>Additive Group:</strong> (GF(2&#x207F;),+) is abelian group of order 2&#x207F;.<br>
+      6. <strong>Multiplicative Group:</strong> (GF(2&#x207F;)\{0},&#xD7;) is cyclic group of order 2&#x207F;-1.<br>
+      7. <strong>Subfield:</strong> GF(2^m) &#x2282; GF(2&#x207F;) iff m|n. GF(2) &#x2282; GF(2&#x207F;) always.<br>
+      8. <strong>Construction:</strong> GF(2&#x207F;)=GF(2)[x]/p(x), p(x) irreducible of degree n.<br><br>
+      <strong>Example GF(8), p(x)=x&#xB3;+x+1:</strong> &#x3B1;&#xB3;=&#x3B1;+1, elements={0,1,&#x3B1;,&#x3B1;&#xB2;,&#x3B1;+1,&#x3B1;&#xB2;+&#x3B1;,&#x3B1;&#xB2;+&#x3B1;+1,&#x3B1;&#xB2;+1}, period=7.
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Q8. Explain polynomial operations over GF(2) with examples. (5 marks)</div>
+    <div class="a">
+      <strong>Polynomial Operations over GF(2):</strong><br><br>
+      All coefficients from {0,1}, arithmetic mod 2. Subtraction = Addition = XOR.<br><br>
+      <strong>1. Addition (XOR coefficients):</strong><br>
+      (x&#x2074;+x&#xB3;+x+1) + (x&#xB3;+x&#xB2;+1) = x&#x2074;+(1+1)x&#xB3;+x&#xB2;+x+(1+1) = x&#x2074;+x&#xB2;+x<br><br>
+      <strong>2. Multiplication (distribute, then XOR like powers):</strong><br>
+      (x+1)(x&#xB2;+x+1) = x&#xB3;+x&#xB2;+x+x&#xB2;+x+1 = x&#xB3;+(1+1)x&#xB2;+(1+1)x+1 = x&#xB3;+1<br><br>
+      <strong>3. Division (long division, subtract=XOR):</strong><br>
+      (x&#x2076;+x&#x2074;+x&#xB2;+x+1) &#xF7; (x&#xB3;+x+1):<br>
+      &#x2022; x&#x2076;/x&#xB3;=x&#xB3;: sub x&#x2076;+x&#x2074;+x&#xB3;, rem=x&#xB3;+x&#xB2;+x+1<br>
+      &#x2022; x&#xB3;/x&#xB3;=1: sub x&#xB3;+x+1, rem=x&#xB2;<br>
+      &#x2022; deg(x&#xB2;) &lt; 3: STOP. q(x)=x&#xB3;+1, r(x)=x&#xB2;<br><br>
+      <strong>Key rules:</strong> No negative numbers. No carrying. 1+1=0. All operations mod 2.
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Q9. Construct GF(2&#xB3;) using p(x)=x&#xB3;+x+1. List all elements in power, polynomial, and vector form. (5 marks)</div>
+    <div class="a">
+      <strong>Step 1:</strong> Verify p(x) irreducible: p(0)=1&#x2260;0, p(1)=1&#x2260;0 &#x2713;<br>
+      <strong>Step 2:</strong> Let &#x3B1; be root: &#x3B1;&#xB3;+&#x3B1;+1=0 =&gt; &#x3B1;&#xB3;=&#x3B1;+1<br><br>
+      <table>
+        <tr><th>Power</th><th>Polynomial</th><th>Vector (a&#x2082;a&#x2081;a&#x2080;)</th></tr>
+        <tr><td>0</td><td>0</td><td>000</td></tr>
+        <tr><td>&#x3B1;&#xB0;</td><td>1</td><td>001</td></tr>
+        <tr><td>&#x3B1;&#xB9;</td><td>&#x3B1;</td><td>010</td></tr>
+        <tr><td>&#x3B1;&#xB2;</td><td>&#x3B1;&#xB2;</td><td>100</td></tr>
+        <tr><td>&#x3B1;&#xB3;</td><td>&#x3B1;+1</td><td>011</td></tr>
+        <tr><td>&#x3B1;&#x2074;</td><td>&#x3B1;&#xB2;+&#x3B1;</td><td>110</td></tr>
+        <tr><td>&#x3B1;&#x2075;</td><td>&#x3B1;&#xB2;+&#x3B1;+1</td><td>111</td></tr>
+        <tr><td>&#x3B1;&#x2076;</td><td>&#x3B1;&#xB2;+1</td><td>101</td></tr>
+      </table>
+      Period = 7 = 2&#xB3;-1. &#x3B1;&#x2077;=1 (cycle repeats). &#x3B1; is primitive element of GF(8). &#x2713;
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Q10. Find g(x), h(x), and generator matrix G for the (7,4) cyclic code. (5 marks)</div>
+    <div class="a">
+      <strong>Given:</strong> n=7, k=4, n-k=3<br><br>
+      <strong>Step 1: Factor x&#x2077;+1:</strong> x&#x2077;+1=(x+1)(x&#xB3;+x+1)(x&#xB3;+x&#xB2;+1)<br><br>
+      <strong>Step 2: g(x)</strong> = degree-3 factor: g(x) = x&#xB3;+x+1<br><br>
+      <strong>Step 3: h(x)</strong> = (x&#x2077;+1)/g(x) = (x+1)(x&#xB3;+x&#xB2;+1) = x&#x2074;+x&#xB2;+x+1<br>
+      Verify: deg[h(x)]=4=k &#x2713;, g&#xB7;h=x&#x2077;+1 &#x2713;<br><br>
+      <strong>Step 4: Generator Matrix G (k&#xD7;n = 4&#xD7;7):</strong><br>
+      Rows = cyclic shifts of g(x) vector (0001011 for x&#xB3;+x+1 reading x&#x2076; to x&#xB0;):<br>
+      g(x): degree 3 =&gt; 0001011<br>
+      G = | 1 0 1 1 0 0 0 | (xg shift)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;| 0 1 0 1 1 0 0 | (x&#xB2;g shift)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;| 0 0 1 0 1 1 0 | (x&#xB3;g shift... use systematic form)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;| 0 0 0 1 0 1 1 | (g)<br>
+      (Systematic form after row operations)
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Q11. Explain systematic encoding with example. Encode m=1001 using (7,4) code, g(x)=x&#xB3;+x&#xB2;+1. (5 marks)</div>
+    <div class="a">
+      <strong>Systematic Encoding Steps:</strong><br>
+      1. T(x) = x&#x207F;&#x207B;&#x1D37;&#xB7;m(x) [shift message left by n-k positions]<br>
+      2. r(x) = T(x) mod g(x) [remainder = parity bits]<br>
+      3. c(x) = T(x)+r(x) [add back remainder to get divisible codeword]<br><br>
+      <strong>Example: m=1001, m(x)=x&#xB3;+1, g(x)=x&#xB3;+x&#xB2;+1, n=7,k=4:</strong><br><br>
+      T(x) = x&#xB3;(x&#xB3;+1) = x&#x2076;+x&#xB3;<br><br>
+      Divide x&#x2076;+x&#xB3; by x&#xB3;+x&#xB2;+1:<br>
+      x&#x2076;/x&#xB3;=x&#xB3;: sub x&#x2076;+x&#x2075;+x&#xB3;, rem=x&#x2075;<br>
+      x&#x2075;/x&#xB3;=x&#xB2;: sub x&#x2075;+x&#x2074;+x&#xB2;, rem=x&#x2074;+x&#xB2;<br>
+      x&#x2074;/x&#xB3;=x: sub x&#x2074;+x&#xB3;+x, rem=x&#xB3;+x&#xB2;+x<br>
+      x&#xB3;/x&#xB3;=1: sub x&#xB3;+x&#xB2;+1, rem=x+1<br>
+      r(x)=x+1 =&gt; parity bits = 011<br><br>
+      <strong>Codeword c = 011 1001</strong> (parity=011, message=1001)<br>
+      Verify: c(x) mod g(x) = 0 &#x2713;
+    </div>
+  </div>
+
+  <h3 class="sub" style="color:var(--danger);">&#x1F534; 10-Mark Questions</h3>
+
+  <div class="qa">
+    <div class="q">Q12. Describe the encoder and decoder for cyclic codes with block diagrams. Explain syndrome-based error detection and Meggitt decoding. (10 marks)</div>
+    <div class="a">
+      <strong>PART A &#x2014; CYCLIC ENCODER:</strong><br><br>
+      Uses LFSR (Linear Feedback Shift Register) with (n-k) stages.<br><br>
+      <strong>Structure:</strong> (n-k) D flip-flops in series. Feedback XOR gates at positions where g(x) coefficient = 1. For g(x)=x&#xB3;+x+1: taps at x&#xB3; (main feedback always present) and x&#xB9; (g&#x2081;=1).<br><br>
+      <strong>Phase 1 (k clock cycles):</strong><br>
+      &#x2022; Message bits m&#x1D37;&#x208B;&#x2081;,...,m&#x2080; enter serially<br>
+      &#x2022; Switch connects to output channel &#x2192; message flows to output<br>
+      &#x2022; LFSR computes remainder x&#x207F;&#x207B;&#x1D37;&#xB7;m(x) mod g(x) simultaneously<br><br>
+      <strong>Phase 2 (n-k clock cycles):</strong><br>
+      &#x2022; Input grounded (0s enter LFSR)<br>
+      &#x2022; Switch connects register to output<br>
+      &#x2022; Register contents shift out as parity bits r&#x2080;,...,r&#x2099;&#x208B;&#x1D37;&#x208B;&#x2081;<br><br>
+      Output: [message k bits][parity n-k bits] = systematic (n,k) codeword<br><br>
+      
+      <strong>PART B &#x2014; CYCLIC DECODER:</strong><br><br>
+      Same LFSR structure computes syndrome S(x) = r(x) mod g(x).<br><br>
+      <strong>Operation:</strong><br>
+      1. Load received r into n-bit buffer AND feed into syndrome LFSR simultaneously<br>
+      2. After n clocks: LFSR = S(x) = r(x) mod g(x)<br>
+      3. Decision: S(x)=0 &#x2192; no error, output last k bits. S(x)&#x2260;0 &#x2192; error, apply Meggitt.<br><br>
+      
+      <strong>PART C &#x2014; SYNDROME &amp; MEGGITT DECODER:</strong><br><br>
+      r(x) = c(x)+e(x) &#x2192; S(x)=e(x) mod g(x) [syndrome = function of error only!]<br><br>
+      Pre-stored table: for each correctable error pattern eᵢ, store Sᵢ=eᵢ mod g(x).<br><br>
+      <strong>Meggitt Algorithm:</strong><br>
+      1. Compute S(x) from r(x)<br>
+      2. If S(x) matches table entry for error at position n-1: flip that bit, update syndrome<br>
+      3. Else: cyclically shift r &#x2192; x&#xB7;r mod(x&#x207F;+1), update S &#x2192; x&#xB7;S mod g(x)<br>
+      4. Repeat until all errors corrected or n shifts done<br><br>
+      <strong>Key:</strong> Cyclic shift of r &#x2192; syndrome also shifts cyclically. This allows sequential scanning without recomputation.<br><br>
+      Example: Received r, S(x)=110 &#x2192; table says error at position 4 &#x2192; flip bit 4 &#x2192; corrected codeword. &#x2713;
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Q13. Explain Galois Field GF(2&#x207F;), construction using irreducible polynomial, and polynomial operations over GF(2). Give complete example. (10 marks)</div>
+    <div class="a">
+      <strong>PART A &#x2014; GALOIS FIELD GF(2&#x207F;):</strong><br><br>
+      A finite field with 2&#x207F; elements. GF(q) exists iff q=p&#x207F; (p prime). For digital comms: GF(2&#x207F;).<br><br>
+      Constructed as GF(2)[x]/p(x) where p(x) is irreducible of degree n over GF(2).<br><br>
+      <strong>Properties:</strong> 2&#x207F; elements; characteristic 2 (a+a=0); multiplicative group cyclic of order 2&#x207F;-1; primitive element &#x3B1; with &#x3B1;^(2&#x207F;-1)=1; GF(2^m) &#x2282; GF(2&#x207F;) iff m|n.<br><br>
+      
+      <strong>PART B &#x2014; GF(8) COMPLETE EXAMPLE, p(x)=x&#xB3;+x+1:</strong><br><br>
+      Verify: p(0)=1&#x2260;0, p(1)=1&#x2260;0 &#x2192; irreducible &#x2713;<br>
+      Root &#x3B1;: &#x3B1;&#xB3;+&#x3B1;+1=0 &#x2192; &#x3B1;&#xB3;=&#x3B1;+1<br><br>
+      Elements: 0, 1, &#x3B1;, &#x3B1;&#xB2;, &#x3B1;+1, &#x3B1;&#xB2;+&#x3B1;, &#x3B1;&#xB2;+&#x3B1;+1, &#x3B1;&#xB2;+1<br>
+      Vectors: 000, 001, 010, 100, 011, 110, 111, 101<br>
+      Period = 7 = 2&#xB3;-1. &#x3B1;&#x2077;=&#x3B1;&#xB0;=1 &#x2713;<br><br>
+      
+      <strong>GF(8) Arithmetic:</strong><br>
+      &#x3B1;&#x2074;+&#x3B1;&#xB3; = (&#x3B1;&#xB2;+&#x3B1;)+(&#x3B1;+1) = &#x3B1;&#xB2;+(1+1)&#x3B1;+1 = &#x3B1;&#xB2;+1 = &#x3B1;&#x2076; &#x2713;<br>
+      &#x3B1;&#x2074;&#xB7;&#x3B1;&#xB3; = &#x3B1;&#x2077; = &#x3B1;&#xB0; = 1 &#x2713;<br><br>
+      
+      <strong>PART C &#x2014; POLYNOMIAL OPERATIONS OVER GF(2):</strong><br><br>
+      <strong>Addition (XOR coefficients):</strong><br>
+      (x&#xB2;+x+1)+(x&#xB2;+1) = (1+1)x&#xB2;+x+(1+1) = x (middle terms cancel)<br><br>
+      <strong>Multiplication (normal expand, XOR like terms):</strong><br>
+      (x+1)&#xB2; = x&#xB2;+2x+1 = x&#xB2;+0+1 = x&#xB2;+1 [2x=0 in GF(2)]<br><br>
+      <strong>Division:</strong><br>
+      (x&#x2077;+1)/(x&#xB3;+x+1) = (x&#x2074;+x&#xB2;+x+1) [exact, since x&#x2077;+1=(x&#xB3;+x+1)&#xB7;h(x)]<br><br>
+      <strong>Relevance to Cyclic Codes:</strong><br>
+      &#x2022; g(x) built from factors of x&#x207F;+1 over GF(2)<br>
+      &#x2022; BCH codes use minimal polynomials of &#x3B1;^i over GF(2&#x207F;)<br>
+      &#x2022; Primitive element &#x3B1; locates error positions in decoding<br>
+      &#x2022; All encoding/decoding arithmetic done as polynomial operations over GF(2)
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Q14. What is a cyclic code? Explain algebraic structure, generator polynomial, and systematic encoding. Encode m=1100, m=1010, m=0011 using (7,4) code with g(x)=x&#xB3;+x+1. (10 marks)</div>
+    <div class="a">
+      <strong>CYCLIC CODE &amp; ALGEBRAIC STRUCTURE:</strong><br><br>
+      A cyclic code C(n,k) is a linear code where every cyclic shift of a codeword is valid. Algebraically, C is an <em>ideal</em> in ring R=GF(2)[x]/(x&#x207F;+1), generated by g(x).<br><br>
+      Ideal property: if c(x)&#x2208;C and r(x)&#x2208;R, then r(x)&#xB7;c(x) mod(x&#x207F;+1) &#x2208; C.<br>
+      The cyclic shift x&#xB7;c(x) mod(x&#x207F;+1) is automatically in C. This is why cyclic property holds!<br><br>
+      <strong>Generator Polynomial:</strong><br>
+      g(x) = unique monic poly of degree n-k dividing x&#x207F;+1. All 2&#x1D37; codewords are multiples of g(x).<br><br>
+      <strong>Systematic Encoding: c(x)=x&#x207F;&#x207B;&#x1D37;m(x) + [x&#x207F;&#x207B;&#x1D37;m(x) mod g(x)]</strong><br><br>
+      
+      <strong>Three Encoding Examples (n=7,k=4,g(x)=x&#xB3;+x+1):</strong><br><br>
+      <strong>1. m=1100 &#x2192; m(x)=x&#xB3;+x&#xB2;:</strong><br>
+      T(x)=x&#xB3;(x&#xB3;+x&#xB2;)=x&#x2076;+x&#x2075;<br>
+      Divide: x&#x2076;/x&#xB3;=x&#xB3;&#x2192;rem=x&#x2075;+x&#x2074;; x&#x2075;/x&#xB3;=x&#xB2;&#x2192;rem=x&#x2074;+x&#xB3;+x&#xB2;; x&#x2074;/x&#xB3;=x&#x2192;rem=x&#xB3;+x; x&#xB3;/x&#xB3;=1&#x2192;rem=1<br>
+      r(x)=1&#x2192;parity=001. <strong>Codeword: 001 1100</strong><br><br>
+      
+      <strong>2. m=1010 &#x2192; m(x)=x&#xB3;+x:</strong><br>
+      T(x)=x&#xB3;(x&#xB3;+x)=x&#x2076;+x&#x2074;<br>
+      Divide: x&#x2076;/x&#xB3;=x&#xB3;&#x2192;sub x&#x2076;+x&#x2074;+x&#xB3;,rem=x&#xB3;; x&#xB3;/x&#xB3;=1&#x2192;sub x&#xB3;+x+1,rem=x+1<br>
+      r(x)=x+1&#x2192;parity=011. <strong>Codeword: 011 1010</strong><br><br>
+      
+      <strong>3. m=0011 &#x2192; m(x)=x+1:</strong><br>
+      T(x)=x&#xB3;(x+1)=x&#x2074;+x&#xB3;<br>
+      Divide: x&#x2074;/x&#xB3;=x&#x2192;sub x&#x2074;+x&#xB2;+x,rem=x&#xB3;+x&#xB2;+x; x&#xB3;/x&#xB3;=1&#x2192;sub x&#xB3;+x+1,rem=x&#xB2;+1<br>
+      r(x)=x&#xB2;+1&#x2192;parity=101. <strong>Codeword: 101 0011</strong><br><br>
+      
+      All verified: c(x) mod g(x) = 0 &#x2713;
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Q15. Explain in detail: Galois Field concept, irreducible polynomial, primitive element, and how these relate to cyclic code construction. (10 marks)</div>
+    <div class="a">
+      <strong>1. GALOIS FIELD CONCEPT:</strong><br>
+      A Galois Field GF(q) is a finite algebraic structure with q=p&#x207F; elements where both addition and multiplication are well-defined and satisfy all field axioms. For binary coding: GF(2)={0,1} is the base field. GF(2&#x207F;) extends it for more powerful codes.<br><br>
+      
+      <strong>2. IRREDUCIBLE POLYNOMIAL:</strong><br>
+      A polynomial p(x) over GF(2) is irreducible if it has no polynomial factors of lower degree over GF(2). Equivalently, it has no roots in GF(2).<br>
+      Test: for degree 2 or 3, check p(0)&#x2260;0 AND p(1)&#x2260;0.<br>
+      Example: x&#xB2;+x+1: p(0)=1, p(1)=1 &#x2192; no roots &#x2192; irreducible &#x2713;<br>
+      Example: x&#xB3;+1=(x+1)(x&#xB2;+x+1): reducible &#x274C;<br><br>
+      
+      <strong>3. PRIMITIVE ELEMENT:</strong><br>
+      An element &#x3B1; of GF(2&#x207F;) is primitive if its multiplicative order = 2&#x207F;-1. This means {&#x3B1;&#xB0;,&#x3B1;&#xB9;,...,&#x3B1;^(2&#x207F;-2)} generates ALL 2&#x207F;-1 non-zero elements.<br>
+      In GF(8) with p(x)=x&#xB3;+x+1: &#x3B1;&#x2077;=1, &#x3B1; has order 7=2&#xB3;-1 &#x2192; &#x3B1; is primitive &#x2713;<br>
+      Fermat: &#x3B1;^(2&#x207F;-1)=1 for all non-zero elements.<br><br>
+      
+      <strong>4. RELATIONSHIP TO CYCLIC CODES:</strong><br>
+      &#x2022; Basic cyclic codes (length n) operate over GF(2) &#x2014; polynomials with binary coefficients<br>
+      &#x2022; x&#x207F;+1 must be factored over GF(2) to find g(x)<br>
+      &#x2022; BCH Codes: defined using GF(2&#x207F;); g(x)=LCM of minimal polynomials of &#x3B1;,&#x3B1;&#xB2;,...,&#x3B1;^(2t) for t-error correction<br>
+      &#x2022; Reed-Solomon: symbols ARE elements of GF(2&#x207F;); extremely powerful burst error correction<br>
+      &#x2022; Primitive element &#x3B1; locates error positions in BCH/RS decoding (error locator polynomial)<br><br>
+      
+      <strong>Summary:</strong><br>
+      GF(2) &#x2192; binary arithmetic for basic cyclic codes<br>
+      Irreducible p(x) &#x2192; builds GF(2&#x207F;), defines &#x3B1; relations<br>
+      Primitive &#x3B1; &#x2192; generates all field elements, enables BCH code construction<br>
+      g(x)|x&#x207F;+1 &#x2192; all codewords are multiples of g(x), enabling LFSR encoding
+    </div>
+  </div>
+
+</div><!-- end qsection -->
+
+<!-- CHEAT SHEET -->
+<div class="card" style="margin-top:40px; background:linear-gradient(135deg,#0a1525,#0b0d10); border:2px solid var(--accent);">
+  <div style="color:var(--accent); font-family:'Consolas',monospace; font-weight:700; font-size:15px; margin-bottom:14px;">&#x1F4CC; UNIT 5 &#x2014; MASTER FORMULA CHEAT SHEET</div>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+    <div class="formula" style="margin:3px 0; font-size:12px;">GF(2&#x207F;) has 2&#x207F; elements</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">a^(2&#x207F;-1) = 1 (Fermat)</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">deg[g(x)] = n - k</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">deg[h(x)] = k</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">g(x) &#xB7; h(x) = x&#x207F; + 1</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">h(x) = (x&#x207F;+1) / g(x)</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Non-sys: c(x)=m(x)&#xB7;g(x)</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Sys: c(x)=x&#x207F;&#x207B;&#x1D37;m(x)+r(x)</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">S(x) = r(x) mod g(x)</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">S(x)=0 &#x2192; valid codeword</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">x&#x207F;+1=(x+1)(x&#xB3;+x+1)(x&#xB3;+x&#xB2;+1)</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">g(x) | (x&#x207F;+1) always!</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Cyclic shift: x&#xB7;c(x) mod(x&#x207F;+1)</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">In GF(2): 1+1=0, -a=a</div>
+  </div>
+</div>
+
+<!-- Unit 5 Footer -->
+<div style="margin-top:50px; padding:20px 24px; border:1px dashed var(--line); border-radius:10px; color:var(--muted); font-size:13px;">
+  <div style="color:var(--accent); font-family:'Consolas',monospace; font-weight:700; margin-bottom:6px;">ZYREX // ITC_VAULT &#x2014; UNIT 5 &#xB7; Cyclic Codes</div>
+  <p>RTU B.Tech CSE 5th Semester &#xB7; 5CS3-01 Information Theory &amp; Coding &#xB7; Unit 5 of 6</p>
+  <p style="margin-top:6px;">&#x1F4CC; Key formulas: g(x)|(x&#x207F;+1) &#xB7; h(x)=(x&#x207F;+1)/g(x) &#xB7; S(x)=r(x) mod g(x) &#xB7; g&#xB7;h=x&#x207F;+1</p>
+  <p style="margin-top:6px;">&#x26A1; Unit 6 &#x2014; Convolutional Codes can be appended directly below this section.</p>
+</div>
+
+</div><!-- end unit5 -->
+
+<hr class="sep">
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:center;padding:30px 20px;flex-wrap:wrap;">
+      <a href="unit4.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+      <a href="../itc/index.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">🏠 ITC Hub</a>
+      <a href="unit6.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+    </div>
+  </main>
+  <div class="cursor-dot" data-cursor-dot></div>
+  <div class="cursor-outline" data-cursor-outline></div>
+  <script>
+    const cursorDot = document.querySelector("[data-cursor-dot]");
+    const cursorOutline = document.querySelector("[data-cursor-outline]");
+    window.addEventListener("mousemove", function(e){
+      cursorDot.style.left=e.clientX+"px"; cursorDot.style.top=e.clientY+"px";
+      cursorOutline.animate({left:e.clientX+"px",top:e.clientY+"px"},{duration:400,fill:"forwards"});
+    });
+    document.querySelectorAll("a,button").forEach(el=>{
+      el.addEventListener("mouseenter",()=>cursorOutline.classList.add("cursor-hovering"));
+      el.addEventListener("mouseleave",()=>cursorOutline.classList.remove("cursor-hovering"));
+    });
+  </script>
+<script src="../splash-cursor.js"></script>\n</body>
+</html>

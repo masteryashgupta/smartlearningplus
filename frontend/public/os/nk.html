@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Learning Plus // OS · NK PYQ</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <main class="main-wrapper" style="width:100%;">
+    <div class="topbar">
+      <a href="index.html" class="back-btn">⬅ OS Hub</a>
+      <div class="brand">Smart<span>Learning</span>+ <span style="color:var(--muted);font-weight:400;font-size:14px;">// OS · NK PYQ</span></div>
+      <div class="nav">
+        <a href="index.html">🏠 OS Hub</a>
+        <a href="syllabus.html">📋 Syllabus</a>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="hero">
+        <h1>📄 NK — Previous Year Questions</h1>
+        <p>5CS4-03 · Operating System · RTU Kota</p>
+        <div class="badges" style="margin-top:14px;">
+          <span class="badge b-red">HIGH PRIORITY</span>
+          <span class="badge b-gold">OS PYQ · NK Notes</span>
+          <span class="badge b-teal">PDF Viewer + Download</span>
+        </div>
+      </div>
+
+      <div class="pyq-section scroll-anchor" id="nk">
+        <div class="pyq-header">
+          <div>
+            <h2 class="pyq-title">📄 NK — Previous Year Questions</h2>
+            <p class="pyq-sub">OS Previous Year Questions &nbsp;·&nbsp; <code style="font-size:12px;background:var(--surface2);color:var(--muted);border-color:var(--border);">os_nk.pdf</code></p>
+          </div>
+          <div class="pyq-header-actions">
+            <a class="pyq-btn pyq-btn-download" href="https://drive.google.com/uc?export=download&id=1LA0qMUqWgrKqfwOwm2X_44iSPk-i6tI_" download="os_nk.pdf">⬇ Download PDF</a>
+          </div>
+        </div>
+        <div class="pdf-viewer-wrap" id="pdfViewerWrap">
+          <div class="pdf-viewer-toolbar">
+            <span class="pdf-filename">os_nk.pdf</span>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <a class="pyq-btn pyq-btn-download" style="padding:6px 14px;font-size:12px;" href="https://drive.google.com/uc?export=download&id=1LA0qMUqWgrKqfwOwm2X_44iSPk-i6tI_" download="os_nk.pdf">⬇ Download</a>
+              <a class="pyq-btn pyq-btn-outline" style="padding:6px 14px;font-size:12px;" href="https://drive.google.com/file/d/1LA0qMUqWgrKqfwOwm2X_44iSPk-i6tI_/view" target="_blank">↗ Open in Tab</a>
+            </div>
+          </div>
+          <iframe id="pdfFrame" class="pdf-iframe" src="https://drive.google.com/file/d/1LA0qMUqWgrKqfwOwm2X_44iSPk-i6tI_/preview" title="OS NK PYQ Viewer"></iframe>
+        </div>
+      </div>
+
+      <div style="margin-top:32px;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:24px;">
+        <h3 style="margin:0 0 14px;color:var(--accent);font-size:16px;">📌 Tips for using NK PYQ</h3>
+        <ul style="margin:0;padding-left:20px;line-height:2;">
+          <li>Combine with unit-wise study guides for best results.</li>
+          <li>Mark repeated questions across years — those are <strong>HIGH</strong> importance topics.</li>
+          <li>Solve numericals (disk scheduling, page replacement, frame allocation) from scratch after reading theory.</li>
+          <li>Download PDF for offline study before exams.</li>
+        </ul>
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:center;padding:30px 20px;flex-wrap:wrap;">
+      <a href="index.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">🏠 Back to OS Hub</a>
+      <a href="syllabus.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">📋 Syllabus →</a>
+    </div>
+  </main>
+  <div class="cursor-dot" data-cursor-dot></div>
+  <div class="cursor-outline" data-cursor-outline></div>
+  <script>
+    const cursorDot = document.querySelector("[data-cursor-dot]");
+    const cursorOutline = document.querySelector("[data-cursor-outline]");
+    window.addEventListener("mousemove", function(e){
+      cursorDot.style.left=e.clientX+"px"; cursorDot.style.top=e.clientY+"px";
+      cursorOutline.animate({left:e.clientX+"px",top:e.clientY+"px"},{duration:400,fill:"forwards"});
+    });
+    document.querySelectorAll("a,button").forEach(el=>{
+      el.addEventListener("mouseenter",()=>cursorOutline.classList.add("cursor-hovering"));
+      el.addEventListener("mouseleave",()=>cursorOutline.classList.remove("cursor-hovering"));
+    });
+  </script>
+<script src="../splash-cursor.js"></script>\n</body>
+</html>

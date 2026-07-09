@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Learning Plus // CGM · Unit 6</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <main class="main-wrapper" style="width:100%;">
+    <div class="topbar">
+      <a href="../cgm/index.html" class="back-btn">⬅ CGM Hub</a>
+      <div class="brand">Smart<span>Learning</span>+ <span style="color:var(--muted);font-weight:400;font-size:14px;">// CGM · Unit 6</span></div>
+      <div class="nav">
+        <a href="../cgm/index.html">🏠 CGM Hub</a>
+        <a href="#content">📖 Content</a>
+        <a href="#qa">❓ Q&amp;A</a>
+        <a href="unit5.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+        <a href="unit7.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="hero">
+        <h1>🎨 Unit 6 — Illumination &amp; Colour Models</h1>
+        <p>Light Sources · Illumination Models · Halftoning · Chromaticity · RGB/YIQ/CMY/HSV/HLS | Hours: 06</p>
+        <div class="badges" style="margin-top:14px;">
+          <a href="../cgm/index.html" style="text-decoration:none;"><span class="badge b-teal">← Back to CGM Hub</span></a>
+          <span class="badge b-gold">5CS4-04 · CGM · RTU</span>
+        </div>
+      </div>
+      <div id="content">
+  <div class="hero" id="unit6">
+    <h1>UNIT 6 — ILLUMINATION AND COLOUR MODELS</h1>
+    <div class="sub">5CS4-04 · Computer Graphics &amp; Multimedia · RTU Kota · III Year – V Sem · B.Tech CSE</div>
+    <div class="sub" style="margin-top:4px;">Credit: 3 &nbsp;|&nbsp; Max Marks: 100 (IA:30, ETE:70) &nbsp;|&nbsp; End Term: 3 Hours</div>
+    <div class="badges">
+      <span class="badge b-red">⚠ HIGH PRIORITY UNIT</span>
+      <span class="badge b-gold">⭐ 5 &amp; 10 Mark Questions</span>
+      <span class="badge b-teal">✦ 6 Hours Weightage</span>
+    </div>
+  </div>
+
+  <div class="progress-bar"></div>
+
+  <div class="toc scroll-anchor" id="toc">
+    <h3>📋 UNIT 6 — CONTENTS</h3>
+    <ol>
+      <li><a href="#lightsources">Light Sources</a> <span class="sublabel">MEDIUM ★★</span></li>
+      <li><a href="#illummodels">Basic Illumination Models</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#halftone">Halftone Patterns &amp; Dithering Techniques</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#properties">Properties of Light</a> <span class="sublabel">MEDIUM ★★</span></li>
+      <li><a href="#primaries">Standard Primaries &amp; Chromaticity Diagram</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#intuitive">Intuitive Colour Concepts</a> <span class="sublabel">MEDIUM ★★</span></li>
+      <li><a href="#rgb">RGB Colour Model</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#yiq">YIQ Colour Model</a> <span class="sublabel">MEDIUM ★★</span></li>
+      <li><a href="#cmy">CMY Colour Model</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#hsv">HSV Colour Model</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#hls">HLS Colour Model</a> <span class="sublabel">MEDIUM ★★</span></li>
+      <li><a href="#selection">Colour Selection</a> <span class="sublabel">LOW ★</span></li>
+      <li><a href="#qa">RTU Exam Q&amp;A Bank (5-mark &amp; 10-mark)</a> <span class="sublabel">EXAM GOLD</span></li>
+    </ol>
+  </div>
+
+  <div class="unit-title scroll-anchor" id="lightsources">
+    <span style="color:var(--accent2);">01.</span> Light Sources
+    <span class="imp m">MEDIUM</span>
+  </div>
+  <div class="unit-sub">How does light reach our eyes from an object?</div>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p>A <strong>Light Source</strong> is any object that emits light energy (photons) which travels through a medium and strikes a surface, part of which is then reflected toward the viewer's eye, enabling the surface to be perceived/rendered as visible and coloured.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish Explanation</div>
+    Light source wo cheez hai jo light emit karti hai — jaise Sun ya bulb. Yeh light kisi object pe padti hai, kuch part absorb hota hai aur kuch reflect hokar humari aankhon tak pahunchta hai. <strong>Isi reflected light ki wajah se hum object ka color aur shape dekh paate hain.</strong>
+  </div>
+
+  <h3 class="sub">Types of Light Sources</h3>
+  <table>
+    <tr><th>Type</th><th>Description</th><th>Example</th></tr>
+    <tr><td class="hi">Point Light Source</td><td>Light originates from a single point, rays spread radially</td><td>Bulb, candle</td></tr>
+    <tr><td class="hi">Distributed/Area Light Source</td><td>Light comes from an extended area/surface</td><td>Tube light, sky on cloudy day</td></tr>
+    <tr><td>Ambient Light</td><td>Light scattered uniformly from all directions in environment (no specific source/direction)</td><td>General room lighting</td></tr>
+    <tr><td>Directional/Parallel Light</td><td>Light rays travel parallel (source assumed at infinity)</td><td>Sunlight</td></tr>
+  </table>
+
+  <div class="card example">
+    <div class="tag">Why It Matters</div>
+    <p>In computer graphics, we must simulate how a light source interacts with object surfaces to compute pixel intensity/colour — this simulation is called an <strong>Illumination Model</strong>.</p>
+  </div>
+
+  <hr class="sep">
+
+  <h2 class="topic scroll-anchor" id="illummodels">
+    <span>02.</span> Basic Illumination Models
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p>An <strong>Illumination Model</strong> (or Lighting Model) is a mathematical formula used to calculate the intensity of light reflected at a given point on an object's surface, based on light source properties, surface material properties, and the relative geometry (angles) between the light, surface, and viewer.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Illumination model ek formula hai jisse hum calculate karte hain ki kisi surface ke point pe kitni light intensity reflect hogi. Yeh light source ki properties, surface material, aur angle pe depend karta hai.
+  </div>
+
+  <h3 class="sub">Components of Basic Illumination Model</h3>
+  <table>
+    <tr><th>Component</th><th>Description</th></tr>
+    <tr><td class="hi">Ambient Reflection</td><td>Constant background illumination present everywhere, regardless of light source direction</td></tr>
+    <tr><td class="hi">Diffuse Reflection</td><td>Light scattered equally in all directions from a rough/matte surface; depends on angle of incidence (Lambert's Cosine Law)</td></tr>
+    <tr><td class="hi">Specular Reflection</td><td>Light reflected in a concentrated direction producing shiny highlights on smooth/glossy surfaces</td></tr>
+  </table>
+
+  <h3 class="sub">Ambient Light Model</h3>
+  <div class="formula">
+    I = Ia · Ka<br>
+    where Ia = intensity of ambient light, Ka = ambient-reflection coefficient of the surface (0≤Ka≤1)
+  </div>
+
+  <h3 class="sub">Diffuse Reflection — Lambert's Cosine Law</h3>
+  <div class="card">
+    <p><strong>Lambert's Law</strong> states that the intensity of light reflected by a perfectly diffuse (matte) surface is directly proportional to the cosine of the angle θ between the light direction and the surface normal.</p>
+  </div>
+  <div class="formula">
+    Idiff = Ip · Kd · cosθ = Ip · Kd · (N · L)<br>
+    where Ip = point light source intensity, Kd = diffuse-reflection coefficient, N = unit surface normal, L = unit vector toward light source
+  </div>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:300px;">
+      <rect x="0" y="0" width="300" height="200" fill="#0d1820"/>
+      <line x1="40" y1="140" x2="260" y2="140" stroke="#8aa0ad" stroke-width="2"/>
+      <line x1="150" y1="140" x2="150" y2="60" stroke="#36e0c4" stroke-width="2" marker-end="url(#a5)"/>
+      <text x="155" y="65" fill="#36e0c4" font-size="11" font-family="Consolas">N (normal)</text>
+      <line x1="150" y1="140" x2="220" y2="50" stroke="#ffb454" stroke-width="2" marker-end="url(#a5)"/>
+      <text x="222" y="50" fill="#ffb454" font-size="11" font-family="Consolas">L (to light)</text>
+      <defs><marker id="a5" markerWidth="8" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#fff"/></marker></defs>
+      <path d="M 150 110 A 30 30 0 0 1 168 95" fill="none" stroke="#ff6b6b" stroke-width="1.5"/>
+      <text x="172" y="100" fill="#ff6b6b" font-size="12" font-family="Consolas">θ</text>
+      <text x="60" y="160" fill="#d7e1e8" font-size="11" font-family="Consolas">Surface</text>
+    </svg>
+    <p class="cap">Fig 1: Angle θ between Normal N and Light Vector L</p>
+  </div>
+
+  <h3 class="sub">Diffuse Reflection with Ambient + Attenuation</h3>
+  <div class="formula">
+    I = Ia·Ka + Ip·Kd·(N·L)
+  </div>
+
+  <h3 class="sub">Specular Reflection — Phong Model</h3>
+  <div class="card">
+    <p>The <strong>Phong Specular Reflection Model</strong> approximates shiny highlights by considering the angle φ between the viewer direction V and the ideal reflection vector R, raised to a power n (specular-reflection/shininess exponent).</p>
+  </div>
+  <div class="formula">
+    Ispec = Ip · Ks · cosⁿφ = Ip · Ks · (R · V)ⁿ
+  </div>
+  <table>
+    <tr><th>Symbol</th><th>Meaning</th></tr>
+    <tr><td>Ks</td><td>Specular-reflection coefficient (material property)</td></tr>
+    <tr><td>n</td><td>Specular-reflection exponent — higher n = shinier, smaller highlight</td></tr>
+    <tr><td>R</td><td>Direction of ideal (mirror) reflection of light</td></tr>
+    <tr><td>V</td><td>Direction toward viewer/camera</td></tr>
+  </table>
+
+  <h3 class="sub">Combined (Total) Illumination Equation</h3>
+  <div class="formula">
+    I = Ia·Ka &nbsp;+&nbsp; Ip·Kd·(N·L) &nbsp;+&nbsp; Ip·Ks·(R·V)ⁿ<br>
+    <span style="color:var(--muted); font-size:12px;">[ Ambient &nbsp;+&nbsp; Diffuse &nbsp;+&nbsp; Specular ]</span>
+  </div>
+
+  <div class="card warn">
+    <div class="tag">⚠ Important</div>
+    <p>This is the classical <strong>Phong Illumination Model</strong> — one of the most frequently asked 10-mark questions in RTU CGM papers. Remember all three components and their physical meaning.</p>
+  </div>
+
+  <div class="card example">
+    <div class="tag">Example</div>
+    <p>If Ia=0.4, Ka=0.5, Ip=0.8, Kd=0.6, θ=60° (cos60°=0.5):<br>
+    I (ambient+diffuse) = 0.4×0.5 + 0.8×0.6×0.5 = 0.2 + 0.24 = <strong>0.44</strong></p>
+  </div>
+
+  <hr class="sep">
+
+  <h2 class="topic scroll-anchor" id="halftone">
+    <span>03.</span> Halftone Patterns &amp; Dithering Techniques
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>Halftoning</strong> is a technique used to simulate a continuous range of shades/intensity levels on a device (printer/display) capable of producing only a limited number of intensity levels (often just black and white), by varying the size and/or density of printed dots in a small area.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Halftoning ka use hota hai jab device sirf limited colors/shades print kar sakta hai (jaise newspaper printing sirf black/white karta hai), lekin humein grey shades dikhani hain. Solution: chhote-chhote dots ka pattern banao — dots jitne bade/dense honge, area utna dark dikhega, jitne chhote/sparse honge utna light dikhega.
+  </div>
+
+  <h3 class="sub">Halftone Approximation (for Bilevel Display)</h3>
+  <div class="card">
+    <p>Group several pixels together into a <strong>halftone cell/pattern</strong> (e.g. 2×2, 3×3) and turn ON a number of pixels proportional to the desired intensity level, creating the illusion of grey using only black and white dots.</p>
+  </div>
+
+  <table>
+    <tr><th>Grid Size</th><th>Possible Intensity Levels</th></tr>
+    <tr><td>2×2 cell</td><td>5 levels (0 to 4 dots ON)</td></tr>
+    <tr><td class="hi">3×3 cell</td><td class="hi">10 levels (0 to 9 dots ON)</td></tr>
+    <tr><td>n×n cell</td><td>n²+1 levels</td></tr>
+  </table>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 460 140" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:460px;">
+      <rect x="0" y="0" width="460" height="140" fill="#0d1820"/>
+      <g font-family="Consolas" font-size="10" fill="#d7e1e8">
+        <text x="20" y="20">Level 0</text>
+        <rect x="20" y="30" width="60" height="60" fill="none" stroke="#8aa0ad"/>
+        <text x="110" y="20">Level 2</text>
+        <rect x="110" y="30" width="60" height="60" fill="none" stroke="#8aa0ad"/>
+        <circle cx="130" cy="50" r="6" fill="#36e0c4"/><circle cx="150" cy="70" r="6" fill="#36e0c4"/>
+        <text x="200" y="20">Level 6</text>
+        <rect x="200" y="30" width="60" height="60" fill="none" stroke="#8aa0ad"/>
+        <circle cx="215" cy="45" r="6" fill="#ffb454"/><circle cx="235" cy="45" r="6" fill="#ffb454"/><circle cx="255" cy="45" r="6" fill="#ffb454"/>
+        <circle cx="215" cy="65" r="6" fill="#ffb454"/><circle cx="235" cy="65" r="6" fill="#ffb454"/><circle cx="255" cy="65" r="6" fill="#ffb454"/>
+        <text x="290" y="20">Level 9 (Full)</text>
+        <rect x="290" y="30" width="60" height="60" fill="none" stroke="#8aa0ad"/>
+        <rect x="290" y="30" width="60" height="60" fill="#ff6b6b" fill-opacity="0.7"/>
+      </g>
+    </svg>
+    <p class="cap">Fig 2: Halftone Cell Approximation of Intensity Levels (3×3 grid)</p>
+  </div>
+
+  <h3 class="sub">Dithering</h3>
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>Dithering</strong> is the technique of approximating an image with a limited colour/intensity palette by adding controlled "noise" (random or patterned variation) to pixel values before quantization, so the eye visually averages nearby dots to perceive intermediate shades not actually present in the palette.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Dithering halftoning ka hi ek refined version hai jisme random/pattern noise add karke colors ko arrange karte hain taki overall image zyada smooth aur natural dikhe, bina banding/blocky patterns ke.
+  </div>
+
+  <table>
+    <tr><th>Type</th><th>Description</th></tr>
+    <tr><td class="hi">Ordered Dithering</td><td>Uses a fixed threshold matrix (dither matrix) applied repeatedly across the image</td></tr>
+    <tr><td class="hi">Random Dithering</td><td>Adds random noise values to pixel intensity before thresholding — avoids regular patterns</td></tr>
+    <tr><td>Error Diffusion (Floyd-Steinberg)</td><td>Quantization error of one pixel is propagated/distributed to neighbouring unprocessed pixels</td></tr>
+  </table>
+
+  <div class="card tip">
+    <div class="tag">Halftoning vs Dithering — Quick Difference</div>
+    <table style="margin:0;">
+      <tr><th>Halftoning</th><th>Dithering</th></tr>
+      <tr><td>Varies dot SIZE/density in a cell</td><td>Adds noise/pattern before quantizing pixel value</td></tr>
+      <tr><td>Mainly used in printing</td><td>Mainly used in digital displays/images</td></tr>
+    </table>
+  </div>
+
+  <hr class="sep">
+
+  <h2 class="topic scroll-anchor" id="properties">
+    <span>04.</span> Properties of Light
+    <span class="imp m">MEDIUM</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>Light</strong> is electromagnetic radiation perceivable by the human eye, characterized by a continuous spectrum of wavelengths roughly between 400 nm (violet) and 700 nm (red); the perceived colour of light is determined by its dominant wavelength composition.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Light electromagnetic energy hai jiski wavelength humari aankh dekh sakti hai (~400-700 nm). Different wavelengths different colors dikhati hain — jaise short wavelength = violet/blue, long wavelength = red.
+  </div>
+
+  <h3 class="sub">Key Properties / Attributes of Colour Perception</h3>
+  <table>
+    <tr><th>Property</th><th>Description</th></tr>
+    <tr><td class="hi">Hue</td><td>The dominant wavelength — what we normally call "colour" (red, green, blue, etc.)</td></tr>
+    <tr><td class="hi">Saturation</td><td>Purity of the colour — how much it is diluted with white light (high saturation = vivid colour)</td></tr>
+    <tr><td class="hi">Lightness/Brightness</td><td>The perceived intensity of the light (luminance) — how light or dark the colour appears</td></tr>
+    <tr><td>Chromaticity</td><td>Combination of hue and saturation (excludes brightness)</td></tr>
+  </table>
+
+  <div class="card example">
+    <div class="tag">Example</div>
+    <p>Sky blue vs Navy blue have the same <strong>hue</strong> but different <strong>saturation/lightness</strong> — sky blue is lighter/less saturated, navy blue is darker/more saturated.</p>
+  </div>
+
+  <hr class="sep">
+
+  <h2 class="topic scroll-anchor" id="primaries">
+    <span>05.</span> Standard Primaries &amp; Chromaticity Diagram
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p>The <strong>CIE Standard Primaries</strong> (Red, Green, Blue — also called XYZ primaries) are a set of three reference colours defined by the CIE (Commission Internationale de l'Eclairage) in 1931, chosen such that any visible colour can be matched by some positive combination/mixture of these three primaries.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Standard primaries ek fixed set of 3 reference colors hain (CIE ke according) jinko mix karke koi bhi visible color banaya ja sakta hai. Isi base pe chromaticity diagram banaya gaya hai jisse colors ko plot/compare kiya ja sakta hai.
+  </div>
+
+  <h3 class="sub">CIE Chromaticity Diagram</h3>
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p>The <strong>Chromaticity Diagram</strong> is a 2D graph (x,y) that represents all visible colours independent of their intensity/brightness, where x and y are normalized chromaticity values derived from the tristimulus values X, Y, Z (x = X/(X+Y+Z), y = Y/(X+Y+Z)).</p>
+  </div>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 320 280" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:320px;">
+      <rect x="0" y="0" width="320" height="280" fill="#0d1820"/>
+      <line x1="40" y1="240" x2="300" y2="240" stroke="#8aa0ad" stroke-width="1"/>
+      <line x1="40" y1="240" x2="40" y2="20" stroke="#8aa0ad" stroke-width="1"/>
+      <text x="300" y="255" fill="#d7e1e8" font-size="11" font-family="Consolas">x</text>
+      <text x="20" y="20" fill="#d7e1e8" font-size="11" font-family="Consolas">y</text>
+      <path d="M 60 230 Q 80 60 150 35 Q 220 50 270 160 Q 240 220 150 235 Q 90 238 60 230 Z" fill="none" stroke="#36e0c4" stroke-width="2"/>
+      <circle cx="150" cy="35" r="3" fill="#4ade80"/><text x="155" y="32" fill="#4ade80" font-size="9" font-family="Consolas">Green</text>
+      <circle cx="270" cy="160" r="3" fill="#ff6b6b"/><text x="245" y="150" fill="#ff6b6b" font-size="9" font-family="Consolas">Red</text>
+      <circle cx="60" cy="230" r="3" fill="#5b9bff"/><text x="62" y="225" fill="#5b9bff" font-size="9" font-family="Consolas">Blue</text>
+      <circle cx="150" cy="170" r="3" fill="#fff"/><text x="155" y="168" fill="#fff" font-size="9" font-family="Consolas">White (C)</text>
+      <line x1="150" y1="35" x2="270" y2="160" stroke="#ffb454" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="270" y1="160" x2="60" y2="230" stroke="#ffb454" stroke-width="1" stroke-dasharray="3,2"/>
+      <line x1="60" y1="230" x2="150" y2="35" stroke="#ffb454" stroke-width="1" stroke-dasharray="3,2"/>
+      <text x="180" y="95" fill="#ffb454" font-size="9" font-family="Consolas">Gamut Triangle</text>
+    </svg>
+    <p class="cap">Fig 3: CIE Chromaticity Diagram — Horseshoe boundary = pure spectral colours; triangle = displayable gamut for RGB monitors</p>
+  </div>
+
+  <h3 class="sub">Key Properties of the Diagram</h3>
+  <div class="card">
+    <ul>
+      <li>Pure spectral colours (fully saturated) lie on the curved boundary</li>
+      <li>White/grey (achromatic) point lies near the centre</li>
+      <li>A straight line joining any two points represents all colours obtainable by mixing those two colours</li>
+      <li>The triangle formed by any 3 primaries (e.g. RGB monitor phosphors) represents the <strong>colour gamut</strong> — the set of all colours that device can reproduce</li>
+      <li>Complementary colours lie on a straight line through the white point, on opposite sides</li>
+    </ul>
+  </div>
+
+  <div class="card warn">
+    <div class="tag">⚠ Important</div>
+    <p>No 3 real primaries can cover the entire visible colour region (the horseshoe) — this is why every display device (monitor/printer) has a limited <strong>colour gamut</strong> and cannot reproduce all real-world colours.</p>
+  </div>
+
+  <hr class="sep">
+
+  <h2 class="topic scroll-anchor" id="intuitive">
+    <span>06.</span> Intuitive Colour Concepts
+    <span class="imp m">MEDIUM</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>Intuitive Colour Concepts</strong> refer to the artist's natural way of describing colour using three perceptually meaningful terms: <em>Hue</em> (the colour itself), <em>Shade</em> (hue mixed with black, also called tint when mixed with white), and <em>Tone</em> (hue mixed with grey) — rather than numeric RGB-style values.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Artists numbers mein nahi sochte (jaise RGB=255,0,0), woh intuitively sochte hain — "yeh pure red hai", "isme thoda black mix karo (shade)", "isme thoda white mix karo (tint)", "isme thoda grey mix karo (tone)". Yeh natural human way hai colors describe karne ki.
+  </div>
+
+  <table>
+    <tr><th>Term</th><th>Meaning</th></tr>
+    <tr><td class="hi">Pure Hue</td><td>Fully saturated spectral colour with no black/white/grey added</td></tr>
+    <tr><td class="hi">Tint</td><td>Hue + White added (lighter version)</td></tr>
+    <tr><td class="hi">Shade</td><td>Hue + Black added (darker version)</td></tr>
+    <tr><td>Tone</td><td>Hue + Grey added (both black and white)</td></tr>
+  </table>
+
+  <hr class="sep">
+
+  <h2 class="topic scroll-anchor" id="rgb">
+    <span>07.</span> RGB Colour Model
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p>The <strong>RGB Model</strong> represents colours as an <em>additive</em> combination of three primary colours — Red, Green, Blue — represented as a unit cube in 3D space, where each axis ranges from 0 to 1 (or 0–255), and every point inside the cube represents a unique colour.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    RGB model mein colors ko Red, Green, Blue light ko <strong>add (mix)</strong> karke banaya jaata hai. Yeh monitors, TVs aur digital screens ka standard model hai kyunki light emit hoti hai (additive mixing).
+  </div>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 260 220" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:260px;">
+      <rect x="0" y="0" width="260" height="220" fill="#0d1820"/>
+      <polygon points="40,170 140,170 170,140 70,140" fill="none" stroke="#8aa0ad" stroke-width="1.5"/>
+      <polygon points="40,170 40,70 70,40 70,140" fill="none" stroke="#8aa0ad" stroke-width="1.5"/>
+      <polygon points="40,70 140,70 170,40 70,40" fill="none" stroke="#8aa0ad" stroke-width="1.5"/>
+      <line x1="140" y1="170" x2="140" y2="70" stroke="#8aa0ad" stroke-width="1.5"/>
+      <line x1="170" y1="140" x2="170" y2="40" stroke="#8aa0ad" stroke-width="1.5"/>
+      <circle cx="40" cy="170" r="4" fill="#000" stroke="#fff"/><text x="15" y="185" fill="#d7e1e8" font-size="10" font-family="Consolas">Black(0,0,0)</text>
+      <circle cx="140" cy="170" r="4" fill="#ff3333"/><text x="120" y="185" fill="#ff6b6b" font-size="10" font-family="Consolas">Red</text>
+      <circle cx="70" cy="140" r="4" fill="#33cc33"/><text x="35" y="155" fill="#4ade80" font-size="10" font-family="Consolas">Green</text>
+      <circle cx="70" cy="40" r="4" fill="#3366ff"/><text x="35" y="30" fill="#5b9bff" font-size="10" font-family="Consolas">Blue</text>
+      <circle cx="170" cy="40" r="4" fill="#fff"/><text x="175" y="35" fill="#fff" font-size="10" font-family="Consolas">White(1,1,1)</text>
+    </svg>
+    <p class="cap">Fig 4: RGB Colour Cube</p>
+  </div>
+
+  <table>
+    <tr><th>Combination</th><th>Resulting Colour</th></tr>
+    <tr><td>R+G</td><td class="hi">Yellow</td></tr>
+    <tr><td>G+B</td><td class="hi">Cyan</td></tr>
+    <tr><td>R+B</td><td class="hi">Magenta</td></tr>
+    <tr><td>R+G+B</td><td class="hi">White</td></tr>
+    <tr><td>No Component</td><td>Black</td></tr>
+  </table>
+
+  <div class="card example">
+    <div class="tag">Example</div>
+    <p>Pure Yellow = R(1,0,0) + G(0,1,0) = <strong>(1,1,0)</strong>. Orange ≈ (1, 0.5, 0)</p>
+  </div>
+
+  <hr class="sep">
+
+  <h2 class="topic scroll-anchor" id="yiq">
+    <span>08.</span> YIQ Colour Model
+    <span class="imp m">MEDIUM</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p>The <strong>YIQ Model</strong> is the colour model adopted for commercial colour TV broadcasting (NTSC standard), where Y represents <em>luminance</em> (brightness — the only signal a black-and-white TV needs), and I, Q represent <em>chrominance</em> (colour information).</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    YIQ TV broadcasting ke liye banaya gaya tha. Y mein brightness info hoti hai — purane black & white TV sirf Y use karte the. I aur Q mein color info hoti hai jo color TVs use karte hain. Isse backward compatibility milti thi.
+  </div>
+
+  <div class="formula">
+    Y = 0.299R + 0.587G + 0.114B<br>
+    I = 0.596R − 0.274G − 0.322B<br>
+    Q = 0.211R − 0.523G + 0.312B
+  </div>
+
+  <div class="card tip">
+    <div class="tag">Why Y this way?</div>
+    <p>The weights in Y reflect human eye sensitivity — eyes are most sensitive to Green, then Red, least to Blue. This is why Y = 0.299R+0.587G+0.114B (Green has highest weight).</p>
+  </div>
+
+  <hr class="sep">
+
+  <h2 class="topic scroll-anchor" id="cmy">
+    <span>09.</span> CMY Colour Model
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p>The <strong>CMY Model</strong> (Cyan, Magenta, Yellow) is a <em>subtractive</em> colour model used in colour printing, where each primary represents the amount of that ink applied to a (white) surface, and colour is produced by <strong>subtracting</strong> (absorbing) wavelengths from white light rather than adding them.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    CMY printing ke liye use hota hai. RGB mein light add hoti hai (additive) jabki CMY mein ink white surface se light ko <strong>absorb (subtract)</strong> karti hai. Jaise yellow ink blue light ko absorb karti hai, baaki reflect karti hai jo yellow dikhta hai.
+  </div>
+
+  <div class="formula">
+    C = 1 − R<br>
+    M = 1 − G<br>
+    Y = 1 − B
+  </div>
+
+  <table>
+    <tr><th>Feature</th><th>RGB (Additive)</th><th>CMY (Subtractive)</th></tr>
+    <tr><td>Used in</td><td>Monitors, TVs, screens</td><td class="hi">Printers, printing press</td></tr>
+    <tr><td>Mixing Type</td><td>Add light</td><td class="hi">Subtract/absorb light from white</td></tr>
+    <tr><td>Black formed by</td><td>Absence of all (0,0,0)</td><td>Sum of all inks (C+M+Y=1)</td></tr>
+    <tr><td>Starting Background</td><td>Black screen</td><td>White paper</td></tr>
+  </table>
+
+  <div class="card warn">
+    <div class="tag">⚠ Important — CMYK</div>
+    <p>In real printing, pure C+M+Y rarely gives true black (gives muddy brown) — so a 4th ink, <strong>Black (K)</strong>, is added → <strong>CMYK model</strong>, used by all commercial colour printers to save ink cost and get truer blacks.</p>
+  </div>
+
+  <div class="card example">
+    <div class="tag">Example</div>
+    <p>RGB = (0.2, 0.5, 0.8) → CMY = (1−0.2, 1−0.5, 1−0.8) = <strong>(0.8, 0.5, 0.2)</strong></p>
+  </div>
+
+  <hr class="sep">
+
+  <h2 class="topic scroll-anchor" id="hsv">
+    <span>10.</span> HSV Colour Model
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p>The <strong>HSV Model</strong> (Hue, Saturation, Value) represents colour using a hexagonal-cone (or cylinder) coordinate system that closely matches how artists/humans intuitively perceive colour: Hue (which colour, 0°–360°), Saturation (purity/vividness, 0–1), and Value (brightness, 0–1).</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    HSV model human-friendly hai — Hue batata hai konsa color hai (red/green/blue etc), Saturation batata hai color kitna pure/vivid hai (white se kitna mix hai), Value batata hai color kitna bright/dark hai. Yeh color-picker tools mein commonly use hota hai.
+  </div>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 260 220" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:260px;">
+      <rect x="0" y="0" width="260" height="220" fill="#0d1820"/>
+      <polygon points="40,40 220,40 130,190" fill="none" stroke="#8aa0ad" stroke-width="1.5"/>
+      <ellipse cx="130" cy="40" rx="90" ry="18" fill="none" stroke="#36e0c4" stroke-width="1.5"/>
+      <text x="135" y="25" fill="#36e0c4" font-size="10" font-family="Consolas">Hue (0-360°)</text>
+      <line x1="130" y1="40" x2="130" y2="190" stroke="#ffb454" stroke-width="1" stroke-dasharray="3,2"/>
+      <text x="135" y="115" fill="#ffb454" font-size="10" font-family="Consolas">Saturation →</text>
+      <text x="130" y="205" fill="#ff6b6b" font-size="10" font-family="Consolas">Value=0 (Black)</text>
+      <text x="135" y="15" fill="#d7e1e8" font-size="9" font-family="Consolas">Value=1 (top)</text>
+    </svg>
+    <p class="cap">Fig 5: HSV Colour Model (Hexcone/Cone shape)</p>
+  </div>
+
+  <table>
+    <tr><th>Axis</th><th>Range</th><th>Meaning</th></tr>
+    <tr><td class="hi">Hue (H)</td><td>0°–360°</td><td>Angular position — which colour (0°=Red, 120°=Green, 240°=Blue)</td></tr>
+    <tr><td class="hi">Saturation (S)</td><td>0–1</td><td>Distance from centre axis — purity of colour (0=grey, 1=pure)</td></tr>
+    <tr><td class="hi">Value (V)</td><td>0–1</td><td>Height along the cone — brightness (0=black, 1=brightest)</td></tr>
+  </table>
+
+  <div class="card tip">
+    <div class="tag">Why HSV is Used</div>
+    <p>Unlike RGB cube where changing "brightness" requires changing all 3 values together, HSV separates intensity (Value) from colour (Hue, Saturation) — making it intuitive for colour-picker UIs and image-editing tools (e.g., Photoshop colour wheel).</p>
+  </div>
+
+  <hr class="sep">
+
+  <h2 class="topic scroll-anchor" id="hls">
+    <span>11.</span> HLS Colour Model
+    <span class="imp m">MEDIUM</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p>The <strong>HLS Model</strong> (Hue, Lightness, Saturation), developed by Tektronix, represents colour space as a <em>double cone (bi-cone)</em> with pure black at the bottom apex, pure white at the top apex, and fully saturated hues around the middle equator — giving symmetric control over lightening and darkening a colour.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    HLS HSV jaisa hi hai but shape double-cone (do cones jude hue) hai. Top pe white, bottom pe black, beech mein full saturation. Lightness 0 se 1 tak jaata hai — 0.5 pe pure colours milte hain, isse zyada/kam karne se white/black mix hota hai.
+  </div>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 260 240" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:260px;">
+      <rect x="0" y="0" width="260" height="240" fill="#0d1820"/>
+      <polygon points="40,120 220,120 130,20" fill="none" stroke="#8aa0ad" stroke-width="1.5"/>
+      <polygon points="40,120 220,120 130,220" fill="none" stroke="#8aa0ad" stroke-width="1.5"/>
+      <ellipse cx="130" cy="120" rx="90" ry="18" fill="none" stroke="#36e0c4" stroke-width="1.5"/>
+      <text x="135" y="125" fill="#36e0c4" font-size="10" font-family="Consolas">L=0.5 (full saturation)</text>
+      <text x="135" y="25" fill="#fff" font-size="10" font-family="Consolas">White (L=1)</text>
+      <text x="135" y="235" fill="#ff6b6b" font-size="10" font-family="Consolas">Black (L=0)</text>
+      <line x1="130" y1="120" x2="60" y2="120" stroke="#ffb454" stroke-width="1.5" stroke-dasharray="3,2"/>
+      <text x="35" y="115" fill="#ffb454" font-size="9" font-family="Consolas">S</text>
+    </svg>
+    <p class="cap">Fig 6: HLS Colour Model (Double-cone shape)</p>
+  </div>
+
+  <table>
+    <tr><th>Feature</th><th>HSV</th><th>HLS</th></tr>
+    <tr><td>Shape</td><td>Single Cone/Hexcone</td><td class="hi">Double Cone (Bi-cone)</td></tr>
+    <tr><td>Brightness Axis</td><td>Value (0=black, 1=bright)</td><td class="hi">Lightness (0=black, 1=white, 0.5=pure colour)</td></tr>
+    <tr><td>Top of shape</td><td>Brightest colour (not necessarily white)</td><td>Always pure white</td></tr>
+    <tr><td>Developed for</td><td>Colour-picker intuition</td><td>Tektronix terminals</td></tr>
+  </table>
+
+  <hr class="sep">
+
+  <h2 class="topic scroll-anchor" id="selection">
+    <span>12.</span> Colour Selection
+    <span class="imp l">LOW</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>Colour Selection</strong> refers to the process and guidelines used to choose appropriate, perceptually effective, and harmonious colour combinations for a graphical application/interface, considering factors such as contrast, harmony, purpose, and viewer perception.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Colour selection ka matlab hai application ya design ke liye sahi colors choose karna — jisse readability, contrast aur visual appeal sab ache rahe. Random colors use karne se design bigad sakta hai.
+  </div>
+
+  <h3 class="sub">Guidelines for Effective Colour Selection</h3>
+  <div class="card">
+    <ul>
+      <li>Use a limited number of colours (avoid overload) — typically 5-7 max in a design</li>
+      <li>Use warm colours (red/orange) to highlight/draw attention, cool colours (blue/green) for backgrounds</li>
+      <li>Ensure adequate contrast between foreground/background for readability</li>
+      <li>Maintain consistency — same colour for same meaning throughout the application</li>
+      <li>Consider colour-blind users — avoid relying purely on hue differences (use brightness/pattern too)</li>
+      <li>Use complementary/harmonious colour schemes from chromaticity relationships</li>
+    </ul>
+  </div>
+
+  <hr class="sep">
+
+  <div class="qsection scroll-anchor" id="qa">
+    <div class="pyq-header">
+      <div>
+        <div class="pyq-title">📝 RTU Exam Question Bank — Unit 6</div>
+        <div class="pyq-sub">Based on previous year papers &amp; importance analysis — Illumination &amp; Colour Models</div>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q1 · 10 MARKS</div>
+      <span class="marks m10">10 MARKS</span>
+      <div class="q">Explain the basic illumination model. Derive the combined equation for ambient, diffuse, and specular reflection (Phong model).</div>
+      <div class="a">
+        <p><strong>Ambient Reflection:</strong> Constant background light present everywhere: I = Ia·Ka</p>
+        <p><strong>Diffuse Reflection (Lambert's Law):</strong> Light scattered equally in all directions from a matte surface, proportional to cosθ between surface normal N and light vector L:</p>
+        <div class="formula">Idiff = Ip·Kd·(N·L)</div>
+        <p><strong>Specular Reflection (Phong Model):</strong> Concentrated reflection causing shiny highlight, depends on angle between viewer V and ideal reflection R, raised to power n:</p>
+        <div class="formula">Ispec = Ip·Ks·(R·V)ⁿ</div>
+        <p><strong>Combined Illumination Equation:</strong></p>
+        <div class="formula">I = Ia·Ka + Ip·Kd·(N·L) + Ip·Ks·(R·V)ⁿ</div>
+        <p>Each term contributes independently to the final colour/brightness at a surface point, and they are summed to give the total perceived intensity used in rendering.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q2 · 10 MARKS</div>
+      <span class="marks m10">10 MARKS</span>
+      <div class="q">What is the CIE Chromaticity Diagram? Explain its construction and properties with a diagram.</div>
+      <div class="a">
+        <p>The CIE Chromaticity Diagram is a 2D plot of normalized chromaticity coordinates x = X/(X+Y+Z), y = Y/(X+Y+Z), derived from CIE XYZ tristimulus values, representing all visible colours independent of brightness.</p>
+        <p><strong>Properties:</strong></p>
+        <ul>
+          <li>Pure spectral (fully saturated) colours lie along the curved (horseshoe) boundary</li>
+          <li>White/achromatic point lies near the centre of the diagram</li>
+          <li>A line joining two points represents all colours obtainable by mixing them</li>
+          <li>A triangle formed by 3 chosen primaries represents the device's <strong>colour gamut</strong></li>
+          <li>No 3 real primaries can reproduce the entire visible region — hence limited gamut for any device</li>
+        </ul>
+        <p>This diagram is used to compare colour gamuts of different display/printing devices and to determine complementary colours (lying on opposite sides of the white point on a straight line through it).</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q3 · 10 MARKS</div>
+      <span class="marks m10">10 MARKS</span>
+      <div class="q">Compare RGB, CMY, HSV and HLS colour models in detail with diagrams.</div>
+      <div class="a">
+        <table>
+          <tr><th>Model</th><th>Components</th><th>Type</th><th>Used For</th></tr>
+          <tr><td class="hi">RGB</td><td>Red, Green, Blue</td><td>Additive</td><td>Monitors, TVs, screens</td></tr>
+          <tr><td class="hi">CMY</td><td>Cyan, Magenta, Yellow</td><td>Subtractive</td><td>Printing/printers</td></tr>
+          <tr><td class="hi">HSV</td><td>Hue, Saturation, Value</td><td>Perceptual (single cone)</td><td>Colour-picker UIs</td></tr>
+          <tr><td class="hi">HLS</td><td>Hue, Lightness, Saturation</td><td>Perceptual (double cone)</td><td>Tektronix terminals, design tools</td></tr>
+        </table>
+        <p><strong>RGB</strong> is represented as a cube — additive mixing where R+G+B=White, used wherever light is emitted (screens). <strong>CMY</strong> is the complementary subtractive model where ink absorbs colour from white light (C=1−R, M=1−G, Y=1−B), used in printing (often extended to CMYK for true black). <strong>HSV</strong> represents colour as a single cone with Hue as angle, Saturation as radius, Value as height — separates colour from brightness intuitively. <strong>HLS</strong> is similar but uses a double-cone shape with symmetric Lightness axis (black at bottom, white at top, pure hues at the middle equator) giving symmetric control for lightening/darkening.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q4 · 10 MARKS</div>
+      <span class="marks m10">10 MARKS</span>
+      <div class="q">What is halftoning? Explain halftone approximation and dithering techniques with examples.</div>
+      <div class="a">
+        <p><strong>Halftoning</strong> simulates continuous shades on a device capable of producing only limited intensity levels, by varying the size/density of printed dots in a cell.</p>
+        <p><strong>Halftone Approximation:</strong> Pixels are grouped into n×n cells; turning ON a number of dots proportional to the desired grey level creates the illusion of intermediate shades. An n×n cell gives n²+1 distinguishable intensity levels (e.g., 3×3 → 10 levels).</p>
+        <p><strong>Dithering:</strong> Approximates an image using a limited palette by adding controlled noise before quantization so neighbouring dots visually average to perceived intermediate colours not actually in the palette.</p>
+        <p><strong>Types of Dithering:</strong> Ordered dithering (fixed threshold matrix), Random dithering (random noise added), and Error diffusion/Floyd-Steinberg (propagates quantization error to neighbouring pixels) — the latter gives the smoothest results and is widely used in image processing software.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q5 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">Differentiate between RGB and CMY colour models.</div>
+      <div class="a">
+        <table>
+          <tr><th>Feature</th><th>RGB</th><th>CMY</th></tr>
+          <tr><td>Mixing Type</td><td>Additive</td><td>Subtractive</td></tr>
+          <tr><td>Used in</td><td>Monitors/Screens</td><td>Printers</td></tr>
+          <tr><td>Background</td><td>Black</td><td>White paper</td></tr>
+          <tr><td>Relation</td><td>C=1−R, M=1−G, Y=1−B</td><td>R=1−C, G=1−M, B=1−Y</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q6 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">Explain Lambert's Cosine Law for diffuse reflection.</div>
+      <div class="a">
+        <p>Lambert's Cosine Law states that the intensity of light diffusely reflected from a matte surface is proportional to the cosine of the angle θ between the surface normal N and the direction L toward the light source:</p>
+        <div class="formula">Idiff = Ip · Kd · cosθ = Ip · Kd · (N·L)</div>
+        <p>When the light is directly perpendicular to the surface (θ=0°), reflection is maximum (cos0°=1). As θ increases toward 90°, reflected intensity decreases to zero, since cosθ→0 — surfaces facing away from light appear dark.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q7 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">What is the YIQ colour model? Why was it developed?</div>
+      <div class="a">
+        <p>YIQ is the colour model used for NTSC colour TV broadcasting. Y represents luminance (brightness, needed by black-and-white TVs), I and Q carry chrominance (colour) information, allowing backward compatibility with older monochrome televisions.</p>
+        <div class="formula">
+          Y = 0.299R + 0.587G + 0.114B<br>
+          I = 0.596R − 0.274G − 0.322B<br>
+          Q = 0.211R − 0.523G + 0.312B
+        </div>
+        <p>The Y weights match the human eye's higher sensitivity to green light, then red, then blue.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q8 · 5 MARKS — Short Note</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">Write a short note on the HSV colour model.</div>
+      <div class="a">
+        <p>HSV represents colour using Hue (angular position 0°-360° denoting which colour), Saturation (radial distance, 0-1, denoting purity/vividness of colour), and Value (height, 0-1, denoting brightness). It is shaped as a single cone/hexcone, with black at the apex (V=0) and the brightest, most saturated colours around the top rim. HSV is widely used in colour-picker tools because it separates brightness from hue/saturation, matching how humans intuitively think about colour.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q9 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">Differentiate between HSV and HLS colour models.</div>
+      <div class="a">
+        <table>
+          <tr><th>Feature</th><th>HSV</th><th>HLS</th></tr>
+          <tr><td>Shape</td><td>Single cone</td><td>Double cone (bi-cone)</td></tr>
+          <tr><td>3rd Axis</td><td>Value (brightness)</td><td>Lightness (symmetric black-white)</td></tr>
+          <tr><td>Pure colours appear at</td><td>Top rim (V=1)</td><td>Middle (L=0.5)</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q10 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">Explain different types of light sources used in illumination models.</div>
+      <div class="a">
+        <p><strong>Point Light Source:</strong> Originates from a single point, rays diverge radially (e.g. bulb).</p>
+        <p><strong>Distributed/Area Light:</strong> Light emitted from an extended surface/area (e.g. tube light, overcast sky).</p>
+        <p><strong>Ambient Light:</strong> Uniformly scattered background light from all directions with no identifiable source/direction; contributes a constant base illumination to every surface.</p>
+        <p><strong>Directional/Parallel Light:</strong> Light rays travel parallel to each other, as if the source were at infinite distance (e.g. sunlight).</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q11 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">Given RGB = (0.6, 0.3, 0.9), find the equivalent CMY values.</div>
+      <div class="a">
+        <div class="formula">
+          C = 1 − R = 1 − 0.6 = 0.4<br>
+          M = 1 − G = 1 − 0.3 = 0.7<br>
+          Y = 1 − B = 1 − 0.9 = 0.1
+        </div>
+        <p>CMY = <strong>(0.4, 0.7, 0.1)</strong></p>
+      </div>
+    </div>
+
+  </div><div style="margin-top:60px; padding:20px 24px; border:1px dashed var(--line); border-radius:10px; color:var(--muted); font-size:13px;">
+    <div style="color:var(--accent); font-family:'Consolas',monospace; font-weight:700; margin-bottom:6px;">ZYREX // CGM_VAULT — UNIT 6 · Illumination &amp; Colour Models</div>
+    <p>RTU B.Tech CSE 5th Semester · 5CS4-04 Computer Graphics &amp; Multimedia · Unit 6 of 7</p>
+    <p style="margin-top:6px;">📌 Focus areas for exam: Phong illumination equation (10-mark regular), CIE chromaticity diagram, RGB vs CMY vs HSV vs HLS comparison, halftoning &amp; dithering theory.</p>
+    <p style="margin-top:6px;">Formulas to memorize: I=Ia·Ka+Ip·Kd·(N·L)+Ip·Ks·(R·V)ⁿ &nbsp;|&nbsp; C=1−R,M=1−G,Y=1−B &nbsp;|&nbsp; Y=0.299R+0.587G+0.114B &nbsp;|&nbsp; n×n halftone cell → n²+1 levels</p>
+  </div>
+
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:center;padding:30px 20px;flex-wrap:wrap;">
+      <a href="unit5.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+      <a href="../cgm/index.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">🏠 CGM Hub</a>
+      <a href="unit7.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+    </div>
+  </main>
+  <div class="cursor-dot" data-cursor-dot></div>
+  <div class="cursor-outline" data-cursor-outline></div>
+  <script>
+    const cursorDot = document.querySelector("[data-cursor-dot]");
+    const cursorOutline = document.querySelector("[data-cursor-outline]");
+    window.addEventListener("mousemove", function(e){
+      cursorDot.style.left=e.clientX+"px"; cursorDot.style.top=e.clientY+"px";
+      cursorOutline.animate({left:e.clientX+"px",top:e.clientY+"px"},{duration:400,fill:"forwards"});
+    });
+    document.querySelectorAll("a,button").forEach(el=>{
+      el.addEventListener("mouseenter",()=>cursorOutline.classList.add("cursor-hovering"));
+      el.addEventListener("mouseleave",()=>cursorOutline.classList.remove("cursor-hovering"));
+    });
+  </script>
+<script src="../splash-cursor.js"></script>\n</body>
+</html>
