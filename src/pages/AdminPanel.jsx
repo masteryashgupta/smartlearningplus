@@ -8,6 +8,7 @@ const TABS = [
   { key: "timetable", label: "Timetable" },
   { key: "holidays", label: "Holidays" },
   { key: "users", label: "Users" },
+  { key: "settings", label: "⚙ Settings" },
 ];
 
 const DAYS = [
@@ -24,6 +25,10 @@ export default function AdminPanel() {
   const [users, setUsers] = useState([]);
   const [slotForm, setSlotForm] = useState({ day_of_week: 1, slot_number: 1, start_time: "08:30", end_time: "09:30", subject_id: "", batch: "ALL", label: "" });
   const [holidayForm, setHolidayForm] = useState({ date: "", reason: "" });
+  const [pwForm, setPwForm] = useState({ current: "", next: "", confirm: "" });
+  const [pwMsg, setPwMsg] = useState(null); // { ok: bool, text: string }
+  const [pwLoading, setPwLoading] = useState(false);
+  const [showPw, setShowPw] = useState({ current: false, next: false, confirm: false });
 
   function reloadTimetable() {
     api.get("/timetable").then((r) => { setWeek(r.data.week); setSubjects(r.data.subjects); });
@@ -69,6 +74,29 @@ export default function AdminPanel() {
   async function removeHoliday(id) {
     await api.delete(`/admin/holidays/${id}`);
     reloadHolidays();
+  }
+
+  async function changePassword(e) {
+    e.preventDefault();
+    setPwMsg(null);
+    if (pwForm.next !== pwForm.confirm) {
+      setPwMsg({ ok: false, text: "New passwords do not match" });
+      return;
+    }
+    if (pwForm.next.length < 8) {
+      setPwMsg({ ok: false, text: "New password must be at least 8 characters" });
+      return;
+    }
+    setPwLoading(true);
+    try {
+      await api.post("/admin/change-password", { currentPassword: pwForm.current, newPassword: pwForm.next });
+      setPwMsg({ ok: true, text: "✓ Password changed successfully!" });
+      setPwForm({ current: "", next: "", confirm: "" });
+    } catch (err) {
+      setPwMsg({ ok: false, text: err.response?.data?.error || "Failed to change password" });
+    } finally {
+      setPwLoading(false);
+    }
   }
 
   return (
@@ -169,6 +197,69 @@ export default function AdminPanel() {
                   <span className="font-mono">{u.percentage !== null ? `${u.percentage}%` : "no data"}</span>
                 </div>
               ))}
+            </div>
+          </div>
+        )}
+
+        {tab === "settings" && (
+          <div className="max-w-md">
+            <div className="card p-6">
+              <div className="font-display font-bold text-lg mb-1">Change Admin Password</div>
+              <p className="text-muted text-sm mb-5">Update your admin account password. You&rsquo;ll need to enter your current password to confirm.</p>
+              <form onSubmit={changePassword} className="space-y-4">
+                {["current", "next", "confirm"].map((field) => (
+                  <div key={field}>
+                    <label className="block text-sm font-medium mb-1" style={{ color: "var(--text2)" }}>
+                      {field === "current" ? "Current password" : field === "next" ? "New password" : "Confirm new password"}
+                    </label>
+                    <div style={{ position: "relative" }}>
+                      <input
+                        className="input w-full"
+                        style={{ paddingRight: "2.75rem" }}
+                        type={showPw[field] ? "text" : "password"}
+                        placeholder={field === "current" ? "Enter current password" : field === "next" ? "Min. 8 characters" : "Repeat new password"}
+                        value={pwForm[field]}
+                        onChange={(e) => { setPwForm({ ...pwForm, [field]: e.target.value }); setPwMsg(null); }}
+                        required
+                        autoComplete={field === "current" ? "current-password" : "new-password"}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPw({ ...showPw, [field]: !showPw[field] })}
+                        style={{
+                          position: "absolute", right: "10px", top: "50%", transform: "translateY(-50%)",
+                          background: "none", border: "none", cursor: "pointer", fontSize: "16px",
+                          color: "var(--muted)", lineHeight: 1,
+                        }}
+                        tabIndex={-1}
+                        aria-label="Toggle visibility"
+                      >
+                        {showPw[field] ? "🙈" : "👁"}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+
+                {pwMsg && (
+                  <div style={{
+                    padding: "10px 14px", borderRadius: "10px", fontSize: "13.5px", fontWeight: 600,
+                    background: pwMsg.ok ? "var(--green-light, #ecfdf5)" : "#fff1f2",
+                    color: pwMsg.ok ? "var(--green, #059669)" : "#e11d48",
+                    border: `1px solid ${pwMsg.ok ? "#6ee7b7" : "#fecdd3"}`,
+                  }}>
+                    {pwMsg.text}
+                  </div>
+                )}
+
+                <button
+                  className="btn-primary w-full"
+                  type="submit"
+                  disabled={pwLoading}
+                  style={{ opacity: pwLoading ? 0.7 : 1, width: "100%" }}
+                >
+                  {pwLoading ? "Updating…" : "Update Password"}
+                </button>
+              </form>
             </div>
           </div>
         )}
