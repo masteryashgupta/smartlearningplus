@@ -4,6 +4,7 @@ import crypto from "crypto";
 import { q } from "../db.js";
 import { signToken, requireAuth } from "../auth.js";
 import { bot } from "../bot/bot.js";
+import { sendResetEmail } from "../lib/mailer.js";
 
 const router = Router();
 
@@ -162,6 +163,81 @@ router.post("/student/disconnect-telegram", requireAuth("student"), async (req, 
     res.json({ ok: true });
   } catch (err) {
     console.error("Error disconnecting Telegram:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// ---- Forgot password (student or admin) ----
+router.post("/forgot-password", async (req, res) => {
+  const { email, role } = req.body;
+  if (!email) return res.status(400).json({ error: "Email is required" });
+  if (!role || !["student", "admin"].includes(role))
+    return res.status(400).json({ error: "Role must be 'student' or 'admin'" });
+
+  // Always respond with success to prevent email enumeration
+  const successMsg = { ok: true, message: "If that email is registered, a reset link has been sent." };
+
+  try {
+    const table = role === "admin" ? "admins" : "users";
+    const { rows } = await q(`select * from ${table} where email = $1`, [email.toLowerCase().trim()]);
+    const user = rows[0];
+
+    if (!user) return res.json(successMsg); // silent — don't reveal if email exists
+
+    const token = crypto.randomBytes(32).toString("hex");
+    const expires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+
+    await q(
+      `update ${table} set reset_token = $1, reset_token_expires = $2 where id = $3`,
+      [token, expires, user.id]
+    );
+
+    const frontendBase = process.env.FRONTEND_URL || "https://smartlearningplus.me";
+    const resetUrl = `${frontendBase}/index.html#/reset-password?token=${token}&role=${role}`;
+
+    try {
+      await sendResetEmail(user.email, resetUrl, user.name);
+    } catch (mailErr) {
+      console.error("[forgot-password] Email send failed:", mailErr.message);
+      // Still return success; admin can check logs
+    }
+
+    res.json(successMsg);
+  } catch (err) {
+    console.error("Forgot password error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// ---- Reset password (student or admin) ----
+router.post("/reset-password", async (req, res) => {
+  const { token, newPassword, role } = req.body;
+  if (!token || !newPassword || !role)
+    return res.status(400).json({ error: "token, newPassword, and role are required" });
+  if (newPassword.length < 8)
+    return res.status(400).json({ error: "Password must be at least 8 characters" });
+  if (!["student", "admin"].includes(role))
+    return res.status(400).json({ error: "Invalid role" });
+
+  try {
+    const table = role === "admin" ? "admins" : "users";
+    const { rows } = await q(
+      `select * from ${table} where reset_token = $1 and reset_token_expires > now()`,
+      [token]
+    );
+    const user = rows[0];
+
+    if (!user) return res.status(400).json({ error: "Reset link is invalid or has expired. Please request a new one." });
+
+    const hash = await bcrypt.hash(newPassword, 10);
+    await q(
+      `update ${table} set password_hash = $1, reset_token = null, reset_token_expires = null where id = $2`,
+      [hash, user.id]
+    );
+
+    res.json({ ok: true, message: "Password reset successfully. You can now log in." });
+  } catch (err) {
+    console.error("Reset password error:", err);
     res.status(500).json({ error: "Internal server error" });
   }
 });
