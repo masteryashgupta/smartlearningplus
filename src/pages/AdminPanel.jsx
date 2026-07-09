@@ -8,6 +8,7 @@ const TABS = [
   { key: "timetable", label: "Timetable" },
   { key: "holidays",  label: "Holidays" },
   { key: "users",     label: "Users" },
+  { key: "whitelist", label: "Whitelist" },
   { key: "attendance",label: "Attendance" },
   { key: "settings",  label: "Settings" },
 ];
@@ -53,6 +54,12 @@ export default function AdminPanel() {
   const [showPw, setShowPw] = useState({ current: false, next: false, confirm: false });
   const [toast, setToast] = useState(null);
 
+  // Whitelist state
+  const [whitelist, setWhitelist] = useState([]);
+  const [whitelistEmailInput, setWhitelistEmailInput] = useState("");
+  const [whitelistSearch, setWhitelistSearch] = useState("");
+  const [whitelistLoading, setWhitelistLoading] = useState(false);
+
   function showToast(msg, ok = true) {
     setToast({ msg, ok });
     setTimeout(() => setToast(null), 3000);
@@ -67,11 +74,12 @@ export default function AdminPanel() {
   function reloadUsers() {
     api.get("/admin/users").then((r) => setUsers(r.data));
   }
+  function reloadWhitelist() {
+    api.get("/admin/whitelist").then((r) => setWhitelist(r.data));
+  }
   async function loadAttendance(d) {
     setAttendanceLoading(true);
     try {
-      // Get all slots for that day, then show attendance status for all users
-      // We use the timetable day to get expected slots
       const dayNum = new Date(d + "T00:00:00").getDay();
       const slots = week[dayNum] || [];
       setAttendanceSlots(slots);
@@ -87,6 +95,7 @@ export default function AdminPanel() {
     reloadTimetable();
     reloadHolidays();
     reloadUsers();
+    reloadWhitelist();
   }, []);
 
   useEffect(() => {
@@ -156,6 +165,33 @@ export default function AdminPanel() {
     }
   }
 
+  async function addWhitelistEmail(e) {
+    e.preventDefault();
+    if (!whitelistEmailInput) return;
+    setWhitelistLoading(true);
+    try {
+      await api.post("/admin/whitelist", { email: whitelistEmailInput });
+      setWhitelistEmailInput("");
+      reloadWhitelist();
+      showToast("Email whitelisted successfully!");
+    } catch (err) {
+      showToast(err.response?.data?.error || "Failed to whitelist email", false);
+    } finally {
+      setWhitelistLoading(false);
+    }
+  }
+
+  async function removeWhitelistEmail(id, email) {
+    if (!window.confirm(`Are you sure you want to remove ${email} from the whitelist?`)) return;
+    try {
+      await api.delete(`/admin/whitelist/${id}`);
+      reloadWhitelist();
+      showToast("Email removed from whitelist.");
+    } catch (err) {
+      showToast("Failed to remove email", false);
+    }
+  }
+
   async function changePassword(e) {
     e.preventDefault();
     setPwMsg(null);
@@ -178,6 +214,11 @@ export default function AdminPanel() {
     u.name?.toLowerCase().includes(userSearch.toLowerCase()) ||
     u.batch?.toLowerCase().includes(userSearch.toLowerCase()) ||
     u.telegram_username?.toLowerCase().includes(userSearch.toLowerCase())
+  );
+
+  const filteredWhitelist = whitelist.filter((w) =>
+    whitelistSearch === "" ||
+    w.email?.toLowerCase().includes(whitelistSearch.toLowerCase())
   );
 
   const todayPresent = overview?.todayMarks?.find((m) => m.status === "present")?.count ?? 0;
@@ -379,9 +420,9 @@ export default function AdminPanel() {
                                 <span className="text-[10px] px-1.5 py-0.5 bg-red-50 rounded-full text-red-500 font-bold border border-red-100">Inactive</span>
                               )}
                             </div>
-                            <div className="text-[11px] text-muted font-mono mt-0.5">
-                              @{u.telegram_username || "—"}
-                              {u.telegram_id && <span className="ml-2 text-green-600">✓ connected</span>}
+                            <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11px] text-muted font-mono mt-1">
+                              {u.email && <span>📧 {u.email}</span>}
+                              <span>🤖 @{u.telegram_username || "—"}{u.telegram_id && <span className="ml-1.5 text-green-600 font-sans font-bold">✓ connected</span>}</span>
                             </div>
                           </div>
                           <div className="text-right flex-shrink-0">
@@ -407,6 +448,59 @@ export default function AdminPanel() {
                           </div>
                         </div>
                       )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* ── WHITELIST ── */}
+        {tab === "whitelist" && (
+          <div className="space-y-4">
+            <div className="card p-4">
+              <div className="font-display font-bold text-base mb-1 text-ink">Whitelist Gmail / Email Address</div>
+              <p className="text-xs text-muted mb-4">Only whitelisted emails will be allowed to register a student account on the website.</p>
+              <form onSubmit={addWhitelistEmail} className="flex flex-col sm:flex-row gap-3">
+                <input
+                  className="input flex-1"
+                  type="email"
+                  placeholder="Enter email address (e.g. student@gmail.com)"
+                  value={whitelistEmailInput}
+                  onChange={(e) => setWhitelistEmailInput(e.target.value)}
+                  required
+                />
+                <button className="btn-primary whitespace-nowrap" disabled={whitelistLoading}>
+                  {whitelistLoading ? "Adding..." : "➕ Whitelist Email"}
+                </button>
+              </form>
+            </div>
+            
+            <div className="card p-4 space-y-3">
+              <div className="flex items-center justify-between gap-3 flex-wrap">
+                <div className="font-display font-bold text-base text-ink">Whitelisted Emails ({whitelist.length})</div>
+                <input
+                  className="input max-w-xs"
+                  placeholder="Search whitelisted emails…"
+                  value={whitelistSearch}
+                  onChange={(e) => setWhitelistSearch(e.target.value)}
+                />
+              </div>
+
+              {filteredWhitelist.length === 0 ? (
+                <div className="text-sm text-muted text-center py-6">No whitelisted emails found.</div>
+              ) : (
+                <div className="divide-y divide-line max-h-[400px] overflow-y-auto pr-1">
+                  {filteredWhitelist.map((w) => (
+                    <div key={w.id} className="flex items-center justify-between gap-3 py-2.5">
+                      <span className="text-sm font-mono font-medium text-ink">{w.email}</span>
+                      <button
+                        onClick={() => removeWhitelistEmail(w.id, w.email)}
+                        className="text-xs text-red-500 hover:text-red-700 font-semibold flex-shrink-0 px-2.5 py-1 rounded-lg hover:bg-red-50 transition-colors"
+                      >
+                        Remove
+                      </button>
                     </div>
                   ))}
                 </div>
