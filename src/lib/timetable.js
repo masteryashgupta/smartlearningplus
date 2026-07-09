@@ -10,7 +10,10 @@ export function todayInIST() {
 }
 
 export function dateStr(d) {
-  return d.toISOString().slice(0, 10); // YYYY-MM-DD (fine since we already shifted to IST)
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
 // All slots for a given weekday that apply to a user's batch, in order.
