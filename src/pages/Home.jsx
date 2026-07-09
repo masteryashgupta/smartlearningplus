@@ -739,7 +739,7 @@ export default function Home() {
           <div className="dashboard-welcome-card my-6">
             <div>
               <h2 className="text-xl font-bold text-ink">Hello, {profile?.name || session?.name} 👋</h2>
-              <p className="text-xs text-muted mt-1">JECRC B.Tech CSE V Semester • {profile?.batch || "G2"} Batch</p>
+              <p className="text-xs text-muted mt-1">B.Tech CSE V Semester • {profile?.batch || "G2"} Batch</p>
             </div>
             {(() => {
               const overallPct = stats?.overall.percentage ?? null;
@@ -856,7 +856,7 @@ export default function Home() {
         {/* STUDY MATERIALS SECTION */}
         <section className="sl-section scroll-anchor" id="subjects">
           <div className="sl-eyebrow-sm">Study Material</div>
-          <div className="sl-section-title" style={{ marginBottom: "20px" }}>JECRC Core Subjects</div>
+          <div className="sl-section-title" style={{ marginBottom: "20px" }}>Core Subjects</div>
           
           <div className="subject-row-grid">
             <a href="/itc/index.html" className="subject-row-card sl-c-itc">
@@ -943,7 +943,7 @@ export default function Home() {
                 <div className="subject-row-icon">🗂️</div>
                 <div className="subject-row-details">
                   <div className="subject-row-title">Teaching &amp; Examination Scheme</div>
-                  <div className="subject-row-code">JECRC V Semester · Credits &amp; Codes</div>
+                  <div className="subject-row-code">RTU V Semester · Credits &amp; Codes</div>
                 </div>
               </div>
               <div className="subject-row-arrow">⬇</div>
@@ -967,12 +967,7 @@ export default function Home() {
           </div>
         </section>
 
-        <footer className="sl-footer">
-          <p>
-            Built with ❤️ for RTU students &nbsp;·&nbsp;{" "}
-            <strong>Smart Learning Plus</strong> &nbsp;·&nbsp; B.Tech CSE 5th Sem
-          </p>
-        </footer>
+
       </div>
     </div>
   );
