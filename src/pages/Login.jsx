@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { api, setSession } from "../api.js";
 
-export default function Login() {
+export default function Login({ compact = false }) {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const [mode, setMode] = useState("student");
@@ -33,7 +33,7 @@ export default function Login() {
     try {
       const { data } = await api.post("/auth/student/exchange", { token });
       setSession(data.token, "student", data.user.name);
-      window.location.href = "/index.html#/dashboard";
+      window.location.href = "/index.html#/";
       window.location.reload();
     } catch (e) {
       setError(e.response?.data?.error || "Link expired. Get a new one via /dashboard in Telegram.");
@@ -49,7 +49,7 @@ export default function Login() {
     try {
       const { data } = await api.post("/auth/student/login", { email: studentEmail, password: studentPassword });
       setSession(data.token, "student", data.user.name);
-      window.location.href = "/index.html#/dashboard";
+      window.location.href = "/index.html#/";
       window.location.reload();
     } catch (e) {
       setError(e.response?.data?.error || "Login failed");
@@ -87,7 +87,7 @@ export default function Login() {
     try {
       const { data } = await api.post("/auth/admin/login", { email, password });
       setSession(data.token, "admin", data.name);
-      window.location.href = "/index.html#/admin";
+      window.location.href = "/index.html#/";
       window.location.reload();
     } catch (e) {
       setError(e.response?.data?.error || "Login failed");
@@ -286,6 +286,22 @@ export default function Login() {
             </form>
           )}
         </div>
+      </div>
+    </div>
+  );
+
+  return compact ? (
+    <div className="w-full max-w-sm">
+      {cardBody}
+    </div>
+  ) : (
+    <div className="min-h-screen flex items-center justify-center px-4">
+      <div className="w-full max-w-sm">
+        <div className="text-center mb-8">
+          <div className="font-display text-2xl font-bold text-ink">Attendance</div>
+          <div className="text-muted text-sm font-mono">Track With Silence</div>
+        </div>
+        {cardBody}
       </div>
     </div>
   );

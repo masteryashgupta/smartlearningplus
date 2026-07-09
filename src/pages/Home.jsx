@@ -1,8 +1,16 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { getSession } from "../api.js";
+import StudentDashboard from "./StudentDashboard.jsx";
+import AdminPanel from "./AdminPanel.jsx";
+import Login from "./Login.jsx";
 
 export default function Home() {
+  const session = getSession();
+
   useEffect(() => {
+    if (session) return;
+
     const cursorDot = document.querySelector("[data-cursor-dot]");
     const cursorOutline = document.querySelector("[data-cursor-outline]");
 
@@ -55,7 +63,16 @@ export default function Home() {
       io.disconnect();
       document.body.classList.remove("sl-home-active");
     };
-  }, []);
+  }, [session]);
+
+  if (session) {
+    if (session.role === "student") {
+      return <StudentDashboard />;
+    }
+    if (session.role === "admin") {
+      return <AdminPanel />;
+    }
+  }
 
   return (
     <div className="sl-home min-h-screen text-[#0f172a] font-sans relative overflow-x-hidden">
@@ -187,8 +204,40 @@ export default function Home() {
         .sl-nav-links a:hover { color: var(--accent); }
         @media (max-width:680px){ .sl-nav-links{ display:none; } }
 
-        /* hero */
-        .sl-hero { padding: 70px 0 50px; text-align:center; position:relative; }
+        /* hero split layout */
+        .sl-hero-container {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 50px;
+          padding: 80px 0 50px;
+          position: relative;
+        }
+        .sl-hero-left {
+          flex: 1.2;
+          text-align: left;
+        }
+        .sl-hero-right {
+          flex: 0.8;
+          display: flex;
+          justify-content: center;
+          animation: sl-pop .7s cubic-bezier(.2,.8,.2,1) both;
+          animation-delay: 0.2s;
+        }
+        @media (max-width: 880px) {
+          .sl-hero-container {
+            flex-direction: column;
+            text-align: center;
+            padding: 40px 0;
+            gap: 30px;
+          }
+          .sl-hero-left {
+            text-align: center;
+          }
+          .sl-hero-right {
+            margin-top: 10px;
+          }
+        }
         .sl-eyebrow {
           display:inline-flex; align-items:center; gap:8px;
           background: var(--surface); border:1px solid var(--border);
@@ -200,7 +249,7 @@ export default function Home() {
         @keyframes sl-pulse { 0%,100%{ box-shadow:0 0 0 4px var(--green-light);} 50%{ box-shadow:0 0 0 7px var(--green-light);} }
 
         .sl-headline {
-          font-size: clamp(40px, 7vw, 76px); font-weight: 800; line-height: 1.04;
+          font-size: clamp(36px, 6vw, 68px); font-weight: 800; line-height: 1.06;
           letter-spacing: -0.03em; color: var(--text); margin-bottom: 22px;
           animation: sl-pop .7s cubic-bezier(.2,.8,.2,1) both; animation-delay: .05s;
         }
@@ -212,13 +261,13 @@ export default function Home() {
         @keyframes sl-shine { to { background-position: 200% center; } }
 
         .sl-sub {
-          max-width: 620px; margin: 0 auto 36px; font-size: 17px; color: var(--muted);
+          margin-bottom: 36px; font-size: 16px; color: var(--muted);
           line-height: 1.65; animation: sl-pop .7s cubic-bezier(.2,.8,.2,1) both; animation-delay: .1s;
         }
         .sl-sub strong { color: var(--text2); }
 
         .sl-hero-actions {
-          display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-bottom: 54px;
+          display:flex; gap:14px; flex-wrap:wrap; margin-bottom: 54px;
           animation: sl-pop .7s cubic-bezier(.2,.8,.2,1) both; animation-delay: .15s;
         }
         .sl-btn-primary, .sl-btn-ghost {
@@ -446,45 +495,44 @@ export default function Home() {
               <a href="#subjects" onClick={(e) => { e.preventDefault(); document.getElementById('subjects')?.scrollIntoView({ behavior: 'smooth' }); }}>Subjects</a>
               <a href="#downloads" onClick={(e) => { e.preventDefault(); document.getElementById('downloads')?.scrollIntoView({ behavior: 'smooth' }); }}>Downloads</a>
             </div>
-            <Link
-              to="/dashboard"
+            <a
+              href="#login-section"
+              onClick={(e) => { e.preventDefault(); document.getElementById('login-section')?.scrollIntoView({ behavior: 'smooth' }); }}
               className="px-3.5 py-1.5 rounded-lg bg-indigo-600 !text-white font-medium text-xs hover:bg-indigo-700 transition-colors shadow-soft"
               style={{ cursor: "none", color: "#ffffff" }}
             >
-              Attendance OS
-            </Link>
+              Sign In
+            </a>
           </div>
         </nav>
 
-        {/* HERO */}
-        <header className="sl-hero">
-          <div className="sl-eyebrow">
-            <span className="dot"></span> All 6 subjects live · RTU 5th Sem CSE
+        {/* HERO SPLIT CONTAINER */}
+        <header className="sl-hero-container">
+          <div className="sl-hero-left">
+            <div className="sl-eyebrow">
+              <span className="dot"></span> All 6 subjects live · RTU 5th Sem CSE
+            </div>
+            <h1 className="sl-headline">
+              Study smarter,
+              <br />
+              not <span className="grad">harder</span>.
+            </h1>
+            <p className="sl-sub">
+              Access syllabus breakdown, exam schemes, and note PDFs for JECRC 5th semester subjects, or log in to monitor your class attendance automatically.
+            </p>
+            <div className="sl-hero-actions">
+              <a href="/itc/index.html" className="sl-btn-primary">
+                Start with ITC →
+              </a>
+              <a href="#subjects" className="sl-btn-ghost" onClick={(e) => { e.preventDefault(); document.getElementById('subjects')?.scrollIntoView({ behavior: 'smooth' }); }}>
+                Browse all subjects
+              </a>
+            </div>
           </div>
-          <h1 className="sl-headline">
-            Study smarter,
-            <br />
-            not <span className="grad">harder</span>.
-          </h1>
-          <div className="sl-hero-actions">
-            <a href="/itc/index.html" className="sl-btn-primary">
-              Start with ITC →
-            </a>
-            <Link
-              to="/login"
-              className="sl-btn-primary"
-              style={{
-                background: "linear-gradient(135deg, var(--purple), #8b5cf6)",
-                boxShadow: "0 8px 24px rgba(139,92,246,0.35)",
-                color: "#ffffff"
-              }}
-            >
-              Attendance OS ➔
-            </Link>
-            <a href="#subjects" className="sl-btn-ghost" onClick={(e) => { e.preventDefault(); document.getElementById('subjects')?.scrollIntoView({ behavior: 'smooth' }); }}>
-              Browse all subjects
-            </a>
+          <div className="sl-hero-right" id="login-section">
+            <Login compact={true} />
           </div>
+        </header>
 
           <div className="sl-stats">
             <div className="sl-stat">

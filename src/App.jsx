@@ -7,22 +7,12 @@ import ResetPassword from "./pages/ResetPassword.jsx";
 import VerifyEmail from "./pages/VerifyEmail.jsx";
 import { getSession } from "./api.js";
 
-function Protected({ role, children }) {
-  const session = getSession();
-  if (!session) return <Navigate to="/login" replace />;
-  if (role && session.role !== role) return <Navigate to="/login" replace />;
-  return children;
-}
-
 export default function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/verify-email" element={<VerifyEmail />} />
-      <Route path="/dashboard" element={<Protected role="student"><StudentDashboard /></Protected>} />
-      <Route path="/admin" element={<Protected role="admin"><AdminPanel /></Protected>} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
