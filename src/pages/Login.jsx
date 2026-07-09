@@ -33,7 +33,8 @@ export default function Login() {
     try {
       const { data } = await api.post("/auth/student/exchange", { token });
       setSession(data.token, "student", data.user.name);
-      navigate("/dashboard");
+      window.location.href = "/index.html#/dashboard";
+      window.location.reload();
     } catch (e) {
       setError(e.response?.data?.error || "Link expired. Get a new one via /dashboard in Telegram.");
     } finally {
@@ -48,7 +49,8 @@ export default function Login() {
     try {
       const { data } = await api.post("/auth/student/login", { email: studentEmail, password: studentPassword });
       setSession(data.token, "student", data.user.name);
-      navigate("/dashboard");
+      window.location.href = "/index.html#/dashboard";
+      window.location.reload();
     } catch (e) {
       setError(e.response?.data?.error || "Login failed");
     } finally {
@@ -85,7 +87,8 @@ export default function Login() {
     try {
       const { data } = await api.post("/auth/admin/login", { email, password });
       setSession(data.token, "admin", data.name);
-      navigate("/admin");
+      window.location.href = "/index.html#/admin";
+      window.location.reload();
     } catch (e) {
       setError(e.response?.data?.error || "Login failed");
     } finally {
