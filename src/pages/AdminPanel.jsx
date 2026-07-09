@@ -4,12 +4,12 @@ import Navbar from "../components/Navbar.jsx";
 import TimetableGrid from "../components/TimetableGrid.jsx";
 
 const TABS = [
-  { key: "overview", label: "📊 Overview" },
-  { key: "timetable", label: "📅 Timetable" },
-  { key: "holidays", label: "🎉 Holidays" },
-  { key: "users", label: "👥 Users" },
-  { key: "attendance", label: "✅ Attendance" },
-  { key: "settings", label: "⚙ Settings" },
+  { key: "overview",   label: "Overview" },
+  { key: "timetable", label: "Timetable" },
+  { key: "holidays",  label: "Holidays" },
+  { key: "users",     label: "Users" },
+  { key: "attendance",label: "Attendance" },
+  { key: "settings",  label: "Settings" },
 ];
 
 const DAYS = [

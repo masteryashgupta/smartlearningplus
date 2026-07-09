@@ -22,19 +22,24 @@ export default function Navbar({ tabs = [], active, onTab }) {
           </span>
         </div>
 
-        {/* Desktop tabs */}
-        <div className="hidden sm:flex items-center gap-1 bg-white border border-line rounded-xl p-1 flex-1 max-w-lg mx-auto overflow-x-auto">
-          {tabs.map((t) => (
-            <button
-              key={t.key}
-              onClick={() => onTab(t.key)}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
-                active === t.key ? "bg-primary text-white shadow-sm" : "text-muted hover:text-ink hover:bg-paper"
-              }`}
-            >
-              {t.label}
-            </button>
-          ))}
+        {/* Desktop tabs — scrollable, no visible scrollbar */}
+        <div className="hidden sm:flex items-center flex-1 max-w-lg mx-auto overflow-hidden">
+          <div
+            className="flex items-center gap-0.5 bg-white border border-line rounded-xl p-1 overflow-x-auto w-full"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          >
+            {tabs.map((t) => (
+              <button
+                key={t.key}
+                onClick={() => onTab(t.key)}
+                className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors whitespace-nowrap flex-shrink-0 ${
+                  active === t.key ? "bg-primary text-white shadow-sm" : "text-muted hover:text-ink hover:bg-paper"
+                }`}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Right: name + sign out */}
