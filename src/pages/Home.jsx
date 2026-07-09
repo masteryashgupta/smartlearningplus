@@ -120,7 +120,7 @@ export default function Home() {
     );
 
     const animatedElements = document.querySelectorAll(
-      ".sl-card, .sl-feat, .sl-pill"
+      ".sl-card, .sl-feat, .sl-pill, .subject-row-card"
     );
     animatedElements.forEach((el, i) => {
       el.style.transitionDelay = `${(i % 6) * 0.05}s`;
