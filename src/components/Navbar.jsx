@@ -2,10 +2,11 @@ import { useNavigate } from "react-router-dom";
 import { clearSession, getSession } from "../api.js";
 import { useState } from "react";
 
-export default function Navbar({ tabs = [], active, onTab }) {
+export default function Navbar({ tabs = [], active, onTab, userName }) {
   const navigate = useNavigate();
   const session = getSession();
   const [menuOpen, setMenuOpen] = useState(false);
+  const displayName = userName || session?.name;
 
   function signOut() {
     clearSession();
@@ -45,7 +46,7 @@ export default function Navbar({ tabs = [], active, onTab }) {
 
         {/* Right: name + sign out */}
         <div className="hidden sm:flex items-center gap-3 shrink-0">
-          <span className="text-xs text-muted font-mono">{session?.name}</span>
+          <span className="text-xs text-muted font-mono">{displayName}</span>
           <button
             className="text-sm text-muted hover:text-bad transition-colors font-medium"
             onClick={signOut}
@@ -81,7 +82,7 @@ export default function Navbar({ tabs = [], active, onTab }) {
             </button>
           ))}
           <div className="pt-2 border-t border-line flex items-center justify-between mt-2">
-            <span className="text-xs text-muted font-mono">{session?.name}</span>
+            <span className="text-xs text-muted font-mono">{displayName}</span>
             <button onClick={signOut} className="text-sm text-bad font-medium">Sign out</button>
           </div>
         </div>

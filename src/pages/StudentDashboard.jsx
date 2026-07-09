@@ -38,7 +38,10 @@ export default function StudentDashboard() {
     if (profile && !profile.telegram_id) {
       interval = setInterval(() => {
         api.get("/auth/student/profile")
-          .then((r) => { if (r.data.telegram_id) setProfile(r.data); })
+          .then((r) => {
+            if (r.data.telegram_id) setProfile(r.data);
+            if (r.data.name) localStorage.setItem("name", r.data.name);
+          })
           .catch((e) => console.error(e));
       }, 5000);
     }
@@ -48,7 +51,10 @@ export default function StudentDashboard() {
   function fetchProfile() {
     setLoadingProfile(true);
     api.get("/auth/student/profile")
-      .then((r) => setProfile(r.data))
+      .then((r) => {
+        setProfile(r.data);
+        if (r.data.name) localStorage.setItem("name", r.data.name);
+      })
       .catch((err) => console.error("Error fetching profile", err))
       .finally(() => setLoadingProfile(false));
   }
@@ -71,7 +77,7 @@ export default function StudentDashboard() {
 
   return (
     <div className="min-h-screen">
-      <Navbar tabs={TABS} active={tab} onTab={setTab} />
+      <Navbar tabs={TABS} active={tab} onTab={setTab} userName={profile?.name} />
       <div className="max-w-5xl mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4">
 
         {tab === "overview" && (
