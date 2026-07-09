@@ -268,6 +268,7 @@ router.post("/reset-password", async (req, res) => {
     console.error("Reset password error:", err);
     res.status(500).json({ error: "Internal server error" });
   }
+});
 // ---- Verify Email ----
 router.get("/verify-email", async (req, res) => {
   const { token } = req.query;
