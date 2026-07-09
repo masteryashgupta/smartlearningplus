@@ -4,7 +4,7 @@ import crypto from "crypto";
 import { q } from "../db.js";
 import { signToken, requireAuth } from "../auth.js";
 import { bot } from "../bot/bot.js";
-import { sendResetEmail } from "../lib/mailer.js";
+import { sendResetEmail, sendVerificationEmail } from "../lib/mailer.js";
 
 const router = Router();
 
@@ -39,6 +39,11 @@ router.post("/student/exchange", async (req, res) => {
     return res.status(403).json({ error: "Your account is deactivated. Please contact the administrator." });
   }
 
+  // Auto-verify email on telegram login as they're authenticated via Telegram bot
+  if (user.email_verified === false) {
+    await q("update users set email_verified = true where id = $1", [user.id]);
+  }
+
   const session = signToken({ role: "student", id: user.id, name: user.name, batch: user.batch });
   res.json({ token: session, user: { id: user.id, name: user.name, batch: user.batch } });
 });
@@ -62,16 +67,31 @@ router.post("/student/register", async (req, res) => {
 
     const hash = await bcrypt.hash(password, 10);
     const connectToken = crypto.randomBytes(16).toString("hex");
+    const verifyToken = crypto.randomBytes(32).toString("hex");
 
     const { rows } = await q(
-      `insert into users (name, email, password_hash, batch, telegram_connect_token)
-       values ($1, $2, $3, $4, $5) returning *`,
-      [name.trim(), email.toLowerCase().trim(), hash, batch, connectToken]
+      `insert into users (name, email, password_hash, batch, telegram_connect_token, email_verified, verification_token)
+       values ($1, $2, $3, $4, $5, false, $6) returning *`,
+      [name.trim(), email.toLowerCase().trim(), hash, batch, connectToken, verifyToken]
     );
     const user = rows[0];
 
-    const sessionToken = signToken({ role: "student", id: user.id, name: user.name, batch: user.batch });
-    res.status(201).json({ token: sessionToken, user: { id: user.id, name: user.name, batch: user.batch } });
+    // Build verification link
+    let frontendBase = process.env.FRONTEND_URL || "https://smartlearningplus.me";
+    if (frontendBase.includes(",")) {
+      const urls = frontendBase.split(",").map((u) => u.trim());
+      const prodUrl = urls.find((u) => !u.includes("localhost"));
+      frontendBase = prodUrl || urls[0];
+    }
+    const verifyUrl = `${frontendBase}/index.html#/verify-email?token=${verifyToken}`;
+
+    try {
+      await sendVerificationEmail(user.email, verifyUrl, user.name);
+    } catch (mailErr) {
+      console.error("[register] Verification email send failed:", mailErr.message);
+    }
+
+    res.status(201).json({ ok: true, message: "Registration successful! Please check your email to verify your account." });
   } catch (err) {
     console.error("Student registration error:", err);
     res.status(500).json({ error: "Internal server error" });
@@ -93,6 +113,9 @@ router.post("/student/login", async (req, res) => {
     }
     if (!user.is_active) {
       return res.status(403).json({ error: "Your account is deactivated. Please contact the administrator." });
+    }
+    if (user.email_verified === false) {
+      return res.status(401).json({ error: "Please verify your email address. Check your inbox for the verification link." });
     }
 
     const ok = await bcrypt.compare(password, user.password_hash);
@@ -245,7 +268,26 @@ router.post("/reset-password", async (req, res) => {
     console.error("Reset password error:", err);
     res.status(500).json({ error: "Internal server error" });
   }
+// ---- Verify Email ----
+router.get("/verify-email", async (req, res) => {
+  const { token } = req.query;
+  if (!token) return res.status(400).json({ error: "Token is required" });
+
+  try {
+    const { rows } = await q("select * from users where verification_token = $1", [token]);
+    const user = rows[0];
+    if (!user) {
+      return res.status(400).json({ error: "Invalid or expired verification token." });
+    }
+
+    await q("update users set email_verified = true, verification_token = null where id = $1", [user.id]);
+    res.json({ ok: true, message: "Email verified successfully! You can now log in." });
+  } catch (err) {
+    console.error("Email verification error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
+
 
 // Utility used by the bot to (re)generate a fresh one-time token
 export async function issueDashboardToken(userId) {
