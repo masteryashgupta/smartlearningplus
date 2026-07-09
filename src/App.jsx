@@ -4,6 +4,7 @@ import Login from "./pages/Login.jsx";
 import StudentDashboard from "./pages/StudentDashboard.jsx";
 import AdminPanel from "./pages/AdminPanel.jsx";
 import ResetPassword from "./pages/ResetPassword.jsx";
+import VerifyEmail from "./pages/VerifyEmail.jsx";
 import { getSession } from "./api.js";
 
 function Protected({ role, children }) {
@@ -19,6 +20,7 @@ export default function App() {
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/verify-email" element={<VerifyEmail />} />
       <Route path="/dashboard" element={<Protected role="student"><StudentDashboard /></Protected>} />
       <Route path="/admin" element={<Protected role="admin"><AdminPanel /></Protected>} />
       <Route path="*" element={<Navigate to="/" replace />} />

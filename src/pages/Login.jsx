@@ -13,6 +13,7 @@ export default function Login() {
   const [forgotMode, setForgotMode] = useState(false);
   const [forgotEmail, setForgotEmail] = useState("");
   const [forgotMsg, setForgotMsg] = useState(null); // {ok, text}
+  const [registerSuccess, setRegisterSuccess] = useState(null); // string message
 
   // Student specific inputs
   const [studentAction, setStudentAction] = useState("login"); // login | register
@@ -58,6 +59,7 @@ export default function Login() {
   async function handleStudentRegister(e) {
     e.preventDefault();
     setError("");
+    setRegisterSuccess(null);
     setLoading(true);
     try {
       const { data } = await api.post("/auth/student/register", {
@@ -66,8 +68,9 @@ export default function Login() {
         password: studentPassword,
         batch: studentBatch,
       });
-      setSession(data.token, "student", data.user.name);
-      navigate("/dashboard");
+      setRegisterSuccess(data.message || "Registration successful! Please check your email to verify your account.");
+      setStudentAction("login");
+      setStudentPassword("");
     } catch (e) {
       setError(e.response?.data?.error || "Registration failed");
     } finally {
@@ -116,13 +119,13 @@ export default function Login() {
         <div className="flex gap-2 mb-6 bg-paper rounded-xl p-1 border border-line/40">
             <button
               className={`flex-1 py-1.5 rounded-lg text-sm font-medium transition-colors ${mode === "student" ? "bg-white shadow-soft text-primary" : "text-muted hover:text-ink"}`}
-              onClick={() => { setMode("student"); setError(""); setForgotMode(false); setForgotMsg(null); }}
+              onClick={() => { setMode("student"); setError(""); setForgotMode(false); setForgotMsg(null); setRegisterSuccess(null); }}
             >
               Student
             </button>
             <button
               className={`flex-1 py-1.5 rounded-lg text-sm font-medium transition-colors ${mode === "admin" ? "bg-white shadow-soft text-primary" : "text-muted hover:text-ink"}`}
-              onClick={() => { setMode("admin"); setError(""); setForgotMode(false); setForgotMsg(null); }}
+              onClick={() => { setMode("admin"); setError(""); setForgotMode(false); setForgotMsg(null); setRegisterSuccess(null); }}
             >
               Admin
             </button>
@@ -177,6 +180,11 @@ export default function Login() {
                     onChange={(e) => setStudentPassword(e.target.value)}
                     required
                   />
+                  {registerSuccess && (
+                    <div className="text-xs bg-green-50 text-green-700 border border-green-200 rounded-xl px-3 py-2.5 font-medium">
+                      {registerSuccess}
+                    </div>
+                  )}
                   {error && <p className="text-bad text-sm">{error}</p>}
                   <button className="btn-primary w-full" disabled={loading}>
                     {loading ? "Signing in…" : "Sign in"}
