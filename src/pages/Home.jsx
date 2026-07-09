@@ -692,8 +692,9 @@ export default function Home() {
       <div className="sl-shell">
         {/* NAV */}
         <nav className="sl-nav">
-          <div className="sl-logo">
-            <span className="sl-logo-mark">⎈</span> Smart Learning
+          <div className="sl-logo" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <img src="/logo.png" alt="Logo" style={{ width: "24px", height: "24px", objectFit: "contain" }} />
+            Smart Learning
             <span style={{ color: "var(--accent)" }}>+</span>
           </div>
           <div className="flex items-center gap-6">
