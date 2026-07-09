@@ -536,6 +536,121 @@ export default function Home() {
         /* footer */
         .sl-footer { text-align:center; padding: 30px 0 50px; color: var(--muted); font-size: 13.5px; }
         .sl-footer strong { color: var(--text2); }
+
+        /* Dashboard premium layout styles */
+        .dashboard-welcome-card {
+          background: linear-gradient(135deg, rgba(79, 70, 229, 0.05) 0%, rgba(6, 182, 212, 0.05) 100%);
+          border: 1px solid rgba(79, 70, 229, 0.12);
+          border-radius: 20px;
+          padding: 20px 24px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 20px;
+          margin-bottom: 24px;
+          animation: sl-pop 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        }
+        .dashboard-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 24px;
+          margin-bottom: 32px;
+        }
+        @media (min-width: 960px) {
+          .dashboard-grid {
+            grid-template-columns: 7.2fr 4.8fr;
+          }
+        }
+        .dashboard-main-col {
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
+        }
+        .dashboard-sidebar-col {
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
+        }
+        
+        /* Sleek Subject Note Row instead of giant bento box */
+        .subject-row-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 12px;
+          margin-bottom: 32px;
+        }
+        @media (min-width: 640px) {
+          .subject-row-grid {
+            grid-template-columns: 1fr 1fr;
+          }
+        }
+        .subject-row-card {
+          background: var(--surface);
+          border: 1px solid var(--border);
+          border-radius: 16px;
+          padding: 16px 20px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 16px;
+          text-decoration: none;
+          transition: all 0.2s ease;
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        .subject-row-card.sl-in {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        .subject-row-card:hover {
+          transform: translateY(-2px);
+          border-color: var(--accent);
+          box-shadow: var(--shadow);
+        }
+        .subject-row-left {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          min-width: 0;
+        }
+        .subject-row-icon {
+          font-size: 20px;
+          width: 40px;
+          height: 40px;
+          background: var(--surface2);
+          border-radius: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+        }
+        .subject-row-details {
+          min-width: 0;
+        }
+        .subject-row-title {
+          font-size: 14px;
+          font-weight: 700;
+          color: var(--text);
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        .subject-row-code {
+          font-size: 11px;
+          color: var(--muted);
+          font-family: monospace;
+          margin-top: 2px;
+        }
+        .subject-row-arrow {
+          font-size: 14px;
+          color: var(--accent);
+          font-weight: bold;
+          flex-shrink: 0;
+          transition: transform 0.2s;
+        }
+        .subject-row-card:hover .subject-row-arrow {
+          transform: translateX(4px);
+        }
       `}</style>
 
       {/* CUSTOM CURSOR DOTS */}
@@ -595,328 +710,236 @@ export default function Home() {
           </div>
         </nav>
 
-        {/* HERO SPLIT CONTAINER */}
-        <header className="sl-hero-container">
-          <div className="sl-hero-left">
-            <div className="sl-eyebrow">
-              <span className="dot"></span> All 6 subjects live · RTU 5th Sem CSE
+        {/* DASHBOARD HEADER & WELCOME CARD */}
+        {session && session.role === "student" && (
+          <div className="dashboard-welcome-card my-6">
+            <div>
+              <h2 className="text-xl font-bold text-ink">Hello, {profile?.name || session?.name} 👋</h2>
+              <p className="text-xs text-muted mt-1">JECRC B.Tech CSE V Semester • {profile?.batch || "G2"} Batch</p>
             </div>
-            <h1 className="sl-headline">
-              Study smarter,
-              <br />
-              not <span className="grad">harder</span>.
-            </h1>
-            <p className="sl-sub">
-              Access syllabus breakdown, exam schemes, and note PDFs for JECRC 5th semester subjects, or log in to monitor your class attendance automatically.
-            </p>
-            <div className="sl-hero-actions">
-              <a href="/itc/index.html" className="sl-btn-primary">
-                Start with ITC →
-              </a>
-              <a href="#subjects" className="sl-btn-ghost" onClick={(e) => { e.preventDefault(); document.getElementById('subjects')?.scrollIntoView({ behavior: 'smooth' }); }}>
-                Browse all subjects
-              </a>
-            </div>
-          </div>
-          <div className="sl-hero-right" id="login-section">
-            {session && session.role === "student" ? (
-              (() => {
-                const overallPct = stats?.overall.percentage ?? null;
-                const safeColor = overallPct === null ? "#6D5EF5" : overallPct >= 75 ? "#16A34A" : overallPct >= 65 ? "#F59E0B" : "#E11D48";
-                return (
-                  <div
-                    className="w-full max-w-sm rounded-2xl p-5 text-white relative overflow-hidden shadow-soft"
-                    style={{ background: `linear-gradient(135deg, ${safeColor}dd, ${safeColor}99)`, textAlign: "left" }}
-                  >
-                    <div className="absolute right-0 top-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none" />
-                    <div className="absolute left-1/3 bottom-0 w-20 h-20 bg-white/10 rounded-full blur-xl -mb-10 pointer-events-none" />
-                    <div className="relative z-10">
-                      <div className="text-white/80 text-xs font-semibold uppercase tracking-wider mb-1">Overall Attendance</div>
-                      <div className="font-display font-bold flex items-baseline gap-1" style={{ fontSize: "clamp(2rem,8vw,3.5rem)" }}>
-                        {overallPct ?? "—"}<span className="text-xl font-medium opacity-80">%</span>
-                      </div>
-                      <div className="text-white/70 text-xs font-mono mt-2">
-                        {stats?.overall.present ?? 0} of {stats?.overall.total ?? 0} classes attended
-                      </div>
-                      
-                      {/* Telegram Connect Widget */}
-                      <div className="mt-4 pt-4 border-t border-white/20">
-                        {loadingProfile ? (
-                          <div className="text-xs text-white/70">Syncing...</div>
-                        ) : profile?.telegram_id ? (
-                          <div className="flex items-center justify-between gap-2">
-                            <span className="text-[11px] text-white/80 truncate">🤖 @{profile.telegram_username} connected</span>
-                            <button onClick={handleDisconnectTelegram} className="text-[10px] bg-white/20 hover:bg-white/30 text-white px-2 py-0.5 rounded transition-all font-semibold">Disconnect</button>
-                          </div>
-                        ) : (
-                          <div className="text-xs space-y-2">
-                            <div className="font-semibold text-white">🤖 Connect Telegram Bot</div>
-                            {profile?.telegram_connect_token && profile?.bot_username ? (
-                              <a
-                                href={`https://t.me/${profile.bot_username}?start=${profile.telegram_connect_token}`}
-                                target="_blank" rel="noopener noreferrer"
-                                className="inline-block w-full text-center bg-white text-indigo-600 hover:bg-indigo-50 font-bold text-xs py-2 px-3 rounded-xl transition-all shadow-soft"
-                                style={{ cursor: "none" }}
-                              >
-                                Connect Bot ➔
-                              </a>
-                            ) : (
-                              <span className="text-[11px] text-white/70">Loading token…</span>
-                            )}
-                          </div>
-                        )}
-                      </div>
+            {(() => {
+              const overallPct = stats?.overall.percentage ?? null;
+              const safeColor = overallPct === null ? "#6D5EF5" : overallPct >= 75 ? "#16A34A" : overallPct >= 65 ? "#F59E0B" : "#E11D48";
+              return (
+                <div className="flex items-center gap-4">
+                  <div className="text-right">
+                    <div className="text-xs text-muted">Overall Attendance</div>
+                    <div className="text-sm font-mono font-bold mt-0.5" style={{ color: safeColor }}>
+                      {overallPct !== null ? `${overallPct}%` : "—"} ({stats?.overall.present ?? 0}/{stats?.overall.total ?? 0} classes)
                     </div>
                   </div>
-                );
-              })()
-            ) : (
-              <Login compact={true} />
-            )}
+                  
+                  {/* Telegram Status Pill */}
+                  <div className="flex items-center gap-1 bg-white border border-line/60 rounded-xl p-1 shadow-soft">
+                    {loadingProfile ? (
+                      <span className="text-[10px] text-muted px-2 py-1">Syncing...</span>
+                    ) : profile?.telegram_id ? (
+                      <div className="flex items-center gap-1.5 px-2 py-1">
+                        <span className="text-[10px] text-green-600 font-medium">🤖 connected</span>
+                        <button onClick={handleDisconnectTelegram} className="text-[9px] bg-red-50 hover:bg-red-100 text-red-600 px-1.5 py-0.5 rounded transition-all font-semibold border border-red-200">Unlink</button>
+                      </div>
+                    ) : profile?.telegram_connect_token && profile?.bot_username ? (
+                      <a
+                        href={`https://t.me/${profile.bot_username}?start=${profile.telegram_connect_token}`}
+                        target="_blank" rel="noopener noreferrer"
+                        className="bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] font-bold py-1 px-2.5 rounded-lg transition-colors border border-indigo-700"
+                        style={{ cursor: "none" }}
+                      >
+                        Link Telegram Bot
+                      </a>
+                    ) : (
+                      <span className="text-[10px] text-muted px-2 py-1">Loading...</span>
+                    )}
+                  </div>
+                </div>
+              );
+            })()}
           </div>
-        </header>
+        )}
 
-          <div className="sl-stats">
-            <div className="sl-stat">
-              <div className="sl-stat-num">6</div>
-              <div className="sl-stat-label">Subjects</div>
-            </div>
-            <div className="sl-stat">
-              <div className="sl-stat-num">6</div>
-              <div className="sl-stat-label">Units / Subject</div>
-            </div>
-            <div className="sl-stat">
-              <div className="sl-stat-num">100%</div>
-              <div className="sl-stat-label">RTU Pattern</div>
-            </div>
-            <div className="sl-stat">
-              <div className="sl-stat-num">Hi+En</div>
-              <div className="sl-stat-label">Bilingual</div>
-            </div>
-          </div>
+        {/* MAIN DASHBOARD GRID */}
+        {session && session.role === "student" && (
+          <div className="dashboard-grid">
+            {/* LEFT COLUMN: TIMETABLE & SUBJECT GAUGES */}
+            <div className="dashboard-main-col" id="attendance-section">
+              {/* TIMETABLE TRACKER */}
+              <div className="card p-5 bg-white border border-line rounded-2xl shadow-soft">
+                <DayEditor onAttendanceChange={refreshData} />
+              </div>
 
-          {/* ATTENDANCE SECTION — Dynamic student dashboard widgets */}
-          {session && session.role === "student" && (
-            <section className="space-y-6 pt-4 pb-8 border-t border-line/60" id="attendance-section">
-              <div className="sl-eyebrow-sm">Attendance OS</div>
-              <div className="sl-section-title" style={{ marginBottom: "20px" }}>Your Tracker &amp; Timetable</div>
-
-              {/* Today's timeline slots / DayEditor */}
-              <DayEditor onAttendanceChange={refreshData} />
-
-              {/* Subject Gauge breakdown */}
-              <div className="space-y-4 pt-4">
-                <h3 className="font-semibold text-xs text-ink uppercase tracking-wider">Subject Wise Breakdown</h3>
+              {/* SUBJECT BREAKDOWN */}
+              <div className="card p-5 bg-white border border-line rounded-2xl shadow-soft">
+                <h3 className="font-bold text-xs text-ink mb-4 uppercase tracking-wider">Subject Attendance breakdown</h3>
                 {stats?.perSubject && stats.perSubject.length > 0 ? (
-                  <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
                     {stats.perSubject.map((sub) => (
                       <SubjectGauge key={sub.subject_id} subject={sub} />
                     ))}
                   </div>
                 ) : (
-                  <div className="card p-6 text-center text-muted text-xs bg-white border border-line rounded-xl">
-                    No subject attendance data available yet. Mark classes in the timetable above to see statistics!
+                  <div className="text-center py-4 text-muted text-xs font-medium">
+                    No subject attendance logged. Use the timetable scheduler above to log attendance!
                   </div>
                 )}
               </div>
+            </div>
 
-              {/* Heatmap & Leaderboard Row */}
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-4 pt-4">
-                {/* Friends Leaderboard */}
-                <div className="md:col-span-5 card p-5 bg-white border border-line rounded-2xl shadow-soft">
-                  <h3 className="font-bold text-sm text-ink mb-3 uppercase tracking-wider flex items-center justify-between">
-                    <span>🏆 Friends Leaderboard</span>
-                    <span className="text-[10px] font-mono text-muted bg-paper px-2 py-0.5 rounded border border-line/40">{leaderboard.length} users</span>
-                  </h3>
-                  <div className="space-y-2.5 max-h-[300px] overflow-y-auto pr-1">
-                    {leaderboard.map((r, i) => {
-                      const isMe = r.id === session?.id;
-                      const pct = r.percentage;
-                      const barColor = pct === null ? "#94A3B8" : pct >= 75 ? "#16A34A" : pct >= 65 ? "#F59E0B" : "#E11D48";
-                      return (
-                        <div key={r.id} className={`flex items-center gap-3 p-2 rounded-xl border transition-all ${isMe ? "bg-indigo-50/50 border-indigo-200" : "border-line/30 bg-paper/40"}`}>
-                          <div className="w-5 h-5 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-600 shrink-0">
-                            {i + 1}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className={`text-xs font-semibold truncate ${isMe ? "text-indigo-900" : "text-ink"}`}>{r.name} {isMe && "(You)"}</div>
-                            <div className="text-[10px] text-muted font-mono">{r.batch} batch</div>
-                          </div>
-                          <div className="font-bold text-xs font-mono shrink-0" style={{ color: barColor }}>
-                            {pct !== null ? `${pct}%` : "—"}
-                          </div>
+            {/* RIGHT COLUMN: LEADERBOARD & HEATMAP */}
+            <div className="dashboard-sidebar-col">
+              {/* LEADERBOARD */}
+              <div className="card p-5 bg-white border border-line rounded-2xl shadow-soft flex flex-col justify-between">
+                <h3 className="font-bold text-xs text-ink mb-3 uppercase tracking-wider flex items-center justify-between">
+                  <span>🏆 Leaderboard</span>
+                  <span className="text-[10px] font-mono text-muted bg-paper px-2 py-0.5 rounded border border-line/40">{leaderboard.length} users</span>
+                </h3>
+                <div className="space-y-2.5 max-h-[220px] overflow-y-auto pr-1">
+                  {leaderboard.map((r, i) => {
+                    const isMe = r.id === session?.id;
+                    const pct = r.percentage;
+                    const barColor = pct === null ? "#94A3B8" : pct >= 75 ? "#16A34A" : pct >= 65 ? "#F59E0B" : "#E11D48";
+                    return (
+                      <div key={r.id} className={`flex items-center gap-3 p-2 rounded-xl border transition-all ${isMe ? "bg-indigo-50/50 border-indigo-200" : "border-line/30 bg-paper/40"}`}>
+                        <div className="w-5 h-5 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-600 shrink-0">
+                          {i + 1}
                         </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Heatmap Calendar */}
-                <div className="md:col-span-7 card p-5 bg-white border border-line rounded-2xl shadow-soft flex flex-col justify-between">
-                  <h3 className="font-bold text-sm text-ink mb-3 uppercase tracking-wider">📅 Attendance Heatmap</h3>
-                  <div className="flex-1 flex items-center justify-center py-2 overflow-x-auto">
-                    <Heatmap data={heatmap} />
-                  </div>
-                  <p className="text-[10px] text-muted text-center mt-2 leading-relaxed">
-                    Hover over the grid blocks to inspect date details. Brighter green represents higher presence rate.
-                  </p>
+                        <div className="flex-1 min-w-0">
+                          <div className={`text-xs font-semibold truncate ${isMe ? "text-indigo-900" : "text-ink"}`}>{r.name} {isMe && "(You)"}</div>
+                          <div className="text-[10px] text-muted font-mono">{r.batch} batch</div>
+                        </div>
+                        <div className="font-bold text-xs font-mono shrink-0" style={{ color: barColor }}>
+                          {pct !== null ? `${pct}%` : "—"}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
-            </section>
-          )}
 
-        {/* SUBJECTS — BENTO GRID */}
+              {/* HEATMAP */}
+              <div className="card p-5 bg-white border border-line rounded-2xl shadow-soft flex flex-col justify-between">
+                <h3 className="font-bold text-xs text-ink mb-3 uppercase tracking-wider">📅 Consistency Heatmap</h3>
+                <div className="flex items-center justify-center py-2 overflow-x-auto">
+                  <Heatmap data={heatmap} />
+                </div>
+                <p className="text-[9px] text-muted text-center mt-2 leading-relaxed">
+                  Hover over the grid blocks to inspect date details. Brighter green represents higher presence rate.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* STUDY MATERIALS SECTION */}
         <section className="sl-section scroll-anchor" id="subjects">
-          <div className="sl-eyebrow-sm">Subjects</div>
-          <div className="sl-section-title">Pick a module to start</div>
-
-          <div className="sl-group-label">📚 Core Subjects</div>
-          <div className="sl-bento">
-            <a href="/itc/index.html" className="sl-card sl-c-itc">
-              <div className="sl-card-top">
-                <div className="sl-card-icon">📘</div>
-                <div className="sl-card-arrow">↗</div>
+          <div className="sl-eyebrow-sm">Study Material</div>
+          <div className="sl-section-title" style={{ marginBottom: "20px" }}>JECRC Core Subjects</div>
+          
+          <div className="subject-row-grid">
+            <a href="/itc/index.html" className="subject-row-card sl-card sl-c-itc">
+              <div className="subject-row-left">
+                <div className="subject-row-icon">📘</div>
+                <div className="subject-row-details">
+                  <div className="subject-row-title">Information Theory &amp; Coding</div>
+                  <div className="subject-row-code">5CS3-01 &nbsp;·&nbsp; 2L &nbsp;·&nbsp; Active Module</div>
+                </div>
               </div>
-              <div className="sl-card-body">
-                <div className="sl-card-title">Information Theory &amp; Coding</div>
-                <div className="sl-card-code">5CS3-01 &nbsp;·&nbsp; 2L</div>
-                <span className="sl-card-status">
-                  <span className="dot2"></span>Data Online
-                </span>
-              </div>
+              <div className="subject-row-arrow">➔</div>
             </a>
 
-            <a href="/cd/index.html" className="sl-card sl-c-cd">
-              <div className="sl-card-top">
-                <div className="sl-card-icon">📕</div>
-                <div className="sl-card-arrow">↗</div>
+            <a href="/cd/index.html" className="subject-row-card sl-card sl-c-cd">
+              <div className="subject-row-left">
+                <div className="subject-row-icon">📕</div>
+                <div className="subject-row-details">
+                  <div className="subject-row-title">Compiler Design</div>
+                  <div className="subject-row-code">5CS4-02 &nbsp;·&nbsp; 3L &nbsp;·&nbsp; Active Module</div>
+                </div>
               </div>
-              <div className="sl-card-body">
-                <div className="sl-card-title">Compiler Design</div>
-                <div className="sl-card-code">5CS4-02 &nbsp;·&nbsp; 3L</div>
-                <span className="sl-card-status">
-                  <span className="dot2"></span>Data Online
-                </span>
-              </div>
+              <div className="subject-row-arrow">➔</div>
             </a>
 
-            <a href="/os/index.html" className="sl-card sl-c-os">
-              <div className="sl-card-top">
-                <div className="sl-card-icon">📗</div>
-                <div className="sl-card-arrow">↗</div>
+            <a href="/os/index.html" className="subject-row-card sl-card sl-c-os">
+              <div className="subject-row-left">
+                <div className="subject-row-icon">📗</div>
+                <div className="subject-row-details">
+                  <div className="subject-row-title">Operating Systems</div>
+                  <div className="subject-row-code">5CS4-03 &nbsp;·&nbsp; 3L &nbsp;·&nbsp; Active Module</div>
+                </div>
               </div>
-              <div className="sl-card-body">
-                <div className="sl-card-title">Operating Systems</div>
-                <div className="sl-card-code">5CS4-03 &nbsp;·&nbsp; 3L</div>
-                <span className="sl-card-status">
-                  <span className="dot2"></span>Data Online
-                </span>
-              </div>
+              <div className="subject-row-arrow">➔</div>
             </a>
 
-            <a href="/cg/index.html" className="sl-card sl-c-cg">
-              <div className="sl-card-top">
-                <div className="sl-card-icon">📙</div>
-                <div className="sl-card-arrow">↗</div>
+            <a href="/cg/index.html" className="subject-row-card sl-card sl-c-cg">
+              <div className="subject-row-left">
+                <div className="subject-row-icon">📙</div>
+                <div className="subject-row-details">
+                  <div className="subject-row-title">Computer Graphics &amp; Multimedia</div>
+                  <div className="subject-row-code">5CS4-04 &nbsp;·&nbsp; 3L &nbsp;·&nbsp; Active Module</div>
+                </div>
               </div>
-              <div className="sl-card-body">
-                <div className="sl-card-title">Computer Graphics &amp; Multimedia</div>
-                <div className="sl-card-code">5CS4-04 &nbsp;·&nbsp; 3L</div>
-                <span className="sl-card-status">
-                  <span className="dot2"></span>Data Online
-                </span>
-              </div>
+              <div className="subject-row-arrow">➔</div>
             </a>
 
-            <a href="/aoa/index.html" className="sl-card sl-c-aoa">
-              <div className="sl-card-top">
-                <div className="sl-card-icon">📓</div>
-                <div className="sl-card-arrow">↗</div>
+            <a href="/aoa/index.html" className="subject-row-card sl-card sl-c-aoa">
+              <div className="subject-row-left">
+                <div className="subject-row-icon">📓</div>
+                <div className="subject-row-details">
+                  <div className="subject-row-title">Analysis of Algorithms</div>
+                  <div className="subject-row-code">5CS4-05 &nbsp;·&nbsp; 3L &nbsp;·&nbsp; Active Module</div>
+                </div>
               </div>
-              <div className="sl-card-body">
-                <div className="sl-card-title">Analysis of Algorithms</div>
-                <div className="sl-card-code">5CS4-05 &nbsp;·&nbsp; 3L</div>
-                <span className="sl-card-status">
-                  <span className="dot2"></span>Data Online
-                </span>
-              </div>
+              <div className="subject-row-arrow">➔</div>
             </a>
 
-            <a href="#" className="sl-card sl-c-hci">
-              <div className="sl-card-top">
-                <div className="sl-card-icon">🖥️</div>
-                <div className="sl-card-arrow">↗</div>
+            <a href="#" className="subject-row-card sl-card sl-c-hci">
+              <div className="subject-row-left">
+                <div className="subject-row-icon">🖥️</div>
+                <div className="subject-row-details">
+                  <div className="subject-row-title">Human-Computer Interaction</div>
+                  <div className="subject-row-code">5CS5-12 &nbsp;·&nbsp; 2L &nbsp;·&nbsp; Pending</div>
+                </div>
               </div>
-              <div className="sl-card-body">
-                <div className="sl-card-title">Human-Computer Interaction</div>
-                <div className="sl-card-code">5CS5-12 &nbsp;·&nbsp; 2L</div>
-                <span className="sl-card-status">
-                  <span className="dot2"></span>Pending
-                </span>
-              </div>
+              <div className="subject-row-arrow">➔</div>
             </a>
           </div>
         </section>
 
-        {/* DOWNLOADS */}
-        <section className="sl-section scroll-anchor" id="downloads">
-          <div className="sl-eyebrow-sm">Official Documents</div>
-          <div className="sl-section-title">RTU scheme &amp; syllabus PDFs</div>
+        {/* SYLLABUS DOWNLOADS */}
+        <section className="sl-section scroll-anchor" id="downloads" style={{ paddingBottom: "40px" }}>
+          <div className="sl-eyebrow-sm">Official Schemes</div>
+          <div className="sl-section-title" style={{ marginBottom: "20px" }}>RTU Syllabus Scheme PDFs</div>
 
-          <div className="sl-doc-grid">
-            <div className="sl-doc-card">
-              <div
-                className="sl-doc-icon"
-                style={{
-                  background: "var(--accent-light)",
-                  color: "var(--accent)",
-                }}
-              >
-                🗂️
-              </div>
-              <div className="sl-doc-body">
-                <div className="sl-doc-title">Teaching &amp; Examination Scheme</div>
-                <div className="sl-doc-desc">
-                  B.Tech CSE · 3rd Year – V Semester · Official RTU scheme with
-                  course codes, credits &amp; marks distribution.
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <a
+              className="subject-row-card sl-card sl-c-el1"
+              href="https://drive.google.com/file/d/1QrFGUTRRIEk2V4H6_XXJCw9vgBUVkZ35/view?usp=sharing"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <div className="subject-row-left">
+                <div className="subject-row-icon">🗂️</div>
+                <div className="subject-row-details">
+                  <div className="subject-row-title">Teaching &amp; Examination Scheme</div>
+                  <div className="subject-row-code">JECRC V Semester · Credits &amp; Codes</div>
                 </div>
               </div>
-              <a
-                className="sl-doc-btn"
-                href="https://drive.google.com/file/d/1QrFGUTRRIEk2V4H6_XXJCw9vgBUVkZ35/view?usp=sharing"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                ⬇ Download Scheme PDF
-              </a>
-            </div>
+              <div className="subject-row-arrow">⬇</div>
+            </a>
 
-            <div className="sl-doc-card">
-              <div
-                className="sl-doc-icon"
-                style={{
-                  background: "var(--purple-light)",
-                  color: "var(--purple)",
-                }}
-              >
-                📘
-              </div>
-              <div className="sl-doc-body">
-                <div className="sl-doc-title">Full Syllabus — 3rd Year</div>
-                <div className="sl-doc-desc">
-                  Complete detailed syllabus document for all 3rd Year subjects,
-                  units &amp; topic breakdown as per RTU.
+            <a
+              className="subject-row-card sl-card sl-c-el3"
+              href="https://drive.google.com/file/d/1pobfLjiwsL2clnoFelTSg6bseLGvdvTV/view?usp=sharing"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <div className="subject-row-left">
+                <div className="subject-row-icon">📘</div>
+                <div className="subject-row-details">
+                  <div className="subject-row-title">Full V-VI Semester Syllabus</div>
+                  <div className="subject-row-code">Official RTU B.Tech CSE topics index</div>
                 </div>
               </div>
-              <a
-                className="sl-doc-btn"
-                href="https://drive.google.com/file/d/1pobfLjiwsL2clnoFelTSg6bseLGvdvTV/view?usp=sharing"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                ⬇ Download Syllabus PDF
-              </a>
-            </div>
+              <div className="subject-row-arrow">⬇</div>
+            </a>
           </div>
         </section>
 
