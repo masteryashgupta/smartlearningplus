@@ -188,8 +188,10 @@ export function registerHandlers() {
     if (existing) {
       return bot.sendMessage(chatId, `Welcome back, ${existing.name}! 👋`, mainKeyboard());
     }
-    pendingRegistration.set(chatId, { step: "name" });
-    await bot.sendMessage(chatId, "Welcome! Let's set you up.\n\nWhat's your name?");
+    await bot.sendMessage(
+      chatId,
+      "Welcome! To track your attendance, please register on our website first:\nhttps://smartlearningplus.me\n\nOnce registered, you can link your Telegram account directly from your dashboard! 🤖"
+    );
   });
 
   bot.onText(/^\/help/, (msg) => bot.sendMessage(msg.chat.id, HELP_TEXT, { parse_mode: "Markdown", ...mainKeyboard() }));

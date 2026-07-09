@@ -36,7 +36,7 @@ router.delete("/holidays/:id", requireAuth("admin"), async (req, res) => {
 // ---- Users ----
 router.get("/users", requireAuth("admin"), async (req, res) => {
   const { rows } = await q(
-    `select u.id, u.name, u.batch, u.section, u.telegram_username, u.telegram_id,
+    `select u.id, u.name, u.email, u.batch, u.section, u.telegram_username, u.telegram_id,
             u.is_active, u.created_at,
             count(*) filter (where a.status='present') as present,
             count(*) filter (where a.status in ('present','absent')) as total
@@ -65,6 +65,46 @@ router.put("/users/:id", requireAuth("admin"), async (req, res) => {
 router.delete("/users/:id", requireAuth("admin"), async (req, res) => {
   await q("delete from users where id = $1", [req.params.id]);
   res.json({ ok: true });
+});
+
+// ---- Whitelist ----
+router.get("/whitelist", requireAuth("admin"), async (req, res) => {
+  try {
+    const { rows } = await q("select * from whitelisted_emails order by email asc");
+    res.json(rows);
+  } catch (err) {
+    console.error("Fetch whitelist error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.post("/whitelist", requireAuth("admin"), async (req, res) => {
+  let { email } = req.body;
+  if (!email) return res.status(400).json({ error: "email is required" });
+  email = email.trim().toLowerCase();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return res.status(400).json({ error: "Invalid email format" });
+  }
+  try {
+    const { rows } = await q(
+      "insert into whitelisted_emails (email) values ($1) on conflict (email) do nothing returning *",
+      [email]
+    );
+    res.json({ ok: true, email: email });
+  } catch (err) {
+    console.error("Add to whitelist error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.delete("/whitelist/:id", requireAuth("admin"), async (req, res) => {
+  try {
+    await q("delete from whitelisted_emails where id = $1", [req.params.id]);
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("Delete whitelist error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 // ---- Overview for admin dashboard ----

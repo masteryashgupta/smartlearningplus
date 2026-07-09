@@ -60,9 +60,16 @@ router.post("/student/register", async (req, res) => {
 
   try {
     // Check if email already exists
-    const checkEmail = await q("select * from users where email = $1", [email.toLowerCase().trim()]);
+    const cleanEmail = email.toLowerCase().trim();
+    const checkEmail = await q("select * from users where email = $1", [cleanEmail]);
     if (checkEmail.rows.length > 0) {
       return res.status(400).json({ error: "Email is already registered" });
+    }
+
+    // Check if email is whitelisted
+    const whitelistCheck = await q("select * from whitelisted_emails where email = $1", [cleanEmail]);
+    if (whitelistCheck.rows.length === 0) {
+      return res.status(403).json({ error: "Registration failed. Your email is not whitelisted by the admin." });
     }
 
     const hash = await bcrypt.hash(password, 10);

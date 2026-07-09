@@ -85,6 +85,15 @@ app.use("/api/attendance", attendanceRoutes);
 app.use("/api/admin", adminRoutes);
 
 async function bootstrapAdmin() {
+  // Ensure whitelisted_emails table exists
+  await q(`
+    create table if not exists whitelisted_emails (
+      id uuid primary key default gen_random_uuid(),
+      email text unique not null,
+      created_at timestamptz default now()
+    )
+  `);
+
   const { rows } = await q("select count(*) from admins");
   if (Number(rows[0].count) > 0) return;
   const { ADMIN_NAME, ADMIN_EMAIL, ADMIN_PASSWORD } = process.env;
