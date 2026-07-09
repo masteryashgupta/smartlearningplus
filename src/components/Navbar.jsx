@@ -19,7 +19,7 @@ export default function Navbar({ tabs = [], active, onTab, userName }) {
       <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between gap-3">
         {/* Logo */}
         <div className="font-display font-bold text-base leading-none text-primary flex items-center gap-2 shrink-0">
-          <img src="/logo.png" alt="Logo" className="w-6 h-6 object-contain" />
+          <img src="/logo.png?v=3" alt="Logo" className="w-6 h-6 object-contain" />
           <span className="font-extrabold tracking-tight">
             Smart Learning<span className="text-primary font-bold font-mono text-[10px] ml-1 px-1 bg-primary/10 rounded">+</span>
           </span>

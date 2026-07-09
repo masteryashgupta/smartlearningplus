@@ -693,7 +693,7 @@ export default function Home() {
         {/* NAV */}
         <nav className="sl-nav">
           <div className="sl-logo" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <img src="/logo.png" alt="Logo" style={{ width: "24px", height: "24px", objectFit: "contain" }} />
+            <img src="/logo.png?v=3" alt="Logo" style={{ width: "24px", height: "24px", objectFit: "contain" }} />
             Smart Learning
             <span style={{ color: "var(--accent)" }}>+</span>
           </div>

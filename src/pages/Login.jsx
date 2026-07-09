@@ -114,8 +114,8 @@ export default function Login({ compact = false }) {
     <div className="min-h-screen flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8 flex flex-col items-center">
-          <img src="/logo.png" alt="Logo" className="w-12 h-12 object-contain mb-3" />
-          <div className="font-display text-2xl font-bold text-ink">Smart Learning Plus</div>
+          <img src="/logo.png?v=3" alt="Logo" className="w-12 h-12 object-contain mb-3" />
+          <div className="font-display text-2xl font-bold text-[#1e3a8a] tracking-tight">Smart Learning Plus</div>
           <div className="text-muted text-sm font-mono">Study Smarter, Not Harder</div>
         </div>
 
