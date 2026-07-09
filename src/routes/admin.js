@@ -1,4 +1,5 @@
 import { Router } from "express";
+import bcrypt from "bcryptjs";
 import { q } from "../db.js";
 import { requireAuth } from "../auth.js";
 
@@ -91,6 +92,31 @@ router.get("/overview", requireAuth("admin"), async (req, res) => {
       percentage: r.total > 0 ? Math.round((r.present / r.total) * 1000) / 10 : 0,
     })),
   });
+});
+
+// ---- Change Admin Password ----
+router.post("/change-password", requireAuth("admin"), async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  if (!currentPassword || !newPassword)
+    return res.status(400).json({ error: "currentPassword and newPassword are required" });
+  if (newPassword.length < 8)
+    return res.status(400).json({ error: "New password must be at least 8 characters" });
+
+  try {
+    const { rows } = await q("select * from admins where id = $1", [req.auth.id]);
+    const admin = rows[0];
+    if (!admin) return res.status(404).json({ error: "Admin not found" });
+
+    const ok = await bcrypt.compare(currentPassword, admin.password_hash);
+    if (!ok) return res.status(401).json({ error: "Current password is incorrect" });
+
+    const hash = await bcrypt.hash(newPassword, 10);
+    await q("update admins set password_hash = $1 where id = $2", [hash, req.auth.id]);
+    res.json({ ok: true, message: "Password updated successfully" });
+  } catch (err) {
+    console.error("Change password error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 export default router;
