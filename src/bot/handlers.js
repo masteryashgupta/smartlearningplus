@@ -47,7 +47,7 @@ async function issueDashboardLink(userId) {
     const prodUrl = urls.find((u) => !u.includes("localhost"));
     base = prodUrl || urls[0];
   }
-  return `${base}/index.html#/login?token=${token}`;
+  return `${base}/index.html#/?token=${token}`;
 }
 
 function statusEmoji(s) {
