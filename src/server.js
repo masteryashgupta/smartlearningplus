@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
 dotenv.config();
 
 import { q } from "./db.js";
@@ -14,7 +16,32 @@ import { startScheduler } from "./bot/scheduler.js";
 import { setupWebhook } from "./bot/bot.js";
 
 const app = express();
+app.use(helmet());
 app.disable("x-powered-by");
+
+// Rate Limiters
+const generalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 200, // Limit each IP to 200 requests per window
+  message: { error: "Too many requests from this IP, please try again later." },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 15, // Limit each IP to 15 login/register/forgot requests per window
+  message: { error: "Too many auth attempts. Please try again in 15 minutes." },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+app.use("/api/", generalLimiter);
+app.use("/api/auth/student/login", authLimiter);
+app.use("/api/auth/admin/login", authLimiter);
+app.use("/api/auth/student/register", authLimiter);
+app.use("/api/auth/forgot-password", authLimiter);
+
 
 const allowedOrigins = process.env.FRONTEND_URL
   ? process.env.FRONTEND_URL.split(",").map((url) => url.trim())
