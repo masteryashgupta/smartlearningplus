@@ -79,34 +79,36 @@ export default function Home() {
   }
 
   useEffect(() => {
-    if (session) return;
-
+    let onMouseMove;
     const cursorDot = document.querySelector("[data-cursor-dot]");
     const cursorOutline = document.querySelector("[data-cursor-outline]");
 
-    const onMouseMove = (e) => {
-      if (cursorDot && cursorOutline) {
+    if (!session && cursorDot && cursorOutline) {
+      onMouseMove = (e) => {
         cursorDot.style.left = `${e.clientX}px`;
         cursorDot.style.top = `${e.clientY}px`;
         cursorOutline.animate(
           { left: `${e.clientX}px`, top: `${e.clientY}px` },
           { duration: 180, fill: "forwards" }
         );
-      }
-    };
-    window.addEventListener("mousemove", onMouseMove);
+      };
+      window.addEventListener("mousemove", onMouseMove);
 
-    const interactiveElements = document.querySelectorAll(
-      "a, button, .sl-card, .sl-feat, .sl-pill, .sl-doc-btn"
-    );
-    interactiveElements.forEach((el) => {
-      el.addEventListener("mouseenter", () =>
-        cursorOutline?.classList.add("cursor-hovering")
+      const interactiveElements = document.querySelectorAll(
+        "a, button, .sl-card, .sl-feat, .sl-pill, .sl-doc-btn"
       );
-      el.addEventListener("mouseleave", () =>
-        cursorOutline?.classList.remove("cursor-hovering")
-      );
-    });
+      interactiveElements.forEach((el) => {
+        el.addEventListener("mouseenter", () =>
+          cursorOutline?.classList.add("cursor-hovering")
+        );
+        el.addEventListener("mouseleave", () =>
+          cursorOutline?.classList.remove("cursor-hovering")
+        );
+      });
+
+      // Add sl-home-active class to body when on homepage to hide system cursor
+      document.body.classList.add("sl-home-active");
+    }
 
     const io = new IntersectionObserver(
       (entries) => {
@@ -125,11 +127,8 @@ export default function Home() {
       io.observe(el);
     });
 
-    // Add sl-home-active class to body when on homepage to hide system cursor
-    document.body.classList.add("sl-home-active");
-
     return () => {
-      window.removeEventListener("mousemove", onMouseMove);
+      if (onMouseMove) window.removeEventListener("mousemove", onMouseMove);
       io.disconnect();
       document.body.classList.remove("sl-home-active");
     };
