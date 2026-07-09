@@ -41,8 +41,13 @@ async function getUser(telegramId) {
 async function issueDashboardLink(userId) {
   const token = crypto.randomBytes(24).toString("hex");
   await q("update users set dashboard_token = $1 where id = $2", [token, userId]);
-  const base = process.env.FRONTEND_URL || "http://localhost:5173";
-  return `${base}/login?token=${token}`;
+  let base = process.env.FRONTEND_URL || "https://smartlearningplus.me";
+  if (base.includes(",")) {
+    const urls = base.split(",").map((u) => u.trim());
+    const prodUrl = urls.find((u) => !u.includes("localhost"));
+    base = prodUrl || urls[0];
+  }
+  return `${base}/index.html#/login?token=${token}`;
 }
 
 function statusEmoji(s) {
