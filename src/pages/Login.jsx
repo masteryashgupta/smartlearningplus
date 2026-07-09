@@ -114,8 +114,8 @@ export default function Login({ compact = false }) {
     <div className="min-h-screen flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <div className="font-display text-2xl font-bold text-ink">Attendance</div>
-          <div className="text-muted text-sm font-mono">Track With Silence</div>
+          <div className="font-display text-2xl font-bold text-ink">Smart Learning Plus</div>
+          <div className="text-muted text-sm font-mono">Study Smarter, Not Harder</div>
         </div>
 
         <div className="card p-6 bg-white border border-line rounded-xl shadow-soft">
@@ -298,8 +298,8 @@ export default function Login({ compact = false }) {
     <div className="min-h-screen flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <div className="font-display text-2xl font-bold text-ink">Attendance</div>
-          <div className="text-muted text-sm font-mono">Track With Silence</div>
+          <div className="font-display text-2xl font-bold text-ink">Smart Learning Plus</div>
+          <div className="text-muted text-sm font-mono">Study Smarter, Not Harder</div>
         </div>
         {cardBody}
       </div>

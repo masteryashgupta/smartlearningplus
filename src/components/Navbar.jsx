@@ -20,7 +20,7 @@ export default function Navbar({ tabs = [], active, onTab, userName }) {
         {/* Logo */}
         <div className="font-display font-bold text-base leading-none text-primary flex items-center gap-1.5 shrink-0">
           <span className="font-extrabold tracking-tight">
-            Attendance<span className="text-muted font-light font-mono text-[10px] ml-1 px-1 bg-primary/10 rounded">OS</span>
+            Smart Learning<span className="text-primary font-bold font-mono text-[10px] ml-1 px-1 bg-primary/10 rounded">+</span>
           </span>
         </div>
 
