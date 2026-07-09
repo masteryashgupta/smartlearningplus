@@ -835,7 +835,7 @@ export default function Home() {
           <div className="sl-section-title" style={{ marginBottom: "20px" }}>JECRC Core Subjects</div>
           
           <div className="subject-row-grid">
-            <a href="/itc/index.html" className="subject-row-card sl-card sl-c-itc">
+            <a href="/itc/index.html" className="subject-row-card sl-c-itc">
               <div className="subject-row-left">
                 <div className="subject-row-icon">📘</div>
                 <div className="subject-row-details">
@@ -846,7 +846,7 @@ export default function Home() {
               <div className="subject-row-arrow">➔</div>
             </a>
 
-            <a href="/cd/index.html" className="subject-row-card sl-card sl-c-cd">
+            <a href="/cd/index.html" className="subject-row-card sl-c-cd">
               <div className="subject-row-left">
                 <div className="subject-row-icon">📕</div>
                 <div className="subject-row-details">
@@ -857,7 +857,7 @@ export default function Home() {
               <div className="subject-row-arrow">➔</div>
             </a>
 
-            <a href="/os/index.html" className="subject-row-card sl-card sl-c-os">
+            <a href="/os/index.html" className="subject-row-card sl-c-os">
               <div className="subject-row-left">
                 <div className="subject-row-icon">📗</div>
                 <div className="subject-row-details">
@@ -868,7 +868,7 @@ export default function Home() {
               <div className="subject-row-arrow">➔</div>
             </a>
 
-            <a href="/cg/index.html" className="subject-row-card sl-card sl-c-cg">
+            <a href="/cg/index.html" className="subject-row-card sl-c-cg">
               <div className="subject-row-left">
                 <div className="subject-row-icon">📙</div>
                 <div className="subject-row-details">
@@ -879,7 +879,7 @@ export default function Home() {
               <div className="subject-row-arrow">➔</div>
             </a>
 
-            <a href="/aoa/index.html" className="subject-row-card sl-card sl-c-aoa">
+            <a href="/aoa/index.html" className="subject-row-card sl-c-aoa">
               <div className="subject-row-left">
                 <div className="subject-row-icon">📓</div>
                 <div className="subject-row-details">
@@ -890,7 +890,7 @@ export default function Home() {
               <div className="subject-row-arrow">➔</div>
             </a>
 
-            <a href="#" className="subject-row-card sl-card sl-c-hci">
+            <a href="#" className="subject-row-card sl-c-hci">
               <div className="subject-row-left">
                 <div className="subject-row-icon">🖥️</div>
                 <div className="subject-row-details">
@@ -910,7 +910,7 @@ export default function Home() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <a
-              className="subject-row-card sl-card sl-c-el1"
+              className="subject-row-card sl-c-el1"
               href="https://drive.google.com/file/d/1QrFGUTRRIEk2V4H6_XXJCw9vgBUVkZ35/view?usp=sharing"
               target="_blank"
               rel="noopener noreferrer"
@@ -926,7 +926,7 @@ export default function Home() {
             </a>
 
             <a
-              className="subject-row-card sl-card sl-c-el3"
+              className="subject-row-card sl-c-el3"
               href="https://drive.google.com/file/d/1pobfLjiwsL2clnoFelTSg6bseLGvdvTV/view?usp=sharing"
               target="_blank"
               rel="noopener noreferrer"
