@@ -5,8 +5,8 @@ import { api } from "../api.js";
 export default function ResetPassword() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
-  const token = params.get("token");
-  const role  = params.get("role") || "student";
+  const token = params.get("token") || new URLSearchParams(window.location.hash.split("?")[1] || "").get("token");
+  const role  = params.get("role") || new URLSearchParams(window.location.hash.split("?")[1] || "").get("role") || "student";
 
   const [newPassword, setNewPassword] = useState("");
   const [confirm, setConfirm] = useState("");

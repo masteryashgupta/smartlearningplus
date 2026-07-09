@@ -5,7 +5,7 @@ import { api } from "../api.js";
 export default function VerifyEmail() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
-  const token = params.get("token");
+  const token = params.get("token") || new URLSearchParams(window.location.hash.split("?")[1] || "").get("token");
 
   const [loading, setLoading] = useState(true);
   const [msg, setMsg] = useState(null); // { ok: bool, text: string }
