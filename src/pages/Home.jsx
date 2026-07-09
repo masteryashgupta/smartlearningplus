@@ -654,8 +654,12 @@ export default function Home() {
       `}</style>
 
       {/* CUSTOM CURSOR DOTS */}
-      <div className="cursor-dot" data-cursor-dot></div>
-      <div className="cursor-outline" data-cursor-outline></div>
+      {!session && (
+        <>
+          <div className="cursor-dot" data-cursor-dot></div>
+          <div className="cursor-outline" data-cursor-outline></div>
+        </>
+      )}
 
       {/* FLOATING BACKGROUND MESH & GRID OVERLAY */}
       <div className="sl-mesh">
