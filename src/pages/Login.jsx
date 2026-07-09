@@ -169,7 +169,7 @@ export default function Login({ compact = false }) {
               ) : studentAction === "login" ? (
                 <form onSubmit={handleStudentLogin} className="space-y-3">
                   <div className="text-[11px] text-[#2563eb] text-center bg-[#eff6ff] py-1.5 px-3 rounded-lg border border-[#dbeafe] mb-3.5 font-semibold">
-                    ⚠️ Use whitelisted student email only
+                    ⚠️ Use student email only
                   </div>
                   <input
                     className="input"
@@ -219,7 +219,7 @@ export default function Login({ compact = false }) {
               ) : (
                 <form onSubmit={handleStudentRegister} className="space-y-3">
                   <div className="text-[11px] text-[#2563eb] text-center bg-[#eff6ff] py-1.5 px-3 rounded-lg border border-[#dbeafe] mb-3.5 font-semibold">
-                    ⚠️ Use whitelisted student email only
+                    ⚠️ Use student email only
                   </div>
                   <input className="input" type="text" placeholder="Full name" value={studentName}
                     onChange={(e) => setStudentName(e.target.value)} required />

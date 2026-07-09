@@ -967,7 +967,11 @@ export default function Home() {
           </div>
         </section>
 
-
+        <footer className="mt-12 py-6 border-t border-line/60 text-center">
+          <p className="text-xs text-muted font-medium">
+            © {new Date().getFullYear()} Smart Learning Plus &nbsp;·&nbsp; V Semester
+          </p>
+        </footer>
       </div>
     </div>
   );
