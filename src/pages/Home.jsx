@@ -649,11 +649,20 @@ export default function Home() {
                             <button onClick={handleDisconnectTelegram} className="text-[10px] bg-white/20 hover:bg-white/30 text-white px-2 py-0.5 rounded transition-all font-semibold">Disconnect</button>
                           </div>
                         ) : (
-                          <div className="text-xs space-y-1.5">
+                          <div className="text-xs space-y-2">
                             <div className="font-semibold text-white">🤖 Connect Telegram Bot</div>
-                            <p className="text-[10px] text-white/85 leading-normal">
-                              Open Telegram and send <span className="font-mono bg-white/20 px-1 rounded">/connect {profile?.telegram_connect_token}</span> to the bot to get instant updates!
-                            </p>
+                            {profile?.telegram_connect_token && profile?.bot_username ? (
+                              <a
+                                href={`https://t.me/${profile.bot_username}?start=${profile.telegram_connect_token}`}
+                                target="_blank" rel="noopener noreferrer"
+                                className="inline-block w-full text-center bg-white text-indigo-600 hover:bg-indigo-50 font-bold text-xs py-2 px-3 rounded-xl transition-all shadow-soft"
+                                style={{ cursor: "none" }}
+                              >
+                                Connect Bot ➔
+                              </a>
+                            ) : (
+                              <span className="text-[11px] text-white/70">Loading token…</span>
+                            )}
                           </div>
                         )}
                       </div>
@@ -698,9 +707,9 @@ export default function Home() {
               {/* Subject Gauge breakdown */}
               <div className="space-y-4 pt-4">
                 <h3 className="font-semibold text-xs text-ink uppercase tracking-wider">Subject Wise Breakdown</h3>
-                {stats?.subjects && stats.subjects.length > 0 ? (
+                {stats?.perSubject && stats.perSubject.length > 0 ? (
                   <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3">
-                    {stats.subjects.map((sub) => (
+                    {stats.perSubject.map((sub) => (
                       <SubjectGauge key={sub.subject_id} subject={sub} />
                     ))}
                   </div>
