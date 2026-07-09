@@ -17,31 +17,45 @@ export default function Heatmap({ data }) {
     return "#E11D48";
   }
 
+  function tooltipFor(dateKey) {
+    const rec = map.get(dateKey);
+    if (!rec || Number(rec.total) === 0) return dateKey;
+    return `${dateKey}: ${rec.present}/${rec.total} present`;
+  }
+
   const weeks = [];
   for (let i = 0; i < days.length; i += 7) weeks.push(days.slice(i, i + 7));
 
   return (
     <div className="card p-4">
-      <div className="font-display font-semibold mb-3">Last 120 Days</div>
-      <div className="flex gap-1 overflow-x-auto pb-1">
+      <div className="font-display font-bold text-base text-ink mb-1">Attendance Heatmap</div>
+      <div className="text-xs text-muted mb-3">Last 120 days</div>
+      <div className="flex gap-1 overflow-x-auto pb-2 -mx-1 px-1">
         {weeks.map((week, wi) => (
-          <div key={wi} className="flex flex-col gap-1">
+          <div key={wi} className="flex flex-col gap-1 flex-shrink-0">
             {week.map((day) => (
               <div
                 key={day}
-                title={`${day}`}
-                className="w-3.5 h-3.5 rounded-sm"
+                title={tooltipFor(day)}
+                className="w-3.5 h-3.5 rounded-sm cursor-default transition-transform hover:scale-125"
                 style={{ background: colorFor(day) }}
               />
             ))}
           </div>
         ))}
       </div>
-      <div className="flex items-center gap-3 mt-3 text-xs text-muted">
-        <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-sm inline-block" style={{ background: "#16A34A" }} /> full day</span>
-        <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-sm inline-block" style={{ background: "#F59E0B" }} /> partial</span>
-        <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-sm inline-block" style={{ background: "#E11D48" }} /> absent</span>
-        <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-sm inline-block" style={{ background: "#EFEDE8" }} /> no data</span>
+      <div className="flex items-center gap-4 mt-2 text-xs text-muted flex-wrap">
+        {[
+          { color: "#16A34A", label: "Full day" },
+          { color: "#F59E0B", label: "Partial" },
+          { color: "#E11D48", label: "Absent" },
+          { color: "#EFEDE8", label: "No data" },
+        ].map(({ color, label }) => (
+          <span key={label} className="flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-sm inline-block flex-shrink-0" style={{ background: color }} />
+            {label}
+          </span>
+        ))}
       </div>
     </div>
   );

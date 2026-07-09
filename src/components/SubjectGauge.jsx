@@ -1,45 +1,64 @@
 const THRESHOLD = Number(import.meta.env.VITE_ATTENDANCE_THRESHOLD || 75);
 
+const COLOR_MAP = {
+  safe: { ring: "#16A34A", text: "#16A34A", bg: "#DCFCE7" },
+  warn: { ring: "#F59E0B", text: "#B45309", bg: "#FEF9C3" },
+  bad:  { ring: "#E11D48", text: "#E11D48", bg: "#FEE2E2" },
+};
+
 export default function SubjectGauge({ subject }) {
   const r = 42;
   const c = 2 * Math.PI * r;
   const pct = Math.min(100, subject.percentage);
   const offset = c - (pct / 100) * c;
   const thresholdAngle = (THRESHOLD / 100) * 360 - 90;
-  const color = subject.safe ? "#16A34A" : subject.percentage >= THRESHOLD - 10 ? "#F59E0B" : "#E11D48";
+  const tier = subject.safe ? "safe" : subject.percentage >= THRESHOLD - 10 ? "warn" : "bad";
+  const color = COLOR_MAP[tier];
 
   const tx = 50 + 46 * Math.cos((thresholdAngle * Math.PI) / 180);
   const ty = 50 + 46 * Math.sin((thresholdAngle * Math.PI) / 180);
 
   return (
-    <div className="card p-5 flex flex-col items-center gap-3 bg-white border border-line/80 rounded-2xl shadow-soft hover:shadow-medium hover:border-primary/20 hover:-translate-y-1 transition-all duration-300">
-      <div className="text-[10px] font-mono font-bold tracking-wider text-muted/80 bg-paper px-2 py-0.5 rounded-full border border-line/50">
+    <div className="card p-4 flex flex-col items-center gap-2.5 bg-white border border-line/80 rounded-2xl shadow-soft hover:shadow-medium hover:border-primary/20 hover:-translate-y-1 transition-all duration-300">
+      {/* Subject code pill */}
+      <div className="text-[10px] font-mono font-bold tracking-wider text-muted/80 bg-paper px-2 py-0.5 rounded-full border border-line/50 w-full text-center truncate">
         {subject.code}
       </div>
-      <div className="relative w-28 h-28 my-1">
-        <svg viewBox="0 0 100 100" className="w-28 h-28 -rotate-90">
-          <circle cx="50" cy="50" r={r} fill="none" stroke="#F1F0EC" strokeWidth="8" />
+
+      {/* Circular gauge */}
+      <div className="relative w-24 h-24">
+        <svg viewBox="0 0 100 100" className="w-24 h-24 -rotate-90">
+          <circle cx="50" cy="50" r={r} fill="none" stroke="#F1F0EC" strokeWidth="9" />
           <circle
-            cx="50" cy="50" r={r} fill="none" stroke={color} strokeWidth="8"
+            cx="50" cy="50" r={r} fill="none" stroke={color.ring} strokeWidth="9"
             strokeDasharray={c} strokeDashoffset={offset} strokeLinecap="round"
             style={{ transition: "stroke-dashoffset 0.6s ease" }}
           />
         </svg>
-        {/* threshold tick mark */}
+        {/* Threshold tick */}
         <div
-          className="absolute w-2 h-2 rounded-full bg-slate-900 border border-white shadow-soft"
+          className="absolute w-2 h-2 rounded-full bg-slate-800 border-2 border-white shadow-soft"
           style={{ left: `${tx}%`, top: `${ty}%`, transform: "translate(-50%,-50%)" }}
           title={`${THRESHOLD}% threshold`}
         />
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="font-display font-bold text-2xl tracking-tight text-ink">{subject.percentage}%</span>
-          <span className="text-[10px] text-muted font-mono bg-paper/60 px-1.5 py-0.5 rounded">{subject.present}/{subject.total}</span>
+          <span className="font-display font-bold text-xl tracking-tight text-ink">{subject.percentage}%</span>
+          <span className="text-[10px] text-muted font-mono">{subject.present}/{subject.total}</span>
         </div>
       </div>
+
+      {/* Subject name */}
       <div className="text-center w-full">
-        <div className="font-semibold text-sm leading-snug text-ink truncate" title={subject.name}>{subject.name}</div>
-        <div className="text-xs mt-1.5 font-medium leading-none" style={{ color }}>
-          {subject.safe ? `Can skip ${subject.canSkip} more` : `Attend next ${subject.needToAttend} to recover`}
+        <div className="font-semibold text-xs leading-snug text-ink line-clamp-2 text-center" title={subject.name}>
+          {subject.name}
+        </div>
+        <div
+          className="text-[10px] mt-1.5 font-bold px-2 py-0.5 rounded-full inline-block"
+          style={{ background: color.bg, color: color.text }}
+        >
+          {subject.safe
+            ? `Skip ${subject.canSkip} more`
+            : `Need ${subject.needToAttend} more`}
         </div>
       </div>
     </div>
