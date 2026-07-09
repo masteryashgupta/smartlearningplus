@@ -1,12 +1,82 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getSession } from "../api.js";
-import StudentDashboard from "./StudentDashboard.jsx";
+import { getSession, clearSession, api } from "../api.js";
 import AdminPanel from "./AdminPanel.jsx";
 import Login from "./Login.jsx";
+import SubjectGauge from "../components/SubjectGauge.jsx";
+import Heatmap from "../components/Heatmap.jsx";
+import DayEditor from "../components/DayEditor.jsx";
 
 export default function Home() {
   const session = getSession();
+
+  // Student dashboard states
+  const [stats, setStats] = useState(null);
+  const [heatmap, setHeatmap] = useState([]);
+  const [leaderboard, setLeaderboard] = useState([]);
+  const [profile, setProfile] = useState(null);
+  const [loadingProfile, setLoadingProfile] = useState(false);
+
+  const refreshData = () => {
+    if (!session || session.role !== "student") return;
+    api.get("/attendance/stats").then((r) => setStats(r.data));
+    api.get("/attendance/heatmap").then((r) => setHeatmap(r.data));
+    api.get("/attendance/leaderboard").then((r) => setLeaderboard(r.data));
+  };
+
+  const fetchProfile = () => {
+    if (!session || session.role !== "student") return;
+    setLoadingProfile(true);
+    api.get("/auth/student/profile")
+      .then((r) => {
+        setProfile(r.data);
+        if (r.data.name) localStorage.setItem("name", r.data.name);
+      })
+      .catch((err) => console.error("Error fetching profile", err))
+      .finally(() => setLoadingProfile(false));
+  };
+
+  useEffect(() => {
+    if (session && session.role === "student") {
+      refreshData();
+      fetchProfile();
+    }
+  }, []);
+
+  // Poll for telegram connection status
+  useEffect(() => {
+    let interval;
+    if (session && session.role === "student" && profile && !profile.telegram_id) {
+      interval = setInterval(() => {
+        api.get("/auth/student/profile")
+          .then((r) => {
+            if (r.data.telegram_id) setProfile(r.data);
+            if (r.data.name) localStorage.setItem("name", r.data.name);
+          })
+          .catch((e) => console.error(e));
+      }, 5000);
+    }
+    return () => { if (interval) clearInterval(interval); };
+  }, [profile]);
+
+  async function handleDisconnectTelegram() {
+    if (!window.confirm("Are you sure you want to disconnect your Telegram account?")) return;
+    setLoadingProfile(true);
+    try {
+      await api.post("/auth/student/disconnect-telegram");
+      fetchProfile();
+    } catch (err) {
+      console.error(err);
+      alert("Failed to disconnect Telegram");
+    } finally {
+      setLoadingProfile(false);
+    }
+  }
+
+  function signOut() {
+    clearSession();
+    window.location.reload();
+  }
 
   useEffect(() => {
     if (session) return;
@@ -65,13 +135,8 @@ export default function Home() {
     };
   }, [session]);
 
-  if (session) {
-    if (session.role === "student") {
-      return <StudentDashboard />;
-    }
-    if (session.role === "admin") {
-      return <AdminPanel />;
-    }
+  if (session && session.role === "admin") {
+    return <AdminPanel />;
   }
 
   return (
@@ -491,18 +556,39 @@ export default function Home() {
             <span style={{ color: "var(--accent)" }}>+</span>
           </div>
           <div className="flex items-center gap-6">
-            <div className="sl-nav-links flex items-center gap-6">
-              <a href="#subjects" onClick={(e) => { e.preventDefault(); document.getElementById('subjects')?.scrollIntoView({ behavior: 'smooth' }); }}>Subjects</a>
-              <a href="#downloads" onClick={(e) => { e.preventDefault(); document.getElementById('downloads')?.scrollIntoView({ behavior: 'smooth' }); }}>Downloads</a>
-            </div>
-            <a
-              href="#login-section"
-              onClick={(e) => { e.preventDefault(); document.getElementById('login-section')?.scrollIntoView({ behavior: 'smooth' }); }}
-              className="px-3.5 py-1.5 rounded-lg bg-indigo-600 !text-white font-medium text-xs hover:bg-indigo-700 transition-colors shadow-soft"
-              style={{ cursor: "none", color: "#ffffff" }}
-            >
-              Sign In
-            </a>
+            {session && session.role === "student" ? (
+              <div className="flex items-center gap-4">
+                <div className="sl-nav-links flex items-center gap-6">
+                  <a href="#attendance-section" onClick={(e) => { e.preventDefault(); document.getElementById('attendance-section')?.scrollIntoView({ behavior: 'smooth' }); }}>Attendance</a>
+                  <a href="#subjects" onClick={(e) => { e.preventDefault(); document.getElementById('subjects')?.scrollIntoView({ behavior: 'smooth' }); }}>Subjects</a>
+                  <a href="#downloads" onClick={(e) => { e.preventDefault(); document.getElementById('downloads')?.scrollIntoView({ behavior: 'smooth' }); }}>Downloads</a>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-muted font-mono bg-paper border border-line/60 rounded-lg px-2.5 py-1">{profile?.name || session?.name}</span>
+                  <button
+                    onClick={signOut}
+                    className="px-3 py-1 rounded-lg bg-red-50 text-red-600 border border-red-200 font-medium text-xs hover:bg-red-100 transition-colors shadow-soft"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center gap-6">
+                <div className="sl-nav-links flex items-center gap-6">
+                  <a href="#subjects" onClick={(e) => { e.preventDefault(); document.getElementById('subjects')?.scrollIntoView({ behavior: 'smooth' }); }}>Subjects</a>
+                  <a href="#downloads" onClick={(e) => { e.preventDefault(); document.getElementById('downloads')?.scrollIntoView({ behavior: 'smooth' }); }}>Downloads</a>
+                </div>
+                <a
+                  href="#login-section"
+                  onClick={(e) => { e.preventDefault(); document.getElementById('login-section')?.scrollIntoView({ behavior: 'smooth' }); }}
+                  className="px-3.5 py-1.5 rounded-lg bg-indigo-600 !text-white font-medium text-xs hover:bg-indigo-700 transition-colors shadow-soft"
+                  style={{ cursor: "none", color: "#ffffff" }}
+                >
+                  Sign In
+                </a>
+              </div>
+            )}
           </div>
         </nav>
 
@@ -530,7 +616,51 @@ export default function Home() {
             </div>
           </div>
           <div className="sl-hero-right" id="login-section">
-            <Login compact={true} />
+            {session && session.role === "student" ? (
+              (() => {
+                const overallPct = stats?.overall.percentage ?? null;
+                const safeColor = overallPct === null ? "#6D5EF5" : overallPct >= 75 ? "#16A34A" : overallPct >= 65 ? "#F59E0B" : "#E11D48";
+                return (
+                  <div
+                    className="w-full max-w-sm rounded-2xl p-5 text-white relative overflow-hidden shadow-soft"
+                    style={{ background: `linear-gradient(135deg, ${safeColor}dd, ${safeColor}99)`, textAlign: "left" }}
+                  >
+                    <div className="absolute right-0 top-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none" />
+                    <div className="absolute left-1/3 bottom-0 w-20 h-20 bg-white/10 rounded-full blur-xl -mb-10 pointer-events-none" />
+                    <div className="relative z-10">
+                      <div className="text-white/80 text-xs font-semibold uppercase tracking-wider mb-1">Overall Attendance</div>
+                      <div className="font-display font-bold flex items-baseline gap-1" style={{ fontSize: "clamp(2rem,8vw,3.5rem)" }}>
+                        {overallPct ?? "—"}<span className="text-xl font-medium opacity-80">%</span>
+                      </div>
+                      <div className="text-white/70 text-xs font-mono mt-2">
+                        {stats?.overall.present ?? 0} of {stats?.overall.total ?? 0} classes attended
+                      </div>
+                      
+                      {/* Telegram Connect Widget */}
+                      <div className="mt-4 pt-4 border-t border-white/20">
+                        {loadingProfile ? (
+                          <div className="text-xs text-white/70">Syncing...</div>
+                        ) : profile?.telegram_id ? (
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="text-[11px] text-white/80 truncate">🤖 @{profile.telegram_username} connected</span>
+                            <button onClick={handleDisconnectTelegram} className="text-[10px] bg-white/20 hover:bg-white/30 text-white px-2 py-0.5 rounded transition-all font-semibold">Disconnect</button>
+                          </div>
+                        ) : (
+                          <div className="text-xs space-y-1.5">
+                            <div className="font-semibold text-white">🤖 Connect Telegram Bot</div>
+                            <p className="text-[10px] text-white/85 leading-normal">
+                              Open Telegram and send <span className="font-mono bg-white/20 px-1 rounded">/connect {profile?.telegram_connect_token}</span> to the bot to get instant updates!
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()
+            ) : (
+              <Login compact={true} />
+            )}
           </div>
         </header>
 
@@ -552,7 +682,76 @@ export default function Home() {
               <div className="sl-stat-label">Bilingual</div>
             </div>
           </div>
-        </header>
+
+          {/* ATTENDANCE SECTION — Dynamic student dashboard widgets */}
+          {session && session.role === "student" && (
+            <section className="space-y-6 pt-4 pb-8 border-t border-line/60" id="attendance-section">
+              <div className="sl-eyebrow-sm">Attendance OS</div>
+              <div className="sl-section-title" style={{ marginBottom: "20px" }}>Your Tracker &amp; Timetable</div>
+
+              {/* Today's timeline slots / DayEditor */}
+              <DayEditor onAttendanceChange={refreshData} />
+
+              {/* Subject Gauge breakdown */}
+              <div className="space-y-4 pt-4">
+                <h3 className="font-semibold text-xs text-ink uppercase tracking-wider">Subject Wise Breakdown</h3>
+                {stats?.subjects && stats.subjects.length > 0 ? (
+                  <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3">
+                    {stats.subjects.map((sub) => (
+                      <SubjectGauge key={sub.subject_id} subject={sub} />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="card p-6 text-center text-muted text-xs bg-white border border-line rounded-xl">
+                    No subject attendance data available yet. Mark classes in the timetable above to see statistics!
+                  </div>
+                )}
+              </div>
+
+              {/* Heatmap & Leaderboard Row */}
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-4 pt-4">
+                {/* Friends Leaderboard */}
+                <div className="md:col-span-5 card p-5 bg-white border border-line rounded-2xl shadow-soft">
+                  <h3 className="font-bold text-sm text-ink mb-3 uppercase tracking-wider flex items-center justify-between">
+                    <span>🏆 Friends Leaderboard</span>
+                    <span className="text-[10px] font-mono text-muted bg-paper px-2 py-0.5 rounded border border-line/40">{leaderboard.length} users</span>
+                  </h3>
+                  <div className="space-y-2.5 max-h-[300px] overflow-y-auto pr-1">
+                    {leaderboard.map((r, i) => {
+                      const isMe = r.id === session?.id;
+                      const pct = r.percentage;
+                      const barColor = pct === null ? "#94A3B8" : pct >= 75 ? "#16A34A" : pct >= 65 ? "#F59E0B" : "#E11D48";
+                      return (
+                        <div key={r.id} className={`flex items-center gap-3 p-2 rounded-xl border transition-all ${isMe ? "bg-indigo-50/50 border-indigo-200" : "border-line/30 bg-paper/40"}`}>
+                          <div className="w-5 h-5 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-600 shrink-0">
+                            {i + 1}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className={`text-xs font-semibold truncate ${isMe ? "text-indigo-900" : "text-ink"}`}>{r.name} {isMe && "(You)"}</div>
+                            <div className="text-[10px] text-muted font-mono">{r.batch} batch</div>
+                          </div>
+                          <div className="font-bold text-xs font-mono shrink-0" style={{ color: barColor }}>
+                            {pct !== null ? `${pct}%` : "—"}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Heatmap Calendar */}
+                <div className="md:col-span-7 card p-5 bg-white border border-line rounded-2xl shadow-soft flex flex-col justify-between">
+                  <h3 className="font-bold text-sm text-ink mb-3 uppercase tracking-wider">📅 Attendance Heatmap</h3>
+                  <div className="flex-1 flex items-center justify-center py-2 overflow-x-auto">
+                    <Heatmap data={heatmap} />
+                  </div>
+                  <p className="text-[10px] text-muted text-center mt-2 leading-relaxed">
+                    Hover over the grid blocks to inspect date details. Brighter green represents higher presence rate.
+                  </p>
+                </div>
+              </div>
+            </section>
+          )}
 
         {/* SUBJECTS — BENTO GRID */}
         <section className="sl-section scroll-anchor" id="subjects">
