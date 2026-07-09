@@ -135,7 +135,11 @@ export default function Home() {
     };
   }, [session]);
 
-  if (session && session.role === "admin") {
+  if (!session) {
+    return <Login />;
+  }
+
+  if (session.role === "admin") {
     return <AdminPanel />;
   }
 
