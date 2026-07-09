@@ -10,9 +10,9 @@
   --text: #0f172a;
   --text2: #334155;
   --muted: #64748b;
-  --accent: #4f46e5;
-  --accent-light: #eef2ff;
-  --accent-hover: #4338ca;
+  --accent: #2563eb;
+  --accent-light: #eff6ff;
+  --accent-hover: #1d4ed8;
   --accent2: #06b6d4;
   --accent2-light: #ecfeff;
   --green: #10b981;
@@ -320,7 +320,7 @@ body, a, button, .subject-card, .nav-item { cursor: auto !important; }
   width: 260px; height: 260px; border-radius: 50%;
   background: rgba(79,70,229,0.06);
 }
-.hero h1 { font-size: 24px; color: var(--text); margin-bottom: 8px; font-weight: 800; letter-spacing: -0.5px; }
+.hero h1 { font-size: 24px; color: #1e3a8a; margin-bottom: 8px; font-weight: 800; letter-spacing: -0.5px; }
 .hero p { color: var(--text2); font-size: 14px; margin-top: 4px; }
 .hero .sub { color: var(--muted); font-size: 13px; }
 .hero .badges { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 18px; }
@@ -333,13 +333,13 @@ body, a, button, .subject-card, .nav-item { cursor: auto !important; }
 .b-teal { color: #0369a1; border-color: #7dd3fc; background: #f0f9ff; }
 
 .unit-title {
-  font-size: 26px; margin: 60px 0 8px; color: var(--text); padding-bottom: 14px;
+  font-size: 26px; margin: 60px 0 8px; color: #1e3a8a; padding-bottom: 14px;
   border-bottom: 2px solid var(--border); display: flex; align-items: center; gap: 10px;
   font-weight: 800; letter-spacing: -0.5px;
 }
 .unit-sub { color: var(--accent); font-size: 13px; margin-bottom: 28px; font-weight: 600; }
 h2.topic {
-  font-size: 19px; margin-top: 44px; margin-bottom: 12px; color: var(--text);
+  font-size: 19px; margin-top: 44px; margin-bottom: 12px; color: #1e3a8a;
   border-left: 3px solid var(--accent); padding-left: 14px;
   display: flex; align-items: center; gap: 10px; font-weight: 700;
 }

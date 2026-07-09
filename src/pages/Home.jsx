@@ -155,9 +155,9 @@ export default function Home() {
           --text: #0f172a;
           --text2: #334155;
           --muted: #64748b;
-          --accent: #4f46e5;
-          --accent-light: #eef2ff;
-          --accent-hover: #4338ca;
+          --accent: #2563eb;
+          --accent-light: #eff6ff;
+          --accent-hover: #1d4ed8;
           --accent2: #06b6d4;
           --accent2-light: #ecfeff;
           --green: #10b981;
@@ -371,7 +371,7 @@ export default function Home() {
           font-size:12px; font-weight:800; letter-spacing:1.4px; text-transform:uppercase;
           color: var(--accent); margin-bottom: 8px;
         }
-        .sl-section-title { font-size: 30px; font-weight: 800; color: var(--text); letter-spacing:-0.02em; margin-bottom: 34px; }
+        .sl-section-title { font-size: 30px; font-weight: 800; color: #1e3a8a; letter-spacing:-0.02em; margin-bottom: 34px; }
 
         /* bento subject grid */
         .sl-bento {

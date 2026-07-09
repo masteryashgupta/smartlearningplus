@@ -10,9 +10,9 @@ export default {
         muted: "#6B7280",
         line: "#E8E6E1",
         primary: {
-          DEFAULT: "#5B5BD6",
-          light: "#EEEEFC",
-          dark: "#4443AE",
+          DEFAULT: "#2563eb",
+          light: "#eff6ff",
+          dark: "#1d4ed8",
         },
         good: "#16A34A",
         bad: "#E11D48",
