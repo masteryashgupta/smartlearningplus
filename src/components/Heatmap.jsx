@@ -27,24 +27,22 @@ export default function Heatmap({ data }) {
   for (let i = 0; i < days.length; i += 7) weeks.push(days.slice(i, i + 7));
 
   return (
-    <div className="card p-4">
-      <div className="font-display font-bold text-base text-ink mb-1">Attendance Heatmap</div>
-      <div className="text-xs text-muted mb-3">Last 120 days</div>
-      <div className="flex gap-1 overflow-x-auto pb-2 -mx-1 px-1">
+    <div className="w-full">
+      <div className="flex gap-1 overflow-x-auto pb-2">
         {weeks.map((week, wi) => (
           <div key={wi} className="flex flex-col gap-1 flex-shrink-0">
             {week.map((day) => (
               <div
                 key={day}
                 title={tooltipFor(day)}
-                className="w-3.5 h-3.5 rounded-sm cursor-default transition-transform hover:scale-125"
+                className="w-3 h-3 rounded-sm cursor-default transition-transform hover:scale-125"
                 style={{ background: colorFor(day) }}
               />
             ))}
           </div>
         ))}
       </div>
-      <div className="flex items-center gap-4 mt-2 text-xs text-muted flex-wrap">
+      <div className="flex items-center gap-4 mt-2 text-[10px] text-muted flex-wrap justify-center">
         {[
           { color: "#16A34A", label: "Full day" },
           { color: "#F59E0B", label: "Partial" },

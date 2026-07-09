@@ -19,7 +19,7 @@ export default function SubjectGauge({ subject }) {
   const ty = 50 + 46 * Math.sin((thresholdAngle * Math.PI) / 180);
 
   return (
-    <div className="card p-4 flex flex-col items-center gap-2.5 bg-white border border-line/80 rounded-2xl shadow-soft hover:shadow-medium hover:border-primary/20 hover:-translate-y-1 transition-all duration-300">
+    <div className="card p-3 sm:p-4 flex flex-col items-center gap-2.5 bg-white border border-line/80 rounded-2xl shadow-soft hover:shadow-medium hover:border-primary/20 hover:-translate-y-1 transition-all duration-300">
       {/* Subject code pill */}
       <div className="text-[10px] font-mono font-bold tracking-wider text-muted/80 bg-paper px-2 py-0.5 rounded-full border border-line/50 w-full text-center truncate">
         {subject.code}

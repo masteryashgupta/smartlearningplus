@@ -66,12 +66,12 @@ export default function DayEditor({ onAttendanceChange }) {
   const totalMarkable = slots.filter((s) => !s.is_holiday).length;
 
   return (
-    <div className="card p-0 overflow-hidden">
+    <div className="w-full">
       {/* Header */}
-      <div className="px-4 pt-4 pb-3 border-b border-line bg-paper/50">
-        <div className="flex items-start justify-between gap-3 flex-wrap">
+      <div className="pb-4 mb-4 border-b border-line">
+        <div className="flex items-center justify-between gap-3">
           <div>
-            <div className="font-display font-bold text-base text-ink">Mark Attendance</div>
+            <h3 className="font-bold text-xs text-ink uppercase tracking-wider">Mark Attendance</h3>
             {totalMarkable > 0 && (
               <div className="text-xs text-muted mt-0.5 font-mono">
                 {presentCount}/{totalMarkable} present today
@@ -82,17 +82,17 @@ export default function DayEditor({ onAttendanceChange }) {
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            className="input !w-auto !py-1.5 !text-sm"
+            className="input !w-auto !py-1.5 !px-2.5 !text-xs font-bold"
           />
         </div>
 
         {/* Quick actions */}
         {totalMarkable > 0 && (
-          <div className="flex gap-2 mt-3 flex-wrap">
+          <div className="flex gap-2 mt-3.5">
             <button
               onClick={() => markWholeDay("present")}
               disabled={saving === "day"}
-              className="flex-1 min-w-[120px] py-2 rounded-xl text-xs font-bold border transition-all"
+              className="flex-1 py-2 rounded-xl text-xs font-bold border transition-all"
               style={{ background: "#DCFCE7", color: "#16A34A", borderColor: "#86EFAC" }}
             >
               ✓ All Present
@@ -100,7 +100,7 @@ export default function DayEditor({ onAttendanceChange }) {
             <button
               onClick={() => markWholeDay("absent")}
               disabled={saving === "day"}
-              className="flex-1 min-w-[120px] py-2 rounded-xl text-xs font-bold border transition-all"
+              className="flex-1 py-2 rounded-xl text-xs font-bold border transition-all"
               style={{ background: "#FEE2E2", color: "#DC2626", borderColor: "#FCA5A5" }}
             >
               ✗ All Absent
@@ -110,7 +110,7 @@ export default function DayEditor({ onAttendanceChange }) {
       </div>
 
       {/* Slots list */}
-      <div className="p-4">
+      <div>
         {loading ? (
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (

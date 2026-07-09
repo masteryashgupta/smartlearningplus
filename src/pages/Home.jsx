@@ -550,6 +550,24 @@ export default function Home() {
           margin-bottom: 24px;
           animation: sl-pop 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
         }
+        @media (max-width: 640px) {
+          .dashboard-welcome-card {
+            flex-direction: column;
+            align-items: stretch;
+            text-align: center;
+            gap: 16px;
+            padding: 16px 20px;
+          }
+          .dashboard-welcome-card > div:last-child {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+          }
+          .dashboard-welcome-card .text-right {
+            text-align: center;
+          }
+        }
         .dashboard-grid {
           display: grid;
           grid-template-columns: 1fr;
@@ -575,13 +593,13 @@ export default function Home() {
         /* Sleek Subject Note Row instead of giant bento box */
         .subject-row-grid {
           display: grid;
-          grid-template-columns: 1fr;
+          grid-template-columns: minmax(0, 1fr);
           gap: 12px;
           margin-bottom: 32px;
         }
         @media (min-width: 640px) {
           .subject-row-grid {
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
           }
         }
         .subject-row-card {
@@ -597,6 +615,7 @@ export default function Home() {
           transition: all 0.2s ease;
           opacity: 0;
           transform: translateY(16px);
+          min-width: 0;
         }
         .subject-row-card.sl-in {
           opacity: 1;
