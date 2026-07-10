@@ -11,6 +11,7 @@ const TABS = [
   { key: "whitelist", label: "Whitelist" },
   { key: "materials", label: "Approvals" },
   { key: "attendance",label: "Attendance" },
+  { key: "health",    label: "Health Status" },
   { key: "settings",  label: "Settings" },
 ];
 
@@ -55,6 +56,8 @@ export default function AdminPanel() {
   const [rejectionInputId, setRejectionInputId] = useState(null);
   const [rejectionReasonText, setRejectionReasonText] = useState("");
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
+  const [health, setHealth] = useState(null);
+  const [healthLoading, setHealthLoading] = useState(false);
 
   function toggleUserStats(userId) {
     if (expandedUserId === userId) {
@@ -113,6 +116,14 @@ export default function AdminPanel() {
 
   function reloadApprovedMaterials() {
     api.get("/admin/materials/approved").then((r) => setApprovedMaterials(r.data || []));
+  }
+
+  function loadHealth() {
+    setHealthLoading(true);
+    api.get("/admin/health")
+      .then((r) => setHealth(r.data))
+      .catch(() => setHealth(null))
+      .finally(() => setHealthLoading(false));
   }
 
   async function handleToggleHidden(id) {
@@ -224,6 +235,7 @@ export default function AdminPanel() {
       reloadPendingMaterialsInternal();
       reloadApprovedMaterials();
     }
+    if (tab === "health") loadHealth();
   }, [tab, attendanceDate, week]);
 
   async function addSlot(e) {
@@ -1029,6 +1041,139 @@ export default function AdminPanel() {
                   </div>
                 )}
               </>
+            )}
+          </div>
+        )}
+
+
+        {/* ── SYSTEM HEALTH STATUS ── */}
+        {tab === "health" && (
+          <div className="space-y-6">
+            <div className="card p-5 sm:p-6 bg-white border border-line rounded-2xl shadow-soft">
+              <div className="flex items-center justify-between flex-wrap gap-4">
+                <div>
+                  <h3 className="font-display font-bold text-lg mb-1 text-ink flex items-center gap-2">
+                    <span>⚡</span> System Health Monitor
+                  </h3>
+                  <p className="text-muted text-sm">Real-time status checks for database connections, storage buckets, Telegram bot services, and email mailers.</p>
+                </div>
+                <button
+                  onClick={loadHealth}
+                  disabled={healthLoading}
+                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-soft transition-all"
+                >
+                  {healthLoading ? "Refreshing..." : "🔄 Refresh Status"}
+                </button>
+              </div>
+            </div>
+
+            {healthLoading && !health ? (
+              <div className="flex items-center justify-center p-12">
+                <span className="text-sm font-semibold text-muted">Diagnosing services, please wait...</span>
+              </div>
+            ) : !health ? (
+              <div className="card p-8 text-center bg-white border border-line rounded-2xl shadow-soft">
+                <div className="text-4xl mb-3">⚠️</div>
+                <div className="text-sm font-semibold text-ink">Failed to fetch health metrics</div>
+                <div className="text-xs text-muted mt-1">Please ensure the backend is online and running.</div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Database */}
+                <div className="card p-5 bg-white border border-line rounded-2xl shadow-soft flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="font-bold text-sm text-ink">🗄️ PostgreSQL Database</span>
+                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${health.database.status === "online" ? "bg-emerald-100 text-emerald-800" : "bg-red-100 text-red-800"}`}>
+                        {health.database.status.toUpperCase()}
+                      </span>
+                    </div>
+                    <p className="text-xs text-muted leading-relaxed">Stores user profiles, logs attendance matrices, configurations, and schedules.</p>
+                  </div>
+                  <div className="mt-4 pt-3 border-t border-line/60 flex justify-between items-center text-xs font-mono">
+                    <span className="text-muted">Query Latency:</span>
+                    <span className="font-bold text-ink">{health.database.latency || "N/A"}</span>
+                  </div>
+                </div>
+
+                {/* Backblaze B2 */}
+                <div className="card p-5 bg-white border border-line rounded-2xl shadow-soft flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="font-bold text-sm text-ink">🪣 Backblaze B2 Storage</span>
+                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${health.b2.status === "online" ? "bg-emerald-100 text-emerald-800" : "bg-red-100 text-red-800"}`}>
+                        {health.b2.status.toUpperCase()}
+                      </span>
+                    </div>
+                    <p className="text-xs text-muted leading-relaxed">Handles student manual uploads, PDFs, images, and pre-signed assets.</p>
+                  </div>
+                  <div className="mt-4 pt-3 border-t border-line/60 flex justify-between items-center text-xs font-mono">
+                    <span className="text-muted">Status / Errors:</span>
+                    <span className="font-bold text-ink truncate max-w-[200px]" title={health.b2.error || "Operational"}>
+                      {health.b2.error ? health.b2.error : "Operational"}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Telegram Bot */}
+                <div className="card p-5 bg-white border border-line rounded-2xl shadow-soft flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="font-bold text-sm text-ink">🤖 Telegram Bot Service</span>
+                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${health.telegram.status === "online" ? "bg-emerald-100 text-emerald-800" : "bg-slate-105 text-slate-800"}`}>
+                        {health.telegram.status.toUpperCase()}
+                      </span>
+                    </div>
+                    <p className="text-xs text-muted leading-relaxed">Broadcasts smart alerts, schedules alerts, and interacts with students via chat commands.</p>
+                  </div>
+                  <div className="mt-4 pt-3 border-t border-line/60 flex justify-between items-center text-xs font-mono">
+                    <span className="text-muted">Active Mode:</span>
+                    <span className="font-bold text-ink">{health.telegram.type || "Offline / Not Set"}</span>
+                  </div>
+                </div>
+
+                {/* Resend Email */}
+                <div className="card p-5 bg-white border border-line rounded-2xl shadow-soft flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="font-bold text-sm text-ink">✉️ Resend Mailer</span>
+                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${health.resend.status === "online" ? "bg-emerald-100 text-emerald-800" : "bg-red-100 text-red-800"}`}>
+                        {health.resend.status.toUpperCase()}
+                      </span>
+                    </div>
+                    <p className="text-xs text-muted leading-relaxed">Sends secure account OTPs, password recovery codes, and registration links to users.</p>
+                  </div>
+                  <div className="mt-4 pt-3 border-t border-line/60 flex justify-between items-center text-xs font-mono">
+                    <span className="text-muted">Configuration:</span>
+                    <span className="font-bold text-ink truncate max-w-[200px]" title={health.resend.error || "Configured"}>
+                      {health.resend.error ? "Missing Key" : "Configured"}
+                    </span>
+                  </div>
+                </div>
+
+                {/* System Diagnostics */}
+                <div className="card p-5 bg-white border border-line rounded-2xl shadow-soft md:col-span-2">
+                  <span className="font-bold text-sm text-ink block mb-3">🖥️ Server Diagnostics & Uptime</span>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs font-mono pt-2">
+                    <div>
+                      <span className="text-muted block">Uptime:</span>
+                      <span className="font-bold text-ink">{Math.floor(health.server.uptime / 60)} mins</span>
+                    </div>
+                    <div>
+                      <span className="text-muted block">Heap Used:</span>
+                      <span className="font-bold text-ink">{Math.round(health.server.memory.heapUsed / 1024 / 1024 * 10) / 10} MB</span>
+                    </div>
+                    <div>
+                      <span className="text-muted block">RSS Memory:</span>
+                      <span className="font-bold text-ink">{Math.round(health.server.memory.rss / 1024 / 1024 * 10) / 10} MB</span>
+                    </div>
+                    <div>
+                      <span className="text-muted block">API URL:</span>
+                      <span className="font-bold text-ink truncate block max-w-[150px]">{api.defaults.baseURL}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             )}
           </div>
         )}
