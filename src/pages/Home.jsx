@@ -847,7 +847,13 @@ export default function Home() {
               <div className="card p-5 bg-white border border-line rounded-2xl shadow-soft">
                 <h3 className="font-bold text-xs text-ink mb-4 uppercase tracking-wider">Subject Attendance breakdown</h3>
                 {stats?.perSubject && stats.perSubject.length > 0 ? (
-                  <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-8 gap-3">
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(auto-fill, minmax(78px, 1fr))",
+                      gap: "10px",
+                    }}
+                  >
                     {stats.perSubject.map((sub) => (
                       <SubjectGauge key={sub.subject_id} subject={sub} />
                     ))}

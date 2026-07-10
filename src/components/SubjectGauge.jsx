@@ -1,59 +1,93 @@
 const THRESHOLD = Number(import.meta.env.VITE_ATTENDANCE_THRESHOLD || 75);
 
 const COLOR_MAP = {
-  safe: { ring: "#16A34A", text: "#16A34A", bg: "#DCFCE7" },
-  warn: { ring: "#F59E0B", text: "#B45309", bg: "#FEF9C3" },
-  bad:  { ring: "#E11D48", text: "#E11D48", bg: "#FEE2E2" },
+  safe: { ring: "#16A34A", text: "#16A34A", bg: "#DCFCE7", track: "#BBF7D0" },
+  warn: { ring: "#F59E0B", text: "#B45309", bg: "#FEF9C3", track: "#FDE68A" },
+  bad:  { ring: "#E11D48", text: "#E11D48", bg: "#FEE2E2", track: "#FECACA" },
 };
 
 export default function SubjectGauge({ subject }) {
-  const r = 42;
+  // Smaller radius for compact 8-col grid
+  const size = 64;
+  const r = 26;
+  const strokeW = 6;
   const c = 2 * Math.PI * r;
-  const pct = Math.min(100, subject.percentage);
+  const pct = Math.min(100, subject.percentage ?? 0);
   const offset = c - (pct / 100) * c;
-  const thresholdAngle = (THRESHOLD / 100) * 360 - 90;
   const tier = subject.safe ? "safe" : subject.percentage >= THRESHOLD - 10 ? "warn" : "bad";
   const color = COLOR_MAP[tier];
 
-  const tx = 50 + 46 * Math.cos((thresholdAngle * Math.PI) / 180);
-  const ty = 50 + 46 * Math.sin((thresholdAngle * Math.PI) / 180);
-
   return (
-    <div className="card p-3 sm:p-4 flex flex-col items-center gap-2.5 bg-white border border-line/80 rounded-2xl shadow-soft hover:shadow-medium hover:border-primary/20 hover:-translate-y-1 transition-all duration-300">
-      {/* Subject code pill */}
-      <div className="text-[9px] font-mono font-bold tracking-wider text-muted/80 bg-paper px-1 py-0.5 rounded-full border border-line/50 w-full text-center">
+    <div
+      className="flex flex-col items-center gap-1.5 p-2 rounded-xl border border-line/60 bg-white hover:border-current/20 hover:-translate-y-0.5 transition-all duration-200 cursor-default"
+      style={{ "--tw-border-opacity": 1 }}
+    >
+      {/* Subject code */}
+      <div
+        className="text-[9px] font-mono font-bold tracking-widest uppercase w-full text-center truncate px-0.5"
+        style={{ color: color.ring }}
+        title={subject.code}
+      >
         {subject.code}
       </div>
 
-      {/* Circular gauge */}
-      <div className="relative w-24 h-24">
-        <svg viewBox="0 0 100 100" className="w-24 h-24 -rotate-90">
-          <circle cx="50" cy="50" r={r} fill="none" stroke="#F1F0EC" strokeWidth="9" />
+      {/* Compact circular SVG gauge */}
+      <div className="relative" style={{ width: size, height: size }}>
+        <svg
+          viewBox="0 0 64 64"
+          width={size}
+          height={size}
+          className="-rotate-90"
+        >
+          {/* Track */}
           <circle
-            cx="50" cy="50" r={r} fill="none" stroke={color.ring} strokeWidth="9"
-            strokeDasharray={c} strokeDashoffset={offset} strokeLinecap="round"
-            style={{ transition: "stroke-dashoffset 0.6s ease" }}
+            cx="32" cy="32" r={r}
+            fill="none"
+            stroke="#F1F0EC"
+            strokeWidth={strokeW}
+          />
+          {/* Progress arc */}
+          <circle
+            cx="32" cy="32" r={r}
+            fill="none"
+            stroke={color.ring}
+            strokeWidth={strokeW}
+            strokeDasharray={c}
+            strokeDashoffset={offset}
+            strokeLinecap="round"
+            style={{ transition: "stroke-dashoffset 0.5s ease" }}
           />
         </svg>
+        {/* Center text */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="font-display font-bold text-xl tracking-tight text-ink">{subject.percentage}%</span>
-          <span className="text-[10px] text-muted font-mono">{subject.present}/{subject.total}</span>
+          <span
+            className="font-bold leading-none"
+            style={{ fontSize: pct === 100 ? "10px" : "11px", color: color.ring }}
+          >
+            {pct}%
+          </span>
+          <span className="text-[8px] text-muted/70 font-mono leading-none mt-0.5">
+            {subject.present}/{subject.total}
+          </span>
         </div>
       </div>
 
-      {/* Subject name */}
-      <div className="text-center w-full">
-        <div className="font-semibold text-xs leading-snug text-ink line-clamp-2 text-center" title={subject.name}>
-          {subject.name}
-        </div>
-        <div
-          className="text-[10px] mt-1.5 font-bold px-2 py-0.5 rounded-full inline-block"
-          style={{ background: color.bg, color: color.text }}
-        >
-          {subject.safe
-            ? `Skip ${subject.canSkip} more`
-            : `Need ${subject.needToAttend} more`}
-        </div>
+      {/* Short subject name */}
+      <div
+        className="text-[9px] font-semibold text-center text-ink/80 leading-tight w-full truncate px-0.5"
+        title={subject.name}
+      >
+        {subject.name}
+      </div>
+
+      {/* Skip / Need badge */}
+      <div
+        className="text-[8px] font-bold px-1.5 py-0.5 rounded-full w-full text-center leading-none"
+        style={{ background: color.bg, color: color.text }}
+      >
+        {subject.safe
+          ? `Skip ${subject.canSkip}`
+          : `Need ${subject.needToAttend}`}
       </div>
     </div>
   );
