@@ -79,37 +79,6 @@ export default function Home() {
   }
 
   useEffect(() => {
-    let onMouseMove;
-    const cursorDot = document.querySelector("[data-cursor-dot]");
-    const cursorOutline = document.querySelector("[data-cursor-outline]");
-
-    if (!session && cursorDot && cursorOutline) {
-      onMouseMove = (e) => {
-        cursorDot.style.left = `${e.clientX}px`;
-        cursorDot.style.top = `${e.clientY}px`;
-        cursorOutline.animate(
-          { left: `${e.clientX}px`, top: `${e.clientY}px` },
-          { duration: 180, fill: "forwards" }
-        );
-      };
-      window.addEventListener("mousemove", onMouseMove);
-
-      const interactiveElements = document.querySelectorAll(
-        "a, button, .sl-card, .sl-feat, .sl-pill, .sl-doc-btn"
-      );
-      interactiveElements.forEach((el) => {
-        el.addEventListener("mouseenter", () =>
-          cursorOutline?.classList.add("cursor-hovering")
-        );
-        el.addEventListener("mouseleave", () =>
-          cursorOutline?.classList.remove("cursor-hovering")
-        );
-      });
-
-      // Add sl-home-active class to body when on homepage to hide system cursor
-      document.body.classList.add("sl-home-active");
-    }
-
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
@@ -128,9 +97,7 @@ export default function Home() {
     });
 
     return () => {
-      if (onMouseMove) window.removeEventListener("mousemove", onMouseMove);
       io.disconnect();
-      document.body.classList.remove("sl-home-active");
     };
   }, [session]);
 
@@ -172,53 +139,7 @@ export default function Home() {
           background: var(--bg);
         }
 
-        /* Scoped cursor styling */
-        body.sl-home-active, 
-        body.sl-home-active a, 
-        body.sl-home-active button, 
-        body.sl-home-active .sl-card, 
-        body.sl-home-active .sl-pill {
-          cursor: none !important;
-        }
 
-        .cursor-dot, .cursor-outline {
-          position: fixed; top: 0; left: 0;
-          pointer-events: none; z-index: 9999;
-          border-radius: 50%;
-          will-change: transform;
-        }
-
-        .cursor-dot {
-          width: 5px; height: 5px;
-          margin: -2.5px 0 0 -2.5px;
-          background: var(--accent);
-          transition: opacity 0.15s ease;
-        }
-
-        .cursor-outline {
-          width: 22px; height: 22px;
-          margin: -11px 0 0 -11px;
-          border: 1.5px solid rgba(79, 70, 229, 0.55);
-          background: transparent;
-          transition: width 0.18s cubic-bezier(.2,.8,.2,1),
-                      height 0.18s cubic-bezier(.2,.8,.2,1),
-                      margin 0.18s cubic-bezier(.2,.8,.2,1),
-                      border-color 0.18s ease,
-                      background 0.18s ease,
-                      opacity 0.15s ease;
-        }
-
-        .cursor-hovering {
-          width: 30px; height: 30px;
-          margin: -15px 0 0 -15px;
-          background: rgba(79, 70, 229, 0.07);
-          border-color: var(--accent);
-        }
-
-        @media (hover: none), (pointer: coarse) {
-          body.sl-home-active, body.sl-home-active a, body.sl-home-active button { cursor: auto !important; }
-          .cursor-dot, .cursor-outline { display: none; }
-        }
 
         /* animated mesh background */
         .sl-mesh {
@@ -668,13 +589,7 @@ export default function Home() {
         }
       `}</style>
 
-      {/* CUSTOM CURSOR DOTS */}
-      {!session && (
-        <>
-          <div className="cursor-dot" data-cursor-dot></div>
-          <div className="cursor-outline" data-cursor-outline></div>
-        </>
-      )}
+
 
       {/* FLOATING BACKGROUND MESH & GRID OVERLAY */}
       <div className="sl-mesh">
