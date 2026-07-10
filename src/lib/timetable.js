@@ -107,10 +107,15 @@ export async function computeStats(userId) {
     // (present+need) / (total+need) >= threshold/100
     let needToAttend = 0;
     if (total > 0 && pct < threshold) {
-      needToAttend = Math.max(
-        0,
-        Math.ceil((threshold * total - 100 * present) / (100 - threshold))
-      );
+      const denom = 100 - threshold;
+      if (denom <= 0) {
+        needToAttend = 999; // impossible to reach 100% if any missed
+      } else {
+        needToAttend = Math.max(
+          0,
+          Math.ceil((threshold * total - 100 * present) / denom)
+        );
+      }
     }
 
     return {
