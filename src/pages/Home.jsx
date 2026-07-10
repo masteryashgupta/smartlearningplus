@@ -17,6 +17,20 @@ export default function Home() {
   const [profile, setProfile] = useState(null);
   const [loadingProfile, setLoadingProfile] = useState(false);
   const [selectedUserStats, setSelectedUserStats] = useState(null);
+  const [subjects, setSubjects] = useState([]);
+  const [myUploads, setMyUploads] = useState([]);
+
+  // Contribution Form States
+  const [contribTab, setContribTab] = useState("upload");
+  const [contribTitle, setContribTitle] = useState("");
+  const [contribSubjectId, setContribSubjectId] = useState("");
+  const [contribSection, setContribSection] = useState("");
+  const [contribContentType, setContribContentType] = useState("pdf");
+  const [contribFile, setContribFile] = useState(null);
+  const [contribTextContent, setContribTextContent] = useState("");
+  const [contribPreviewTab, setContribPreviewTab] = useState("write");
+  const [contribLoading, setContribLoading] = useState(false);
+  const [contribMessage, setContribMessage] = useState(null);
 
   const handleUserClick = (userId) => {
     if (!session) return;
@@ -40,6 +54,105 @@ export default function Home() {
     api.get("/attendance/stats").then((r) => setStats(r.data));
     api.get("/attendance/heatmap").then((r) => setHeatmap(r.data));
     api.get("/attendance/leaderboard").then((r) => setLeaderboard(r.data));
+    api.get("/timetable").then((r) => setSubjects(r.data.subjects || []));
+    api.get("/materials/my-uploads").then((r) => setMyUploads(r.data || []));
+  };
+
+  const refreshUploads = () => {
+    if (session && session.role === "student") {
+      api.get("/materials/my-uploads").then((r) => setMyUploads(r.data || []));
+    }
+  };
+
+  const handleContribSubmit = async (e) => {
+    e.preventDefault();
+    if (!contribTitle.trim()) return setContribMessage({ type: "error", text: "Title is required" });
+    if (!contribSubjectId) return setContribMessage({ type: "error", text: "Subject is required" });
+    if (!contribSection) return setContribMessage({ type: "error", text: "Section/Category is required" });
+
+    if (["pdf", "image"].includes(contribContentType) && !contribFile) {
+      return setContribMessage({ type: "error", text: "Please select a file to upload" });
+    }
+    if (["text", "html"].includes(contribContentType) && !contribTextContent.trim()) {
+      return setContribMessage({ type: "error", text: "Content text is required" });
+    }
+
+    setContribLoading(true);
+    setContribMessage(null);
+
+    try {
+      // 1. Soft duplicate title check
+      const dupCheck = await api.get(`/materials/check-title?title=${encodeURIComponent(contribTitle)}&subject_id=${contribSubjectId}`);
+      if (dupCheck.data.exists) {
+        const confirmSubmit = window.confirm(
+          `Warning: A material with the title "${contribTitle}" already exists for this subject. Do you still want to upload?`
+        );
+        if (!confirmSubmit) {
+          setContribLoading(false);
+          return;
+        }
+      }
+
+      // 2. Prepare FormData
+      const formData = new FormData();
+      formData.append("title", contribTitle.trim());
+      formData.append("subject_id", contribSubjectId);
+      formData.append("section", contribSection);
+      formData.append("content_type", contribContentType);
+      
+      if (["pdf", "image"].includes(contribContentType)) {
+        formData.append("file", contribFile);
+      } else {
+        formData.append("text_content", contribTextContent);
+      }
+
+      // 3. Post to upload route
+      const response = await api.post("/materials/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      });
+
+      setContribMessage({ type: "success", text: response.data.message });
+      // Reset form
+      setContribTitle("");
+      setContribFile(null);
+      setContribTextContent("");
+      // Refresh history and switch tab
+      refreshUploads();
+      setContribTab("history");
+    } catch (err) {
+      console.error("Submit upload error:", err);
+      const errMsg = err.response?.data?.error || "Failed to submit study material. Please try again.";
+      setContribMessage({ type: "error", text: errMsg });
+    } finally {
+      setContribLoading(false);
+    }
+  };
+
+  const renderSimpleMarkdown = (text) => {
+    if (!text) return "";
+    let html = text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+    
+    html = html.replace(/^### (.*$)/gim, "<h3>$1</h3>");
+    html = html.replace(/^## (.*$)/gim, "<h2>$1</h2>");
+    html = html.replace(/^# (.*$)/gim, "<h1>$1</h1>");
+    
+    html = html.replace(/\*\*(.*?)\*\//g, "<strong>$1</strong>");
+    html = html.replace(/\*(.*?)\*/g, "<em>$1</em>");
+    
+    html = html.replace(/```([\s\S]*?)```/g, "<pre><code>$1</code></pre>");
+    html = html.replace(/`([^`]+)`/g, "<code>$1</code>");
+    
+    html = html.split("\n\n").map(p => {
+      if (p.startsWith("<h") || p.startsWith("<pre")) return p;
+      return `<p>${p.replace(/\n/g, "<br>")}</p>`;
+    }).join("");
+    
+    return html;
   };
 
   const fetchProfile = () => {
@@ -739,6 +852,296 @@ export default function Home() {
                 ) : (
                   <div className="text-center py-4 text-muted text-xs font-medium">
                     No subject attendance logged. Use the timetable scheduler above to log attendance!
+                  </div>
+                )}
+              </div>
+
+              {/* STUDY MATERIALS CONTRIBUTIONS CARD */}
+              <div className="card p-5 bg-white border border-line rounded-2xl shadow-soft mt-5">
+                <div className="flex items-center justify-between border-b border-line/60 pb-3 mb-4">
+                  <h3 className="font-bold text-xs text-ink uppercase tracking-wider flex items-center gap-1.5">
+                    <span>📤 Share Study Material</span>
+                  </h3>
+                  <div className="flex bg-slate-100 p-0.5 rounded-lg border border-slate-200">
+                    <button
+                      onClick={() => { setContribTab("upload"); setContribMessage(null); }}
+                      className={`text-[10px] font-bold px-3 py-1 rounded-md transition-all ${contribTab === "upload" ? "bg-white text-indigo-600 shadow-sm" : "text-muted hover:text-ink"}`}
+                    >
+                      Upload New
+                    </button>
+                    <button
+                      onClick={() => { setContribTab("history"); setContribMessage(null); }}
+                      className={`text-[10px] font-bold px-3 py-1 rounded-md transition-all ${contribTab === "history" ? "bg-white text-indigo-600 shadow-sm" : "text-muted hover:text-ink"}`}
+                    >
+                      My Uploads ({myUploads.length})
+                    </button>
+                  </div>
+                </div>
+
+                {contribMessage && (
+                  <div className={`p-3 rounded-xl text-xs font-semibold mb-4 border ${contribMessage.type === "success" ? "bg-emerald-50 border-emerald-200 text-emerald-700" : "bg-red-50 border-red-200 text-red-700"}`}>
+                    {contribMessage.text}
+                  </div>
+                )}
+
+                {contribTab === "upload" ? (
+                  <form onSubmit={handleContribSubmit} className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {/* Title */}
+                      <div className="flex flex-col gap-1">
+                        <label className="text-[10px] font-bold text-muted uppercase tracking-wider">Title</label>
+                        <input
+                          type="text"
+                          required
+                          placeholder="e.g. CD Handwritten Notes"
+                          value={contribTitle}
+                          onChange={(e) => setContribTitle(e.target.value)}
+                          className="px-3 py-2 border border-line rounded-xl text-xs font-medium focus:ring-1 focus:ring-indigo-500 focus:outline-none bg-paper"
+                        />
+                      </div>
+
+                      {/* Subject select */}
+                      <div className="flex flex-col gap-1">
+                        <label className="text-[10px] font-bold text-muted uppercase tracking-wider">Subject / Lab</label>
+                        <select
+                          required
+                          value={contribSubjectId}
+                          onChange={(e) => {
+                            setContribSubjectId(e.target.value);
+                            setContribSection("");
+                          }}
+                          className="px-3 py-2 border border-line rounded-xl text-xs font-medium focus:outline-none bg-paper"
+                        >
+                          <option value="">Select a subject...</option>
+                          {subjects.map((sub) => (
+                            <option key={sub.id} value={sub.id}>
+                              {sub.name} ({sub.code})
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {/* Section category (dependent select) */}
+                      <div className="flex flex-col gap-1">
+                        <label className="text-[10px] font-bold text-muted uppercase tracking-wider">Section / Category</label>
+                        <select
+                          required
+                          disabled={!contribSubjectId}
+                          value={contribSection}
+                          onChange={(e) => setContribSection(e.target.value)}
+                          className="px-3 py-2 border border-line rounded-xl text-xs font-medium focus:outline-none bg-paper disabled:opacity-50"
+                        >
+                          <option value="">Select category...</option>
+                          {contribSubjectId &&
+                            (subjects.find((s) => s.id === contribSubjectId)?.type === "lab" ? (
+                              <>
+                                <option value="Lab Manual">Lab Manual</option>
+                                <option value="Lab Code / Program">Lab Code / Program</option>
+                                <option value="Viva Questions">Viva Questions</option>
+                                <option value="Other Resources">Other Resources</option>
+                              </>
+                            ) : (
+                              <>
+                                <option value="Unit 1">Unit 1</option>
+                                <option value="Unit 2">Unit 2</option>
+                                <option value="Unit 3">Unit 3</option>
+                                <option value="Unit 4">Unit 4</option>
+                                <option value="Unit 5">Unit 5</option>
+                                <option value="Unit 6">Unit 6</option>
+                                <option value="Syllabus">Syllabus</option>
+                                <option value="PYQ">PYQ</option>
+                                <option value="Other Resources">Other Resources</option>
+                              </>
+                            ))}
+                        </select>
+                      </div>
+
+                      {/* Content Type select (pills/radio format) */}
+                      <div className="flex flex-col gap-1">
+                        <label className="text-[10px] font-bold text-muted uppercase tracking-wider">Format</label>
+                        <div className="flex gap-2">
+                          {[
+                            { value: "pdf", label: "📄 PDF" },
+                            { value: "image", label: "🖼️ Image" },
+                            { value: "text", label: "✍️ Markdown" },
+                            { value: "html", label: "🌐 HTML" }
+                          ].map((t) => (
+                            <button
+                              key={t.value}
+                              type="button"
+                              onClick={() => setContribContentType(t.value)}
+                              className={`flex-1 text-[11px] font-semibold py-2 px-1 rounded-xl border text-center transition-all ${
+                                contribContentType === t.value
+                                  ? "border-indigo-500 bg-indigo-50/50 text-indigo-700 font-bold"
+                                  : "border-line bg-paper/50 text-slate-600 hover:bg-slate-50"
+                              }`}
+                            >
+                              {t.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Conditional Input Section */}
+                    {["pdf", "image"].includes(contribContentType) ? (
+                      <div className="flex flex-col gap-1.5 p-4 border border-dashed border-indigo-200 rounded-2xl bg-indigo-50/10">
+                        <label className="text-[10px] font-bold text-indigo-700 uppercase tracking-wider flex items-center gap-1">
+                          <span>📁 File Selection</span>
+                          <span className="font-normal font-mono normal-case">
+                            ({contribContentType === "pdf" ? "PDF max 10MB" : "Image max 2MB"})
+                          </span>
+                        </label>
+                        <input
+                          type="file"
+                          required
+                          accept={contribContentType === "pdf" ? ".pdf" : ".png,.jpg,.jpeg,.webp"}
+                          onChange={(e) => {
+                            const file = e.target.files[0];
+                            if (file) {
+                              const limit = contribContentType === "pdf" ? 10 * 1024 * 1024 : 2 * 1024 * 1024;
+                              if (file.size > limit) {
+                                alert(`File is too large. Max size allowed is ${contribContentType === "pdf" ? "10MB" : "2MB"}.`);
+                                e.target.value = "";
+                                setContribFile(null);
+                                return;
+                              }
+                              setContribFile(file);
+                            }
+                          }}
+                          className="text-xs text-slate-500 file:mr-4 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-[11px] file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer"
+                        />
+                        {contribFile && (
+                          <div className="text-[10px] text-emerald-600 font-mono mt-1">
+                            Selected: {contribFile.name} ({(contribFile.size / (1024 * 1024)).toFixed(2)} MB)
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="flex flex-col gap-1">
+                        <div className="flex items-center justify-between border-b border-line pb-1 mb-1">
+                          <label className="text-[10px] font-bold text-muted uppercase tracking-wider">
+                            {contribContentType === "text" ? "Markdown Content" : "HTML Content"}
+                          </label>
+                          <div className="flex bg-slate-100 p-0.5 rounded-lg">
+                            <button
+                              type="button"
+                              onClick={() => setContribPreviewTab("write")}
+                              className={`text-[9px] font-bold px-2 py-0.5 rounded transition-all ${contribPreviewTab === "write" ? "bg-white text-indigo-600 shadow-sm" : "text-muted"}`}
+                            >
+                              Write
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setContribPreviewTab("preview")}
+                              className={`text-[9px] font-bold px-2 py-0.5 rounded transition-all ${contribPreviewTab === "preview" ? "bg-white text-indigo-600 shadow-sm" : "text-muted"}`}
+                            >
+                              Live Preview
+                            </button>
+                          </div>
+                        </div>
+
+                        {contribPreviewTab === "write" ? (
+                          <textarea
+                            required
+                            placeholder={
+                              contribContentType === "text"
+                                ? "Write your notes using markdown syntax... e.g. # Title \n **Important points**"
+                                : "Paste your custom HTML code here... e.g. <div><h1>My Title</h1><p>Notes</p></div>"
+                            }
+                            rows={8}
+                            value={contribTextContent}
+                            onChange={(e) => setContribTextContent(e.target.value)}
+                            className="w-full px-3 py-2 border border-line rounded-xl text-xs font-mono focus:ring-1 focus:ring-indigo-500 focus:outline-none bg-paper"
+                          />
+                        ) : (
+                          <div className="border border-line rounded-xl p-3 min-h-[170px] bg-slate-50 overflow-y-auto max-h-[220px]">
+                            {contribContentType === "text" ? (
+                              contribTextContent ? (
+                                <div
+                                  className="text-xs prose prose-slate max-w-none text-slate-800"
+                                  dangerouslySetInnerHTML={{ __html: renderSimpleMarkdown(contribTextContent) }}
+                                />
+                              ) : (
+                                <div className="text-xs text-muted italic">Type something to see the live preview...</div>
+                              )
+                            ) : contribTextContent ? (
+                              <iframe
+                                title="HTML Sandbox Preview"
+                                sandbox="allow-same-origin"
+                                srcDoc={`<!DOCTYPE html><html><head><style>body { font-family: system-ui; margin: 8px; color: #1e293b; line-height: 1.5; font-size: 13px; } pre { background: #f8fafc; padding: 8px; border-radius: 4px; }</style></head><body>${contribTextContent}</body></html>`}
+                                className="w-full h-[150px] border-0"
+                              />
+                            ) : (
+                              <div className="text-xs text-muted italic">Type some HTML code to see the live preview...</div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    <button
+                      type="submit"
+                      disabled={contribLoading}
+                      className="w-full py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition-colors flex items-center justify-center gap-1.5 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {contribLoading ? (
+                        <>
+                          <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                          <span>Uploading &amp; Sanitizing...</span>
+                        </>
+                      ) : (
+                        <>
+                          <span>🚀 Submit for Approval</span>
+                        </>
+                      )}
+                    </button>
+                  </form>
+                ) : (
+                  /* HISTORY LIST */
+                  <div className="space-y-3 max-h-[380px] overflow-y-auto pr-1">
+                    {myUploads.length === 0 ? (
+                      <div className="text-center py-8 text-muted text-xs font-semibold">
+                        You haven't uploaded any study materials yet.
+                      </div>
+                    ) : (
+                      myUploads.map((item) => {
+                        const statusColor =
+                          item.status === "approved"
+                            ? "bg-emerald-50 border-emerald-200 text-emerald-700"
+                            : item.status === "rejected"
+                            ? "bg-rose-50 border-rose-200 text-rose-700"
+                            : "bg-amber-50 border-amber-200 text-amber-700";
+                        return (
+                          <div key={item.id} className="p-3 border border-line/60 rounded-xl bg-paper/40 flex flex-col gap-1.5">
+                            <div className="flex items-start justify-between gap-3">
+                              <div>
+                                <h4 className="text-xs font-bold text-ink">{item.title}</h4>
+                                <div className="text-[10px] text-muted font-semibold mt-0.5">
+                                  {item.subject_name} ({item.subject_code}) &middot; {item.section}
+                                </div>
+                              </div>
+                              <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${statusColor}`}>
+                                {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
+                              </span>
+                            </div>
+
+                            {item.status === "rejected" && item.rejection_reason && (
+                              <div className="text-[10px] bg-rose-50/50 border border-rose-100 rounded-lg p-2 text-rose-800">
+                                <span className="font-bold">Reason:</span> {item.rejection_reason}
+                              </div>
+                            )}
+
+                            <div className="flex items-center justify-between border-t border-line/40 pt-2 text-[9px] text-muted mt-1">
+                              <span>Format: {item.content_type.toUpperCase()}</span>
+                              <span>Submitted on {new Date(item.created_at).toLocaleDateString()}</span>
+                            </div>
+                          </div>
+                        );
+                      })
+                    )}
                   </div>
                 )}
               </div>
