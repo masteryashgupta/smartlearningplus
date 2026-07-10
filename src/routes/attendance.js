@@ -94,4 +94,14 @@ router.get("/leaderboard", requireAuth("student"), async (req, res) => {
   );
 });
 
+// Get stats of any user (for leaderboard detailed view)
+router.get("/users/:id/stats", requireAuth("student"), async (req, res) => {
+  try {
+    const stats = await computeStats(req.params.id);
+    res.json(stats);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to load user stats" });
+  }
+});
+
 export default router;
