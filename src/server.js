@@ -13,10 +13,23 @@ import attendanceRoutes from "./routes/attendance.js";
 import adminRoutes from "./routes/admin.js";
 import { registerHandlers } from "./bot/handlers.js";
 import { startScheduler } from "./bot/scheduler.js";
-import { setupWebhook } from "./bot/bot.js";
+import { setupWebhook, getBotStatus } from "./bot/bot.js";
 
 const app = express();
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+        fontSrc: ["'self'", "https://fonts.gstatic.com"],
+        imgSrc: ["'self'", "data:"],
+        scriptSrc: ["'self'", "'unsafe-inline'"],
+      },
+    },
+  })
+);
+
 app.disable("x-powered-by");
 
 // Rate Limiters
@@ -78,6 +91,332 @@ app.use((req, res, next) => {
 });
 
 app.get("/health", (req, res) => res.json({ ok: true }));
+
+app.get("/", async (req, res) => {
+  let dbStatusText = "Connected";
+  let dbStatusDot = "active";
+  let dbStatusColor = "var(--success)";
+  try {
+    await q("SELECT NOW()");
+  } catch (err) {
+    dbStatusText = "Disconnected";
+    dbStatusDot = "inactive";
+    dbStatusColor = "var(--danger)";
+  }
+
+  const botState = getBotStatus();
+  let botStatusText = botState;
+  let botStatusDot = "active";
+  let botStatusColor = "var(--success)";
+
+  if (botState === "Not Configured" || botState === "Disabled") {
+    botStatusDot = "inactive";
+    botStatusColor = "var(--text-muted)";
+  } else if (botState.includes("Failed") || botState === "Unauthorized") {
+    botStatusDot = "inactive";
+    botStatusColor = "var(--danger)";
+  } else if (botState.includes("Missing")) {
+    botStatusDot = "warning";
+    botStatusColor = "var(--warning)";
+  }
+
+  const seconds = process.uptime();
+  const d = Math.floor(seconds / (3600 * 24));
+  const h = Math.floor((seconds % (3600 * 24)) / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = Math.floor(seconds % 60);
+  const uptimeText = `${d > 0 ? `${d}d ` : ""}${h}h ${m}m ${s}s`;
+
+  const nodeVersion = process.version;
+  const memoryUsage = `${Math.round((process.memoryUsage().heapUsed / 1024 / 1024) * 100) / 100} MB`;
+  const serverTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" });
+  const envText = process.env.NODE_ENV || "production";
+
+  res.send(`<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Learning Plus — Backend Status</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #0b0f19;
+            --bg-card: #151c2c;
+            --border: rgba(255, 255, 255, 0.08);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --primary: #6366f1;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background-image: radial-gradient(circle at top right, rgba(99, 102, 241, 0.08), transparent 400px),
+                              radial-gradient(circle at bottom left, rgba(168, 85, 247, 0.06), transparent 400px);
+        }
+        .container {
+            width: 100%;
+            max-width: 680px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            animation: fadeIn 0.8s ease-out;
+        }
+        .logo-container {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            border-radius: 16px;
+            margin-bottom: 1rem;
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.25);
+        }
+        .logo-svg {
+            width: 32px;
+            height: 32px;
+            fill: white;
+        }
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #f8fafc, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-family: monospace;
+        }
+        .status-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
+        @media(min-width: 520px) {
+            .status-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        .card-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+        }
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            font-size: 1.125rem;
+        }
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .status-dot.active {
+            background-color: var(--success);
+            box-shadow: 0 0 12px var(--success);
+            animation: pulse 2s infinite;
+        }
+        .status-dot.inactive {
+            background-color: var(--danger);
+            box-shadow: 0 0 12px var(--danger);
+        }
+        .status-dot.warning {
+            background-color: var(--warning);
+            box-shadow: 0 0 12px var(--warning);
+            animation: pulse 2s infinite;
+        }
+        .metrics-card {
+            grid-column: span 1;
+        }
+        @media(min-width: 520px) {
+            .metrics-card {
+                grid-column: span 2;
+            }
+        }
+        .metrics-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+        @media(min-width: 480px) {
+            .metrics-list {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        .metric-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        .metric-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .metric-value {
+            font-size: 0.95rem;
+            font-weight: 600;
+            font-family: monospace;
+        }
+        .footer {
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 1.5rem;
+        }
+        .footer a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .footer a:hover {
+            color: #818cf8;
+        }
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.5; }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-container">
+                <svg class="logo-svg" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                </svg>
+            </div>
+            <h1>Smart Learning Plus</h1>
+            <div class="subtitle">System Status Dashboard</div>
+        </div>
+
+        <div class="status-grid">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Server API</span>
+                </div>
+                <div class="status-badge" style="color: var(--success)">
+                    <span class="status-dot active"></span>
+                    Online
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">PostgreSQL DB</span>
+                </div>
+                <div class="status-badge" style="color: ${dbStatusColor}">
+                    <span class="status-dot ${dbStatusDot}"></span>
+                    ${dbStatusText}
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Telegram Bot</span>
+                </div>
+                <div class="status-badge" style="color: ${botStatusColor}">
+                    <span class="status-dot ${botStatusDot}"></span>
+                    ${botStatusText}
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Environment</span>
+                </div>
+                <div class="status-badge" style="color: #a855f7">
+                    <span class="status-dot active" style="background-color:#a855f7; box-shadow:0 0 12px #a855f7;"></span>
+                    ${envText}
+                </div>
+            </div>
+
+            <div class="card metrics-card">
+                <div class="card-header">
+                    <span class="card-title">System Metrics</span>
+                </div>
+                <div class="metrics-list">
+                    <div class="metric-item">
+                        <span class="metric-label">Uptime</span>
+                        <span class="metric-value">${uptimeText}</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">Node version</span>
+                        <span class="metric-value">${nodeVersion}</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">Memory Usage</span>
+                        <span class="metric-value">${memoryUsage}</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">Server Time (IST)</span>
+                        <span class="metric-value">${serverTime}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>API Endpoint: <a href="/api">/api</a> | Health JSON: <a href="/health">/health</a></p>
+        </div>
+    </div>
+</body>
+</html>`);
+});
+
 
 app.use("/api/auth", authRoutes);
 app.use("/api/timetable", timetableRoutes);

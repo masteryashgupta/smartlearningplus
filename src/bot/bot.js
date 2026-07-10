@@ -9,6 +9,17 @@ if (!token) {
 
 const useWebhook = process.env.USE_WEBHOOK === "true";
 
+let botStatus = "Disabled";
+if (!token) {
+  botStatus = "Not Configured";
+} else {
+  botStatus = useWebhook ? "Active (Webhook)" : "Active (Polling)";
+}
+
+export function getBotStatus() {
+  return botStatus;
+}
+
 export const bot = token
   ? new TelegramBot(token, useWebhook ? {} : { polling: true })
   : null;
@@ -18,6 +29,7 @@ if (bot && !useWebhook) {
     console.error("⚠️ Telegram polling error:", error.message || error);
     if (error.message && (error.message.includes("401") || error.message.includes("Unauthorized"))) {
       console.warn("⚠️ Telegram Bot Token is unauthorized. Stopping polling to prevent spam.");
+      botStatus = "Unauthorized";
       bot.stopPolling().catch((err) => console.error("Failed to stop polling:", err.message));
     }
   });
@@ -28,6 +40,7 @@ export async function setupWebhook(app) {
   const publicUrl = process.env.PUBLIC_URL;
   if (!publicUrl) {
     console.warn("⚠️ PUBLIC_URL not set — webhook cannot be established.");
+    botStatus = "Webhook Configuration Missing";
     return;
   }
   const path = `/telegram/webhook/${token}`;
@@ -38,7 +51,9 @@ export async function setupWebhook(app) {
       res.sendStatus(200);
     });
     console.log("✅ Telegram webhook set:", publicUrl + path);
+    botStatus = "Active (Webhook)";
   } catch (err) {
     console.error("❌ Failed to set Telegram webhook:", err.message || err);
+    botStatus = "Webhook Registration Failed";
   }
 }
