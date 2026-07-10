@@ -1002,15 +1002,30 @@ export default function Home() {
           
           <div className="subject-row-grid">
             <a
-              href="/CourseCheckbox.java"
+              href="/AJ%20lab/CourseCheckbox.java"
               download="CourseCheckbox.java"
               className="subject-row-card sl-c-lab3"
             >
               <div className="subject-row-left">
                 <div className="subject-row-icon">☕</div>
                 <div className="subject-row-details">
-                  <div className="subject-row-title">Advanced Java Lab</div>
+                  <div className="subject-row-title">Advanced Java Lab — Program</div>
                   <div className="subject-row-code">CourseCheckbox.java &nbsp;·&nbsp; Click to Download</div>
+                </div>
+              </div>
+              <div className="subject-row-arrow">⬇</div>
+            </a>
+
+            <a
+              href="/AJ%20lab/Advanced%20Java%20Lab%20Manual%20Anisha%20mam.docx"
+              download="Advanced Java Lab Manual Anisha mam.docx"
+              className="subject-row-card sl-c-lab3"
+            >
+              <div className="subject-row-left">
+                <div className="subject-row-icon">📝</div>
+                <div className="subject-row-details">
+                  <div className="subject-row-title">Advanced Java Lab — Manual</div>
+                  <div className="subject-row-code">Lab Manual Anisha Mam &nbsp;·&nbsp; Click to Download</div>
                 </div>
               </div>
               <div className="subject-row-arrow">⬇</div>
