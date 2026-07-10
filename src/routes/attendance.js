@@ -74,7 +74,8 @@ router.get("/leaderboard", requireAuth("student"), async (req, res) => {
   const { rows } = await q(
     `select u.id, u.name, u.batch,
         count(*) filter (where a.status='present') as present,
-        count(*) filter (where a.status in ('present','absent')) as total
+        count(*) filter (where a.status in ('present','absent')) as total,
+        (select count(*) from community_materials where uploaded_by = u.id and status = 'approved') as approved_contributions
      from users u
      left join attendance a on a.user_id = u.id
      where u.is_active = true
@@ -90,6 +91,7 @@ router.get("/leaderboard", requireAuth("student"), async (req, res) => {
       batch: r.batch,
       percentage: r.total > 0 ? Math.round((r.present / r.total) * 1000) / 10 : null,
       total: Number(r.total),
+      contributions: Number(r.approved_contributions),
     }))
   );
 });

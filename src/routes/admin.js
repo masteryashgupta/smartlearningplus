@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { q } from "../db.js";
 import { requireAuth } from "../auth.js";
 import { computeStats } from "../lib/timetable.js";
+import { signUrls } from "../lib/b2.js";
 
 const router = Router();
 
@@ -180,7 +181,7 @@ router.get("/materials/pending", requireAuth("admin"), async (req, res) => {
        where cm.status = 'pending'
        order by cm.created_at asc`
     );
-    res.json(rows);
+    res.json(await signUrls(rows));
   } catch (err) {
     console.error("[materials-pending] Error:", err);
     res.status(500).json({ error: "Failed to load pending materials" });

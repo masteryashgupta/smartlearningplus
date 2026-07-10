@@ -4,7 +4,7 @@ import sanitizeHtml from "sanitize-html";
 import { fileTypeFromBuffer } from "file-type";
 import { q } from "../db.js";
 import { requireAuth } from "../auth.js";
-import { uploadToB2 } from "../lib/b2.js";
+import { uploadToB2, signUrls } from "../lib/b2.js";
 
 const router = Router();
 
@@ -46,7 +46,7 @@ router.get("/my-uploads", requireAuth("student"), async (req, res) => {
        order by cm.created_at desc`,
       [req.auth.id]
     );
-    res.json(rows);
+    res.json(await signUrls(rows));
   } catch (err) {
     console.error("[my-uploads] Error:", err);
     res.status(500).json({ error: "Failed to load upload history" });
@@ -64,7 +64,7 @@ router.get("/approved/:subject_code", async (req, res) => {
        order by cm.created_at desc`,
       [req.params.subject_code]
     );
-    res.json(rows);
+    res.json(await signUrls(rows));
   } catch (err) {
     console.error("[approved] Error:", err);
     res.status(500).json({ error: "Failed to fetch community materials" });

@@ -49,3 +49,58 @@ export async function uploadToB2(fileBuffer, fileName, mimeType) {
   // 4. Return formatted public download URL
   return `${downloadUrl}/file/${bucketName}/${fileName}`;
 }
+
+/**
+ * Generates a short-lived download authorization token for files prefix 'contributions/'
+ * @returns {Promise<string|null>} The authorization token
+ */
+export async function getDownloadToken() {
+  const keyId = process.env.B2_APPLICATION_KEY_ID;
+  const key = process.env.B2_APPLICATION_KEY;
+  const bucketId = process.env.B2_BUCKET_ID;
+
+  if (!keyId || !key || !bucketId) {
+    return null;
+  }
+
+  b2.applicationKeyId = keyId;
+  b2.applicationKey = key;
+
+  await b2.authorize();
+  const res = await b2.getDownloadAuthorization({
+    bucketId: bucketId,
+    fileNamePrefix: "contributions/",
+    validDurationInSeconds: 3600, // 1 hour
+  });
+  return res.data.authorizationToken;
+}
+
+/**
+ * Appends authorization query parameter to file_urls of materials if present
+ * @param {Array} items
+ * @returns {Promise<Array>}
+ */
+export async function signUrls(items) {
+  if (!items || items.length === 0) return items;
+  const hasFiles = items.some(item => item.file_url);
+  if (!hasFiles) return items;
+
+  try {
+    const token = await getDownloadToken();
+    if (!token) return items;
+    return items.map(item => {
+      if (item.file_url) {
+        // Support files that might already have query params
+        const separator = item.file_url.includes("?") ? "&" : "?";
+        return {
+          ...item,
+          file_url: `${item.file_url}${separator}Authorization=${token}`
+        };
+      }
+      return item;
+    });
+  } catch (err) {
+    console.error("[signUrls] Error signing B2 private URLs:", err);
+    return items;
+  }
+}
