@@ -457,6 +457,12 @@ async function migrateDatabase() {
       )
     `);
 
+    // Add is_hidden column for admin moderation of approved materials (safe migration)
+    await q(`
+      alter table community_materials
+      add column if not exists is_hidden boolean not null default false
+    `);
+
     // Update subject names to match timetable formatting (code - lecturer)
     await q(`
       UPDATE subjects SET name = 'HCI - PT' WHERE code = 'HCI' AND name != 'HCI - PT';

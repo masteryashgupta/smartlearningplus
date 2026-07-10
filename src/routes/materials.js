@@ -60,7 +60,7 @@ router.get("/approved/:subject_code", async (req, res) => {
       `select cm.id, cm.title, cm.section, cm.content_type, cm.file_url, cm.text_content, cm.uploader_name, cm.created_at
        from community_materials cm
        join subjects s on s.id = cm.subject_id
-       where lower(s.code) = lower($1) and cm.status = 'approved'
+       where lower(s.code) = lower($1) and cm.status = 'approved' and cm.is_hidden = false
        order by cm.created_at desc`,
       [req.params.subject_code]
     );

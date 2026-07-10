@@ -242,4 +242,53 @@ router.post("/materials/:id/reject", requireAuth("admin"), async (req, res) => {
   }
 });
 
+// Fetch ALL approved materials (for admin management view)
+router.get("/materials/approved", requireAuth("admin"), async (req, res) => {
+  try {
+    const { rows } = await q(
+      `select cm.*, s.name as subject_name, s.code as subject_code
+       from community_materials cm
+       join subjects s on s.id = cm.subject_id
+       where cm.status = 'approved'
+       order by cm.created_at desc`
+    );
+    res.json(await signUrls(rows));
+  } catch (err) {
+    console.error("[materials-approved] Error:", err);
+    res.status(500).json({ error: "Failed to load approved materials" });
+  }
+});
+
+// Toggle hide/unhide an approved material
+router.post("/materials/:id/toggle-hidden", requireAuth("admin"), async (req, res) => {
+  try {
+    const { rows } = await q(
+      `update community_materials
+       set is_hidden = NOT is_hidden
+       where id = $1 returning id, is_hidden`,
+      [req.params.id]
+    );
+    if (rows.length === 0) return res.status(404).json({ error: "Material not found" });
+    res.json({ ok: true, is_hidden: rows[0].is_hidden });
+  } catch (err) {
+    console.error("[materials-toggle-hidden] Error:", err);
+    res.status(500).json({ error: "Database error toggling hidden state" });
+  }
+});
+
+// Permanently delete a material (any status)
+router.delete("/materials/:id", requireAuth("admin"), async (req, res) => {
+  try {
+    const { rowCount } = await q(
+      `delete from community_materials where id = $1`,
+      [req.params.id]
+    );
+    if (rowCount === 0) return res.status(404).json({ error: "Material not found" });
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("[materials-delete] Error:", err);
+    res.status(500).json({ error: "Database error during delete" });
+  }
+});
+
 export default router;
