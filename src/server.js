@@ -11,6 +11,7 @@ import authRoutes from "./routes/auth.js";
 import timetableRoutes from "./routes/timetable.js";
 import attendanceRoutes from "./routes/attendance.js";
 import adminRoutes from "./routes/admin.js";
+import materialsRoutes from "./routes/materials.js";
 import { registerHandlers } from "./bot/handlers.js";
 import { startScheduler } from "./bot/scheduler.js";
 import { setupWebhook, getBotStatus } from "./bot/bot.js";
@@ -422,6 +423,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/timetable", timetableRoutes);
 app.use("/api/attendance", attendanceRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/materials", materialsRoutes);
 
 async function migrateDatabase() {
   console.log("🔄 Running database migrations...");
@@ -431,6 +433,26 @@ async function migrateDatabase() {
       create table if not exists whitelisted_emails (
         id uuid primary key default gen_random_uuid(),
         email text unique not null,
+        created_at timestamptz default now()
+      )
+    `);
+
+    // Ensure community_materials table exists
+    await q(`
+      create table if not exists community_materials (
+        id uuid primary key default gen_random_uuid(),
+        title text not null,
+        subject_id uuid references subjects(id) on delete cascade,
+        section text not null,
+        content_type text not null check (content_type in ('pdf', 'image', 'text', 'html')),
+        uploader_name text,
+        file_url text,
+        text_content text,
+        uploaded_by uuid references users(id) on delete set null,
+        status text not null default 'pending' check (status in ('pending', 'approved', 'rejected')),
+        rejection_reason text,
+        reviewed_by uuid references admins(id) on delete set null,
+        reviewed_at timestamptz,
         created_at timestamptz default now()
       )
     `);

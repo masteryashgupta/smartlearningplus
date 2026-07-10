@@ -167,7 +167,77 @@ router.post("/change-password", requireAuth("admin"), async (req, res) => {
     res.json({ ok: true, message: "Password updated successfully" });
   } catch (err) {
     console.error("Change password error:", err);
-    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// Fetch pending study materials list
+router.get("/materials/pending", requireAuth("admin"), async (req, res) => {
+  try {
+    const { rows } = await q(
+      `select cm.*, s.name as subject_name, s.code as subject_code
+       from community_materials cm
+       join subjects s on s.id = cm.subject_id
+       where cm.status = 'pending'
+       order by cm.created_at asc`
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error("[materials-pending] Error:", err);
+    res.status(500).json({ error: "Failed to load pending materials" });
+  }
+});
+
+// Fetch pending materials counter badge
+router.get("/materials/pending/count", requireAuth("admin"), async (req, res) => {
+  try {
+    const { rows } = await q("select count(*) from community_materials where status = 'pending'");
+    res.json({ count: Number(rows[0].count) });
+  } catch (err) {
+    console.error("[materials-pending-count] Error:", err);
+    res.status(500).json({ error: "Failed to fetch counts" });
+  }
+});
+
+// Approve a contribution
+router.post("/materials/:id/approve", requireAuth("admin"), async (req, res) => {
+  try {
+    const { rows } = await q(
+      `update community_materials 
+       set status = 'approved', reviewed_by = $1, reviewed_at = now()
+       where id = $2 returning *`,
+      [req.auth.id, req.params.id]
+    );
+    if (rows.length === 0) {
+      return res.status(404).json({ error: "Material not found" });
+    }
+    res.json({ ok: true, message: "Material approved successfully", material: rows[0] });
+  } catch (err) {
+    console.error("[materials-approve] Error:", err);
+    res.status(500).json({ error: "Database error during approval" });
+  }
+});
+
+// Reject a contribution with reason
+router.post("/materials/:id/reject", requireAuth("admin"), async (req, res) => {
+  const { reason } = req.body;
+  if (!reason || !reason.trim()) {
+    return res.status(400).json({ error: "Rejection reason is required" });
+  }
+
+  try {
+    const { rows } = await q(
+      `update community_materials 
+       set status = 'rejected', rejection_reason = $1, reviewed_by = $2, reviewed_at = now()
+       where id = $3 returning *`,
+      [reason.trim(), req.auth.id, req.params.id]
+    );
+    if (rows.length === 0) {
+      return res.status(404).json({ error: "Material not found" });
+    }
+    res.json({ ok: true, message: "Material rejected successfully", material: rows[0] });
+  } catch (err) {
+    console.error("[materials-reject] Error:", err);
+    res.status(500).json({ error: "Database error during rejection" });
   }
 });
 
