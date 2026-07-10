@@ -110,155 +110,39 @@ export default function Login({ compact = false }) {
     }
   }
 
-  return (
-    <div className="min-h-screen flex items-center justify-center px-4">
-      <div className="w-full max-w-sm">
-        <div className="text-center mb-8 flex flex-col items-center">
-          <img src="/logo.png?v=3" alt="Logo" className="w-12 h-12 object-contain mb-3" />
-          <div className="font-display text-2xl font-bold text-[#1e3a8a] tracking-tight">Smart Learning Plus</div>
-          <div className="text-muted text-sm font-mono">Study Smarter, Not Harder</div>
-        </div>
+  const cardContent = (
+    <div className="card p-6 bg-white border border-line rounded-xl shadow-soft">
+      <div className="flex gap-2 mb-6 bg-paper rounded-xl p-1 border border-line/40">
+        <button
+          className={`flex-1 py-1.5 rounded-lg text-sm font-medium transition-colors ${mode === "student" ? "bg-white shadow-soft text-primary" : "text-muted hover:text-ink"}`}
+          onClick={() => { setMode("student"); setError(""); setForgotMode(false); setForgotMsg(null); setRegisterSuccess(null); }}
+        >
+          Student
+        </button>
+        <button
+          className={`flex-1 py-1.5 rounded-lg text-sm font-medium transition-colors ${mode === "admin" ? "bg-white shadow-soft text-primary" : "text-muted hover:text-ink"}`}
+          onClick={() => { setMode("admin"); setError(""); setForgotMode(false); setForgotMsg(null); setRegisterSuccess(null); }}
+        >
+          Admin
+        </button>
+      </div>
 
-        <div className="card p-6 bg-white border border-line rounded-xl shadow-soft">
-        <div className="flex gap-2 mb-6 bg-paper rounded-xl p-1 border border-line/40">
-            <button
-              className={`flex-1 py-1.5 rounded-lg text-sm font-medium transition-colors ${mode === "student" ? "bg-white shadow-soft text-primary" : "text-muted hover:text-ink"}`}
-              onClick={() => { setMode("student"); setError(""); setForgotMode(false); setForgotMsg(null); setRegisterSuccess(null); }}
-            >
-              Student
-            </button>
-            <button
-              className={`flex-1 py-1.5 rounded-lg text-sm font-medium transition-colors ${mode === "admin" ? "bg-white shadow-soft text-primary" : "text-muted hover:text-ink"}`}
-              onClick={() => { setMode("admin"); setError(""); setForgotMode(false); setForgotMsg(null); setRegisterSuccess(null); }}
-            >
-              Admin
-            </button>
-          </div>
-
-          {mode === "student" ? (
-            <div>
-              {forgotMode ? (
-                /* ── FORGOT PASSWORD FORM ── */
-                <form onSubmit={handleForgotPassword} className="space-y-3">
-                  <div className="text-sm font-semibold text-ink mb-1">Reset your password</div>
-                  <p className="text-xs text-muted mb-3">Enter your registered email and we'll send you a reset link valid for 1 hour.</p>
-                  <input
-                    className="input"
-                    type="email"
-                    placeholder="Your email address"
-                    value={forgotEmail}
-                    onChange={(e) => setForgotEmail(e.target.value)}
-                    required
-                    autoFocus
-                  />
-                  {forgotMsg && (
-                    <div className={`text-xs rounded-xl px-3 py-2.5 font-medium ${
-                      forgotMsg.ok ? "bg-green-50 text-green-700 border border-green-200" : "bg-red-50 text-red-600 border border-red-200"
-                    }`}>{forgotMsg.text}</div>
-                  )}
-                  <button className="btn-primary w-full" disabled={loading}>
-                    {loading ? "Sending…" : "Send Reset Link"}
-                  </button>
-                  <div className="text-center">
-                    <button type="button" className="text-xs text-primary hover:underline"
-                      onClick={() => { setForgotMode(false); setForgotMsg(null); setForgotEmail(""); }}>
-                      ← Back to sign in
-                    </button>
-                  </div>
-                </form>
-              ) : studentAction === "login" ? (
-                <form onSubmit={handleStudentLogin} className="space-y-3">
-                  <div className="text-[11px] text-[#2563eb] text-center bg-[#eff6ff] py-1.5 px-3 rounded-lg border border-[#dbeafe] mb-3.5 font-semibold">
-                    ⚠️ Use student email only
-                  </div>
-                  <input
-                    className="input"
-                    type="email"
-                    placeholder="Student email"
-                    value={studentEmail}
-                    onChange={(e) => setStudentEmail(e.target.value)}
-                    required
-                  />
-                  <input
-                    className="input"
-                    type="password"
-                    placeholder="Password"
-                    value={studentPassword}
-                    onChange={(e) => setStudentPassword(e.target.value)}
-                    required
-                  />
-                  {registerSuccess && (
-                    <div className="text-xs bg-green-50 text-green-700 border border-green-200 rounded-xl px-3 py-2.5 font-medium">
-                      {registerSuccess}
-                    </div>
-                  )}
-                  {error && <p className="text-bad text-sm">{error}</p>}
-                  <button className="btn-primary w-full" disabled={loading}>
-                    {loading ? "Signing in…" : "Sign in"}
-                  </button>
-
-                  <div className="flex items-center justify-between mt-1">
-                    <button type="button" className="text-xs text-primary hover:underline"
-                      onClick={() => { setStudentAction("register"); setError(""); }}>
-                      Don't have an account? Sign up
-                    </button>
-                    <button type="button" className="text-xs text-muted hover:text-primary hover:underline"
-                      onClick={() => { setForgotMode(true); setForgotMsg(null); setForgotEmail(studentEmail); }}>
-                      Forgot password?
-                    </button>
-                  </div>
-
-                  <div className="border-t border-line/60 mt-4 pt-4 text-center">
-                    <p className="text-xs text-muted leading-relaxed">
-                      Or log in instantly via Telegram:<br />
-                      Open Telegram, send <span className="font-mono text-ink">/dashboard</span> to the bot,
-                      and tap the link.
-                    </p>
-                  </div>
-                </form>
-              ) : (
-                <form onSubmit={handleStudentRegister} className="space-y-3">
-                  <div className="text-[11px] text-[#2563eb] text-center bg-[#eff6ff] py-1.5 px-3 rounded-lg border border-[#dbeafe] mb-3.5 font-semibold">
-                    ⚠️ Use student email only
-                  </div>
-                  <input className="input" type="text" placeholder="Full name" value={studentName}
-                    onChange={(e) => setStudentName(e.target.value)} required />
-                  <input className="input" type="email" placeholder="Email address" value={studentEmail}
-                    onChange={(e) => setStudentEmail(e.target.value)} required />
-                  <input className="input" type="password" placeholder="Password (min. 8 chars)" value={studentPassword}
-                    onChange={(e) => setStudentPassword(e.target.value)} required />
-
-                  <div className="flex gap-2 items-center bg-paper p-1 rounded-xl border border-line">
-                    <span className="text-xs text-muted pl-2 pr-1 font-medium">Batch:</span>
-                    <button type="button"
-                      className={`flex-1 py-1 rounded-lg text-xs font-semibold transition-colors ${studentBatch === "G1" ? "bg-white shadow-soft text-primary" : "text-muted"}`}
-                      onClick={() => setStudentBatch("G1")}>G1 (Lab)</button>
-                    <button type="button"
-                      className={`flex-1 py-1 rounded-lg text-xs font-semibold transition-colors ${studentBatch === "G2" ? "bg-white shadow-soft text-primary" : "text-muted"}`}
-                      onClick={() => setStudentBatch("G2")}>G2 (Lab)</button>
-                  </div>
-
-                  {error && <p className="text-bad text-sm">{error}</p>}
-                  <button className="btn-primary w-full" disabled={loading}>
-                    {loading ? "Creating account…" : "Sign up"}
-                  </button>
-
-                  <div className="text-center mt-3">
-                    <button type="button" className="text-xs text-primary hover:underline"
-                      onClick={() => { setStudentAction("login"); setError(""); }}>
-                      Already have an account? Sign in
-                    </button>
-                  </div>
-                </form>
-              )}
-            </div>
-          ) : forgotMode ? (
-            /* ── ADMIN FORGOT PASSWORD ── */
+      {mode === "student" ? (
+        <div>
+          {forgotMode ? (
+            /* ── FORGOT PASSWORD FORM ── */
             <form onSubmit={handleForgotPassword} className="space-y-3">
-              <div className="text-sm font-semibold text-ink mb-1">Reset admin password</div>
-              <p className="text-xs text-muted mb-3">Enter your admin email. A reset link will be sent if the address is registered.</p>
-              <input className="input" type="email" placeholder="Admin email" value={forgotEmail}
-                onChange={(e) => setForgotEmail(e.target.value)} required autoFocus />
+              <div className="text-sm font-semibold text-ink mb-1">Reset your password</div>
+              <p className="text-xs text-muted mb-3">Enter your registered email and we'll send you a reset link valid for 1 hour.</p>
+              <input
+                className="input"
+                type="email"
+                placeholder="Your email address"
+                value={forgotEmail}
+                onChange={(e) => setForgotEmail(e.target.value)}
+                required
+                autoFocus
+              />
               {forgotMsg && (
                 <div className={`text-xs rounded-xl px-3 py-2.5 font-medium ${
                   forgotMsg.ok ? "bg-green-50 text-green-700 border border-green-200" : "bg-red-50 text-red-600 border border-red-200"
@@ -274,41 +158,148 @@ export default function Login({ compact = false }) {
                 </button>
               </div>
             </form>
-          ) : (
-            <form onSubmit={handleAdminLogin} className="space-y-3">
-              <input className="input" type="email" placeholder="Admin email" value={email}
-                onChange={(e) => setEmail(e.target.value)} required />
-              <input className="input" type="password" placeholder="Password" value={password}
-                onChange={(e) => setPassword(e.target.value)} required />
+          ) : studentAction === "login" ? (
+            <form onSubmit={handleStudentLogin} className="space-y-3">
+              <div className="text-[11px] text-[#2563eb] text-center bg-[#eff6ff] py-1.5 px-3 rounded-lg border border-[#dbeafe] mb-3.5 font-semibold">
+                ⚠️ Use student email only
+              </div>
+              <input
+                className="input"
+                type="email"
+                placeholder="Student email"
+                value={studentEmail}
+                onChange={(e) => setStudentEmail(e.target.value)}
+                required
+              />
+              <input
+                className="input"
+                type="password"
+                placeholder="Password"
+                value={studentPassword}
+                onChange={(e) => setStudentPassword(e.target.value)}
+                required
+              />
+              {registerSuccess && (
+                <div className="text-xs bg-green-50 text-green-700 border border-green-200 rounded-xl px-3 py-2.5 font-medium">
+                  {registerSuccess}
+                </div>
+              )}
               {error && <p className="text-bad text-sm">{error}</p>}
               <button className="btn-primary w-full" disabled={loading}>
                 {loading ? "Signing in…" : "Sign in"}
               </button>
-              <div className="text-right mt-1">
+
+              <div className="flex items-center justify-between mt-1">
+                <button type="button" className="text-xs text-primary hover:underline"
+                  onClick={() => { setStudentAction("register"); setError(""); }}>
+                  Don't have an account? Sign up
+                </button>
                 <button type="button" className="text-xs text-muted hover:text-primary hover:underline"
-                  onClick={() => { setForgotMode(true); setForgotMsg(null); setForgotEmail(email); }}>
+                  onClick={() => { setForgotMode(true); setForgotMsg(null); setForgotEmail(studentEmail); }}>
                   Forgot password?
+                </button>
+              </div>
+
+              <div className="border-t border-line/60 mt-4 pt-4 text-center">
+                <p className="text-xs text-muted leading-relaxed">
+                  Or log in instantly via Telegram:<br />
+                  Open Telegram, send <span className="font-mono text-ink">/dashboard</span> to the bot,
+                  and tap the link.
+                </p>
+              </div>
+            </form>
+          ) : (
+            <form onSubmit={handleStudentRegister} className="space-y-3">
+              <div className="text-[11px] text-[#2563eb] text-center bg-[#eff6ff] py-1.5 px-3 rounded-lg border border-[#dbeafe] mb-3.5 font-semibold">
+                ⚠️ Use student email only
+              </div>
+              <input className="input" type="text" placeholder="Full name" value={studentName}
+                onChange={(e) => setStudentName(e.target.value)} required />
+              <input className="input" type="email" placeholder="Email address" value={studentEmail}
+                onChange={(e) => setStudentEmail(e.target.value)} required />
+              <input className="input" type="password" placeholder="Password (min. 8 chars)" value={studentPassword}
+                onChange={(e) => setStudentPassword(e.target.value)} required />
+
+              <div className="flex gap-2 items-center bg-paper p-1 rounded-xl border border-line">
+                <span className="text-xs text-muted pl-2 pr-1 font-medium">Batch:</span>
+                <button type="button"
+                  className={`flex-1 py-1 rounded-lg text-xs font-semibold transition-colors ${studentBatch === "G1" ? "bg-white shadow-soft text-primary" : "text-muted"}`}
+                  onClick={() => setStudentBatch("G1")}>G1 (Lab)</button>
+                <button type="button"
+                  className={`flex-1 py-1 rounded-lg text-xs font-semibold transition-colors ${studentBatch === "G2" ? "bg-white shadow-soft text-primary" : "text-muted"}`}
+                  onClick={() => setStudentBatch("G2")}>G2 (Lab)</button>
+              </div>
+
+              {error && <p className="text-bad text-sm">{error}</p>}
+              <button className="btn-primary w-full" disabled={loading}>
+                {loading ? "Creating account…" : "Sign up"}
+              </button>
+
+              <div className="text-center mt-3">
+                <button type="button" className="text-xs text-primary hover:underline"
+                  onClick={() => { setStudentAction("login"); setError(""); }}>
+                  Already have an account? Sign in
                 </button>
               </div>
             </form>
           )}
         </div>
-      </div>
+      ) : forgotMode ? (
+        /* ── ADMIN FORGOT PASSWORD ── */
+        <form onSubmit={handleForgotPassword} className="space-y-3">
+          <div className="text-sm font-semibold text-ink mb-1">Reset admin password</div>
+          <p className="text-xs text-muted mb-3">Enter your admin email. A reset link will be sent if the address is registered.</p>
+          <input className="input" type="email" placeholder="Admin email" value={forgotEmail}
+            onChange={(e) => setForgotEmail(e.target.value)} required autoFocus />
+          {forgotMsg && (
+            <div className={`text-xs rounded-xl px-3 py-2.5 font-medium ${
+              forgotMsg.ok ? "bg-green-50 text-green-700 border border-green-200" : "bg-red-50 text-red-600 border border-red-200"
+            }`}>{forgotMsg.text}</div>
+          )}
+          <button className="btn-primary w-full" disabled={loading}>
+            {loading ? "Sending…" : "Send Reset Link"}
+          </button>
+          <div className="text-center">
+            <button type="button" className="text-xs text-primary hover:underline"
+              onClick={() => { setForgotMode(false); setForgotMsg(null); setForgotEmail(""); }}>
+              ← Back to sign in
+            </button>
+          </div>
+        </form>
+      ) : (
+        <form onSubmit={handleAdminLogin} className="space-y-3">
+          <input className="input" type="email" placeholder="Admin email" value={email}
+            onChange={(e) => setEmail(e.target.value)} required />
+          <input className="input" type="password" placeholder="Password" value={password}
+            onChange={(e) => setPassword(e.target.value)} required />
+          {error && <p className="text-bad text-sm">{error}</p>}
+          <button className="btn-primary w-full" disabled={loading}>
+            {loading ? "Signing in…" : "Sign in"}
+          </button>
+          <div className="text-right mt-1">
+            <button type="button" className="text-xs text-muted hover:text-primary hover:underline"
+              onClick={() => { setForgotMode(true); setForgotMsg(null); setForgotEmail(email); }}>
+              Forgot password?
+            </button>
+          </div>
+        </form>
+      )}
     </div>
   );
 
   return compact ? (
-    <div className="w-full max-w-sm">
-      {cardBody}
+    <div className="w-full">
+      {cardContent}
     </div>
   ) : (
     <div className="min-h-screen flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
-        <div className="text-center mb-8">
-          <div className="font-display text-2xl font-bold text-ink">Smart Learning Plus</div>
+        <div className="text-center mb-8 flex flex-col items-center">
+          <img src="/logo.png?v=3" alt="Logo" className="w-12 h-12 object-contain mb-3" />
+          <div className="font-display text-2xl font-bold text-[#1e3a8a] tracking-tight">Smart Learning Plus</div>
           <div className="text-muted text-sm font-mono">Study Smarter, Not Harder</div>
         </div>
-        {cardBody}
+        {cardContent}
       </div>
     </div>
   );

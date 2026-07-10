@@ -134,11 +134,7 @@ export default function Home() {
     };
   }, [session]);
 
-  if (!session) {
-    return <Login />;
-  }
-
-  if (session.role === "admin") {
+  if (session && session.role === "admin") {
     return <AdminPanel />;
   }
 
@@ -848,6 +844,78 @@ export default function Home() {
                 <p className="text-[9px] text-muted text-center mt-2 leading-relaxed">
                   Hover over the grid blocks to inspect date details. Brighter green represents higher presence rate.
                 </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* LOCKED DASHBOARD PREVIEW & SIGN IN (For Logged-Out Users) */}
+        {!session && (
+          <div className="locked-preview-container my-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+            {/* Left: Creative Glassmorphic Mockup Dashboard (High visual impact) */}
+            <div className="lg:col-span-7 card relative overflow-hidden bg-gradient-to-br from-[#1e1b4b] to-[#0f172a] border border-white/10 p-6 sm:p-8 rounded-2xl flex flex-col justify-between shadow-soft min-h-[380px] backdrop-blur-md">
+              {/* Background glowing rings */}
+              <div className="absolute top-10 right-10 w-48 h-48 bg-cyan-500/10 rounded-full blur-3xl" />
+              <div className="absolute bottom-5 left-5 w-40 h-40 bg-indigo-500/10 rounded-full blur-3xl" />
+              
+              <div className="relative z-10">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/20 border border-indigo-500/30 text-xs font-bold text-indigo-200 tracking-wide uppercase mb-6">
+                  <span>🔒 Attendance Tracker</span>
+                </div>
+                
+                <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight mb-4">
+                  Analyze Your Attendance <br className="hidden sm:inline" />&amp; Consistency
+                </h1>
+                <p className="text-sm text-slate-300 max-w-lg leading-relaxed mb-8">
+                  Log in to visualize your weekly class timetable, track real-time attendance statistics, compare with friends on the leaderboard, and maintain your green streak on the heatmap.
+                </p>
+
+                {/* Grid of Mock Visual Items (Visual Wow Factor) */}
+                <div className="grid grid-cols-3 gap-4 opacity-50 select-none pointer-events-none">
+                  {/* Mock Subject Gauge */}
+                  <div className="bg-slate-800/50 border border-slate-700/40 rounded-xl p-4 text-center">
+                    <div className="w-12 h-12 rounded-full border-4 border-cyan-400/30 border-t-cyan-400 mx-auto flex items-center justify-center text-xs text-cyan-300 font-mono font-bold">85%</div>
+                    <div className="text-xs text-white mt-2.5 font-bold truncate">Compiler Design</div>
+                  </div>
+                  {/* Mock Leaderboard Rank */}
+                  <div className="bg-slate-800/50 border border-slate-700/40 rounded-xl p-4 text-center flex flex-col justify-center">
+                    <div className="text-2xl">🏆</div>
+                    <div className="text-xs text-white font-bold mt-2">#1 in Batch</div>
+                  </div>
+                  {/* Mock Heatmap Preview */}
+                  <div className="bg-slate-800/50 border border-slate-700/40 rounded-xl p-4 text-center flex flex-col items-center justify-center">
+                    <div className="grid grid-cols-4 gap-1">
+                      <div className="w-3 h-3 rounded-sm bg-emerald-500" />
+                      <div className="w-3 h-3 rounded-sm bg-emerald-600" />
+                      <div className="w-3 h-3 rounded-sm bg-slate-700" />
+                      <div className="w-3 h-3 rounded-sm bg-emerald-400" />
+                      <div className="w-3 h-3 rounded-sm bg-emerald-700" />
+                      <div className="w-3 h-3 rounded-sm bg-slate-700" />
+                      <div className="w-3 h-3 rounded-sm bg-emerald-500" />
+                      <div className="w-3 h-3 rounded-sm bg-emerald-600" />
+                    </div>
+                    <div className="text-xs text-white mt-3.5 font-bold">Consistency Grid</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Large locked callout */}
+              <div className="relative z-10 mt-8 pt-4 border-t border-slate-700/50 flex items-center justify-between text-slate-300 text-xs">
+                <span className="flex items-center gap-2 font-medium">
+                  <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse" />
+                  Live Syncing with Telegram Bot
+                </span>
+                <span className="font-mono text-xs bg-slate-800/80 px-2.5 py-1 rounded border border-slate-700">v5.0.0</span>
+              </div>
+            </div>
+
+            {/* Right: The Login/Registration Card container */}
+            <div className="lg:col-span-5 flex flex-col justify-center">
+              <div className="relative group p-1 bg-gradient-to-b from-indigo-500/20 to-cyan-500/10 rounded-2xl border border-white/5 shadow-lg">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-cyan-500 rounded-2xl blur opacity-30 group-hover:opacity-40 transition duration-1000" />
+                <div className="relative bg-white rounded-[1rem] overflow-hidden p-0.5">
+                  <Login compact={true} />
+                </div>
               </div>
             </div>
           </div>
