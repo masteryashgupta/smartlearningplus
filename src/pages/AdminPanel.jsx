@@ -9,6 +9,7 @@ const TABS = [
   { key: "holidays",  label: "Holidays" },
   { key: "users",     label: "Users" },
   { key: "whitelist", label: "Whitelist" },
+  { key: "materials", label: "Approvals" },
   { key: "attendance",label: "Attendance" },
   { key: "settings",  label: "Settings" },
 ];
@@ -46,6 +47,11 @@ export default function AdminPanel() {
   const [expandedUserId, setExpandedUserId] = useState(null);
   const [expandedUserStats, setExpandedUserStats] = useState(null);
   const [statsLoading, setStatsLoading] = useState(false);
+  const [pendingMaterials, setPendingMaterials] = useState([]);
+  const [pendingMaterialsCount, setPendingMaterialsCount] = useState(0);
+  const [previewMaterialId, setPreviewMaterialId] = useState(null);
+  const [rejectionInputId, setRejectionInputId] = useState(null);
+  const [rejectionReasonText, setRejectionReasonText] = useState("");
 
   function toggleUserStats(userId) {
     if (expandedUserId === userId) {
@@ -96,6 +102,66 @@ export default function AdminPanel() {
   function reloadWhitelist() {
     api.get("/admin/whitelist").then((r) => setWhitelist(r.data));
   }
+
+  function reloadPendingMaterials() {
+    api.get("/admin/materials/pending").then((r) => setPendingMaterials(r.data));
+    api.get("/admin/materials/pending/count").then((r) => setPendingMaterialsCount(r.data.count));
+  }
+
+  async function handleApproveMaterial(id) {
+    if (!window.confirm("Are you sure you want to approve this contribution?")) return;
+    try {
+      await api.post(`/admin/materials/${id}/approve`);
+      showToast("Material approved successfully!");
+      reloadPendingMaterials();
+    } catch (err) {
+      console.error(err);
+      showToast("Failed to approve material", false);
+    }
+  }
+
+  async function handleRejectConfirm(id) {
+    if (!rejectionReasonText.trim()) {
+      alert("Please provide a rejection reason.");
+      return;
+    }
+    try {
+      await api.post(`/admin/materials/${id}/reject`, { reason: rejectionReasonText.trim() });
+      showToast("Material rejected.");
+      setRejectionInputId(null);
+      setRejectionReasonText("");
+      reloadPendingMaterials();
+    } catch (err) {
+      console.error(err);
+      showToast("Failed to reject material", false);
+    }
+  }
+
+  const renderSimpleMarkdown = (text) => {
+    if (!text) return "";
+    let html = text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+    
+    html = html.replace(/^### (.*$)/gim, "<h3>$1</h3>");
+    html = html.replace(/^## (.*$)/gim, "<h2>$1</h2>");
+    html = html.replace(/^# (.*$)/gim, "<h1>$1</h1>");
+    
+    html = html.replace(/\*\*(.*?)\*\//g, "<strong>$1</strong>");
+    html = html.replace(/\*(.*?)\*/g, "<em>$1</em>");
+    
+    html = html.replace(/```([\s\S]*?)```/g, "<pre><code>$1</code></pre>");
+    html = html.replace(/`([^`]+)`/g, "<code>$1</code>");
+    
+    html = html.split("\n\n").map(p => {
+      if (p.startsWith("<h") || p.startsWith("<pre")) return p;
+      return `<p>${p.replace(/\n/g, "<br>")}</p>`;
+    }).join("");
+    
+    return html;
+  };
+
   async function loadAttendance(d) {
     setAttendanceLoading(true);
     try {
@@ -115,10 +181,12 @@ export default function AdminPanel() {
     reloadHolidays();
     reloadUsers();
     reloadWhitelist();
+    reloadPendingMaterials();
   }, []);
 
   useEffect(() => {
     if (tab === "attendance") loadAttendance(attendanceDate);
+    if (tab === "materials") reloadPendingMaterials();
   }, [tab, attendanceDate, week]);
 
   async function addSlot(e) {
@@ -664,6 +732,150 @@ export default function AdminPanel() {
                 })}
               </div>
             </div>
+          </div>
+        )}
+
+        {/* ── COMMUNITY APPROVALS ── */}
+        {tab === "materials" && (
+          <div className="space-y-4">
+            <div className="card p-4 sm:p-5">
+              <div className="font-display font-bold text-lg mb-1 text-ink flex items-center gap-2">
+                <span>📥</span> Contribution Moderation Queue
+              </div>
+              <p className="text-muted text-sm">Review, preview, and approve or reject study materials submitted by students.</p>
+            </div>
+
+            {pendingMaterials.length === 0 ? (
+              <div className="card p-8 text-center bg-white border border-line rounded-2xl shadow-soft">
+                <div className="text-4xl mb-3">🎉</div>
+                <div className="text-sm font-semibold text-ink">All caught up!</div>
+                <div className="text-xs text-muted mt-1">There are no pending student contributions waiting for approval.</div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-4">
+                {pendingMaterials.map((item) => {
+                  const isPreviewOpen = previewMaterialId === item.id;
+                  const isRejecting = rejectionInputId === item.id;
+                  return (
+                    <div key={item.id} className="card p-4 sm:p-5 bg-white border border-line rounded-2xl shadow-soft flex flex-col gap-3">
+                      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                        <div>
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="font-bold text-sm text-ink">{item.title}</span>
+                            <span className="text-[10px] font-mono bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full border border-indigo-200">
+                              {item.content_type.toUpperCase()}
+                            </span>
+                          </div>
+                          <div className="text-xs text-muted font-medium mt-1">
+                            Subject: <span className="font-bold text-ink">{item.subject_name} ({item.subject_code})</span> &middot; Category: <span className="font-bold text-ink">{item.section}</span>
+                          </div>
+                          <div className="text-[11px] text-muted mt-0.5">
+                            Uploaded by <span className="font-semibold text-ink">{item.uploader_name || "Unknown"}</span> on {new Date(item.created_at).toLocaleDateString()}
+                          </div>
+                        </div>
+
+                        {/* Control Actions */}
+                        <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+                          <button
+                            onClick={() => setPreviewMaterialId(isPreviewOpen ? null : item.id)}
+                            className={`px-3 py-1.5 rounded-lg text-xs font-semibold border ${isPreviewOpen ? "bg-slate-800 text-white border-slate-800" : "bg-slate-50 border-line text-slate-700 hover:bg-slate-100"}`}
+                          >
+                            {isPreviewOpen ? "Hide Preview" : "Preview"}
+                          </button>
+                          <button
+                            onClick={() => handleApproveMaterial(item.id)}
+                            className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white"
+                          >
+                            Approve
+                          </button>
+                          <button
+                            onClick={() => {
+                              if (isRejecting) {
+                                setRejectionInputId(null);
+                                setRejectionReasonText("");
+                              } else {
+                                setRejectionInputId(item.id);
+                                setRejectionReasonText("");
+                              }
+                            }}
+                            className={`px-3 py-1.5 rounded-lg text-xs font-semibold border ${isRejecting ? "bg-rose-50 border-rose-200 text-rose-700" : "bg-rose-600 text-white hover:bg-rose-750"}`}
+                          >
+                            Reject
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Rejection input field inline prompt */}
+                      {isRejecting && (
+                        <div className="p-3 border border-red-200 rounded-xl bg-red-50/10 mt-1 flex flex-col gap-2">
+                          <label className="text-[10px] font-bold text-red-600 uppercase tracking-wider">Provide rejection reason</label>
+                          <input
+                            type="text"
+                            placeholder="e.g. Incomplete notes / content doesn't match RTU syllabus"
+                            value={rejectionReasonText}
+                            onChange={(e) => setRejectionReasonText(e.target.value)}
+                            className="px-3 py-1.5 border border-line rounded-lg text-xs font-semibold focus:ring-1 focus:ring-red-500 focus:outline-none"
+                          />
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => handleRejectConfirm(item.id)}
+                              className="px-3.5 py-1 bg-red-600 text-white rounded-lg text-[10px] font-bold hover:bg-red-750"
+                            >
+                              Confirm Rejection
+                            </button>
+                            <button
+                              onClick={() => { setRejectionInputId(null); setRejectionReasonText(""); }}
+                              className="px-3.5 py-1 bg-slate-200 text-slate-700 rounded-lg text-[10px] font-bold hover:bg-slate-300"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Preview Drawer */}
+                      {isPreviewOpen && (
+                        <div className="border border-line/65 rounded-2xl p-4 bg-slate-50/50 mt-2">
+                          <div className="text-[10px] font-bold text-muted uppercase tracking-wider mb-2">Content Preview</div>
+                          {item.content_type === "pdf" && (
+                            <iframe
+                              src={item.file_url}
+                              className="w-full h-[400px] border border-line rounded-xl bg-white"
+                              title={`PDF Preview: ${item.title}`}
+                            />
+                          )}
+                          {item.content_type === "image" && (
+                            <div className="flex justify-center p-2 bg-white rounded-xl border">
+                              <img
+                                src={item.file_url}
+                                className="max-h-[350px] object-contain rounded-lg"
+                                alt={`Image Preview: ${item.title}`}
+                              />
+                            </div>
+                          )}
+                          {item.content_type === "text" && (
+                            <div className="bg-white rounded-xl border p-4 max-h-[300px] overflow-y-auto">
+                              <div
+                                className="text-xs prose prose-slate max-w-none text-slate-800"
+                                dangerouslySetInnerHTML={{ __html: renderSimpleMarkdown(item.text_content) }}
+                              />
+                            </div>
+                          )}
+                          {item.content_type === "html" && (
+                            <iframe
+                              sandbox="allow-same-origin"
+                              srcDoc={`<!DOCTYPE html><html><head><style>body { font-family: system-ui; margin: 8px; color: #1e293b; line-height: 1.5; font-size: 13px; } pre { background: #f8fafc; padding: 8px; border-radius: 4px; }</style></head><body>${item.text_content}</body></html>`}
+                              className="w-full h-[300px] border border-line rounded-xl bg-white"
+                              title={`HTML Preview: ${item.title}`}
+                            />
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         )}
 

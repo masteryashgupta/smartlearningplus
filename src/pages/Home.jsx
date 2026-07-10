@@ -1172,7 +1172,17 @@ export default function Home() {
                             {i + 1}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <div className={`text-xs font-semibold truncate ${isMe ? "text-indigo-900" : "text-ink"}`}>{r.name} {isMe && "(You)"}</div>
+                            <div className={`text-xs font-semibold truncate flex items-center gap-1.5 ${isMe ? "text-indigo-900" : "text-ink"}`}>
+                              <span>{r.name} {isMe && "(You)"}</span>
+                              {r.contributions > 0 && (
+                                <span
+                                  className="text-[9px] bg-amber-100 text-amber-800 border border-amber-250 font-bold px-1.5 py-0.2 rounded flex items-center gap-0.5"
+                                  title={`${r.contributions} approved study materials shared`}
+                                >
+                                  🌟 {r.contributions}
+                                </span>
+                              )}
+                            </div>
                             <div className="text-[10px] text-muted font-mono">{r.batch} batch</div>
                           </div>
                           <div className="font-bold text-xs font-mono shrink-0" style={{ color: barColor }}>
