@@ -43,6 +43,25 @@ export default function AdminPanel() {
   const [users, setUsers] = useState([]);
   const [userSearch, setUserSearch] = useState("");
   const [editingUser, setEditingUser] = useState(null);
+  const [expandedUserId, setExpandedUserId] = useState(null);
+  const [expandedUserStats, setExpandedUserStats] = useState(null);
+  const [statsLoading, setStatsLoading] = useState(false);
+
+  function toggleUserStats(userId) {
+    if (expandedUserId === userId) {
+      setExpandedUserId(null);
+      setExpandedUserStats(null);
+    } else {
+      setExpandedUserId(userId);
+      setExpandedUserStats(null);
+      setStatsLoading(true);
+      api.get(`/admin/users/${userId}/stats`)
+        .then((r) => setExpandedUserStats(r.data))
+        .catch((err) => console.error("Error fetching user stats:", err))
+        .finally(() => setStatsLoading(false));
+    }
+  }
+
   const [attendanceDate, setAttendanceDate] = useState(new Date().toISOString().slice(0, 10));
   const [attendanceSlots, setAttendanceSlots] = useState([]);
   const [attendanceLoading, setAttendanceLoading] = useState(false);
@@ -145,7 +164,7 @@ export default function AdminPanel() {
 
   async function saveUser(u) {
     try {
-      await api.put(`/admin/users/${u.id}`, { name: u.name, batch: u.batch, is_active: u.is_active });
+      await api.put(`/admin/users/${u.id}`, { name: u.name, batch: u.batch, section: u.section, is_active: u.is_active });
       reloadUsers();
       setEditingUser(null);
       showToast("User updated!");
@@ -385,7 +404,7 @@ export default function AdminPanel() {
                       {editingUser?.id === u.id ? (
                         /* Edit row */
                         <div className="p-4 bg-primary/5">
-                          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-3">
+                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-3">
                             <input className="input" placeholder="Name" value={editingUser.name}
                               onChange={(e) => setEditingUser({ ...editingUser, name: e.target.value })} />
                             <select className="input" value={editingUser.batch}
@@ -394,6 +413,8 @@ export default function AdminPanel() {
                               <option value="G1">G1</option>
                               <option value="G2">G2</option>
                             </select>
+                            <input className="input" placeholder="Section (e.g. 5CSG CS-5)" value={editingUser.section || ""}
+                              onChange={(e) => setEditingUser({ ...editingUser, section: e.target.value })} />
                             <label className="flex items-center gap-2 text-sm font-medium text-ink">
                               <input type="checkbox" checked={editingUser.is_active}
                                 onChange={(e) => setEditingUser({ ...editingUser, is_active: e.target.checked })}
@@ -407,46 +428,95 @@ export default function AdminPanel() {
                           </div>
                         </div>
                       ) : (
-                        <div className="flex items-center gap-3 px-4 py-3 hover:bg-paper/50 transition-colors">
-                          {/* Avatar */}
-                          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">
-                            {u.name?.[0]?.toUpperCase() || "?"}
+                        <>
+                          <div className="flex items-center gap-3 px-4 py-3 hover:bg-paper/50 transition-colors">
+                            {/* Avatar */}
+                            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">
+                              {u.name?.[0]?.toUpperCase() || "?"}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <span className="font-semibold text-sm text-ink truncate">{u.name}</span>
+                                <span className="text-[10px] px-1.5 py-0.5 bg-paper rounded-full text-muted font-mono border border-line">{u.batch}</span>
+                                <span className="text-[10px] px-1.5 py-0.5 bg-paper rounded-full text-muted font-mono border border-line">{u.section || "—"}</span>
+                                {!u.is_active && (
+                                  <span className="text-[10px] px-1.5 py-0.5 bg-red-50 rounded-full text-red-500 font-bold border border-red-100">Inactive</span>
+                                )}
+                              </div>
+                              <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11px] text-muted font-mono mt-1">
+                                {u.email && <span>📧 {u.email}</span>}
+                                <span>🤖 @{u.telegram_username || "—"}{u.telegram_id && <span className="ml-1.5 text-green-600 font-sans font-bold">✓ connected</span>}</span>
+                              </div>
+                            </div>
+                            <div className="text-right flex-shrink-0">
+                              <div className="font-bold text-sm font-mono" style={{
+                                color: u.percentage === null ? "#94A3B8" : u.percentage >= 75 ? "#16A34A" : u.percentage >= 65 ? "#F59E0B" : "#E11D48"
+                              }}>
+                                {u.percentage !== null ? `${u.percentage}%` : "—"}
+                              </div>
+                              <div className="flex gap-1.5 mt-1 justify-end">
+                                <button
+                                  onClick={() => toggleUserStats(u.id)}
+                                  className={`text-[10px] px-2 py-1 rounded-lg font-bold transition-colors ${expandedUserId === u.id ? "bg-indigo-600 text-white" : "bg-indigo-50 text-indigo-600 hover:bg-indigo-100"}`}
+                                >
+                                  {expandedUserId === u.id ? "Close Stats" : "Stats"}
+                                </button>
+                                <button
+                                  onClick={() => setEditingUser({ ...u })}
+                                  className="text-[10px] px-2 py-1 rounded-lg bg-primary/10 text-primary font-bold hover:bg-primary/20 transition-colors"
+                                >
+                                  Edit
+                                </button>
+                                <button
+                                  onClick={() => deleteUser(u.id, u.name)}
+                                  className="text-[10px] px-2 py-1 rounded-lg bg-red-50 text-red-500 font-bold hover:bg-red-100 transition-colors"
+                                >
+                                  Delete
+                                </button>
+                              </div>
+                            </div>
                           </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <span className="font-semibold text-sm text-ink truncate">{u.name}</span>
-                              <span className="text-[10px] px-1.5 py-0.5 bg-paper rounded-full text-muted font-mono border border-line">{u.batch}</span>
-                              {!u.is_active && (
-                                <span className="text-[10px] px-1.5 py-0.5 bg-red-50 rounded-full text-red-500 font-bold border border-red-100">Inactive</span>
+                          {expandedUserId === u.id && (
+                            <div className="px-4 pb-4 pt-1 bg-paper/30 border-t border-line/40">
+                              {statsLoading ? (
+                                <div className="text-xs text-muted py-3 flex items-center gap-2">
+                                  <span className="animate-spin inline-block">⏳</span> Loading subject-wise attendance...
+                                </div>
+                              ) : expandedUserStats ? (
+                                <div className="space-y-2 mt-2">
+                                  <div className="text-[11px] font-bold text-muted uppercase tracking-wider mb-2">Subject Attendance Breakdown</div>
+                                  {expandedUserStats.perSubject.length === 0 ? (
+                                    <div className="text-xs text-muted py-2">No attendance records found for this student.</div>
+                                  ) : (
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                      {expandedUserStats.perSubject.map((sub, sidx) => {
+                                        const subColor = sub.percentage >= 75 ? "#16A34A" : sub.percentage >= 65 ? "#F59E0B" : "#E11D48";
+                                        return (
+                                          <div key={sidx} className="p-3 bg-white border border-line rounded-xl shadow-sm flex items-center justify-between gap-3">
+                                            <div className="min-w-0">
+                                              <div className="font-semibold text-xs text-ink truncate">{sub.name}</div>
+                                              <div className="text-[10px] text-muted mt-0.5 font-mono">
+                                                {sub.present} / {sub.total} classes {sub.safe ? "🟢 safe" : `🔴 need ${sub.needToAttend}`}
+                                              </div>
+                                            </div>
+                                            <div className="text-right">
+                                              <div className="font-mono text-xs font-bold" style={{ color: subColor }}>{sub.percentage}%</div>
+                                              <div className="w-16 h-1.5 bg-line rounded-full overflow-hidden mt-1">
+                                                <div className="h-full rounded-full" style={{ width: `${sub.percentage}%`, background: subColor }} />
+                                              </div>
+                                            </div>
+                                          </div>
+                                        );
+                                      })}
+                                    </div>
+                                  )}
+                                </div>
+                              ) : (
+                                <div className="text-xs text-red-500 py-3">Failed to load statistics.</div>
                               )}
                             </div>
-                            <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11px] text-muted font-mono mt-1">
-                              {u.email && <span>📧 {u.email}</span>}
-                              <span>🤖 @{u.telegram_username || "—"}{u.telegram_id && <span className="ml-1.5 text-green-600 font-sans font-bold">✓ connected</span>}</span>
-                            </div>
-                          </div>
-                          <div className="text-right flex-shrink-0">
-                            <div className="font-bold text-sm font-mono" style={{
-                              color: u.percentage === null ? "#94A3B8" : u.percentage >= 75 ? "#16A34A" : u.percentage >= 65 ? "#F59E0B" : "#E11D48"
-                            }}>
-                              {u.percentage !== null ? `${u.percentage}%` : "—"}
-                            </div>
-                            <div className="flex gap-1.5 mt-1 justify-end">
-                              <button
-                                onClick={() => setEditingUser({ ...u })}
-                                className="text-[10px] px-2 py-1 rounded-lg bg-primary/10 text-primary font-bold hover:bg-primary/20 transition-colors"
-                              >
-                                Edit
-                              </button>
-                              <button
-                                onClick={() => deleteUser(u.id, u.name)}
-                                className="text-[10px] px-2 py-1 rounded-lg bg-red-50 text-red-500 font-bold hover:bg-red-100 transition-colors"
-                              >
-                                Delete
-                              </button>
-                            </div>
-                          </div>
-                        </div>
+                          )}
+                        </>
                       )}
                     </div>
                   ))}
