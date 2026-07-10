@@ -423,16 +423,34 @@ app.use("/api/timetable", timetableRoutes);
 app.use("/api/attendance", attendanceRoutes);
 app.use("/api/admin", adminRoutes);
 
-async function bootstrapAdmin() {
-  // Ensure whitelisted_emails table exists
-  await q(`
-    create table if not exists whitelisted_emails (
-      id uuid primary key default gen_random_uuid(),
-      email text unique not null,
-      created_at timestamptz default now()
-    )
-  `);
+async function migrateDatabase() {
+  console.log("🔄 Running database migrations...");
+  try {
+    // Ensure whitelisted_emails table exists
+    await q(`
+      create table if not exists whitelisted_emails (
+        id uuid primary key default gen_random_uuid(),
+        email text unique not null,
+        created_at timestamptz default now()
+      )
+    `);
 
+    // Update subject names to match timetable formatting (code - lecturer)
+    await q(`
+      UPDATE subjects SET name = 'HCI - PT' WHERE code = 'HCI' AND name != 'HCI - PT';
+      UPDATE subjects SET name = 'CGM - CU' WHERE code = 'CGM' AND name != 'CGM - CU';
+      UPDATE subjects SET name = 'AOA - MS' WHERE code = 'AOA' AND name != 'AOA - MS';
+      UPDATE subjects SET name = 'CD - YP' WHERE code = 'CD' AND name != 'CD - YP';
+      UPDATE subjects SET name = 'ITC - DR. YZU' WHERE code = 'ITC' AND name != 'ITC - DR. YZU';
+      UPDATE subjects SET name = 'OS - AS' WHERE code = 'OS' AND name != 'OS - AS';
+    `);
+    console.log("✅ Database migrations completed successfully.");
+  } catch (err) {
+    console.error("❌ Database migrations failed:", err);
+  }
+}
+
+async function bootstrapAdmin() {
   const { rows } = await q("select count(*) from admins");
   if (Number(rows[0].count) > 0) return;
   const { ADMIN_NAME, ADMIN_EMAIL, ADMIN_PASSWORD } = process.env;
@@ -453,6 +471,7 @@ const PORT = process.env.PORT || 4000;
 
 (async () => {
   try {
+    await migrateDatabase();
     await bootstrapAdmin();
     registerHandlers();
     await setupWebhook(app);

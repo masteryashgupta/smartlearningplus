@@ -104,17 +104,17 @@ for each row execute function set_updated_at();
 -- ============================================================
 
 insert into subjects (code, name, type, color) values
-  ('HCI', 'Human Computer Interaction', 'theory', '#6D5EF5'),
-  ('CGM', 'Computer Graphics & Multimedia', 'theory', '#22B8CF'),
-  ('AOA', 'Analysis of Algorithms', 'theory', '#51CF66'),
-  ('CD',  'Compiler Design', 'theory', '#FCC419'),
-  ('ITC', 'IT & Communication', 'theory', '#FF8787'),
-  ('OS',  'Operating Systems', 'theory', '#845EF7'),
+  ('HCI', 'HCI - PT', 'theory', '#6D5EF5'),
+  ('CGM', 'CGM - CU', 'theory', '#22B8CF'),
+  ('AOA', 'AOA - MS', 'theory', '#51CF66'),
+  ('CD',  'CD - YP', 'theory', '#FCC419'),
+  ('ITC', 'ITC - DR. YZU', 'theory', '#FF8787'),
+  ('OS',  'OS - AS', 'theory', '#845EF7'),
   ('AOALAB', 'AOA Lab', 'lab', '#51CF66'),
   ('CGMLAB', 'CGM Lab', 'lab', '#22B8CF'),
   ('AJLAB', 'AJ Lab', 'lab', '#FF6B6B'),
   ('CDLAB', 'CD Lab', 'lab', '#FCC419')
-on conflict do nothing;
+on conflict (code) do update set name = excluded.name;
 
 -- Timetable seed — 5CSG CS-5, 2026-27 (from the JECRC sheet).
 -- Slots: 1=8:30-9:30 2=9:30-10:30 3=10:30-11:30 4=11:30-12:30
