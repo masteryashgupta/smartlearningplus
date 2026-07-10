@@ -858,9 +858,20 @@ export default function Home() {
                   </div>
                 )}
               </div>
+
+              {/* HEATMAP */}
+              <div className="card p-5 bg-white border border-line rounded-2xl shadow-soft flex flex-col justify-between">
+                <h3 className="font-bold text-xs text-ink mb-3 uppercase tracking-wider">📅 Consistency Heatmap</h3>
+                <div className="flex items-center justify-center py-2 overflow-x-auto">
+                  <Heatmap data={heatmap} />
+                </div>
+                <p className="text-[9px] text-muted text-center mt-2 leading-relaxed">
+                  Hover over the grid blocks to inspect date details. Brighter green represents higher presence rate.
+                </p>
+              </div>
             </div>
 
-            {/* RIGHT COLUMN: LEADERBOARD & HEATMAP */}
+            {/* RIGHT COLUMN: LEADERBOARD & CONTRIBUTIONS */}
             <div className="dashboard-sidebar-col">
               {/* LEADERBOARD */}
               <div className="card p-5 bg-white border border-line rounded-2xl shadow-soft flex flex-col justify-between">
@@ -935,16 +946,7 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* HEATMAP */}
-              <div className="card p-5 bg-white border border-line rounded-2xl shadow-soft flex flex-col justify-between">
-                <h3 className="font-bold text-xs text-ink mb-3 uppercase tracking-wider">📅 Consistency Heatmap</h3>
-                <div className="flex items-center justify-center py-2 overflow-x-auto">
-                  <Heatmap data={heatmap} />
-                </div>
-                <p className="text-[9px] text-muted text-center mt-2 leading-relaxed">
-                  Hover over the grid blocks to inspect date details. Brighter green represents higher presence rate.
-                </p>
-              </div>
+
 
               {/* STUDY MATERIALS CONTRIBUTIONS CARD */}
               <div className="card p-5 bg-white border border-line rounded-2xl shadow-soft mt-5">
