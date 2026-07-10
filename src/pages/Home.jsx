@@ -16,6 +16,24 @@ export default function Home() {
   const [leaderboard, setLeaderboard] = useState([]);
   const [profile, setProfile] = useState(null);
   const [loadingProfile, setLoadingProfile] = useState(false);
+  const [selectedUserStats, setSelectedUserStats] = useState(null);
+
+  const handleUserClick = (userId) => {
+    if (!session) return;
+    if (selectedUserStats && selectedUserStats.userId === userId) {
+      setSelectedUserStats(null);
+      return;
+    }
+    setSelectedUserStats({ userId, stats: null, loading: true });
+    api.get(`/attendance/users/${userId}/stats`)
+      .then((r) => {
+        setSelectedUserStats({ userId, stats: r.data, loading: false });
+      })
+      .catch((err) => {
+        console.error("Error fetching leaderboard user stats", err);
+        setSelectedUserStats(null);
+      });
+  };
 
   const refreshData = () => {
     if (!session || session.role !== "student") return;
@@ -587,6 +605,13 @@ export default function Home() {
         .subject-row-card:hover .subject-row-arrow {
           transform: translateX(4px);
         }
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(-4px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+          animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
       `}</style>
 
 
@@ -732,18 +757,52 @@ export default function Home() {
                     const isMe = r.id === session?.id;
                     const pct = r.percentage;
                     const barColor = pct === null ? "#94A3B8" : pct >= 75 ? "#16A34A" : pct >= 65 ? "#F59E0B" : "#E11D48";
+                    const isExpanded = selectedUserStats && selectedUserStats.userId === r.id;
                     return (
-                      <div key={r.id} className={`flex items-center gap-3 p-2 rounded-xl border transition-all ${isMe ? "bg-indigo-50/50 border-indigo-200" : "border-line/30 bg-paper/40"}`}>
-                        <div className="w-5 h-5 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-600 shrink-0">
-                          {i + 1}
+                      <div
+                        key={r.id}
+                        onClick={() => handleUserClick(r.id)}
+                        className={`flex flex-col gap-1 p-2 rounded-xl border transition-all cursor-pointer hover:border-indigo-400/50 ${isMe ? "bg-indigo-50/55 border-indigo-250 shadow-sm" : "border-line/30 bg-paper/45"}`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="w-5 h-5 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-600 shrink-0">
+                            {i + 1}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className={`text-xs font-semibold truncate ${isMe ? "text-indigo-900" : "text-ink"}`}>{r.name} {isMe && "(You)"}</div>
+                            <div className="text-[10px] text-muted font-mono">{r.batch} batch</div>
+                          </div>
+                          <div className="font-bold text-xs font-mono shrink-0" style={{ color: barColor }}>
+                            {pct !== null ? `${pct}%` : "—"}
+                          </div>
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <div className={`text-xs font-semibold truncate ${isMe ? "text-indigo-900" : "text-ink"}`}>{r.name} {isMe && "(You)"}</div>
-                          <div className="text-[10px] text-muted font-mono">{r.batch} batch</div>
-                        </div>
-                        <div className="font-bold text-xs font-mono shrink-0" style={{ color: barColor }}>
-                          {pct !== null ? `${pct}%` : "—"}
-                        </div>
+
+                        {isExpanded && (
+                          <div className="px-1 border-t border-line/30 mt-2 pt-2 animate-fade-in" onClick={(e) => e.stopPropagation()}>
+                            {selectedUserStats.loading ? (
+                              <div className="text-[10px] text-muted font-mono animate-pulse">Loading counts...</div>
+                            ) : selectedUserStats.stats && selectedUserStats.stats.perSubject ? (
+                              selectedUserStats.stats.perSubject.length === 0 ? (
+                                <div className="text-[10px] text-muted italic">No attendance logged yet.</div>
+                              ) : (
+                                <div className="flex flex-wrap gap-1.5">
+                                  {selectedUserStats.stats.perSubject.map((sub) => (
+                                    <span
+                                      key={sub.subject_id}
+                                      className="text-[10px] px-2 py-0.5 rounded-full font-bold border border-current/10"
+                                      style={{
+                                        backgroundColor: (sub.color || "#5B5BD6") + "18",
+                                        color: sub.color || "#5B5BD6",
+                                      }}
+                                    >
+                                      {sub.code}: {sub.present}/{sub.total}
+                                    </span>
+                                  ))}
+                                </div>
+                              )
+                            ) : null}
+                          </div>
+                        )}
                       </div>
                     );
                   })}
