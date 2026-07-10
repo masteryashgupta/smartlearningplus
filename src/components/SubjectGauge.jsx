@@ -21,7 +21,7 @@ export default function SubjectGauge({ subject }) {
   return (
     <div className="card p-3 sm:p-4 flex flex-col items-center gap-2.5 bg-white border border-line/80 rounded-2xl shadow-soft hover:shadow-medium hover:border-primary/20 hover:-translate-y-1 transition-all duration-300">
       {/* Subject code pill */}
-      <div className="text-[10px] font-mono font-bold tracking-wider text-muted/80 bg-paper px-2 py-0.5 rounded-full border border-line/50 w-full text-center truncate">
+      <div className="text-[9px] font-mono font-bold tracking-wider text-muted/80 bg-paper px-1 py-0.5 rounded-full border border-line/50 w-full text-center">
         {subject.code}
       </div>
 
@@ -35,12 +35,6 @@ export default function SubjectGauge({ subject }) {
             style={{ transition: "stroke-dashoffset 0.6s ease" }}
           />
         </svg>
-        {/* Threshold tick */}
-        <div
-          className="absolute w-2 h-2 rounded-full bg-slate-800 border-2 border-white shadow-soft"
-          style={{ left: `${tx}%`, top: `${ty}%`, transform: "translate(-50%,-50%)" }}
-          title={`${THRESHOLD}% threshold`}
-        />
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <span className="font-display font-bold text-xl tracking-tight text-ink">{subject.percentage}%</span>
           <span className="text-[10px] text-muted font-mono">{subject.present}/{subject.total}</span>
