@@ -2,6 +2,7 @@ import { Router } from "express";
 import bcrypt from "bcryptjs";
 import { q } from "../db.js";
 import { requireAuth } from "../auth.js";
+import { computeStats } from "../lib/timetable.js";
 
 const router = Router();
 
@@ -53,11 +54,11 @@ router.get("/users", requireAuth("admin"), async (req, res) => {
 });
 
 router.put("/users/:id", requireAuth("admin"), async (req, res) => {
-  const { name, batch, is_active } = req.body;
+  const { name, batch, section, is_active } = req.body;
   const { rows } = await q(
     `update users set name = coalesce($1,name), batch = coalesce($2,batch),
-       is_active = coalesce($3,is_active) where id = $4 returning *`,
-    [name, batch, is_active, req.params.id]
+       section = coalesce($3,section), is_active = coalesce($4,is_active) where id = $5 returning *`,
+    [name, batch, section, is_active, req.params.id]
   );
   res.json(rows[0]);
 });
@@ -65,6 +66,17 @@ router.put("/users/:id", requireAuth("admin"), async (req, res) => {
 router.delete("/users/:id", requireAuth("admin"), async (req, res) => {
   await q("delete from users where id = $1", [req.params.id]);
   res.json({ ok: true });
+});
+
+// ---- User Stats ----
+router.get("/users/:id/stats", requireAuth("admin"), async (req, res) => {
+  try {
+    const stats = await computeStats(req.params.id);
+    res.json(stats);
+  } catch (err) {
+    console.error("Error fetching user stats:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 // ---- Whitelist ----
