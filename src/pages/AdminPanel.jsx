@@ -49,9 +49,12 @@ export default function AdminPanel() {
   const [statsLoading, setStatsLoading] = useState(false);
   const [pendingMaterials, setPendingMaterials] = useState([]);
   const [pendingMaterialsCount, setPendingMaterialsCount] = useState(0);
+  const [approvedMaterials, setApprovedMaterials] = useState([]);
+  const [materialsSubTab, setMaterialsSubTab] = useState("pending");
   const [previewMaterialId, setPreviewMaterialId] = useState(null);
   const [rejectionInputId, setRejectionInputId] = useState(null);
   const [rejectionReasonText, setRejectionReasonText] = useState("");
+  const [deleteConfirmId, setDeleteConfirmId] = useState(null);
 
   function toggleUserStats(userId) {
     if (expandedUserId === userId) {
@@ -106,6 +109,37 @@ export default function AdminPanel() {
   function reloadPendingMaterials() {
     api.get("/admin/materials/pending").then((r) => setPendingMaterials(r.data));
     api.get("/admin/materials/pending/count").then((r) => setPendingMaterialsCount(r.data.count));
+  }
+
+  function reloadApprovedMaterials() {
+    api.get("/admin/materials/approved").then((r) => setApprovedMaterials(r.data || []));
+  }
+
+  async function handleToggleHidden(id) {
+    try {
+      const r = await api.post(`/admin/materials/${id}/toggle-hidden`);
+      setApprovedMaterials((prev) =>
+        prev.map((m) => (m.id === id ? { ...m, is_hidden: r.data.is_hidden } : m))
+      );
+      showToast(r.data.is_hidden ? "Material hidden from public view." : "Material is now visible again.");
+    } catch {
+      showToast("Failed to update visibility.", false);
+    }
+  }
+
+  async function handleDeleteMaterial(id) {
+    try {
+      await api.delete(`/admin/materials/${id}`);
+      setApprovedMaterials((prev) => prev.filter((m) => m.id !== id));
+      setDeleteConfirmId(null);
+      showToast("Material permanently deleted.");
+    } catch {
+      showToast("Failed to delete material.", false);
+    }
+  }
+
+  function reloadPendingMaterialsInternal() {
+    reloadPendingMaterials();
   }
 
   async function handleApproveMaterial(id) {
@@ -186,7 +220,10 @@ export default function AdminPanel() {
 
   useEffect(() => {
     if (tab === "attendance") loadAttendance(attendanceDate);
-    if (tab === "materials") reloadPendingMaterials();
+    if (tab === "materials") {
+      reloadPendingMaterialsInternal();
+      reloadApprovedMaterials();
+    }
   }, [tab, attendanceDate, week]);
 
   async function addSlot(e) {
@@ -740,144 +777,262 @@ export default function AdminPanel() {
           <div className="space-y-4">
             <div className="card p-4 sm:p-5">
               <div className="font-display font-bold text-lg mb-1 text-ink flex items-center gap-2">
-                <span>📥</span> Contribution Moderation Queue
+                <span>📚</span> Community Materials Management
               </div>
-              <p className="text-muted text-sm">Review, preview, and approve or reject study materials submitted by students.</p>
+              <p className="text-muted text-sm">Review pending submissions or manage already-approved materials — hide them temporarily or delete permanently.</p>
+              {/* Sub-tab toggle */}
+              <div className="flex gap-2 mt-3">
+                <button
+                  onClick={() => setMaterialsSubTab("pending")}
+                  className={`px-4 py-1.5 rounded-lg text-xs font-bold border transition-all ${
+                    materialsSubTab === "pending"
+                      ? "bg-amber-500 text-white border-amber-500 shadow-sm"
+                      : "bg-white border-line text-slate-600 hover:bg-amber-50"
+                  }`}
+                >
+                  📥 Pending {pendingMaterialsCount > 0 && `(${pendingMaterialsCount})`}
+                </button>
+                <button
+                  onClick={() => { setMaterialsSubTab("approved"); reloadApprovedMaterials(); }}
+                  className={`px-4 py-1.5 rounded-lg text-xs font-bold border transition-all ${
+                    materialsSubTab === "approved"
+                      ? "bg-emerald-600 text-white border-emerald-600 shadow-sm"
+                      : "bg-white border-line text-slate-600 hover:bg-emerald-50"
+                  }`}
+                >
+                  ✅ Approved ({approvedMaterials.length})
+                </button>
+              </div>
             </div>
 
-            {pendingMaterials.length === 0 ? (
-              <div className="card p-8 text-center bg-white border border-line rounded-2xl shadow-soft">
-                <div className="text-4xl mb-3">🎉</div>
-                <div className="text-sm font-semibold text-ink">All caught up!</div>
-                <div className="text-xs text-muted mt-1">There are no pending student contributions waiting for approval.</div>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 gap-4">
-                {pendingMaterials.map((item) => {
-                  const isPreviewOpen = previewMaterialId === item.id;
-                  const isRejecting = rejectionInputId === item.id;
-                  return (
-                    <div key={item.id} className="card p-4 sm:p-5 bg-white border border-line rounded-2xl shadow-soft flex flex-col gap-3">
-                      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
-                        <div>
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <span className="font-bold text-sm text-ink">{item.title}</span>
-                            <span className="text-[10px] font-mono bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full border border-indigo-200">
-                              {item.content_type.toUpperCase()}
-                            </span>
-                          </div>
-                          <div className="text-xs text-muted font-medium mt-1">
-                            Subject: <span className="font-bold text-ink">{item.subject_name} ({item.subject_code})</span> &middot; Category: <span className="font-bold text-ink">{item.section}</span>
-                          </div>
-                          <div className="text-[11px] text-muted mt-0.5">
-                            Uploaded by <span className="font-semibold text-ink">{item.uploader_name || "Unknown"}</span> on {new Date(item.created_at).toLocaleDateString()}
-                          </div>
-                        </div>
+            {/* ── PENDING sub-tab ── */}
+            {materialsSubTab === "pending" && (
+              <>
+                {pendingMaterials.length === 0 ? (
+                  <div className="card p-8 text-center bg-white border border-line rounded-2xl shadow-soft">
+                    <div className="text-4xl mb-3">🎉</div>
+                    <div className="text-sm font-semibold text-ink">All caught up!</div>
+                    <div className="text-xs text-muted mt-1">There are no pending student contributions waiting for approval.</div>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 gap-4">
+                    {pendingMaterials.map((item) => {
+                      const isPreviewOpen = previewMaterialId === item.id;
+                      const isRejecting = rejectionInputId === item.id;
+                      return (
+                        <div key={item.id} className="card p-4 sm:p-5 bg-white border border-line rounded-2xl shadow-soft flex flex-col gap-3">
+                          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                            <div>
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <span className="font-bold text-sm text-ink">{item.title}</span>
+                                <span className="text-[10px] font-mono bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full border border-indigo-200">
+                                  {item.content_type.toUpperCase()}
+                                </span>
+                              </div>
+                              <div className="text-xs text-muted font-medium mt-1">
+                                Subject: <span className="font-bold text-ink">{item.subject_name} ({item.subject_code})</span> &middot; Category: <span className="font-bold text-ink">{item.section}</span>
+                              </div>
+                              <div className="text-[11px] text-muted mt-0.5">
+                                Uploaded by <span className="font-semibold text-ink">{item.uploader_name || "Unknown"}</span> on {new Date(item.created_at).toLocaleDateString()}
+                              </div>
+                            </div>
 
-                        {/* Control Actions */}
-                        <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
-                          <button
-                            onClick={() => setPreviewMaterialId(isPreviewOpen ? null : item.id)}
-                            className={`px-3 py-1.5 rounded-lg text-xs font-semibold border ${isPreviewOpen ? "bg-slate-800 text-white border-slate-800" : "bg-slate-50 border-line text-slate-700 hover:bg-slate-100"}`}
-                          >
-                            {isPreviewOpen ? "Hide Preview" : "Preview"}
-                          </button>
-                          <button
-                            onClick={() => handleApproveMaterial(item.id)}
-                            className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white"
-                          >
-                            Approve
-                          </button>
-                          <button
-                            onClick={() => {
-                              if (isRejecting) {
-                                setRejectionInputId(null);
-                                setRejectionReasonText("");
-                              } else {
-                                setRejectionInputId(item.id);
-                                setRejectionReasonText("");
-                              }
-                            }}
-                            className={`px-3 py-1.5 rounded-lg text-xs font-semibold border ${isRejecting ? "bg-rose-50 border-rose-200 text-rose-700" : "bg-rose-600 text-white hover:bg-rose-750"}`}
-                          >
-                            Reject
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Rejection input field inline prompt */}
-                      {isRejecting && (
-                        <div className="p-3 border border-red-200 rounded-xl bg-red-50/10 mt-1 flex flex-col gap-2">
-                          <label className="text-[10px] font-bold text-red-600 uppercase tracking-wider">Provide rejection reason</label>
-                          <input
-                            type="text"
-                            placeholder="e.g. Incomplete notes / content doesn't match RTU syllabus"
-                            value={rejectionReasonText}
-                            onChange={(e) => setRejectionReasonText(e.target.value)}
-                            className="px-3 py-1.5 border border-line rounded-lg text-xs font-semibold focus:ring-1 focus:ring-red-500 focus:outline-none"
-                          />
-                          <div className="flex gap-2">
-                            <button
-                              onClick={() => handleRejectConfirm(item.id)}
-                              className="px-3.5 py-1 bg-red-600 text-white rounded-lg text-[10px] font-bold hover:bg-red-750"
-                            >
-                              Confirm Rejection
-                            </button>
-                            <button
-                              onClick={() => { setRejectionInputId(null); setRejectionReasonText(""); }}
-                              className="px-3.5 py-1 bg-slate-200 text-slate-700 rounded-lg text-[10px] font-bold hover:bg-slate-300"
-                            >
-                              Cancel
-                            </button>
+                            {/* Control Actions */}
+                            <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+                              <button
+                                onClick={() => setPreviewMaterialId(isPreviewOpen ? null : item.id)}
+                                className={`px-3 py-1.5 rounded-lg text-xs font-semibold border ${isPreviewOpen ? "bg-slate-800 text-white border-slate-800" : "bg-slate-50 border-line text-slate-700 hover:bg-slate-100"}`}
+                              >
+                                {isPreviewOpen ? "Hide Preview" : "Preview"}
+                              </button>
+                              <button
+                                onClick={() => handleApproveMaterial(item.id)}
+                                className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white"
+                              >
+                                Approve
+                              </button>
+                              <button
+                                onClick={() => {
+                                  if (isRejecting) {
+                                    setRejectionInputId(null);
+                                    setRejectionReasonText("");
+                                  } else {
+                                    setRejectionInputId(item.id);
+                                    setRejectionReasonText("");
+                                  }
+                                }}
+                                className={`px-3 py-1.5 rounded-lg text-xs font-semibold border ${isRejecting ? "bg-rose-50 border-rose-200 text-rose-700" : "bg-rose-600 text-white hover:bg-rose-750"}`}
+                              >
+                                Reject
+                              </button>
+                            </div>
                           </div>
-                        </div>
-                      )}
 
-                      {/* Preview Drawer */}
-                      {isPreviewOpen && (
-                        <div className="border border-line/65 rounded-2xl p-4 bg-slate-50/50 mt-2">
-                          <div className="text-[10px] font-bold text-muted uppercase tracking-wider mb-2">Content Preview</div>
-                          {item.content_type === "pdf" && (
-                            <iframe
-                              src={item.file_url}
-                              className="w-full h-[400px] border border-line rounded-xl bg-white"
-                              title={`PDF Preview: ${item.title}`}
-                            />
-                          )}
-                          {item.content_type === "image" && (
-                            <div className="flex justify-center p-2 bg-white rounded-xl border">
-                              <img
-                                src={item.file_url}
-                                className="max-h-[350px] object-contain rounded-lg"
-                                alt={`Image Preview: ${item.title}`}
+                          {/* Rejection input field inline prompt */}
+                          {isRejecting && (
+                            <div className="p-3 border border-red-200 rounded-xl bg-red-50/10 mt-1 flex flex-col gap-2">
+                              <label className="text-[10px] font-bold text-red-600 uppercase tracking-wider">Provide rejection reason</label>
+                              <input
+                                type="text"
+                                placeholder="e.g. Incomplete notes / content doesn't match RTU syllabus"
+                                value={rejectionReasonText}
+                                onChange={(e) => setRejectionReasonText(e.target.value)}
+                                className="px-3 py-1.5 border border-line rounded-lg text-xs font-semibold focus:ring-1 focus:ring-red-500 focus:outline-none"
                               />
+                              <div className="flex gap-2">
+                                <button
+                                  onClick={() => handleRejectConfirm(item.id)}
+                                  className="px-3.5 py-1 bg-red-600 text-white rounded-lg text-[10px] font-bold hover:bg-red-750"
+                                >
+                                  Confirm Rejection
+                                </button>
+                                <button
+                                  onClick={() => { setRejectionInputId(null); setRejectionReasonText(""); }}
+                                  className="px-3.5 py-1 bg-slate-200 text-slate-700 rounded-lg text-[10px] font-bold hover:bg-slate-300"
+                                >
+                                  Cancel
+                                </button>
+                              </div>
                             </div>
                           )}
-                          {item.content_type === "text" && (
-                            <div className="bg-white rounded-xl border p-4 max-h-[300px] overflow-y-auto">
-                              <div
-                                className="text-xs prose prose-slate max-w-none text-slate-800"
-                                dangerouslySetInnerHTML={{ __html: renderSimpleMarkdown(item.text_content) }}
-                              />
+
+                          {/* Preview Drawer */}
+                          {isPreviewOpen && (
+                            <div className="border border-line/65 rounded-2xl p-4 bg-slate-50/50 mt-2">
+                              <div className="text-[10px] font-bold text-muted uppercase tracking-wider mb-2">Content Preview</div>
+                              {item.content_type === "pdf" && (
+                                <iframe
+                                  src={item.file_url}
+                                  className="w-full h-[400px] border border-line rounded-xl bg-white"
+                                  title={`PDF Preview: ${item.title}`}
+                                />
+                              )}
+                              {item.content_type === "image" && (
+                                <div className="flex justify-center p-2 bg-white rounded-xl border">
+                                  <img
+                                    src={item.file_url}
+                                    className="max-h-[350px] object-contain rounded-lg"
+                                    alt={`Image Preview: ${item.title}`}
+                                  />
+                                </div>
+                              )}
+                              {item.content_type === "text" && (
+                                <div className="bg-white rounded-xl border p-4 max-h-[300px] overflow-y-auto">
+                                  <div
+                                    className="text-xs prose prose-slate max-w-none text-slate-800"
+                                    dangerouslySetInnerHTML={{ __html: renderSimpleMarkdown(item.text_content) }}
+                                  />
+                                </div>
+                              )}
+                              {item.content_type === "html" && (
+                                <iframe
+                                  sandbox="allow-same-origin"
+                                  srcDoc={`<!DOCTYPE html><html><head><style>body { font-family: system-ui; margin: 8px; color: #1e293b; line-height: 1.5; font-size: 13px; } pre { background: #f8fafc; padding: 8px; border-radius: 4px; }</style></head><body>${item.text_content}</body></html>`}
+                                  className="w-full h-[300px] border border-line rounded-xl bg-white"
+                                  title={`HTML Preview: ${item.title}`}
+                                />
+                              )}
                             </div>
                           )}
-                          {item.content_type === "html" && (
-                            <iframe
-                              sandbox="allow-same-origin"
-                              srcDoc={`<!DOCTYPE html><html><head><style>body { font-family: system-ui; margin: 8px; color: #1e293b; line-height: 1.5; font-size: 13px; } pre { background: #f8fafc; padding: 8px; border-radius: 4px; }</style></head><body>${item.text_content}</body></html>`}
-                              className="w-full h-[300px] border border-line rounded-xl bg-white"
-                              title={`HTML Preview: ${item.title}`}
-                            />
-                          )}
                         </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </>
+            )}
+
+            {/* ── APPROVED sub-tab ── */}
+            {materialsSubTab === "approved" && (
+              <>
+                {approvedMaterials.length === 0 ? (
+                  <div className="card p-8 text-center bg-white border border-line rounded-2xl shadow-soft">
+                    <div className="text-4xl mb-3">📭</div>
+                    <div className="text-sm font-semibold text-ink">No approved materials yet.</div>
+                    <div className="text-xs text-muted mt-1">Approved student contributions will appear here for management.</div>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 gap-3">
+                    {approvedMaterials.map((item) => {
+                      const isDeleting = deleteConfirmId === item.id;
+                      return (
+                        <div
+                          key={item.id}
+                          className={`card p-4 sm:p-5 bg-white border rounded-2xl shadow-soft flex flex-col sm:flex-row sm:items-center gap-3 transition-all ${item.is_hidden ? "border-slate-300 opacity-60" : "border-line"}`}
+                        >
+                          {/* Info */}
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="font-bold text-sm text-ink truncate">{item.title}</span>
+                              <span className="text-[9px] font-mono bg-indigo-50 text-indigo-700 px-1.5 py-0.5 rounded-full border border-indigo-200 shrink-0">
+                                {item.content_type.toUpperCase()}
+                              </span>
+                              {item.is_hidden && (
+                                <span className="text-[9px] font-bold bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded-full border border-slate-200 shrink-0">
+                                  HIDDEN
+                                </span>
+                              )}
+                            </div>
+                            <div className="text-[11px] text-muted mt-0.5 truncate">
+                              <span className="font-semibold text-ink">{item.subject_code}</span>
+                              {" · "}{item.section}
+                              {" · "}by <span className="font-semibold text-ink">{item.uploader_name || "Unknown"}</span>
+                              {" · "}{new Date(item.created_at).toLocaleDateString()}
+                            </div>
+                          </div>
+
+                          {/* Actions */}
+                          <div className="flex items-center gap-2 shrink-0 flex-wrap">
+                            {/* Hide / Unhide */}
+                            <button
+                              onClick={() => handleToggleHidden(item.id)}
+                              className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
+                                item.is_hidden
+                                  ? "bg-emerald-50 border-emerald-300 text-emerald-700 hover:bg-emerald-100"
+                                  : "bg-slate-50 border-line text-slate-600 hover:bg-slate-100"
+                              }`}
+                              title={item.is_hidden ? "Unhide — make visible to students" : "Hide from public lab pages"}
+                            >
+                              {item.is_hidden ? "👁 Unhide" : "🙈 Hide"}
+                            </button>
+
+                            {/* Delete with inline confirm */}
+                            {isDeleting ? (
+                              <div className="flex items-center gap-1.5">
+                                <span className="text-[10px] font-semibold text-red-600">Delete permanently?</span>
+                                <button
+                                  onClick={() => handleDeleteMaterial(item.id)}
+                                  className="px-2.5 py-1 bg-red-600 text-white rounded-lg text-[10px] font-bold hover:bg-red-700"
+                                >
+                                  Yes, Delete
+                                </button>
+                                <button
+                                  onClick={() => setDeleteConfirmId(null)}
+                                  className="px-2.5 py-1 bg-slate-200 text-slate-700 rounded-lg text-[10px] font-bold hover:bg-slate-300"
+                                >
+                                  Cancel
+                                </button>
+                              </div>
+                            ) : (
+                              <button
+                                onClick={() => setDeleteConfirmId(item.id)}
+                                className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-50 border border-red-200 text-red-600 hover:bg-red-100 transition-all"
+                                title="Permanently delete this material"
+                              >
+                                🗑 Delete
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </>
             )}
           </div>
         )}
+
 
         {/* ── SETTINGS ── */}
         {tab === "settings" && (
