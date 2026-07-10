@@ -7,10 +7,14 @@
 
   let subjectCode = "";
   if (decodedPath.includes("/itc/")) subjectCode = "ITC";
+  else if (decodedPath.includes("/cd lab/") || decodedPath.includes("/cd-lab/")) subjectCode = "CD";
   else if (decodedPath.includes("/cd/")) subjectCode = "CD";
   else if (decodedPath.includes("/os/")) subjectCode = "OS";
   else if (decodedPath.includes("/cg/")) subjectCode = "CG";
+  else if (decodedPath.includes("/aoa lab/") || decodedPath.includes("/aoa-lab/")) subjectCode = "AOA";
   else if (decodedPath.includes("/aoa/")) subjectCode = "AOA";
+  else if (decodedPath.includes("/cgm lab/") || decodedPath.includes("/cgm-lab/")) subjectCode = "CGMLAB";
+  else if (decodedPath.includes("/cgm/")) subjectCode = "CGM";
   // Support both "AJ lab" and "AJlab"
   else if (decodedPath.includes("/aj lab/") || decodedPath.includes("/aj-lab/") || decodedPath.includes("/ajlab/")) subjectCode = "AJLAB";
 

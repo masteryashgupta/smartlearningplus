@@ -1395,12 +1395,49 @@ export default function Home() {
           <div className="sl-section-title" style={{ marginBottom: "20px" }}>Labs</div>
           
           <div className="subject-row-grid">
+            {/* AJ Lab */}
             <a href="/AJ%20lab/index.html" className="subject-row-card sl-c-lab3">
               <div className="subject-row-left">
                 <div className="subject-row-icon">☕</div>
                 <div className="subject-row-details">
                   <div className="subject-row-title">Advanced Java Lab</div>
-                  <div className="subject-row-code">AJ Lab Manual &amp; Program Code Vault</div>
+                  <div className="subject-row-code">AJLAB · Java Swing, AWT &amp; Event Handling</div>
+                </div>
+              </div>
+              <div className="subject-row-arrow">➔</div>
+            </a>
+
+            {/* AOA Lab */}
+            <a href="/AOA%20lab/index.html" className="subject-row-card sl-c-lab1">
+              <div className="subject-row-left">
+                <div className="subject-row-icon">🔬</div>
+                <div className="subject-row-details">
+                  <div className="subject-row-title">Analysis of Algorithms Lab</div>
+                  <div className="subject-row-code">AOA · Algorithm Design &amp; Complexity</div>
+                </div>
+              </div>
+              <div className="subject-row-arrow">➔</div>
+            </a>
+
+            {/* CD Lab */}
+            <a href="/CD%20lab/index.html" className="subject-row-card sl-c-lab4">
+              <div className="subject-row-left">
+                <div className="subject-row-icon">⚙️</div>
+                <div className="subject-row-details">
+                  <div className="subject-row-title">Compiler Design Lab</div>
+                  <div className="subject-row-code">CD · Lexical Analysis, Parsing &amp; Code Gen</div>
+                </div>
+              </div>
+              <div className="subject-row-arrow">➔</div>
+            </a>
+
+            {/* CGM Lab */}
+            <a href="/CGM%20lab/index.html" className="subject-row-card sl-c-lab2">
+              <div className="subject-row-left">
+                <div className="subject-row-icon">🎨</div>
+                <div className="subject-row-details">
+                  <div className="subject-row-title">Computer Graphics &amp; Multimedia Lab</div>
+                  <div className="subject-row-code">CGMLAB · OpenGL, 2D/3D Graphics &amp; Transforms</div>
                 </div>
               </div>
               <div className="subject-row-arrow">➔</div>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Learning Plus // CGM Lab</title>
+<link rel="stylesheet" href="../style.css">
+<style>
+  :root {
+    --mc: #dc2626;
+    --mc-light: rgba(220, 38, 38, 0.08);
+  }
+
+  body { overflow-x: hidden; }
+  .sl-mod { position: relative; min-height: 100vh; }
+
+  .sl-mesh { position: fixed; inset: 0; z-index: -1; overflow: hidden; background: var(--bg); }
+  .sl-mesh span { position: absolute; border-radius: 50%; filter: blur(60px); opacity: .28; animation: sl-float 20s ease-in-out infinite; }
+  .sl-mesh span:nth-child(1) { width: 380px; height: 380px; background: var(--mc); top: -120px; left: -80px; animation-delay: 0s; }
+  .sl-mesh span:nth-child(2) { width: 300px; height: 300px; background: var(--accent2); top: 40%; right: -100px; animation-delay: -7s; }
+  .sl-mesh span:nth-child(3) { width: 260px; height: 260px; background: var(--mc); bottom: -100px; left: 25%; animation-delay: -13s; opacity:.18; }
+  @keyframes sl-float {
+    0%, 100% { transform: translate(0,0) scale(1); }
+    33% { transform: translate(35px,-25px) scale(1.07); }
+    66% { transform: translate(-25px,20px) scale(0.95); }
+  }
+  .sl-grid-overlay {
+    position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background-image: linear-gradient(rgba(220,38,38,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(220,38,38,0.03) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, black 35%, transparent 90%);
+  }
+
+  .sl-shell { max-width: 1180px; margin: 0 auto; padding: 0 24px 60px; }
+
+  .sl-topbar {
+    position: sticky; top:0; z-index:50; background: rgba(245,247,255,0.85); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border); padding: 14px 0; margin-bottom: 8px;
+  }
+  .sl-topbar-inner { display:flex; align-items:center; gap:16px; flex-wrap:wrap; max-width:1180px; margin:0 auto; padding:0 24px; }
+  .sl-back {
+    display:inline-flex; align-items:center; gap:6px; font-size:13.5px; font-weight:700; color: var(--mc);
+    background: var(--mc-light); border:1.5px solid var(--mc-light); padding:8px 14px; border-radius:10px; text-decoration:none; transition:.2s;
+  }
+  .sl-back:hover { background: var(--mc); color:#fff; border-color: var(--mc); }
+  .sl-topbar-brand { font-weight:800; font-size:15px; color: var(--text); display:flex; align-items:center; gap:6px; }
+  .sl-topbar-brand .sub { color: var(--muted); font-weight:500; font-size:13px; }
+
+  .sl-mhero { padding: 56px 0 40px; text-align:center; }
+  .sl-meyebrow {
+    display:inline-flex; align-items:center; gap:8px; background: var(--surface); border:1px solid var(--border);
+    padding:7px 16px; border-radius:999px; font-size:12px; font-weight:700; color: var(--mc); box-shadow: var(--shadow-sm);
+    margin-bottom:22px; font-family:'JetBrains Mono',monospace; animation: sl-pop .6s cubic-bezier(.2,.8,.2,1) both;
+  }
+  .sl-mtitle {
+    font-size: clamp(34px,6vw,56px); font-weight:800; letter-spacing:-0.03em; color: var(--text); margin-bottom:14px;
+    animation: sl-pop .7s cubic-bezier(.2,.8,.2,1) both; animation-delay:.05s;
+  }
+  .sl-mtitle .grad { background: linear-gradient(120deg, var(--mc), var(--accent2)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .sl-msub { font-size:16px; color: var(--muted); margin-bottom:6px; animation: sl-pop .7s cubic-bezier(.2,.8,.2,1) both; animation-delay:.1s; }
+  .sl-mmeta { font-size:13.5px; color: var(--muted); margin-bottom:30px; animation: sl-pop .7s cubic-bezier(.2,.8,.2,1) both; animation-delay:.12s; }
+
+  @keyframes sl-pop { from { opacity:0; transform: translateY(14px);} to { opacity:1; transform: translateY(0);} }
+
+  .sl-stats {
+    display:grid; grid-template-columns: repeat(2,1fr); gap:1px; background: var(--border); border:1px solid var(--border);
+    border-radius: var(--radius); overflow:hidden; max-width:420px; margin:0 auto; box-shadow: var(--shadow-sm);
+    animation: sl-pop .7s cubic-bezier(.2,.8,.2,1) both; animation-delay:.16s;
+  }
+  .sl-stat { background: var(--surface); padding:18px 8px; text-align:center; }
+  .sl-stat-num { font-size:22px; font-weight:800; color: var(--mc); letter-spacing:-0.02em; }
+  .sl-stat-label { font-size:10.5px; color: var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.4px; margin-top:3px; }
+
+  .sl-section { padding: 46px 0 0; }
+  .sl-eyebrow-sm { font-size:12px; font-weight:800; letter-spacing:1.4px; text-transform:uppercase; color: var(--mc); margin-bottom:8px; }
+  .sl-section-title { font-size:26px; font-weight:800; color: var(--text); letter-spacing:-0.02em; margin-bottom:26px; }
+
+  .sl-res-grid { display:grid; grid-template-columns: repeat(2,1fr); gap:16px; }
+  @media (max-width:620px){ .sl-res-grid{ grid-template-columns:1fr; } }
+  .sl-res-card {
+    display:flex; align-items:center; gap:16px; background: var(--surface); border:1px solid var(--border);
+    border-radius:16px; padding:20px; text-decoration:none; transition:.25s;
+    opacity:0; transform: translateY(18px);
+  }
+  .sl-res-card.sl-in { opacity:1; transform: translateY(0); }
+  .sl-res-card:hover { border-color: var(--mc); box-shadow: var(--shadow); transform: translateY(-4px); }
+  .sl-res-icon { width:48px; height:48px; flex-shrink:0; border-radius:12px; background: var(--mc-light); display:flex; align-items:center; justify-content:center; font-size:22px; }
+  .sl-res-title { font-size:15.5px; font-weight:800; color: var(--text); margin-bottom:3px; }
+  .sl-res-desc { font-size:12.5px; color: var(--muted); }
+  .sl-res-status { margin-left:auto; flex-shrink:0; font-size:10.5px; font-weight:700; padding:4px 10px; border-radius:999px; background: var(--mc-light); color: var(--mc); }
+
+  .sl-mfooter { text-align:center; padding: 60px 0 10px; font-size:12.5px; color: var(--muted); font-weight:500; }
+  .sl-mfooter a { color: var(--mc); text-decoration:none; font-weight:600; }
+</style>
+</head>
+<body>
+  <div class="sl-mod">
+    <div class="sl-mesh">
+      <span></span><span></span><span></span>
+    </div>
+    <div class="sl-grid-overlay"></div>
+
+    <header class="sl-topbar">
+      <div class="sl-topbar-inner">
+        <a href="../index.html" class="sl-back">⬅ Back to Hub</a>
+        <div class="sl-topbar-brand">
+          Smart<span>Learning</span>+
+          <span class="sub">// CGM Lab</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="sl-shell">
+      <div class="sl-mhero">
+        <div class="sl-meyebrow">🎨 PRACTICAL PORTAL</div>
+        <h1 class="sl-mtitle">Computer Graphics &amp; <span class="grad">Multimedia Lab</span></h1>
+        <p class="sl-msub">RTU V Semester · Practical &amp; Laboratory Work</p>
+        <p class="sl-mmeta">OpenGL, 2D/3D Graphics, Transformations &amp; Multimedia Applications</p>
+
+        <div class="sl-stats">
+          <div class="sl-stat">
+            <div class="sl-stat-num">—</div>
+            <div class="sl-stat-label">Programs</div>
+          </div>
+          <div class="sl-stat">
+            <div class="sl-stat-num">—</div>
+            <div class="sl-stat-label">Resources</div>
+          </div>
+        </div>
+      </div>
+
+      <section class="sl-section">
+        <div class="sl-eyebrow-sm">Laboratory Resources</div>
+        <h2 class="sl-section-title">Materials &amp; Downloads</h2>
+        <p style="color:var(--muted); font-size:13.5px; margin-bottom:24px;">
+          Resources will appear here once uploaded and approved. Use the <a href="../index.html#dashboard" style="color:var(--mc); font-weight:700;">Share Study Material</a> feature on the dashboard to contribute.
+        </p>
+        <div class="sl-res-grid" id="community-materials-grid"></div>
+      </section>
+
+      <footer class="sl-mfooter">
+        <p>🎨 CGM Lab · Smart Learning Plus · <a href="../index.html">← Back to Main Hub</a></p>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('sl-in'); });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.sl-res-card').forEach((el, i) => {
+      el.style.transitionDelay = `${(i % 6) * 0.05}s`;
+      io.observe(el);
+    });
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.8/purify.min.js"></script>
+  <script src="../community-loader.js"></script>
+</body>
+</html>
