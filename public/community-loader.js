@@ -32,11 +32,9 @@
   sections[0].parentNode.insertBefore(communitySection, sections[0].nextSibling);
 
   // 4. Determine API Base dynamic endpoint
-  let apiBase = "";
-  if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+  let apiBase = localStorage.getItem("api_url") || "/api";
+  if (apiBase === "/api" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")) {
     apiBase = "http://localhost:4000/api";
-  } else {
-    apiBase = "/api";
   }
 
   // 5. Fetch approved materials for this subject

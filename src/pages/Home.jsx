@@ -168,6 +168,9 @@ export default function Home() {
   };
 
   useEffect(() => {
+    // Save API URL dynamically for static HTML subpages uploader widget to connect
+    localStorage.setItem("api_url", import.meta.env.VITE_API_URL || "http://localhost:4000/api");
+
     if (session && session.role === "student") {
       refreshData();
       fetchProfile();
