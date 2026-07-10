@@ -113,9 +113,14 @@ async function bootstrapAdmin() {
 const PORT = process.env.PORT || 4000;
 
 (async () => {
-  await bootstrapAdmin();
-  registerHandlers();
-  await setupWebhook(app);
-  startScheduler();
-  app.listen(PORT, () => console.log(`🚀 Backend running on port ${PORT}`));
+  try {
+    await bootstrapAdmin();
+    registerHandlers();
+    await setupWebhook(app);
+    startScheduler();
+    app.listen(PORT, () => console.log(`🚀 Backend running on port ${PORT}`));
+  } catch (error) {
+    console.error("❌ Fatal error during backend startup:", error);
+    process.exit(1);
+  }
 })();
