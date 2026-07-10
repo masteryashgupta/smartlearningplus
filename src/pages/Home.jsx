@@ -927,6 +927,29 @@ export default function Home() {
           </div>
         </section>
 
+        {/* LABS SECTION */}
+        <section className="sl-section scroll-anchor" id="labs">
+          <div className="sl-eyebrow-sm">Practical Learning</div>
+          <div className="sl-section-title" style={{ marginBottom: "20px" }}>Labs</div>
+          
+          <div className="subject-row-grid">
+            <a
+              href="/CourseCheckbox.java"
+              download="CourseCheckbox.java"
+              className="subject-row-card sl-c-lab3"
+            >
+              <div className="subject-row-left">
+                <div className="subject-row-icon">☕</div>
+                <div className="subject-row-details">
+                  <div className="subject-row-title">Advanced Java Lab</div>
+                  <div className="subject-row-code">CourseCheckbox.java &nbsp;·&nbsp; Click to Download</div>
+                </div>
+              </div>
+              <div className="subject-row-arrow">⬇</div>
+            </a>
+          </div>
+        </section>
+
         {/* SYLLABUS DOWNLOADS */}
         <section className="sl-section scroll-anchor" id="downloads" style={{ paddingBottom: "40px" }}>
           <div className="sl-eyebrow-sm">Official Schemes</div>
