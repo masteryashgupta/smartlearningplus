@@ -1,20 +1,33 @@
 (function() {
-  // 1. Identify the current subject page code based on location paths
-  let subjectCode = "";
-  const path = window.location.pathname.toLowerCase();
+  console.log("=== Smart Learning+ Community Loader Initialized ===");
   
-  if (path.includes("/itc/")) subjectCode = "ITC";
-  else if (path.includes("/cd/")) subjectCode = "CD";
-  else if (path.includes("/os/")) subjectCode = "OS";
-  else if (path.includes("/cg/")) subjectCode = "CG";
-  else if (path.includes("/aoa/")) subjectCode = "AOA";
-  else if (path.includes("/aj%20lab/") || path.includes("/aj lab/")) subjectCode = "AJLAB";
+  // 1. Identify the current subject page code based on location paths (decoded and normalized)
+  const decodedPath = decodeURIComponent(window.location.pathname).toLowerCase();
+  console.log("Normalized Path:", decodedPath);
 
-  if (!subjectCode) return;
+  let subjectCode = "";
+  if (decodedPath.includes("/itc/")) subjectCode = "ITC";
+  else if (decodedPath.includes("/cd/")) subjectCode = "CD";
+  else if (decodedPath.includes("/os/")) subjectCode = "OS";
+  else if (decodedPath.includes("/cg/")) subjectCode = "CG";
+  else if (decodedPath.includes("/aoa/")) subjectCode = "AOA";
+  // Support both "AJ lab" and "AJlab"
+  else if (decodedPath.includes("/aj lab/") || decodedPath.includes("/aj-lab/") || decodedPath.includes("/ajlab/")) subjectCode = "AJLAB";
+
+  console.log("Detected Subject Code:", subjectCode);
+
+  if (!subjectCode) {
+    console.warn("Could not determine subject code for path:", decodedPath);
+    return;
+  }
 
   // 2. Locate insertion target (usually after the first resource section)
   const sections = document.querySelectorAll(".sl-section");
-  if (sections.length === 0) return;
+  if (sections.length === 0) {
+    console.error("Target container '.sl-section' not found on this page.");
+    return;
+  }
+  console.log("Found page sections:", sections.length);
 
   // 3. Create the community contributions UI layout
   const communitySection = document.createElement("section");
@@ -36,12 +49,24 @@
   if (apiBase === "/api" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")) {
     apiBase = "http://localhost:4000/api";
   }
+  console.log("Resolved API URL:", apiBase);
 
   // 5. Fetch approved materials for this subject
-  fetch(`${apiBase}/materials/approved/${subjectCode}`)
-    .then(res => res.json())
+  const fetchUrl = `${apiBase}/materials/approved/${subjectCode}`;
+  console.log("Fetching materials from:", fetchUrl);
+
+  fetch(fetchUrl)
+    .then(res => {
+      console.log("Received Response status:", res.status);
+      if (!res.ok) throw new Error("HTTP Status " + res.status);
+      return res.json();
+    })
     .then(data => {
-      if (!data || data.length === 0) return;
+      console.log("Successfully fetched materials count:", data ? data.length : 0);
+      if (!data || data.length === 0) {
+        console.log("No approved materials returned from backend for subject:", subjectCode);
+        return;
+      }
 
       const grid = document.getElementById("community-materials-grid");
       data.forEach(item => {
@@ -87,7 +112,9 @@
       window.communityMaterialsList = data;
       document.getElementById("community-materials-section").style.display = "block";
     })
-    .catch(err => console.error("Error loading community materials:", err));
+    .catch(err => {
+      console.error("Error loading community materials via Fetch:", err);
+    });
 
   // 6. Modal logic to display text/HTML entries securely
   window.showCommunityMaterialModal = function(id) {
@@ -113,7 +140,6 @@
         </div>
       `;
     } else if (item.content_type === "html") {
-      // In-depth DOMPurify sanitization at render time (Requirement 5)
       const cleanHtml = window.DOMPurify ? window.DOMPurify.sanitize(item.text_content) : item.text_content;
       innerContent = `
         <iframe
