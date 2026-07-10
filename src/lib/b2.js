@@ -104,3 +104,18 @@ export async function signUrls(items) {
     return items;
   }
 }
+
+export async function checkB2Health() {
+  const keyId = process.env.B2_APPLICATION_KEY_ID;
+  const key = process.env.B2_APPLICATION_KEY;
+  if (!keyId || !key) return { status: "offline", error: "Keys not configured" };
+  try {
+    b2.applicationKeyId = keyId;
+    b2.applicationKey = key;
+    await b2.authorize();
+    return { status: "online" };
+  } catch (err) {
+    return { status: "offline", error: err.message || "Failed to authorize B2" };
+  }
+}
+

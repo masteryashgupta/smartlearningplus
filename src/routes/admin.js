@@ -3,7 +3,8 @@ import bcrypt from "bcryptjs";
 import { q } from "../db.js";
 import { requireAuth } from "../auth.js";
 import { computeStats } from "../lib/timetable.js";
-import { signUrls } from "../lib/b2.js";
+import { signUrls, checkB2Health } from "../lib/b2.js";
+import { getBotStatus } from "../bot/bot.js";
 
 const router = Router();
 
@@ -289,6 +290,57 @@ router.delete("/materials/:id", requireAuth("admin"), async (req, res) => {
     console.error("[materials-delete] Error:", err);
     res.status(500).json({ error: "Database error during delete" });
   }
+});
+
+// System health checks (database, Telegram bot, Backblaze B2, Resend mailer)
+router.get("/health", requireAuth("admin"), async (req, res) => {
+  const health = {
+    database: { status: "offline", latency: null, error: null },
+    telegram: { status: "offline", type: null },
+    b2: { status: "offline", error: null },
+    resend: { status: "offline", error: null },
+    server: { status: "online", uptime: process.uptime(), memory: process.memoryUsage() }
+  };
+
+  // 1. Database Check
+  try {
+    const start = Date.now();
+    await q("SELECT 1");
+    health.database.status = "online";
+    health.database.latency = `${Date.now() - start}ms`;
+  } catch (err) {
+    health.database.error = err.message || "Failed to query db";
+  }
+
+  // 2. Telegram Bot Check
+  try {
+    const status = getBotStatus();
+    health.telegram.status = (status.startsWith("Active") || status.startsWith("Polling") || status.startsWith("Webhook")) ? "online" : "offline";
+    health.telegram.type = status;
+  } catch (err) {
+    health.telegram.type = "Error";
+  }
+
+  // 3. Backblaze B2 Check
+  try {
+    const b2res = await checkB2Health();
+    health.b2.status = b2res.status;
+    if (b2res.error) health.b2.error = b2res.error;
+  } catch (err) {
+    health.b2.error = err.message || "Error running B2 health";
+  }
+
+  // 4. Resend Mailer Check
+  const resendKey = process.env.RESEND_API_KEY;
+  if (!resendKey) {
+    health.resend.status = "offline";
+    health.resend.error = "RESEND_API_KEY not configured";
+  } else {
+    health.resend.status = "online";
+    health.resend.error = null;
+  }
+
+  res.json(health);
 });
 
 export default router;
