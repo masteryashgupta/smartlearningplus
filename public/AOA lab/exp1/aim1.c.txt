@@ -1,1 +1,1 @@
-Experiment - 2 Aim - Sort a given set of elements using the Quick Sort method and determine the time required to sort the elements. The elements can be read from a file or can be generated using the random number generator.
+Experiment - 1 Aim - Sort a given set of elements using the Quick Sort method and determine the time required to sort the elements. The elements can be read from a file or can be generated using the random number generator.
