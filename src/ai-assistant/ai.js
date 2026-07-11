@@ -9,19 +9,35 @@ if (process.env.GEMINI_API_KEY) {
 }
 
 export async function getEmbedding(text) {
-  if (!genAI) {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) {
     throw new Error("GEMINI_API_KEY is not configured");
   }
-  try {
-    const model = genAI.getGenerativeModel({ model: "text-embedding-004" });
-    const result = await model.embedContent(text);
-    return result.embedding.values;
-  } catch (err) {
-    console.warn("Gemini text-embedding-004 failed, attempting embedding-001 fallback:", err.message);
-    const model = genAI.getGenerativeModel({ model: "embedding-001" });
-    const result = await model.embedContent(text);
-    return result.embedding.values;
+  
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent?key=${apiKey}`;
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      model: "models/gemini-embedding-001",
+      content: { parts: [{ text }] },
+      outputDimensionality: 768
+    })
+  });
+  
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(`Embedding API failed with status ${response.status}: ${errText}`);
   }
+  
+  const data = await response.json();
+  if (!data.embedding || !data.embedding.values) {
+    throw new Error("Invalid response format from Embedding API");
+  }
+  
+  return data.embedding.values;
 }
 
 export async function callGemini(prompt, systemInstruction = "") {
@@ -31,7 +47,7 @@ export async function callGemini(prompt, systemInstruction = "") {
   
   // Combine system instruction into the prompt or pass it to config
   const config = systemInstruction ? { systemInstruction } : {};
-  const modelWithConfig = genAI.getGenerativeModel({ model: "gemini-2.5-flash" }, config);
+  const modelWithConfig = genAI.getGenerativeModel({ model: "gemini-1.5-flash" }, config);
   const result = await modelWithConfig.generateContent(prompt);
   const response = await result.response;
   return response.text();
