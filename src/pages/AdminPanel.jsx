@@ -106,6 +106,8 @@ export default function AdminPanel({ onClose }) {
   const [broadcastMessage, setBroadcastMessage] = useState("");
   const [broadcastLoading, setBroadcastLoading] = useState(false);
   const [broadcastMsg, setBroadcastMsg] = useState(null);
+  const [broadcastUserSearch, setBroadcastUserSearch] = useState("");
+  const [selectedUserIds, setSelectedUserIds] = useState([]);
 
   const handleSendBroadcast = async (e) => {
     e.preventDefault();
@@ -113,9 +115,12 @@ export default function AdminPanel({ onClose }) {
     if (!broadcastChannels.email && !broadcastChannels.telegram) {
       return setBroadcastMsg({ ok: false, text: "Please select at least one channel (Email or Telegram)." });
     }
+    if (selectedUserIds.length === 0) {
+      return setBroadcastMsg({ ok: false, text: "Please select at least one user to receive the broadcast." });
+    }
     
     const confirmSend = window.confirm(
-      `Are you sure you want to send this announcement to ALL active users?`
+      `Are you sure you want to send this announcement to the selected ${selectedUserIds.length} users?`
     );
     if (!confirmSend) return;
 
@@ -124,7 +129,8 @@ export default function AdminPanel({ onClose }) {
       const { data } = await api.post("/admin/broadcast", {
         subject: broadcastChannels.email ? broadcastSubject : undefined,
         message: broadcastMessage,
-        channels: Object.keys(broadcastChannels).filter(k => broadcastChannels[k])
+        channels: Object.keys(broadcastChannels).filter(k => broadcastChannels[k]),
+        userIds: selectedUserIds
       });
       setBroadcastMsg({ ok: true, text: `✓ Broadcast successfully queued! Sent to ${data.sentCount} users.` });
       setBroadcastSubject("");
@@ -183,7 +189,11 @@ export default function AdminPanel({ onClose }) {
     api.get("/admin/holidays").then((r) => setHolidays(r.data));
   }
   function reloadUsers() {
-    api.get("/admin/users").then((r) => setUsers(r.data));
+    api.get("/admin/users").then((r) => {
+      setUsers(r.data);
+      const activeIds = r.data.filter(u => u.is_active).map(u => u.id);
+      setSelectedUserIds(activeIds);
+    });
   }
   function reloadWhitelist() {
     api.get("/admin/whitelist").then((r) => setWhitelist(r.data));
@@ -1454,6 +1464,74 @@ export default function AdminPanel({ onClose }) {
                       />
                       🤖 Send via Telegram
                     </label>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-[10px] font-bold text-muted mb-1.5 uppercase tracking-wider">
+                    Recipients ({selectedUserIds.length} selected)
+                  </label>
+                  <div className="space-y-2">
+                    <div className="flex gap-2">
+                      <input 
+                        type="text" 
+                        placeholder="Search users by name/email/batch..." 
+                        value={broadcastUserSearch}
+                        onChange={(e) => setBroadcastUserSearch(e.target.value)}
+                        className="input font-sans text-xs flex-1 py-1 px-3"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const activeUsers = users.filter(u => u.is_active);
+                          if (selectedUserIds.length === activeUsers.length) {
+                            setSelectedUserIds([]);
+                          } else {
+                            setSelectedUserIds(activeUsers.map(u => u.id));
+                          }
+                        }}
+                        className="px-3 py-1 bg-slate-100 hover:bg-slate-200 border border-line rounded-lg text-xs font-semibold transition-colors shrink-0"
+                      >
+                        {selectedUserIds.length === users.filter(u => u.is_active).length ? "Deselect All" : "Select All"}
+                      </button>
+                    </div>
+
+                    <div className="max-h-48 overflow-y-auto border border-line rounded-xl p-2 space-y-1 bg-slate-50/50">
+                      {users.filter(u => u.is_active).filter(u => 
+                        !broadcastUserSearch ||
+                        u.name?.toLowerCase().includes(broadcastUserSearch.toLowerCase()) ||
+                        u.email?.toLowerCase().includes(broadcastUserSearch.toLowerCase()) ||
+                        (u.batch && u.batch.toLowerCase().includes(broadcastUserSearch.toLowerCase()))
+                      ).map(u => {
+                        const isChecked = selectedUserIds.includes(u.id);
+                        return (
+                          <label key={u.id} className="flex items-center justify-between p-1.5 hover:bg-white rounded-lg cursor-pointer text-xs transition-colors">
+                            <span className="flex items-center gap-2 font-medium text-slate-700 min-w-0">
+                              <input 
+                                type="checkbox" 
+                                checked={isChecked} 
+                                onChange={() => {
+                                  if (isChecked) {
+                                    setSelectedUserIds(selectedUserIds.filter(id => id !== u.id));
+                                  } else {
+                                    setSelectedUserIds([...selectedUserIds, u.id]);
+                                  }
+                                }}
+                                className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                              />
+                              <span className="truncate">{u.name} <span className="text-muted font-mono">({u.batch || "No Batch"})</span></span>
+                            </span>
+                            <span className="flex items-center gap-2 shrink-0 text-[10px] text-muted">
+                              {u.email && <span title="Has Email">📧</span>}
+                              {u.telegram_id && <span title="Has Telegram connected">🤖</span>}
+                            </span>
+                          </label>
+                        );
+                      })}
+                      {users.filter(u => u.is_active).length === 0 && (
+                        <div className="text-center py-4 text-xs text-muted">No active users found.</div>
+                      )}
+                    </div>
                   </div>
                 </div>
 
