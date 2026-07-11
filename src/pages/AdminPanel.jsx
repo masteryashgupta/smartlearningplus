@@ -12,6 +12,7 @@ const TABS = [
   { key: "materials", label: "Approvals" },
   { key: "attendance",label: "Attendance" },
   { key: "health",    label: "Health Status" },
+  { key: "moderator-logs", label: "Moderator Logs" },
   { key: "settings",  label: "Settings" },
 ];
 
@@ -67,6 +68,8 @@ export default function AdminPanel({ onClose }) {
   const [rejectionInputId, setRejectionInputId] = useState(null);
   const [rejectionReasonText, setRejectionReasonText] = useState("");
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
+  const [moderatorLogs, setModeratorLogs] = useState([]);
+  const [logsLoading, setLogsLoading] = useState(false);
   const [health, setHealth] = useState(null);
   const [healthLoading, setHealthLoading] = useState(false);
 
@@ -127,6 +130,14 @@ export default function AdminPanel({ onClose }) {
 
   function reloadApprovedMaterials() {
     api.get("/admin/materials/approved").then((r) => setApprovedMaterials(r.data || []));
+  }
+
+  function reloadModeratorLogs() {
+    setLogsLoading(true);
+    api.get("/admin/moderator-logs")
+      .then((r) => setModeratorLogs(r.data || []))
+      .catch((err) => console.error("Error loading moderator logs:", err))
+      .finally(() => setLogsLoading(false));
   }
 
   function loadHealth() {
@@ -247,6 +258,7 @@ export default function AdminPanel({ onClose }) {
       reloadApprovedMaterials();
     }
     if (tab === "health") loadHealth();
+    if (tab === "moderator-logs") reloadModeratorLogs();
   }, [tab, attendanceDate, week]);
 
   async function addSlot(e) {
@@ -1213,6 +1225,89 @@ export default function AdminPanel({ onClose }) {
                     </div>
                   </div>
                 </div>
+              </div>
+            )}
+          </div>
+        )}
+
+
+        {/* ── MODERATOR LOGS ── */}
+        {tab === "moderator-logs" && (
+          <div className="card p-4 sm:p-5 bg-white border border-line rounded-2xl shadow-soft space-y-4">
+            <div className="flex items-center justify-between gap-3 flex-wrap">
+              <div>
+                <h2 className="font-display font-bold text-lg text-ink flex items-center gap-2">
+                  <span>🛡️</span> Moderator Activity Logs
+                </h2>
+                <p className="text-muted text-xs mt-0.5">Audit log of all actions performed by student moderators.</p>
+              </div>
+              <button
+                onClick={reloadModeratorLogs}
+                className="px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-50 border border-indigo-200 text-indigo-700 hover:bg-indigo-100 transition-colors flex items-center gap-1 cursor-pointer"
+                disabled={logsLoading}
+              >
+                🔄 Refresh Logs
+              </button>
+            </div>
+
+            {logsLoading && moderatorLogs.length === 0 ? (
+              <div className="text-sm text-muted text-center py-10 flex items-center justify-center gap-2">
+                <span className="animate-spin">⏳</span> Loading logs...
+              </div>
+            ) : moderatorLogs.length === 0 ? (
+              <div className="text-sm text-muted text-center py-10 bg-slate-50 rounded-xl border border-dashed border-line">
+                No moderator logs recorded yet.
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="border-b border-line bg-paper/40 text-muted uppercase font-bold text-[10px] tracking-wider">
+                      <th className="py-2.5 px-3">Timestamp</th>
+                      <th className="py-2.5 px-3">Moderator</th>
+                      <th className="py-2.5 px-3">Action</th>
+                      <th className="py-2.5 px-3">Details</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-line font-medium text-ink">
+                    {moderatorLogs.map((log) => (
+                      <tr key={log.id} className="hover:bg-paper/30 transition-colors">
+                        <td className="py-3 px-3 font-mono text-muted whitespace-nowrap">
+                          {new Date(log.created_at).toLocaleString("en-IN", {
+                            dateStyle: "medium",
+                            timeStyle: "short",
+                          })}
+                        </td>
+                        <td className="py-3 px-3">
+                          <div>
+                            <div className="font-semibold">{log.moderator_name}</div>
+                            {log.moderator_email && (
+                              <div className="text-[10px] text-muted font-mono">{log.moderator_email}</div>
+                            )}
+                          </div>
+                        </td>
+                        <td className="py-3 px-3">
+                          <span
+                            className={`px-2 py-0.5 rounded-full text-[9px] font-bold border ${
+                              log.action.includes("approve")
+                                ? "bg-emerald-50 border-emerald-200 text-emerald-700"
+                                : log.action.includes("reject")
+                                ? "bg-rose-50 border-rose-200 text-rose-700"
+                                : log.action.includes("delete")
+                                ? "bg-rose-50 border-rose-200 text-rose-700"
+                                : "bg-indigo-50 border-indigo-200 text-indigo-700"
+                            }`}
+                          >
+                            {log.action.replace(/_/g, " ").toUpperCase()}
+                          </span>
+                        </td>
+                        <td className="py-3 px-3 max-w-[280px] break-words text-slate-700">
+                          {log.details}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             )}
           </div>
