@@ -36,8 +36,19 @@ function StatCard({ icon, label, value, sub, color = "#6D5EF5" }) {
   );
 }
 
-export default function AdminPanel() {
-  const [tab, setTab] = useState("overview");
+export default function AdminPanel({ onClose }) {
+  const role = localStorage.getItem("role");
+  const isModeratorSession = localStorage.getItem("is_moderator") === "true";
+
+  const allowedTabs = TABS.filter((t) => {
+    if (role === "admin") return true;
+    if (role === "student" && isModeratorSession) {
+      return ["whitelist", "materials"].includes(t.key);
+    }
+    return false;
+  });
+
+  const [tab, setTab] = useState(role === "admin" ? "overview" : "materials");
   const [overview, setOverview] = useState(null);
   const [week, setWeek] = useState({});
   const [subjects, setSubjects] = useState([]);
@@ -281,7 +292,13 @@ export default function AdminPanel() {
 
   async function saveUser(u) {
     try {
-      await api.put(`/admin/users/${u.id}`, { name: u.name, batch: u.batch, section: u.section, is_active: u.is_active });
+      await api.put(`/admin/users/${u.id}`, {
+        name: u.name,
+        batch: u.batch,
+        section: u.section,
+        is_active: u.is_active,
+        is_moderator: u.is_moderator,
+      });
       reloadUsers();
       setEditingUser(null);
       showToast("User updated!");
@@ -362,7 +379,7 @@ export default function AdminPanel() {
 
   return (
     <div className="min-h-screen">
-      <Navbar tabs={TABS} active={tab} onTab={setTab} />
+      <Navbar tabs={allowedTabs} active={tab} onTab={setTab} />
 
       {/* Toast */}
       {toast && (
@@ -379,6 +396,20 @@ export default function AdminPanel() {
       )}
 
       <div className="max-w-5xl mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4">
+        {onClose && (
+          <div className="flex justify-between items-center bg-indigo-50 border border-indigo-200 rounded-2xl p-4 mb-2">
+            <div>
+              <h3 className="font-bold text-indigo-900 text-sm">🛡️ Moderator Mode</h3>
+              <p className="text-xs text-indigo-700 mt-0.5">You have permissions to approve community content and manage the email whitelist.</p>
+            </div>
+            <button
+              onClick={onClose}
+              className="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold hover:bg-indigo-700 transition-colors shadow-sm cursor-pointer"
+            >
+              ← Back to Student Dashboard
+            </button>
+          </div>
+        )}
 
         {/* ── OVERVIEW ── */}
         {tab === "overview" && overview && (
@@ -521,7 +552,7 @@ export default function AdminPanel() {
                       {editingUser?.id === u.id ? (
                         /* Edit row */
                         <div className="p-4 bg-primary/5">
-                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-3">
+                          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-3">
                             <input className="input" placeholder="Name" value={editingUser.name}
                               onChange={(e) => setEditingUser({ ...editingUser, name: e.target.value })} />
                             <select className="input" value={editingUser.batch}
@@ -537,6 +568,12 @@ export default function AdminPanel() {
                                 onChange={(e) => setEditingUser({ ...editingUser, is_active: e.target.checked })}
                                 className="w-4 h-4 accent-primary" />
                               Active
+                            </label>
+                            <label className="flex items-center gap-2 text-sm font-medium text-ink">
+                              <input type="checkbox" checked={editingUser.is_moderator || false}
+                                onChange={(e) => setEditingUser({ ...editingUser, is_moderator: e.target.checked })}
+                                className="w-4 h-4 accent-indigo-600" />
+                              Moderator
                             </label>
                           </div>
                           <div className="flex gap-2">
@@ -558,6 +595,9 @@ export default function AdminPanel() {
                                 <span className="text-[10px] px-1.5 py-0.5 bg-paper rounded-full text-muted font-mono border border-line">{u.section || "—"}</span>
                                 {!u.is_active && (
                                   <span className="text-[10px] px-1.5 py-0.5 bg-red-50 rounded-full text-red-500 font-bold border border-red-100">Inactive</span>
+                                )}
+                                {u.is_moderator && (
+                                  <span className="text-[10px] px-1.5 py-0.5 bg-indigo-50 rounded-full text-indigo-600 font-bold border border-indigo-100">🛡️ Moderator</span>
                                 )}
                               </div>
                               <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11px] text-muted font-mono mt-1">

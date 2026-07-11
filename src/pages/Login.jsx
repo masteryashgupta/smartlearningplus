@@ -33,6 +33,7 @@ export default function Login({ compact = false }) {
     try {
       const { data } = await api.post("/auth/student/exchange", { token });
       setSession(data.token, "student", data.user.name);
+      localStorage.setItem("is_moderator", data.user.is_moderator ? "true" : "false");
       window.location.href = "/index.html#/";
       window.location.reload();
     } catch (e) {
@@ -49,6 +50,7 @@ export default function Login({ compact = false }) {
     try {
       const { data } = await api.post("/auth/student/login", { email: studentEmail, password: studentPassword });
       setSession(data.token, "student", data.user.name);
+      localStorage.setItem("is_moderator", data.user.is_moderator ? "true" : "false");
       window.location.href = "/index.html#/";
       window.location.reload();
     } catch (e) {

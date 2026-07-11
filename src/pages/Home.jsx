@@ -13,6 +13,7 @@ export default function Home() {
   // Student dashboard states
   const [stats, setStats] = useState(null);
   const [heatmap, setHeatmap] = useState([]);
+  const [viewModeratorPanel, setViewModeratorPanel] = useState(false);
   const [leaderboard, setLeaderboard] = useState([]);
   const [profile, setProfile] = useState(null);
   const [loadingProfile, setLoadingProfile] = useState(false);
@@ -162,6 +163,9 @@ export default function Home() {
       .then((r) => {
         setProfile(r.data);
         if (r.data.name) localStorage.setItem("name", r.data.name);
+        if (r.data.is_moderator !== undefined) {
+          localStorage.setItem("is_moderator", r.data.is_moderator ? "true" : "false");
+        }
       })
       .catch((err) => console.error("Error fetching profile", err))
       .finally(() => setLoadingProfile(false));
@@ -237,6 +241,9 @@ export default function Home() {
 
   if (session && session.role === "admin") {
     return <AdminPanel />;
+  }
+  if (session && session.role === "student" && viewModeratorPanel) {
+    return <AdminPanel onClose={() => setViewModeratorPanel(false)} />;
   }
 
   return (
@@ -756,6 +763,14 @@ export default function Home() {
                   <a href="#attendance-section" onClick={(e) => { e.preventDefault(); document.getElementById('attendance-section')?.scrollIntoView({ behavior: 'smooth' }); }}>Attendance</a>
                   <a href="#subjects" onClick={(e) => { e.preventDefault(); document.getElementById('subjects')?.scrollIntoView({ behavior: 'smooth' }); }}>Subjects</a>
                   <a href="#downloads" onClick={(e) => { e.preventDefault(); document.getElementById('downloads')?.scrollIntoView({ behavior: 'smooth' }); }}>Downloads</a>
+                  {profile?.is_moderator && (
+                    <button
+                      onClick={() => setViewModeratorPanel(true)}
+                      className="text-xs font-bold text-indigo-600 bg-indigo-50 border border-indigo-200 px-2.5 py-1 rounded-lg hover:bg-indigo-100 transition-all cursor-pointer flex items-center gap-1"
+                    >
+                      <span>🛡️</span> Moderator Panel
+                    </button>
+                  )}
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-xs text-muted font-mono bg-paper border border-line/60 rounded-lg px-2.5 py-1">{profile?.name || session?.name}</span>
