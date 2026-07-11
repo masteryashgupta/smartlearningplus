@@ -109,16 +109,16 @@ function withTimeout(promise, ms) {
 export async function callAI(prompt, systemInstruction = "") {
   const timeoutMs = 15000; // 15 seconds
   try {
-    const answer = await withTimeout(callGemini(prompt, systemInstruction), timeoutMs);
-    return { answer, served_by: "gemini" };
+    const answer = await withTimeout(callGroq(prompt, systemInstruction), timeoutMs);
+    return { answer, served_by: "groq" };
   } catch (err) {
-    console.warn("Gemini failed or timed out, falling back to Groq. Error:", err.message);
+    console.warn("Groq failed or timed out, falling back to Gemini. Error:", err.message);
     try {
-      const answer = await withTimeout(callGroq(prompt, systemInstruction), timeoutMs);
-      return { answer, served_by: "groq" };
+      const answer = await withTimeout(callGemini(prompt, systemInstruction), timeoutMs);
+      return { answer, served_by: "gemini" };
     } catch (err2) {
-      console.error("Groq also failed or timed out. Error:", err2.message);
-      throw new Error("Both AI providers (Gemini & Groq) are currently unavailable or timed out. Please try again.");
+      console.error("Gemini also failed or timed out. Error:", err2.message);
+      throw new Error("Both AI providers (Groq & Gemini) are currently unavailable or timed out. Please try again.");
     }
   }
 }
