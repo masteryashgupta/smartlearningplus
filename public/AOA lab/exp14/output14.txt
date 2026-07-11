@@ -1,0 +1,11 @@
+Output:
+
+Enter the text string: AABAACAADAABAABA
+Enter the pattern to search: AABA
+
+Matching positions (Naive String Matching):
+Pattern found at index 0
+Pattern found at index 9
+Pattern found at index 12
+
+Time Required = 0.000004 seconds

@@ -1,0 +1,12 @@
+Output:
+
+Enter the number of elements: 6
+
+Generated (Sorted) Elements:
+12 166 241 740 758 881 
+
+Enter the element to search: 740
+
+Element 740 found at position 4
+
+Time Required = 0.000002 seconds

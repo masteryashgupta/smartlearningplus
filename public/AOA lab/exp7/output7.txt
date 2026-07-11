@@ -1,0 +1,20 @@
+Output:
+
+Enter number of items: 3
+Enter weight and profit of each item:
+Item 1 weight: 10
+Item 1 profit: 60
+Item 2 weight: 20
+Item 2 profit: 100
+Item 3 weight: 30
+Item 3 profit: 120
+Enter knapsack capacity: 50
+
+Items selected (Greedy - by profit/weight ratio):
+Item (W=10, P=60) -> Fully taken
+Item (W=20, P=100) -> Fully taken
+Item (W=30, P=120) -> Fraction taken = 0.67
+
+Maximum Profit (Greedy Knapsack) = 240.00
+
+Time Required = 0.000006 seconds

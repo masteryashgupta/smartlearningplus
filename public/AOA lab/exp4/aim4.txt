@@ -1,0 +1,4 @@
+Experiment - 4
+Aim - Implement Linear Search algorithm to search a value from a given set of 
+elements. The elements can be read from a file or can be generated using the 
+random number generator.

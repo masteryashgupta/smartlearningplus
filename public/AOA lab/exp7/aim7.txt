@@ -1,0 +1,2 @@
+Experiment - 7
+Aim - Implement Knapsack problem using Greedy Method.

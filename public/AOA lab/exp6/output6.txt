@@ -1,0 +1,22 @@
+Output:
+
+Enter elements of 2x2 Matrix A:
+1 2
+3 4
+Enter elements of 2x2 Matrix B:
+5 6
+7 8
+
+Matrix A:
+1 2 
+3 4 
+
+Matrix B:
+5 6 
+7 8 
+
+Resultant Matrix C (A x B) using Strassen's Method:
+19 22 
+43 50 
+
+Time Required = 0.000003 seconds

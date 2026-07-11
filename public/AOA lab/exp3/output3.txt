@@ -1,0 +1,11 @@
+Output:
+
+Enter the number of elements: 6
+
+Generated Elements:
+615 944 840 696 255 703 
+
+Sorted Elements:
+255 615 696 703 840 944 
+
+Time Required = 0.000001 seconds

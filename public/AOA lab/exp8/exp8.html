@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AOA Lab // Experiment 8</title>
+<link rel="stylesheet" href="../style.css">
+<style>
+  :root {
+    --mc: #0284c7;
+    --mc-light: rgba(2, 132, 199, 0.08);
+  }
+
+  body { overflow-x: hidden; }
+  .sl-mod { position: relative; min-height: 100vh; }
+
+  .sl-mesh { position: fixed; inset: 0; z-index: -1; overflow: hidden; background: var(--bg); }
+  .sl-mesh span { position: absolute; border-radius: 50%; filter: blur(60px); opacity: .28; animation: sl-float 20s ease-in-out infinite; }
+  .sl-mesh span:nth-child(1) { width: 380px; height: 380px; background: var(--mc); top: -120px; left: -80px; animation-delay: 0s; }
+  .sl-mesh span:nth-child(2) { width: 300px; height: 300px; background: var(--accent2); top: 40%; right: -100px; animation-delay: -7s; }
+  .sl-mesh span:nth-child(3) { width: 260px; height: 260px; background: var(--mc); bottom: -100px; left: 25%; animation-delay: -13s; opacity:.18; }
+  @keyframes sl-float {
+    0%, 100% { transform: translate(0,0) scale(1); }
+    33% { transform: translate(35px,-25px) scale(1.07); }
+    66% { transform: translate(-25px,20px) scale(0.95); }
+  }
+  .sl-grid-overlay {
+    position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background-image: linear-gradient(rgba(2,132,199,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(2,132,199,0.03) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, black 35%, transparent 90%);
+  }
+
+  .sl-shell { max-width: 900px; margin: 0 auto; padding: 0 24px 60px; }
+
+  /* ── TOPBAR ── */
+  .sl-topbar {
+    position: sticky; top:0; z-index:50; background: rgba(245,247,255,0.85); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border); padding: 14px 0; margin-bottom: 8px;
+  }
+  .sl-topbar-inner { display:flex; align-items:center; gap:16px; flex-wrap:wrap; max-width:900px; margin:0 auto; padding:0 24px; }
+  .sl-back {
+    display:inline-flex; align-items:center; gap:6px; font-size:13.5px; font-weight:700; color: var(--mc);
+    background: var(--mc-light); border:1.5px solid var(--mc-light); padding:8px 14px; border-radius:10px; text-decoration:none; transition:.2s;
+  }
+  .sl-back:hover { background: var(--mc); color:#fff; border-color: var(--mc); }
+  .sl-topbar-brand { font-weight:800; font-size:15px; color: var(--text); display:flex; align-items:center; gap:6px; }
+  .sl-topbar-brand .sub { color: var(--muted); font-weight:500; font-size:13px; }
+
+  /* ── CONTAINER ── */
+  .exp-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: var(--shadow-sm);
+    margin-top: 40px;
+  }
+
+  .exp-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .exp-meta {
+    font-size: 12.5px;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 16px;
+  }
+
+  .sub-tab-nav {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .sub-tab-btn {
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .sub-tab-btn:hover {
+    border-color: var(--mc);
+    color: var(--mc);
+  }
+
+  .sub-tab-btn.active {
+    background: var(--mc-light);
+    border-color: var(--mc);
+    color: var(--mc);
+  }
+
+  .exp-content {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    min-height: 150px;
+    position: relative;
+  }
+
+  .exp-aim-text {
+    font-size: 14.5px;
+    color: var(--text2);
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  .code-container {
+    position: relative;
+  }
+
+  .code-block {
+    background: #0f172a !important;
+    color: #f8fafc !important;
+    padding: 20px;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    overflow-x: auto;
+    white-space: pre;
+    margin: 0;
+  }
+
+  .output-block {
+    background: #1e293b;
+    color: #38bdf8;
+    padding: 20px;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    margin: 0;
+  }
+
+  /* ── COPY BUTTON ── */
+  .copy-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e2e8f0;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 11.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(4px);
+  }
+
+  .copy-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+
+  .copy-btn.copied {
+    background: #10b981;
+    border-color: #10b981;
+    color: #fff;
+  }
+
+  .toast-copy {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #10b981;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 1000;
+    display: none;
+  }
+</style>
+</head>
+<body>
+  <div class="sl-mod">
+    <div class="sl-mesh">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <div class="sl-grid-overlay"></div>
+
+    <header class="sl-topbar">
+      <div class="sl-topbar-inner">
+        <a href="../index.html" class="sl-back">⬅ Back to Lab</a>
+        <div class="sl-topbar-brand">
+          Smart<span>Learning</span>+
+          <span class="sub">// Experiment 8</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="sl-shell">
+      <div class="exp-card">
+        <h1 class="exp-title">Experiment 8: Merge Sort Method</h1>
+        <div class="exp-meta">FILE TARGETS: aim8.txt · exp8.c · output8.txt</div>
+
+        <div class="sub-tab-nav">
+          <button class="sub-tab-btn active" id="btn-aim" onclick="switchSubTab('aim')">Aim</button>
+          <button class="sub-tab-btn" id="btn-code" onclick="switchSubTab('code')">Code</button>
+          <button class="sub-tab-btn" id="btn-output" onclick="switchSubTab('output')">Output</button>
+        </div>
+
+        <div class="exp-content">
+          <!-- AIM TAB -->
+          <div id="content-aim" class="tab-pane">
+            <p class="exp-aim-text" id="aim-text">Loading Aim...</p>
+          </div>
+          
+          <!-- CODE TAB -->
+          <div id="content-code" class="tab-pane" style="display:none;">
+            <div class="code-container">
+              <button class="copy-btn" onclick="copyCode()">Copy Code</button>
+              <pre class="code-block" id="code-text">Loading Code...</pre>
+            </div>
+          </div>
+
+          <!-- OUTPUT TAB -->
+          <div id="content-output" class="tab-pane" style="display:none;">
+            <pre class="output-block" id="output-text">Loading Output...</pre>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast-copy" id="toast-copy">✓ Code copied to clipboard!</div>
+
+  <script>
+    let expCodeText = '';
+
+    const files = {
+      aim: 'aim8.txt',
+      code: 'exp8.c',
+      output: 'output8.txt'
+    };
+
+    async function loadData() {
+      try {
+        const aimRes = await fetch(files.aim);
+        document.getElementById('aim-text').textContent = await aimRes.text();
+
+        const codeRes = await fetch(files.code);
+        expCodeText = await codeRes.text();
+        document.getElementById('code-text').textContent = expCodeText;
+
+        const outputRes = await fetch(files.output);
+        document.getElementById('output-text').textContent = await outputRes.text();
+      } catch (err) {
+        console.error("Error loading files:", err);
+      }
+    }
+
+    function switchSubTab(tabId) {
+      document.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(`btn-${tabId}`).classList.add('active');
+      
+      document.querySelectorAll('.tab-pane').forEach(p => p.style.display = 'none');
+      document.getElementById(`content-${tabId}`).style.display = 'block';
+    }
+
+    async function copyCode() {
+      try {
+        await navigator.clipboard.writeText(expCodeText);
+        const btn = document.querySelector('.copy-btn');
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+
+        const toast = document.getElementById('toast-copy');
+        toast.style.display = 'block';
+
+        setTimeout(() => {
+          btn.textContent = 'Copy Code';
+          btn.classList.remove('copied');
+          toast.style.display = 'none';
+        }, 2000);
+      } catch (err) {
+        console.error("Copy failed:", err);
+      }
+    }
+
+    loadData();
+  </script>
+</body>
+</html>

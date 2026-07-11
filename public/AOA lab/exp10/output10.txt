@@ -1,0 +1,21 @@
+Output:
+
+Enter number of items: 4
+Enter weight and profit of each item:
+Item 1 weight: 1
+Item 1 profit: 1
+Item 2 weight: 3
+Item 2 profit: 4
+Item 3 weight: 4
+Item 3 profit: 5
+Item 4 weight: 5
+Item 4 profit: 7
+Enter knapsack capacity: 7
+
+Items selected (0/1 Knapsack - DP):
+Item (W=4, P=5) -> Taken
+Item (W=3, P=4) -> Taken
+
+Maximum Profit (0/1 Knapsack DP) = 9
+
+Time Required = 0.000002 seconds
