@@ -1087,7 +1087,7 @@ export default function Home() {
                         <label className="text-[10px] font-bold text-indigo-700 uppercase tracking-wider flex items-center gap-1">
                           <span>📁 File Selection</span>
                           <span className="font-normal font-mono normal-case">
-                            ({contribContentType === "pdf" ? "PDF 10MB" : "Image 2MB"})
+                            ({contribContentType === "pdf" ? "PDF 100MB" : "Image 2MB"})
                           </span>
                         </label>
                         <input
@@ -1097,9 +1097,9 @@ export default function Home() {
                           onChange={(e) => {
                             const file = e.target.files[0];
                             if (file) {
-                              const limit = contribContentType === "pdf" ? 10 * 1024 * 1024 : 2 * 1024 * 1024;
+                              const limit = contribContentType === "pdf" ? 100 * 1024 * 1024 : 2 * 1024 * 1024;
                               if (file.size > limit) {
-                                alert(`File is too large. Max size allowed is ${contribContentType === "pdf" ? "10MB" : "2MB"}.`);
+                                alert(`File is too large. Max size allowed is ${contribContentType === "pdf" ? "100MB" : "2MB"}.`);
                                 e.target.value = "";
                                 setContribFile(null);
                                 return;
