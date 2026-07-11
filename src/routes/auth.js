@@ -44,8 +44,8 @@ router.post("/student/exchange", async (req, res) => {
     await q("update users set email_verified = true where id = $1", [user.id]);
   }
 
-  const session = signToken({ role: "student", id: user.id, name: user.name, batch: user.batch });
-  res.json({ token: session, user: { id: user.id, name: user.name, batch: user.batch } });
+  const session = signToken({ role: "student", id: user.id, name: user.name, batch: user.batch, is_moderator: user.is_moderator });
+  res.json({ token: session, user: { id: user.id, name: user.name, batch: user.batch, is_moderator: user.is_moderator } });
 });
 
 // ---- Student registration (website) ----
@@ -130,8 +130,8 @@ router.post("/student/login", async (req, res) => {
       return res.status(401).json({ error: "Invalid email or password" });
     }
 
-    const sessionToken = signToken({ role: "student", id: user.id, name: user.name, batch: user.batch });
-    res.json({ token: sessionToken, user: { id: user.id, name: user.name, batch: user.batch } });
+    const sessionToken = signToken({ role: "student", id: user.id, name: user.name, batch: user.batch, is_moderator: user.is_moderator });
+    res.json({ token: sessionToken, user: { id: user.id, name: user.name, batch: user.batch, is_moderator: user.is_moderator } });
   } catch (err) {
     console.error("Student login error:", err);
     res.status(500).json({ error: "Internal server error" });
@@ -175,6 +175,7 @@ router.get("/student/profile", requireAuth("student"), async (req, res) => {
       telegram_username: user.telegram_username,
       telegram_connect_token: user.telegram_connect_token,
       bot_username: botUsername,
+      is_moderator: user.is_moderator,
     });
   } catch (err) {
     console.error("Error fetching student profile:", err);

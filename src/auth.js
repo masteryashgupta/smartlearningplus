@@ -31,19 +31,28 @@ export function requireAuth(role) {
     if (!token) return res.status(401).json({ error: "Missing token" });
     const decoded = verifyToken(token);
     if (!decoded) return res.status(401).json({ error: "Invalid or expired token" });
-    if (role && decoded.role !== role) {
-      return res.status(403).json({ error: "Not authorized for this resource" });
+    if (role) {
+      if (role === "moderator") {
+        if (decoded.role !== "admin" && decoded.role !== "student") {
+          return res.status(403).json({ error: "Not authorized for this resource" });
+        }
+      } else if (decoded.role !== role) {
+        return res.status(403).json({ error: "Not authorized for this resource" });
+      }
     }
 
     // Security validation against database status
     if (decoded.role === "student") {
       try {
-        const { rows } = await q("select is_active from users where id = $1", [decoded.id]);
+        const { rows } = await q("select is_active, is_moderator from users where id = $1", [decoded.id]);
         if (rows.length === 0) {
           return res.status(403).json({ error: "User account not found" });
         }
         if (!rows[0].is_active) {
           return res.status(403).json({ error: "Your account is deactivated. Please contact the administrator." });
+        }
+        if (role === "moderator" && decoded.role === "student" && !rows[0].is_moderator) {
+          return res.status(403).json({ error: "Not authorized. Moderator privilege required." });
         }
       } catch (err) {
         console.error("Database validation error inside requireAuth:", err);

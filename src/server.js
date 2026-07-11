@@ -463,6 +463,18 @@ async function migrateDatabase() {
       add column if not exists is_hidden boolean not null default false
     `);
 
+    // Add is_moderator column for users
+    await q(`
+      alter table users
+      add column if not exists is_moderator boolean not null default false
+    `);
+
+    // Drop reviewed_by constraint to allow users (moderators) to review
+    await q(`
+      alter table community_materials
+      drop constraint if exists community_materials_reviewed_by_fkey
+    `);
+
     // Update subject names to match timetable formatting (code - lecturer)
     await q(`
       UPDATE subjects SET name = 'HCI - PT' WHERE code = 'HCI' AND name != 'HCI - PT';

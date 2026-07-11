@@ -40,7 +40,7 @@ router.delete("/holidays/:id", requireAuth("admin"), async (req, res) => {
 router.get("/users", requireAuth("admin"), async (req, res) => {
   const { rows } = await q(
     `select u.id, u.name, u.email, u.batch, u.section, u.telegram_username, u.telegram_id,
-            u.is_active, u.created_at,
+            u.is_active, u.is_moderator, u.created_at,
             count(*) filter (where a.status='present') as present,
             count(*) filter (where a.status in ('present','absent')) as total
      from users u
@@ -56,11 +56,12 @@ router.get("/users", requireAuth("admin"), async (req, res) => {
 });
 
 router.put("/users/:id", requireAuth("admin"), async (req, res) => {
-  const { name, batch, section, is_active } = req.body;
+  const { name, batch, section, is_active, is_moderator } = req.body;
   const { rows } = await q(
     `update users set name = coalesce($1,name), batch = coalesce($2,batch),
-       section = coalesce($3,section), is_active = coalesce($4,is_active) where id = $5 returning *`,
-    [name, batch, section, is_active, req.params.id]
+       section = coalesce($3,section), is_active = coalesce($4,is_active),
+       is_moderator = coalesce($5,is_moderator) where id = $6 returning *`,
+    [name, batch, section, is_active, is_moderator, req.params.id]
   );
   res.json(rows[0]);
 });
@@ -82,7 +83,7 @@ router.get("/users/:id/stats", requireAuth("admin"), async (req, res) => {
 });
 
 // ---- Whitelist ----
-router.get("/whitelist", requireAuth("admin"), async (req, res) => {
+router.get("/whitelist", requireAuth("moderator"), async (req, res) => {
   try {
     const { rows } = await q("select * from whitelisted_emails order by email asc");
     res.json(rows);
@@ -92,7 +93,7 @@ router.get("/whitelist", requireAuth("admin"), async (req, res) => {
   }
 });
 
-router.post("/whitelist", requireAuth("admin"), async (req, res) => {
+router.post("/whitelist", requireAuth("moderator"), async (req, res) => {
   let { email } = req.body;
   if (!email) return res.status(400).json({ error: "email is required" });
   email = email.trim().toLowerCase();
@@ -111,7 +112,7 @@ router.post("/whitelist", requireAuth("admin"), async (req, res) => {
   }
 });
 
-router.delete("/whitelist/:id", requireAuth("admin"), async (req, res) => {
+router.delete("/whitelist/:id", requireAuth("moderator"), async (req, res) => {
   try {
     await q("delete from whitelisted_emails where id = $1", [req.params.id]);
     res.json({ ok: true });
@@ -173,7 +174,7 @@ router.post("/change-password", requireAuth("admin"), async (req, res) => {
 });
 
 // Fetch pending study materials list
-router.get("/materials/pending", requireAuth("admin"), async (req, res) => {
+router.get("/materials/pending", requireAuth("moderator"), async (req, res) => {
   try {
     const { rows } = await q(
       `select cm.*, s.name as subject_name, s.code as subject_code
@@ -190,7 +191,7 @@ router.get("/materials/pending", requireAuth("admin"), async (req, res) => {
 });
 
 // Fetch pending materials counter badge
-router.get("/materials/pending/count", requireAuth("admin"), async (req, res) => {
+router.get("/materials/pending/count", requireAuth("moderator"), async (req, res) => {
   try {
     const { rows } = await q("select count(*) from community_materials where status = 'pending'");
     res.json({ count: Number(rows[0].count) });
@@ -201,7 +202,7 @@ router.get("/materials/pending/count", requireAuth("admin"), async (req, res) =>
 });
 
 // Approve a contribution
-router.post("/materials/:id/approve", requireAuth("admin"), async (req, res) => {
+router.post("/materials/:id/approve", requireAuth("moderator"), async (req, res) => {
   try {
     const { rows } = await q(
       `update community_materials 
@@ -220,7 +221,7 @@ router.post("/materials/:id/approve", requireAuth("admin"), async (req, res) => 
 });
 
 // Reject a contribution with reason
-router.post("/materials/:id/reject", requireAuth("admin"), async (req, res) => {
+router.post("/materials/:id/reject", requireAuth("moderator"), async (req, res) => {
   const { reason } = req.body;
   if (!reason || !reason.trim()) {
     return res.status(400).json({ error: "Rejection reason is required" });
@@ -244,7 +245,7 @@ router.post("/materials/:id/reject", requireAuth("admin"), async (req, res) => {
 });
 
 // Fetch ALL approved materials (for admin management view)
-router.get("/materials/approved", requireAuth("admin"), async (req, res) => {
+router.get("/materials/approved", requireAuth("moderator"), async (req, res) => {
   try {
     const { rows } = await q(
       `select cm.*, s.name as subject_name, s.code as subject_code
@@ -261,7 +262,7 @@ router.get("/materials/approved", requireAuth("admin"), async (req, res) => {
 });
 
 // Toggle hide/unhide an approved material
-router.post("/materials/:id/toggle-hidden", requireAuth("admin"), async (req, res) => {
+router.post("/materials/:id/toggle-hidden", requireAuth("moderator"), async (req, res) => {
   try {
     const { rows } = await q(
       `update community_materials
@@ -278,7 +279,7 @@ router.post("/materials/:id/toggle-hidden", requireAuth("admin"), async (req, re
 });
 
 // Permanently delete a material (any status)
-router.delete("/materials/:id", requireAuth("admin"), async (req, res) => {
+router.delete("/materials/:id", requireAuth("moderator"), async (req, res) => {
   try {
     const { rowCount } = await q(
       `delete from community_materials where id = $1`,
