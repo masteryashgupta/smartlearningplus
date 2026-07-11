@@ -5,7 +5,7 @@ export default function ShareWidget() {
   const [copied, setCopied] = useState(false);
 
   const shareTitle = "Smart Learning Plus";
-  const shareText = "Check out Smart Learning Plus! 📚 Track your class attendance with heatmaps, download RTU syllabus, access the study vault, and chat with the built-in AI assistant to learn smarter. Join here!";
+  const shareText = "Check out Smart Learning Plus! 📚 Download RTU syllabus and access the study vault to learn smarter. Join here!";
   const shareUrl = "https://smartlearningplus.me";
   const fullShareText = `${shareText}\n\n👉 ${shareUrl}`;
 
