@@ -12,7 +12,7 @@ const router = Router();
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
-    fileSize: 10 * 1024 * 1024 // 10MB overall max file limit (Multer catches this)
+    fileSize: 100 * 1024 * 1024 // 100MB overall max file limit (Multer catches this)
   }
 });
 
@@ -111,8 +111,8 @@ router.post("/upload", requireAuth("student"), upload.single("file"), async (req
 
       // Size checks
       const fileSize = req.file.size;
-      if (content_type === "pdf" && fileSize > 10 * 1024 * 1024) {
-        return res.status(400).json({ error: "PDF files cannot exceed 10MB." });
+      if (content_type === "pdf" && fileSize > 100 * 1024 * 1024) {
+        return res.status(400).json({ error: "PDF files cannot exceed 100MB." });
       }
       if (content_type === "image" && fileSize > 2 * 1024 * 1024) {
         return res.status(400).json({ error: "Image files cannot exceed 2MB." });
