@@ -13,6 +13,7 @@ const TABS = [
   { key: "materials", label: "Approvals" },
   { key: "attendance",label: "Attendance" },
   { key: "health",    label: "Health Status" },
+  { key: "broadcast", label: "Broadcast" },
   { key: "moderator-logs", label: "Moderator Logs" },
   { key: "settings",  label: "Settings" },
 ];
@@ -98,6 +99,43 @@ export default function AdminPanel({ onClose }) {
   const [pwMsg, setPwMsg] = useState(null);
   const [pwLoading, setPwLoading] = useState(false);
   const [showPw, setShowPw] = useState({ current: false, next: false, confirm: false });
+
+  // Broadcast States
+  const [broadcastChannels, setBroadcastChannels] = useState({ email: true, telegram: true });
+  const [broadcastSubject, setBroadcastSubject] = useState("");
+  const [broadcastMessage, setBroadcastMessage] = useState("");
+  const [broadcastLoading, setBroadcastLoading] = useState(false);
+  const [broadcastMsg, setBroadcastMsg] = useState(null);
+
+  const handleSendBroadcast = async (e) => {
+    e.preventDefault();
+    setBroadcastMsg(null);
+    if (!broadcastChannels.email && !broadcastChannels.telegram) {
+      return setBroadcastMsg({ ok: false, text: "Please select at least one channel (Email or Telegram)." });
+    }
+    
+    const confirmSend = window.confirm(
+      `Are you sure you want to send this announcement to ALL active users?`
+    );
+    if (!confirmSend) return;
+
+    setBroadcastLoading(true);
+    try {
+      const { data } = await api.post("/admin/broadcast", {
+        subject: broadcastChannels.email ? broadcastSubject : undefined,
+        message: broadcastMessage,
+        channels: Object.keys(broadcastChannels).filter(k => broadcastChannels[k])
+      });
+      setBroadcastMsg({ ok: true, text: `✓ Broadcast successfully queued! Sent to ${data.sentCount} users.` });
+      setBroadcastSubject("");
+      setBroadcastMessage("");
+    } catch (err) {
+      console.error(err);
+      setBroadcastMsg({ ok: false, text: err.response?.data?.error || "Failed to send broadcast." });
+    } finally {
+      setBroadcastLoading(false);
+    }
+  };
   const [toast, setToast] = useState(null);
 
   // Whitelist state
@@ -1379,6 +1417,89 @@ export default function AdminPanel({ onClose }) {
                 </table>
               </div>
             )}
+          </div>
+        )}
+
+
+        {/* ── BROADCAST ── */}
+        {tab === "broadcast" && (
+          <div className="max-w-xl space-y-4">
+            <div className="card p-5 sm:p-6 bg-white border border-line rounded-2xl shadow-soft">
+              <h2 className="font-display font-bold text-lg text-ink flex items-center gap-2 mb-1">
+                <span>📢</span> Send Broadcast Announcement
+              </h2>
+              <p className="text-muted text-xs mb-5">
+                Send a notification message directly to all registered and active users.
+              </p>
+              
+              <form onSubmit={handleSendBroadcast} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-semibold mb-1.5 text-ink font-mono tracking-wide uppercase">Channels</label>
+                  <div className="flex gap-4">
+                    <label className="flex items-center gap-2 text-xs font-semibold text-ink cursor-pointer select-none">
+                      <input 
+                        type="checkbox" 
+                        checked={broadcastChannels.email} 
+                        onChange={(e) => setBroadcastChannels({ ...broadcastChannels, email: e.target.checked })}
+                        className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                      />
+                      📧 Send via Email
+                    </label>
+                    <label className="flex items-center gap-2 text-xs font-semibold text-ink cursor-pointer select-none">
+                      <input 
+                        type="checkbox" 
+                        checked={broadcastChannels.telegram} 
+                        onChange={(e) => setBroadcastChannels({ ...broadcastChannels, telegram: e.target.checked })}
+                        className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                      />
+                      🤖 Send via Telegram
+                    </label>
+                  </div>
+                </div>
+
+                {broadcastChannels.email && (
+                  <div>
+                    <label className="block text-xs font-bold text-muted mb-1.5 uppercase tracking-wider">Email Subject</label>
+                    <input 
+                      type="text" 
+                      className="input font-sans text-xs" 
+                      placeholder="e.g. Platform Update: New Study Materials Available" 
+                      value={broadcastSubject} 
+                      onChange={(e) => setBroadcastSubject(e.target.value)}
+                      required
+                    />
+                  </div>
+                )}
+
+                <div>
+                  <label className="block text-xs font-bold text-muted mb-1.5 uppercase tracking-wider">Message Content</label>
+                  <textarea 
+                    className="input min-h-[140px] font-sans text-xs leading-relaxed" 
+                    placeholder="Type your announcement details here..." 
+                    value={broadcastMessage} 
+                    onChange={(e) => setBroadcastMessage(e.target.value)}
+                    required
+                  />
+                </div>
+
+                {broadcastMsg && (
+                  <div className={`p-3 rounded-xl text-xs font-medium border ${
+                    broadcastMsg.ok ? "bg-green-50 border-green-200 text-green-700" : "bg-red-50 border-red-200 text-red-700"
+                  }`}>
+                    {broadcastMsg.text}
+                  </div>
+                )}
+
+                <button 
+                  className="btn-primary w-full" 
+                  type="submit" 
+                  disabled={broadcastLoading || (!broadcastChannels.email && !broadcastChannels.telegram)}
+                  style={{ opacity: broadcastLoading ? 0.7 : 1 }}
+                >
+                  {broadcastLoading ? "Sending Broadcast..." : "🚀 Send to All Users"}
+                </button>
+              </form>
+            </div>
           </div>
         )}
 
