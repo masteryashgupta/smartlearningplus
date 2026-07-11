@@ -212,8 +212,9 @@ export default function Login({ compact = false }) {
             </form>
           ) : (
             <form onSubmit={handleStudentRegister} className="space-y-3">
-              <div className="text-[11px] text-[#2563eb] text-center bg-[#eff6ff] py-1.5 px-3 rounded-lg border border-[#dbeafe] mb-3.5 font-semibold">
-                ⚠️ Use student email only
+              <div className="text-[11px] text-[#2563eb] text-center bg-[#eff6ff] py-1.5 px-3 rounded-lg border border-[#dbeafe] mb-3.5 font-semibold flex flex-col gap-1">
+                <span>⚠️ Invite-only Platform</span>
+                <span className="font-normal opacity-90">Only manually approved student emails can register.</span>
               </div>
               <input className="input" type="text" placeholder="Full name" value={studentName}
                 onChange={(e) => setStudentName(e.target.value)} required />
@@ -226,10 +227,10 @@ export default function Login({ compact = false }) {
                 <span className="text-xs text-muted pl-2 pr-1 font-medium">Batch:</span>
                 <button type="button"
                   className={`flex-1 py-1 rounded-lg text-xs font-semibold transition-colors ${studentBatch === "G1" ? "bg-white shadow-soft text-primary" : "text-muted"}`}
-                  onClick={() => setStudentBatch("G1")}>G1 (Lab)</button>
+                  onClick={() => setStudentBatch("G1")}>Batch 1</button>
                 <button type="button"
                   className={`flex-1 py-1 rounded-lg text-xs font-semibold transition-colors ${studentBatch === "G2" ? "bg-white shadow-soft text-primary" : "text-muted"}`}
-                  onClick={() => setStudentBatch("G2")}>G2 (Lab)</button>
+                  onClick={() => setStudentBatch("G2")}>Batch 2</button>
               </div>
 
               {error && <p className="text-bad text-sm">{error}</p>}
