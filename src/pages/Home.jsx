@@ -8,6 +8,7 @@ import Heatmap from "../components/Heatmap.jsx";
 import DayEditor from "../components/DayEditor.jsx";
 import AskAIWidget from "../components/AskAIWidget.jsx";
 import ShareWidget from "../components/ShareWidget.jsx";
+import AnnouncementBar from "../components/AnnouncementBar.jsx";
 
 export default function Home() {
   const session = getSession();
@@ -267,6 +268,7 @@ export default function Home() {
 
   return (
     <div className="sl-home min-h-screen text-[#0f172a] font-sans relative overflow-x-hidden">
+      <AnnouncementBar />
       {/* SCOPED CSS STYLES FOR LANDING PAGE */}
       <style>{`
         .sl-home {

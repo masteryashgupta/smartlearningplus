@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { api } from "../api.js";
 import TimetableGrid from "../components/TimetableGrid.jsx";
+import AnnouncementManager from "../components/AnnouncementManager.jsx";
 
 const TAB_GROUPS = [
   {
@@ -30,6 +31,7 @@ const TAB_GROUPS = [
     title: "Communications",
     items: [
       { key: "broadcast", label: "Broadcaster", icon: "📢" },
+      { key: "announcement", label: "Announcement Bar", icon: "📣" },
       { key: "moderator-logs", label: "Moderator Logs", icon: "🕵️‍♂️" }
     ]
   },
@@ -1649,6 +1651,13 @@ export default function AdminPanel({ onClose }) {
                   {broadcastLoading ? "Dispatching Broadcast..." : "🚀 Disperse Announcement"}
                 </button>
               </form>
+            </div>
+          )}
+
+          {/* 📣 TABS: LIVE ANNOUNCEMENT BAR */}
+          {tab === "announcement" && (
+            <div className="modern-card">
+              <AnnouncementManager />
             </div>
           )}
 
