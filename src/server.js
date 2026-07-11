@@ -541,6 +541,11 @@ async function migrateDatabase() {
         updated_by text
       )
     `);
+    await q(`
+      ALTER TABLE announcement_singleton 
+      ADD COLUMN IF NOT EXISTS scroll_speed integer NOT NULL DEFAULT 45,
+      ADD COLUMN IF NOT EXISTS gap integer NOT NULL DEFAULT 20
+    `);
 
     console.log("✅ Database migrations completed successfully.");
   } catch (err) {

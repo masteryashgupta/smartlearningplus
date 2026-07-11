@@ -27,15 +27,17 @@ router.get("/public", async (req, res) => {
   try {
     await ensureSingleton();
     const { rows } = await q(
-      "SELECT text, is_active, updated_at FROM announcement_singleton WHERE id = 'singleton'"
+      "SELECT text, is_active, scroll_speed, gap, updated_at FROM announcement_singleton WHERE id = 'singleton'"
     );
     if (rows.length === 0) {
-      return res.json({ text: "", isActive: false, updatedAt: null });
+      return res.json({ text: "", isActive: false, scrollSpeed: 45, gap: 20, updatedAt: null });
     }
     const row = rows[0];
     res.json({
       text: row.text || "",
       isActive: row.is_active,
+      scrollSpeed: row.scroll_speed || 45,
+      gap: row.gap || 20,
       updatedAt: row.updated_at,
     });
   } catch (err) {
@@ -49,15 +51,17 @@ router.get("/", requireAuth("admin"), async (req, res) => {
   try {
     await ensureSingleton();
     const { rows } = await q(
-      "SELECT text, is_active, updated_at, updated_by FROM announcement_singleton WHERE id = 'singleton'"
+      "SELECT text, is_active, scroll_speed, gap, updated_at, updated_by FROM announcement_singleton WHERE id = 'singleton'"
     );
     if (rows.length === 0) {
-      return res.json({ text: "", isActive: true, updatedAt: null, updatedBy: null });
+      return res.json({ text: "", isActive: true, scrollSpeed: 45, gap: 20, updatedAt: null, updatedBy: null });
     }
     const row = rows[0];
     res.json({
       text: row.text || "",
       isActive: row.is_active,
+      scrollSpeed: row.scroll_speed || 45,
+      gap: row.gap || 20,
       updatedAt: row.updated_at,
       updatedBy: row.updated_by,
     });
@@ -70,20 +74,22 @@ router.get("/", requireAuth("admin"), async (req, res) => {
 // PUT /api/announcement — admin only, upserts the singleton
 router.put("/", requireAuth("admin"), async (req, res) => {
   try {
-    const { text, isActive } = req.body;
+    const { text, isActive, scrollSpeed, gap } = req.body;
     const cleanText = sanitizeText(text);
     const active = isActive !== undefined ? Boolean(isActive) : true;
+    const speed = scrollSpeed !== undefined ? parseInt(scrollSpeed, 10) : 45;
+    const characterGap = gap !== undefined ? parseInt(gap, 10) : 20;
     const updatedBy = req.auth?.name || req.auth?.id || "admin";
 
     await q(
-      `INSERT INTO announcement_singleton (id, text, is_active, updated_at, updated_by)
-       VALUES ('singleton', $1, $2, NOW(), $3)
+      `INSERT INTO announcement_singleton (id, text, is_active, scroll_speed, gap, updated_at, updated_by)
+       VALUES ('singleton', $1, $2, $3, $4, NOW(), $5)
        ON CONFLICT (id) DO UPDATE
-         SET text = $1, is_active = $2, updated_at = NOW(), updated_by = $3`,
-      [cleanText, active, updatedBy]
+         SET text = $1, is_active = $2, scroll_speed = $3, gap = $4, updated_at = NOW(), updated_by = $5`,
+      [cleanText, active, speed, characterGap, updatedBy]
     );
 
-    res.json({ ok: true, text: cleanText, isActive: active });
+    res.json({ ok: true, text: cleanText, isActive: active, scrollSpeed: speed, gap: characterGap });
   } catch (err) {
     console.error("[announcement] PUT / error:", err);
     res.status(500).json({ error: "Internal server error" });
