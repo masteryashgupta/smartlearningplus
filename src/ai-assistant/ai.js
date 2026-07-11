@@ -8,36 +8,53 @@ if (process.env.GEMINI_API_KEY) {
   genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 }
 
-export async function getEmbedding(text) {
+export async function getEmbedding(text, retries = 3, delay = 2000) {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     throw new Error("GEMINI_API_KEY is not configured");
   }
   
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent?key=${apiKey}`;
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      model: "models/gemini-embedding-001",
-      content: { parts: [{ text }] },
-      outputDimensionality: 768
-    })
-  });
   
-  if (!response.ok) {
-    const errText = await response.text();
-    throw new Error(`Embedding API failed with status ${response.status}: ${errText}`);
+  for (let i = 0; i < retries; i++) {
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          model: "models/gemini-embedding-001",
+          content: { parts: [{ text }] },
+          outputDimensionality: 768
+        })
+      });
+      
+      if (response.status === 429) {
+        console.warn(`Rate limited (429). Retrying in ${delay}ms...`);
+        await new Promise((resolve) => setTimeout(resolve, delay));
+        delay *= 2;
+        continue;
+      }
+      
+      if (!response.ok) {
+        const errText = await response.text();
+        throw new Error(`Embedding API failed with status ${response.status}: ${errText}`);
+      }
+      
+      const data = await response.json();
+      if (!data.embedding || !data.embedding.values) {
+        throw new Error("Invalid response format from Embedding API");
+      }
+      
+      return data.embedding.values;
+    } catch (err) {
+      if (i === retries - 1) throw err;
+      console.warn(`Embedding attempt ${i + 1} failed. Retrying in ${delay}ms... Error: ${err.message}`);
+      await new Promise((resolve) => setTimeout(resolve, delay));
+      delay *= 2;
+    }
   }
-  
-  const data = await response.json();
-  if (!data.embedding || !data.embedding.values) {
-    throw new Error("Invalid response format from Embedding API");
-  }
-  
-  return data.embedding.values;
 }
 
 export async function callGemini(prompt, systemInstruction = "") {
