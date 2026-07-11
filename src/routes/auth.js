@@ -90,16 +90,6 @@ router.post("/student/register", async (req, res) => {
             console.error(`Failed to send telegram message to env admin ${envAdminId}:`, err);
           });
         }
-
-        // 2. Fallback or addition: send to any DB admins with telegram_id
-        const adminRes = await q("select telegram_id from admins where telegram_id is not null");
-        for (const admin of adminRes.rows) {
-          if (admin.telegram_id && String(admin.telegram_id) !== String(envAdminId)) {
-            bot.sendMessage(admin.telegram_id, htmlMsg, { parse_mode: "HTML" }).catch(err => {
-              console.error(`Failed to send telegram message to admin ${admin.telegram_id}:`, err);
-            });
-          }
-        }
       }
     } catch (err) {
       console.error("Failed to notify admins via telegram:", err);
