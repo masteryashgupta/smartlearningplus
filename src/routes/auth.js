@@ -73,7 +73,8 @@ router.post("/student/register", async (req, res) => {
     const hash = await bcrypt.hash(password, 10);
     
     await q(
-      `insert into registration_requests (name, email, password_hash, batch) values ($1, $2, $3, $4)`,
+      `insert into registration_requests (name, email, password_hash, batch) values ($1, $2, $3, $4)
+       on conflict (email) do update set status = 'pending', name = $1, password_hash = $3, batch = $4, created_at = CURRENT_TIMESTAMP`,
       [name.trim(), cleanEmail, hash, batch]
     );
 
