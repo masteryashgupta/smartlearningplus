@@ -1,10 +1,7 @@
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
-import { createRequire } from "module";
-const require = createRequire(import.meta.url);
-const pdfParseModule = require("pdf-parse");
-const pdfParse = typeof pdfParseModule === "function" ? pdfParseModule : pdfParseModule.default;
+import { PDFParse } from "pdf-parse";
 import dotenv from "dotenv";
 import { q } from "../src/db.js";
 import { getEmbedding, callAI } from "../src/ai-assistant/ai.js";
@@ -170,8 +167,10 @@ async function main() {
       console.log(`Parsing NK PDF: ${pdfFile}...`);
       try {
         const dataBuffer = fs.readFileSync(pdfPath);
-        const pdfData = await pdfParse(dataBuffer);
+        const parser = new PDFParse({ data: dataBuffer });
+        const pdfData = await parser.getText();
         const text = pdfData.text.replace(/\s+/g, " ").trim();
+        await parser.destroy();
         
         console.log(`Extracted ${text.length} chars. Chunking text...`);
         const rawChunks = chunkText(text, 1500, 200);
@@ -234,7 +233,7 @@ async function main() {
           chunk.source_type,
           chunk.year,
           chunk.content,
-          embedding,
+          `[${embedding.join(",")}]`,
           chunk.content_hash
         ]);
 
