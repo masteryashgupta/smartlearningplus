@@ -6,7 +6,7 @@ import { computeStats } from "../lib/timetable.js";
 import { signUrls, checkB2Health } from "../lib/b2.js";
 import { getBotStatus, bot } from "../bot/bot.js";
 import crypto from "crypto";
-import { sendVerificationEmail } from "../lib/mailer.js";
+import { sendVerificationEmail, sendRejectionEmail } from "../lib/mailer.js";
 
 const router = Router();
 
@@ -222,9 +222,16 @@ router.post("/registrations/:id/approve", requireAuth("moderator"), async (req, 
 
 router.post("/registrations/:id/reject", requireAuth("moderator"), async (req, res) => {
   try {
-    const { rows } = await q("update registration_requests set status = 'rejected' where id = $1 returning email", [req.params.id]);
+    const { rows } = await q("update registration_requests set status = 'rejected' where id = $1 returning *", [req.params.id]);
     if (rows.length > 0) {
-      await logModeratorActivity(req, "registration_reject", `Rejected registration for "${rows[0].email}"`);
+      const user = rows[0];
+      await logModeratorActivity(req, "registration_reject", `Rejected registration for "${user.email}"`);
+      
+      try {
+        await sendRejectionEmail(user.email, user.name);
+      } catch (mailErr) {
+        console.error("[reject] Rejection email send failed:", mailErr.message);
+      }
     }
     res.json({ ok: true });
   } catch (err) {
