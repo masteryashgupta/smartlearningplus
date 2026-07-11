@@ -108,6 +108,8 @@ export default function AdminPanel({ onClose }) {
   const [broadcastChannels, setBroadcastChannels] = useState({ email: true, telegram: true });
   const [broadcastSubject, setBroadcastSubject] = useState("");
   const [broadcastMessage, setBroadcastMessage] = useState("");
+  const [broadcastButtonText, setBroadcastButtonText] = useState("");
+  const [broadcastButtonLink, setBroadcastButtonLink] = useState("");
   const [broadcastLoading, setBroadcastLoading] = useState(false);
   const [broadcastMsg, setBroadcastMsg] = useState(null);
   const [broadcastUserSearch, setBroadcastUserSearch] = useState("");
@@ -383,12 +385,16 @@ export default function AdminPanel({ onClose }) {
       const { data } = await api.post("/admin/broadcast", {
         subject: broadcastChannels.email ? broadcastSubject : undefined,
         message: broadcastMessage,
+        buttonText: broadcastChannels.email && broadcastButtonText ? broadcastButtonText : undefined,
+        buttonLink: broadcastChannels.email && broadcastButtonLink ? broadcastButtonLink : undefined,
         channels: Object.keys(broadcastChannels).filter(k => broadcastChannels[k]),
         userIds: selectedUserIds
       });
       setBroadcastMsg({ ok: true, text: `✓ Broadcast successfully queued to ${data.sentCount} users.` });
       setBroadcastSubject("");
       setBroadcastMessage("");
+      setBroadcastButtonText("");
+      setBroadcastButtonLink("");
     } catch (err) {
       setBroadcastMsg({ ok: false, text: err.response?.data?.error || "Failed to send broadcast." });
     } finally {
@@ -1586,16 +1592,38 @@ export default function AdminPanel({ onClose }) {
                 </div>
 
                 {broadcastChannels.email && (
-                  <div>
-                    <label className="text-[10px] font-bold text-slate-400 uppercase">Email Title / Subject</label>
-                    <input
-                      placeholder="e.g. Platform update: New PYQs loaded"
-                      value={broadcastSubject}
-                      onChange={(e) => setBroadcastSubject(e.target.value)}
-                      className="modern-input mt-1"
-                      required
-                    />
-                  </div>
+                  <>
+                    <div>
+                      <label className="text-[10px] font-bold text-slate-400 uppercase">Email Title / Subject</label>
+                      <input
+                        placeholder="e.g. Platform update: New PYQs loaded"
+                        value={broadcastSubject}
+                        onChange={(e) => setBroadcastSubject(e.target.value)}
+                        className="modern-input mt-1"
+                        required
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-[10px] font-bold text-slate-400 uppercase">Button Text (Optional)</label>
+                        <input
+                          placeholder="e.g. Go to Dashboard"
+                          value={broadcastButtonText}
+                          onChange={(e) => setBroadcastButtonText(e.target.value)}
+                          className="modern-input mt-1"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[10px] font-bold text-slate-400 uppercase">Button Link (Optional)</label>
+                        <input
+                          placeholder="e.g. https://..."
+                          value={broadcastButtonLink}
+                          onChange={(e) => setBroadcastButtonLink(e.target.value)}
+                          className="modern-input mt-1"
+                        />
+                      </div>
+                    </div>
+                  </>
                 )}
 
                 <div>
