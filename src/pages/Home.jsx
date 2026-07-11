@@ -21,6 +21,11 @@ export default function Home() {
   const [loadingProfile, setLoadingProfile] = useState(false);
   const [selectedUserStats, setSelectedUserStats] = useState(null);
   const [botUsername, setBotUsername] = useState(null);
+  // Contact Admin modal states
+  const [showContactModal, setShowContactModal] = useState(false);
+  const [contactForm, setContactForm] = useState({ name: "", email: "", message: "" });
+  const [contactLoading, setContactLoading] = useState(false);
+  const [contactResult, setContactResult] = useState(null); // { ok, text }
   const [subjects, setSubjects] = useState([]);
   const [myUploads, setMyUploads] = useState([]);
 
@@ -1517,38 +1522,183 @@ export default function Home() {
         <AskAIWidget />
         <ShareWidget />
 
-        {/* ── CONTACT ADMIN FLOATING BUTTON ── */}
-        {botUsername && (
+        {/* ── CONTACT ADMIN FLOATING BUTTON & MODAL ── */}
+        {/* Registered users → open Telegram bot directly */}
+        {session && botUsername && (
           <a
             href={`https://t.me/${botUsername}?start=contact_admin`}
             target="_blank"
             rel="noopener noreferrer"
             title="Send a message to the admin via Telegram"
             style={{
-              position: "fixed",
-              bottom: "90px",
-              right: "20px",
-              zIndex: 9999,
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
+              position: "fixed", bottom: "90px", right: "20px", zIndex: 9998,
+              display: "flex", alignItems: "center", gap: "8px",
               padding: "10px 16px",
               background: "linear-gradient(135deg, #2563eb, #06b6d4)",
-              color: "#fff",
-              borderRadius: "999px",
-              fontWeight: 700,
-              fontSize: "13px",
-              textDecoration: "none",
-              boxShadow: "0 4px 18px rgba(37,99,235,0.35)",
+              color: "#fff", borderRadius: "999px", fontWeight: 700, fontSize: "13px",
+              textDecoration: "none", boxShadow: "0 4px 18px rgba(37,99,235,0.35)",
               transition: "transform 0.18s, box-shadow 0.18s",
-              backdropFilter: "blur(4px)",
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 8px 24px rgba(37,99,235,0.45)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 4px 18px rgba(37,99,235,0.35)"; }}
+            onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; }}
           >
-            <span style={{ fontSize: "18px", lineHeight: 1 }}>✉️</span>
+            <span style={{ fontSize: "17px", lineHeight: 1 }}>&#9993;&#65039;</span>
             <span>Contact Admin</span>
           </a>
+        )}
+
+        {/* Non-registered users → show form modal */}
+        {!session && (
+          <button
+            onClick={() => { setShowContactModal(true); setContactResult(null); setContactForm({ name: "", email: "", message: "" }); }}
+            title="Contact the administrator"
+            style={{
+              position: "fixed", bottom: "90px", right: "20px", zIndex: 9998,
+              display: "flex", alignItems: "center", gap: "8px",
+              padding: "10px 16px",
+              background: "linear-gradient(135deg, #2563eb, #06b6d4)",
+              color: "#fff", borderRadius: "999px", fontWeight: 700, fontSize: "13px",
+              border: "none", cursor: "pointer", boxShadow: "0 4px 18px rgba(37,99,235,0.35)",
+              transition: "transform 0.18s, box-shadow 0.18s",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; }}
+          >
+            <span style={{ fontSize: "17px", lineHeight: 1 }}>&#9993;&#65039;</span>
+            <span>Contact Admin</span>
+          </button>
+        )}
+
+        {/* ── CONTACT FORM MODAL ── */}
+        {showContactModal && (
+          <div
+            onClick={(e) => { if (e.target === e.currentTarget) { setShowContactModal(false); setContactResult(null); } }}
+            style={{
+              position: "fixed", inset: 0, zIndex: 10000,
+              background: "rgba(0,0,0,0.55)", backdropFilter: "blur(6px)",
+              display: "flex", alignItems: "center", justifyContent: "center", padding: "16px",
+            }}
+          >
+            <div style={{
+              background: "#fff", borderRadius: "20px", width: "100%", maxWidth: "440px",
+              boxShadow: "0 20px 60px rgba(0,0,0,0.18)", overflow: "hidden",
+              animation: "sl-fade-up 0.22s ease",
+            }}>
+              {/* Modal Header */}
+              <div style={{
+                background: "linear-gradient(135deg, #2563eb, #06b6d4)",
+                padding: "24px 28px 20px",
+              }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                  <div>
+                    <div style={{ color: "#fff", fontSize: "18px", fontWeight: 800, letterSpacing: "-0.4px" }}>
+                      &#9993;&#65039; Contact Admin
+                    </div>
+                    <div style={{ color: "rgba(255,255,255,0.8)", fontSize: "12px", marginTop: "3px" }}>
+                      Smart Learning+ · We respond on email
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => { setShowContactModal(false); setContactResult(null); }}
+                    style={{ background: "rgba(255,255,255,0.15)", border: "none", color: "#fff", borderRadius: "50%", width: "32px", height: "32px", cursor: "pointer", fontSize: "16px", display: "flex", alignItems: "center", justifyContent: "center" }}
+                  >&#10005;</button>
+                </div>
+              </div>
+
+              {/* Modal Body */}
+              <div style={{ padding: "24px 28px 28px" }}>
+                {contactResult ? (
+                  /* SUCCESS STATE */
+                  <div style={{ textAlign: "center", padding: "12px 0" }}>
+                    <div style={{ fontSize: "48px", marginBottom: "12px" }}>&#9989;</div>
+                    <div style={{ fontWeight: 800, fontSize: "16px", color: "#1b2430", marginBottom: "8px" }}>Message Sent!</div>
+                    <div style={{ color: "#64748b", fontSize: "13px", lineHeight: 1.6, marginBottom: "20px" }}>
+                      Your message has been delivered to the admin. We'll review it and get back to you on your email address as soon as possible.
+                    </div>
+                    <button
+                      onClick={() => { setShowContactModal(false); setContactResult(null); }}
+                      style={{ padding: "10px 24px", background: "linear-gradient(135deg, #2563eb, #06b6d4)", color: "#fff", border: "none", borderRadius: "10px", fontWeight: 700, fontSize: "13px", cursor: "pointer" }}
+                    >Close</button>
+                  </div>
+                ) : (
+                  /* FORM STATE */
+                  <form
+                    onSubmit={async (e) => {
+                      e.preventDefault();
+                      setContactLoading(true);
+                      setContactResult(null);
+                      try {
+                        await api.post("/auth/contact", contactForm);
+                        setContactResult({ ok: true });
+                      } catch (err) {
+                        setContactResult({ ok: false, text: err.response?.data?.error || "Failed to send. Please try again." });
+                      } finally {
+                        setContactLoading(false);
+                      }
+                    }}
+                    style={{ display: "flex", flexDirection: "column", gap: "14px" }}
+                  >
+                    <div style={{ color: "#64748b", fontSize: "12.5px", lineHeight: 1.55, background: "#f0f9ff", border: "1px solid #bae6fd", borderRadius: "10px", padding: "10px 14px" }}>
+                      &#8505;&#65039; Fill in your details below. The admin will reply to your email address.
+                    </div>
+
+                    <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+                      <label style={{ fontSize: "11px", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>Your Name *</label>
+                      <input
+                        type="text" required placeholder="e.g. Yash Gupta"
+                        value={contactForm.name}
+                        onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
+                        style={{ padding: "10px 14px", border: "1px solid #e2e8f0", borderRadius: "10px", fontSize: "13px", outline: "none", fontFamily: "inherit", color: "#1b2430" }}
+                      />
+                    </div>
+
+                    <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+                      <label style={{ fontSize: "11px", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>Your Email *</label>
+                      <input
+                        type="email" required placeholder="you@example.com"
+                        value={contactForm.email}
+                        onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
+                        style={{ padding: "10px 14px", border: "1px solid #e2e8f0", borderRadius: "10px", fontSize: "13px", outline: "none", fontFamily: "inherit", color: "#1b2430" }}
+                      />
+                    </div>
+
+                    <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+                      <label style={{ fontSize: "11px", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>Your Message *</label>
+                      <textarea
+                        required placeholder="Describe your question or issue..."
+                        rows={4}
+                        value={contactForm.message}
+                        onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
+                        style={{ padding: "10px 14px", border: "1px solid #e2e8f0", borderRadius: "10px", fontSize: "13px", outline: "none", fontFamily: "inherit", resize: "vertical", color: "#1b2430" }}
+                      />
+                    </div>
+
+                    {contactResult && !contactResult.ok && (
+                      <div style={{ padding: "10px 14px", background: "#fef2f2", border: "1px solid #fca5a5", borderRadius: "10px", color: "#dc2626", fontSize: "12px", fontWeight: 600 }}>
+                        {contactResult.text}
+                      </div>
+                    )}
+
+                    <button
+                      type="submit" disabled={contactLoading}
+                      style={{
+                        padding: "12px", background: contactLoading ? "#94a3b8" : "linear-gradient(135deg, #2563eb, #06b6d4)",
+                        color: "#fff", border: "none", borderRadius: "10px", fontWeight: 700,
+                        fontSize: "13.5px", cursor: contactLoading ? "not-allowed" : "pointer",
+                        transition: "opacity 0.15s", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+                      }}
+                    >
+                      {contactLoading ? (
+                        <><div style={{ width: "14px", height: "14px", border: "2px solid rgba(255,255,255,0.3)", borderTop: "2px solid #fff", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} /><span>Sending...</span></>
+                      ) : (
+                        <span>&#128640; Send Message</span>
+                      )}
+                    </button>
+                  </form>
+                )}
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </div>
