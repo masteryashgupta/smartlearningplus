@@ -1883,7 +1883,7 @@ export default function Home() {
                     <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
                       <label style={{ fontSize: "11px", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>Your Name *</label>
                       <input
-                        type="text" required placeholder="e.g. Yash Gupta"
+                        type="text" required placeholder="e.g. John Smith"
                         value={contactForm.name}
                         onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
                         style={{ padding: "10px 14px", border: "1px solid #e2e8f0", borderRadius: "10px", fontSize: "13px", outline: "none", fontFamily: "inherit", color: "#1b2430" }}
