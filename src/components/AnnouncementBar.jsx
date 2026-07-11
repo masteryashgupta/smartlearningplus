@@ -48,7 +48,7 @@ export default function AnnouncementBar() {
   const scrollSpeed = announcement.scrollSpeed || 45;
   const gapSize = announcement.gap || 20;
   const spaces = "\u00A0".repeat(gapSize);
-  const repeated = `${text}${spaces}·${spaces}${text}${spaces}·${spaces}${text}${spaces}·${spaces}${text}${spaces}·${spaces}`;
+  const repeated = `${text}${spaces}${text}${spaces}${text}${spaces}${text}${spaces}`;
 
   return (
     <>

@@ -79,7 +79,7 @@ export default function AnnouncementManager() {
   };
 
   const spacesPreview = "\u00A0".repeat(gap);
-  const repeatedPreview = text ? `${text}${spacesPreview}·${spacesPreview}${text}${spacesPreview}·${spacesPreview}` : "";
+  const repeatedPreview = text ? `${text}${spacesPreview}${text}${spacesPreview}${text}${spacesPreview}` : "";
 
   return (
     <div style={{ maxWidth: 680 }}>
