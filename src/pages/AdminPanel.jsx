@@ -385,8 +385,8 @@ export default function AdminPanel({ onClose }) {
       const { data } = await api.post("/admin/broadcast", {
         subject: broadcastChannels.email ? broadcastSubject : undefined,
         message: broadcastMessage,
-        buttonText: broadcastChannels.email && broadcastButtonText ? broadcastButtonText : undefined,
-        buttonLink: broadcastChannels.email && broadcastButtonLink ? broadcastButtonLink : undefined,
+        buttonText: broadcastButtonText || undefined,
+        buttonLink: broadcastButtonLink || undefined,
         channels: Object.keys(broadcastChannels).filter(k => broadcastChannels[k]),
         userIds: selectedUserIds
       });
@@ -1592,38 +1592,39 @@ export default function AdminPanel({ onClose }) {
                 </div>
 
                 {broadcastChannels.email && (
-                  <>
+                  <div>
+                    <label className="text-[10px] font-bold text-slate-400 uppercase">Email Title / Subject</label>
+                    <input
+                      placeholder="e.g. Platform update: New PYQs loaded"
+                      value={broadcastSubject}
+                      onChange={(e) => setBroadcastSubject(e.target.value)}
+                      className="modern-input mt-1"
+                      required
+                    />
+                  </div>
+                )}
+
+                {(broadcastChannels.email || broadcastChannels.telegram) && (
+                  <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="text-[10px] font-bold text-slate-400 uppercase">Email Title / Subject</label>
+                      <label className="text-[10px] font-bold text-slate-400 uppercase">Button / Link Text (Optional)</label>
                       <input
-                        placeholder="e.g. Platform update: New PYQs loaded"
-                        value={broadcastSubject}
-                        onChange={(e) => setBroadcastSubject(e.target.value)}
+                        placeholder="e.g. Go to Dashboard"
+                        value={broadcastButtonText}
+                        onChange={(e) => setBroadcastButtonText(e.target.value)}
                         className="modern-input mt-1"
-                        required
                       />
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="text-[10px] font-bold text-slate-400 uppercase">Button Text (Optional)</label>
-                        <input
-                          placeholder="e.g. Go to Dashboard"
-                          value={broadcastButtonText}
-                          onChange={(e) => setBroadcastButtonText(e.target.value)}
-                          className="modern-input mt-1"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-[10px] font-bold text-slate-400 uppercase">Button Link (Optional)</label>
-                        <input
-                          placeholder="e.g. https://..."
-                          value={broadcastButtonLink}
-                          onChange={(e) => setBroadcastButtonLink(e.target.value)}
-                          className="modern-input mt-1"
-                        />
-                      </div>
+                    <div>
+                      <label className="text-[10px] font-bold text-slate-400 uppercase">Button / Link URL (Optional)</label>
+                      <input
+                        placeholder="e.g. https://..."
+                        value={broadcastButtonLink}
+                        onChange={(e) => setBroadcastButtonLink(e.target.value)}
+                        className="modern-input mt-1"
+                      />
                     </div>
-                  </>
+                  </div>
                 )}
 
                 <div>
