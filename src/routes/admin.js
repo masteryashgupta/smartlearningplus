@@ -27,11 +27,11 @@ export async function logModeratorActivity(req, action, details) {
 
   // Always notify via Telegram
   try {
-    const envAdminId = process.env.ADMIN_TELEGRAM_ID;
+    const envAdminId = process.env.ADMIN_TELEGRAM_ID?.trim();
     if (envAdminId && bot) {
-      const msg = `🛡️ *Platform Activity*\n\n*By:* ${actorName}\n*Action:* ${action}\n*Details:* ${details}`;
-      bot.sendMessage(envAdminId, msg, { parse_mode: "Markdown" }).catch(err => {
-        console.error("Failed to send log to telegram:", err);
+      const htmlMsg = `🛡️ <b>Platform Activity</b>\n\n<b>By:</b> ${actorName}\n<b>Action:</b> ${action}\n<b>Details:</b> ${details}`;
+      bot.sendMessage(envAdminId, htmlMsg, { parse_mode: "HTML" }).catch(err => {
+        console.error(`Failed to broadcast admin activity to env admin ${envAdminId}:`, err);
       });
     }
   } catch (err) {

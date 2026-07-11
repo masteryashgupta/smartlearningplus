@@ -83,9 +83,10 @@ router.post("/student/register", async (req, res) => {
         const msg = `🚨 *New Registration Request*\n\n*Name:* ${name.trim()}\n*Email:* ${cleanEmail}\n*Batch:* ${batch}\n\nPlease review this request in the Admin Panel.`;
         
         // 1. Send to ADMIN_TELEGRAM_ID from env
-        const envAdminId = process.env.ADMIN_TELEGRAM_ID;
+        const envAdminId = process.env.ADMIN_TELEGRAM_ID?.trim();
+        const htmlMsg = `🚨 <b>New Registration Request</b>\n\n<b>Name:</b> ${name.trim()}\n<b>Email:</b> ${cleanEmail}\n<b>Batch:</b> ${batch}\n\nPlease review this request in the Admin Panel.`;
         if (envAdminId) {
-          bot.sendMessage(envAdminId, msg, { parse_mode: "Markdown" }).catch(err => {
+          bot.sendMessage(envAdminId, htmlMsg, { parse_mode: "HTML" }).catch(err => {
             console.error(`Failed to send telegram message to env admin ${envAdminId}:`, err);
           });
         }
@@ -94,7 +95,7 @@ router.post("/student/register", async (req, res) => {
         const adminRes = await q("select telegram_id from admins where telegram_id is not null");
         for (const admin of adminRes.rows) {
           if (admin.telegram_id && String(admin.telegram_id) !== String(envAdminId)) {
-            bot.sendMessage(admin.telegram_id, msg, { parse_mode: "Markdown" }).catch(err => {
+            bot.sendMessage(admin.telegram_id, htmlMsg, { parse_mode: "HTML" }).catch(err => {
               console.error(`Failed to send telegram message to admin ${admin.telegram_id}:`, err);
             });
           }
