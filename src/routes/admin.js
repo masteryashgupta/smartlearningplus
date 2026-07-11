@@ -6,7 +6,7 @@ import { computeStats } from "../lib/timetable.js";
 import { signUrls, checkB2Health } from "../lib/b2.js";
 import { getBotStatus, bot } from "../bot/bot.js";
 import crypto from "crypto";
-import { sendVerificationEmail, sendRejectionEmail } from "../lib/mailer.js";
+import { sendVerificationEmail, sendRejectionEmail, sendAnnouncementEmail } from "../lib/mailer.js";
 
 const router = Router();
 
@@ -479,6 +479,57 @@ router.get("/moderator-logs", requireAuth("admin"), async (req, res) => {
     res.json(rows);
   } catch (err) {
     console.error("Fetch moderator logs error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// ---- Broadcast Announcement to All Users ----
+router.post("/broadcast", requireAuth("admin"), async (req, res) => {
+  const { subject, message, channels } = req.body;
+  if (!message) return res.status(400).json({ error: "Message content is required" });
+  if (!channels || !Array.isArray(channels) || channels.length === 0) {
+    return res.status(400).json({ error: "At least one channel (email or telegram) is required" });
+  }
+
+  try {
+    const { rows: users } = await q("select name, email, telegram_id from users where is_active = true");
+    
+    // Run broadcast in background
+    const runBroadcast = async () => {
+      let emailSuccessCount = 0;
+      let tgSuccessCount = 0;
+
+      for (const user of users) {
+        // Send email
+        if (channels.includes("email") && user.email) {
+          try {
+            await sendAnnouncementEmail(user.email, user.name, subject, message);
+            emailSuccessCount++;
+          } catch (err) {
+            console.error(`[broadcast] Failed email to ${user.email}:`, err.message || err);
+          }
+        }
+
+        // Send Telegram
+        if (channels.includes("telegram") && user.telegram_id && bot) {
+          try {
+            await bot.sendMessage(user.telegram_id, message);
+            tgSuccessCount++;
+          } catch (err) {
+            console.error(`[broadcast] Failed Telegram to ${user.telegram_id}:`, err.message || err);
+          }
+        }
+      }
+      
+      console.log(`[broadcast] Completed. Emails sent: ${emailSuccessCount}, Telegrams sent: ${tgSuccessCount}`);
+    };
+
+    runBroadcast();
+    await logModeratorActivity(req, "broadcast_send", `Sent broadcast announcement to ${users.length} users via [${channels.join(", ")}]`);
+
+    res.json({ ok: true, sentCount: users.length });
+  } catch (err) {
+    console.error("Broadcast route error:", err);
     res.status(500).json({ error: "Internal server error" });
   }
 });

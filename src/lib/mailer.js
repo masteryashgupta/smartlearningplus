@@ -175,3 +175,54 @@ export async function sendRejectionEmail(to, name) {
 
   console.log(`[mailer] Rejection email sent to ${to} — id: ${data?.id}`);
 }
+
+/**
+ * Send an announcement email via Resend.
+ * @param {string} to  Recipient email
+ * @param {string} name  Recipient's name
+ * @param {string} subject  Email subject
+ * @param {string} message  Email message content (plain text or markdown format)
+ */
+export async function sendAnnouncementEmail(to, name, subject, message) {
+  const client = getClient();
+  if (!client) {
+    console.warn("[mailer] Skipping email — Resend client not configured");
+    return;
+  }
+
+  const fromAddress = process.env.RESEND_FROM || "Smart Learning+ <onboarding@resend.dev>";
+
+  // Simple HTML formatting for announcement message linebreaks
+  const formattedMsg = message.replace(/\n/g, "<br/>");
+
+  const html = `
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 600px; margin: 0 auto; background: #fafaf8; border-radius: 16px; overflow: hidden; border: 1px solid #e5e2db;">
+      <div style="background: linear-gradient(135deg, #4f46e5, #06b6d4); padding: 32px 32px 28px;">
+        <div style="color: white; font-size: 22px; font-weight: 800; letter-spacing: -0.5px;">Smart Learning+</div>
+        <div style="color: rgba(255,255,255,0.75); font-size: 13px; margin-top: 4px;">Announcement</div>
+      </div>
+      <div style="padding: 32px;">
+        <p style="color: #1b2430; font-size: 15px; margin: 0 0 16px;">Hi <strong>${name}</strong>,</p>
+        <div style="color: #334155; font-size: 14px; line-height: 1.65; margin: 0 0 24px; font-family: inherit;">
+          ${formattedMsg}
+        </div>
+      </div>
+      <div style="border-top: 1px solid #e5e2db; padding: 16px 32px; background: #f8f7f5;">
+        <p style="color: #94a3b8; font-size: 11px; margin: 0;">Smart Learning+ · Attendance OS</p>
+      </div>
+    </div>
+  `;
+
+  const { data, error } = await client.emails.send({
+    from: fromAddress,
+    to,
+    subject: subject || "Announcement from Smart Learning+",
+    html,
+  });
+
+  if (error) {
+    throw new Error(`Resend error: ${JSON.stringify(error)}`);
+  }
+
+  console.log(`[mailer] Announcement email sent to ${to} — id: ${data?.id}`);
+}
