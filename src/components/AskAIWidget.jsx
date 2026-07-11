@@ -100,7 +100,7 @@ export default function AskAIWidget() {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 font-sans">
+    <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 font-sans" style={{ maxWidth: "calc(100vw - 32px)" }}>
       {/* Floating Button */}
       {!isOpen && (
         <button
@@ -115,7 +115,14 @@ export default function AskAIWidget() {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="w-[360px] sm:w-[420px] h-[550px] max-h-[85vh] bg-surface border border-line rounded-2xl shadow-soft flex flex-col overflow-hidden animate-fade-in text-ink">
+        <div
+          className="bg-surface border border-line rounded-2xl shadow-soft flex flex-col overflow-hidden animate-fade-in text-ink"
+          style={{
+            width: "min(420px, calc(100vw - 32px))",
+            height: "min(550px, calc(100svh - 96px))",
+            maxHeight: "85vh",
+          }}
+        >
           
           {/* Header */}
           <div className="p-4 bg-paper border-b border-line flex items-center justify-between shrink-0">

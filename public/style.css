@@ -614,6 +614,27 @@ svg text { fill: var(--text); }
     padding: 5px 10px !important;
     font-size: 12px !important;
   }
+
+  /* --- Module index page (Vault): stat cards should not clip on mobile --- */
+  .sl-shell {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+  .sl-stats {
+    max-width: 100% !important;
+    width: 100% !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    margin: 0 !important;
+  }
+  .sl-stat {
+    padding: 14px 6px !important;
+  }
+  .sl-stat-num {
+    font-size: 18px !important;
+  }
+  .sl-mhero {
+    padding: 32px 0 24px !important;
+  }
 }
 
 /* ── SYLLABUS BLOCK ── */

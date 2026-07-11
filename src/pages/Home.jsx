@@ -871,10 +871,15 @@ export default function Home() {
                   href="#login-section"
                   onClick={(e) => {
                     e.preventDefault();
-                    setShowMobileLogin(true);
-                    setTimeout(() => {
-                      document.getElementById('login-section')?.scrollIntoView({ behavior: 'smooth' });
-                    }, 50);
+                    setShowMobileLogin(prev => {
+                      const next = !prev;
+                      if (next) {
+                        setTimeout(() => {
+                          document.getElementById('login-section')?.scrollIntoView({ behavior: 'smooth' });
+                        }, 50);
+                      }
+                      return next;
+                    });
                   }}
                   className="px-3.5 py-1.5 rounded-lg bg-indigo-600 !text-white font-medium text-xs hover:bg-indigo-700 transition-colors shadow-soft"
                   style={{ cursor: "none", color: "#ffffff" }}
