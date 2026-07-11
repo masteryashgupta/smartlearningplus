@@ -52,7 +52,7 @@ Website Features & Usage:
 3. Share Study Material: Users can upload PDFs, notes, or images to share with the community. Link: [Share Study Material](/)
 4. Subject Attendance Breakdown: Visual indicators showing attendance percentage per subject/lab. Link: [Dashboard](/)
 5. Timetable / Heatmap: View weekly schedule and past attendance history. Link: [Dashboard](/)
-6. Syllabus PDFs / Official Schemes: Download official RTU syllabus and examination schemes. Link: [Syllabus PDFs](/)
+6. Syllabus PDFs / Official Schemes: Download official RTU syllabus and examination schemes. Link: [Syllabus PDFs](/#downloads)
 7. Telegram Integration: Users can connect their Telegram account to get bot notifications. Link: [Dashboard](/)
 
 When explaining a feature, provide clear steps on how to use it and ALWAYS include the relevant markdown link from the list above. Keep responses helpful, concise, and friendly.
@@ -83,7 +83,7 @@ If the user greets you, introduce yourself as the Platform Guide and list a few 
 
   return {
     answer: aiResult.answer,
-    sources,
+    sources: [],
     served_by: aiResult.served_by
   };
 }
