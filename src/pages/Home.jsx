@@ -1261,7 +1261,7 @@ export default function Home() {
 
         {/* LOCKED DASHBOARD PREVIEW & SIGN IN (For Logged-Out Users) */}
         {!session && (
-          <div className="locked-preview-container my-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+          <div id="login-section" className="locked-preview-container my-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
             {/* Left: Creative Glassmorphic Mockup Dashboard (High visual impact) */}
             <div className="lg:col-span-7 card relative overflow-hidden bg-gradient-to-br from-[#1e1b4b] to-[#0f172a] border border-white/10 p-6 sm:p-8 rounded-2xl flex flex-col justify-between shadow-soft min-h-[380px] backdrop-blur-md">
               {/* Background glowing rings */}

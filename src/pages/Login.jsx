@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { api, setSession } from "../api.js";
+import { api, setSession, getSession } from "../api.js";
 
-export default function Login({ compact = false }) {
+export default function Login({ compact = false, adminOnly = false }) {
   const [params] = useSearchParams();
   const navigate = useNavigate();
-  const [mode, setMode] = useState("student");
+  const [mode, setMode] = useState(adminOnly ? "admin" : "student");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -21,6 +21,17 @@ export default function Login({ compact = false }) {
   const [studentEmail, setStudentEmail] = useState("");
   const [studentPassword, setStudentPassword] = useState("");
   const [studentBatch, setStudentBatch] = useState("G1");
+
+  useEffect(() => {
+    const session = getSession();
+    if (session) {
+      navigate("/");
+    }
+  }, [navigate]);
+
+  useEffect(() => {
+    setMode(adminOnly ? "admin" : "student");
+  }, [adminOnly]);
 
   useEffect(() => {
     const token = params.get("token");
@@ -114,20 +125,22 @@ export default function Login({ compact = false }) {
 
   const cardContent = (
     <div className="card p-6 bg-white border border-line rounded-xl shadow-soft">
-      <div className="flex gap-2 mb-6 bg-paper rounded-xl p-1 border border-line/40">
-        <button
-          className={`flex-1 py-1.5 rounded-lg text-sm font-medium transition-colors ${mode === "student" ? "bg-white shadow-soft text-primary" : "text-muted hover:text-ink"}`}
-          onClick={() => { setMode("student"); setError(""); setForgotMode(false); setForgotMsg(null); setRegisterSuccess(null); }}
-        >
-          Student
-        </button>
-        <button
-          className={`flex-1 py-1.5 rounded-lg text-sm font-medium transition-colors ${mode === "admin" ? "bg-white shadow-soft text-primary" : "text-muted hover:text-ink"}`}
-          onClick={() => { setMode("admin"); setError(""); setForgotMode(false); setForgotMsg(null); setRegisterSuccess(null); }}
-        >
-          Admin
-        </button>
-      </div>
+      {!adminOnly && (
+        <div className="flex gap-2 mb-6 bg-paper rounded-xl p-1 border border-line/40">
+          <button
+            className={`flex-1 py-1.5 rounded-lg text-sm font-medium transition-colors ${studentAction === "login" ? "bg-white shadow-soft text-primary" : "text-muted hover:text-ink"}`}
+            onClick={() => { setStudentAction("login"); setError(""); setForgotMode(false); setForgotMsg(null); setRegisterSuccess(null); }}
+          >
+            Sign In
+          </button>
+          <button
+            className={`flex-1 py-1.5 rounded-lg text-sm font-medium transition-colors ${studentAction === "register" ? "bg-white shadow-soft text-primary" : "text-muted hover:text-ink"}`}
+            onClick={() => { setStudentAction("register"); setError(""); setForgotMode(false); setForgotMsg(null); setRegisterSuccess(null); }}
+          >
+            Register
+          </button>
+        </div>
+      )}
 
       {mode === "student" ? (
         <div>
