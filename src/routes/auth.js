@@ -80,17 +80,22 @@ router.post("/student/register", async (req, res) => {
 
     // Send Telegram notification to admin
     try {
+      const envAdminId = process.env.ADMIN_TELEGRAM_ID?.trim();
+      console.log(`[tg-debug] New request. envAdminId="${envAdminId}", botExists=${!!bot}`);
       if (bot) {
-        const msg = `🚨 *New Registration Request*\n\n*Name:* ${name.trim()}\n*Email:* ${cleanEmail}\n*Batch:* ${batch}\n\nPlease review this request in the Admin Panel.`;
-        
-        // 1. Send to ADMIN_TELEGRAM_ID from env
-        const envAdminId = process.env.ADMIN_TELEGRAM_ID?.trim();
         const htmlMsg = `🚨 <b>New Registration Request</b>\n\n<b>Name:</b> ${name.trim()}\n<b>Email:</b> ${cleanEmail}\n<b>Batch:</b> ${batch}\n\nPlease review this request in the Admin Panel.`;
         if (envAdminId) {
-          bot.sendMessage(envAdminId, htmlMsg, { parse_mode: "HTML" }).catch(err => {
-            console.error(`Failed to send telegram message to env admin ${envAdminId}:`, err);
-          });
+          console.log(`[tg-debug] Sending message to ${envAdminId}...`);
+          bot.sendMessage(envAdminId, htmlMsg, { parse_mode: "HTML" })
+            .then(() => console.log(`[tg-debug] Successfully sent telegram message to ${envAdminId}`))
+            .catch(err => {
+              console.error(`[tg-debug] Telegram API error:`, err.message || err);
+            });
+        } else {
+          console.warn("[tg-debug] ADMIN_TELEGRAM_ID is empty, skipping send");
         }
+      } else {
+        console.warn("[tg-debug] Bot instance is null, skipping send");
       }
     } catch (err) {
       console.error("Failed to notify admins via telegram:", err);

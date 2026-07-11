@@ -18,6 +18,7 @@ import { startScheduler } from "./bot/scheduler.js";
 import { setupWebhook, getBotStatus } from "./bot/bot.js";
 
 const app = express();
+app.set("trust proxy", 1);
 app.use(
   helmet({
     contentSecurityPolicy: {
