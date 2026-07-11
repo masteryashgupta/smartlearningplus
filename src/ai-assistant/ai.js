@@ -12,9 +12,16 @@ export async function getEmbedding(text) {
   if (!genAI) {
     throw new Error("GEMINI_API_KEY is not configured");
   }
-  const model = genAI.getGenerativeModel({ model: "text-embedding-004" });
-  const result = await model.embedContent(text);
-  return result.embedding.values;
+  try {
+    const model = genAI.getGenerativeModel({ model: "text-embedding-004" });
+    const result = await model.embedContent(text);
+    return result.embedding.values;
+  } catch (err) {
+    console.warn("Gemini text-embedding-004 failed, attempting embedding-001 fallback:", err.message);
+    const model = genAI.getGenerativeModel({ model: "embedding-001" });
+    const result = await model.embedContent(text);
+    return result.embedding.values;
+  }
 }
 
 export async function callGemini(prompt, systemInstruction = "") {
