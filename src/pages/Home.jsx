@@ -792,6 +792,28 @@ export default function Home() {
             display: none;
           }
         }
+        .attendance-preview-fab {
+          position: fixed;
+          bottom: 76px;
+          left: 16px;
+          z-index: 50;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 44px;
+          height: 44px;
+          background: linear-gradient(135deg, #1e1b4b, #0f172a);
+          color: #fff;
+          border: 1px solid rgba(255,255,255,0.15);
+          border-radius: 50%;
+          font-size: 18px;
+          box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+          transition: transform 0.2s;
+          cursor: pointer;
+        }
+        .attendance-preview-fab:hover {
+          transform: scale(1.05);
+        }
       `}</style>
 
 
@@ -847,7 +869,13 @@ export default function Home() {
                 </div>
                 <a
                   href="#login-section"
-                  onClick={(e) => { e.preventDefault(); document.getElementById('login-section')?.scrollIntoView({ behavior: 'smooth' }); }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setShowMobileLogin(true);
+                    setTimeout(() => {
+                      document.getElementById('login-section')?.scrollIntoView({ behavior: 'smooth' });
+                    }, 50);
+                  }}
                   className="px-3.5 py-1.5 rounded-lg bg-indigo-600 !text-white font-medium text-xs hover:bg-indigo-700 transition-colors shadow-soft"
                   style={{ cursor: "none", color: "#ffffff" }}
                 >
@@ -1470,91 +1498,11 @@ export default function Home() {
             </div>
 
             {/* Mobile collapsible UI */}
-            <div className="block lg:hidden my-6 space-y-4">
-              {/* Toggle 1: Sign In & Register */}
-              <div className="w-full">
-                <button
-                  onClick={() => setShowMobileLogin(!showMobileLogin)}
-                  className="w-full text-left p-5 rounded-2xl bg-gradient-to-r from-indigo-650 to-indigo-600 text-white font-bold flex items-center justify-between shadow-md"
-                  style={{ background: "linear-gradient(135deg, #4f46e5 0%, #3730a3 100%)" }}
-                >
-                  <span className="flex items-center gap-2.5">
-                    <span className="text-lg">🔑</span>
-                    <span>Sign In / Register</span>
-                  </span>
-                  <span className="text-xs bg-white/20 px-2.5 py-1 rounded-lg">
-                    {showMobileLogin ? "Close" : "Open"}
-                  </span>
-                </button>
-                {showMobileLogin && (
-                  <div className="mt-3 bg-white rounded-2xl p-1 border border-indigo-100 shadow-lg animate-fade-in">
-                    <Login compact={true} />
-                  </div>
-                )}
+            {showMobileLogin && (
+              <div className="block lg:hidden mt-3 bg-white rounded-[1rem] overflow-hidden p-0.5 border border-indigo-100/80 shadow-lg animate-fade-in">
+                <Login compact={true} />
               </div>
-
-              {/* Toggle 2: Attendance Tracker Feature Preview */}
-              <div className="w-full">
-                <button
-                  onClick={() => setShowMobileLockedPreview(!showMobileLockedPreview)}
-                  className="w-full text-left p-5 rounded-2xl bg-gradient-to-br from-[#1e1b4b] to-[#0f172a] border border-white/10 text-white font-bold flex items-center justify-between shadow-soft"
-                >
-                  <span className="flex items-center gap-2.5">
-                    <span className="text-lg">🔒</span>
-                    <span>Attendance Tracker Feature</span>
-                  </span>
-                  <span className="text-xs bg-white/10 px-2.5 py-1 rounded-lg">
-                    {showMobileLockedPreview ? "Close" : "Preview"}
-                  </span>
-                </button>
-                {showMobileLockedPreview && (
-                  <div className="mt-3 card relative overflow-hidden bg-gradient-to-br from-[#1e1b4b] to-[#0f172a] border border-white/10 p-5 rounded-2xl flex flex-col justify-between shadow-soft min-h-[340px] backdrop-blur-md animate-fade-in text-white">
-                    {/* Background glowing rings */}
-                    <div className="absolute top-10 right-10 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl" />
-                    
-                    <div className="relative z-10">
-                      <h2 className="text-xl font-extrabold text-white tracking-tight mb-3">
-                        Analyze Your Attendance &amp; Consistency
-                      </h2>
-                      <p className="text-xs text-slate-300 leading-relaxed mb-6">
-                        Log in to visualize your weekly class timetable, track real-time attendance statistics, compare with friends on the leaderboard, and maintain your green streak on the heatmap.
-                      </p>
-
-                      {/* Grid of Mock Visual Items */}
-                      <div className="grid grid-cols-3 gap-3 opacity-55 select-none pointer-events-none mb-6">
-                        <div className="bg-slate-800/60 border border-slate-700/50 rounded-xl p-3 text-center">
-                          <div className="w-10 h-10 rounded-full border-4 border-cyan-400/30 border-t-cyan-400 mx-auto flex items-center justify-center text-[10px] text-cyan-300 font-mono font-bold">85%</div>
-                          <div className="text-[10px] text-white mt-2 font-bold truncate">Compiler</div>
-                        </div>
-                        <div className="bg-slate-800/60 border border-slate-700/50 rounded-xl p-3 text-center flex flex-col justify-center">
-                          <div className="text-xl">🏆</div>
-                          <div className="text-[10px] text-white font-bold mt-2.5">#1 in Batch</div>
-                        </div>
-                        <div className="bg-slate-800/60 border border-slate-700/50 rounded-xl p-3 text-center flex flex-col items-center justify-center">
-                          <div className="grid grid-cols-4 gap-0.5">
-                            <div className="w-2.5 h-2.5 rounded-sm bg-emerald-500" />
-                            <div className="w-2.5 h-2.5 rounded-sm bg-emerald-600" />
-                            <div className="w-2.5 h-2.5 rounded-sm bg-slate-700" />
-                            <div className="w-2.5 h-2.5 rounded-sm bg-emerald-400" />
-                            <div className="w-2.5 h-2.5 rounded-sm bg-emerald-700" />
-                            <div className="w-2.5 h-2.5 rounded-sm bg-slate-700" />
-                          </div>
-                          <div className="text-[10px] text-white mt-3 font-bold">Heatmap</div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="relative z-10 pt-3 border-t border-slate-700/50 flex items-center justify-between text-slate-300 text-[10px]">
-                      <span className="flex items-center gap-1.5 font-medium">
-                        <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-                        Live Syncing with Telegram Bot
-                      </span>
-                      <span className="font-mono bg-slate-800/80 px-2 py-0.5 rounded border border-slate-700">v5.0.0</span>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
+            )}
           </div>
         )}
 
@@ -1736,6 +1684,90 @@ export default function Home() {
         
         <AskAIWidget />
         <ShareWidget />
+
+        {/* Guest Attendance Tracker Preview FAB (only on mobile, when not logged in) */}
+        {!session && (
+          <button
+            onClick={() => setShowMobileLockedPreview(true)}
+            className="attendance-preview-fab block lg:hidden"
+            title="Preview Attendance Tracker Feature"
+          >
+            <span>🔒</span>
+          </button>
+        )}
+
+        {/* Guest Attendance Tracker Preview Modal (only on mobile) */}
+        {!session && showMobileLockedPreview && (
+          <div
+            onClick={(e) => { if (e.target === e.currentTarget) setShowMobileLockedPreview(false); }}
+            style={{
+              position: "fixed", inset: 0, zIndex: 10000,
+              background: "rgba(0,0,0,0.65)", backdropFilter: "blur(8px)",
+              display: "flex", alignItems: "center", justify: "center", padding: "16px",
+            }}
+          >
+            <div style={{
+              background: "linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%)",
+              borderRadius: "20px", width: "100%", maxWidth: "440px",
+              boxShadow: "0 20px 60px rgba(0,0,0,0.4)", overflow: "hidden",
+              border: "1px solid rgba(255,255,255,0.15)",
+              animation: "sl-fade-up 0.22s ease",
+              color: "#fff",
+              position: "relative"
+            }}>
+              {/* Modal Header */}
+              <div style={{ padding: "20px 24px", display: "flex", alignItems: "center", justify: "space-between", borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <span style={{ fontSize: "18px" }}>🔒</span>
+                  <span style={{ fontSize: "15px", fontWeight: 800 }}>Attendance Tracker Feature</span>
+                </div>
+                <button
+                  onClick={() => setShowMobileLockedPreview(false)}
+                  style={{ background: "rgba(255,255,255,0.15)", border: "none", color: "#fff", borderRadius: "50%", width: "28px", height: "28px", cursor: "pointer", fontSize: "14px", display: "flex", alignItems: "center", justify: "center" }}
+                >&#10005;</button>
+              </div>
+
+              {/* Modal Body */}
+              <div style={{ padding: "20px 24px 24px" }}>
+                <h2 className="text-lg font-extrabold text-white tracking-tight mb-2">
+                  Analyze Your Attendance &amp; Consistency
+                </h2>
+                <p className="text-xs text-slate-300 leading-relaxed mb-5">
+                  Log in to visualize your weekly class timetable, track real-time attendance statistics, compare with friends on the leaderboard, and maintain your green streak on the heatmap.
+                </p>
+
+                {/* Grid of Mock Visual Items */}
+                <div className="grid grid-cols-3 gap-3 opacity-90 select-none pointer-events-none mb-5">
+                  <div className="bg-slate-800/60 border border-slate-700/50 rounded-xl p-3 text-center">
+                    <div className="w-10 h-10 rounded-full border-4 border-cyan-400/30 border-t-cyan-400 mx-auto flex items-center justify-center text-[10px] text-cyan-300 font-mono font-bold">85%</div>
+                    <div className="text-[10px] text-white mt-2 font-bold truncate">Compiler</div>
+                  </div>
+                  <div className="bg-slate-800/60 border border-slate-700/50 rounded-xl p-3 text-center flex flex-col justify-center">
+                    <div className="text-xl">🏆</div>
+                    <div className="text-[10px] text-white font-bold mt-2">#1 in Batch</div>
+                  </div>
+                  <div className="bg-slate-800/60 border border-slate-700/50 rounded-xl p-3 text-center flex flex-col items-center justify-center">
+                    <div className="grid grid-cols-4 gap-0.5">
+                      <div className="w-2.5 h-2.5 rounded-sm bg-emerald-500" />
+                      <div className="w-2.5 h-2.5 rounded-sm bg-emerald-600" />
+                      <div className="w-2.5 h-2.5 rounded-sm bg-slate-700" />
+                      <div className="w-2.5 h-2.5 rounded-sm bg-emerald-400" />
+                    </div>
+                    <div className="text-[10px] text-white mt-3 font-bold">Heatmap</div>
+                  </div>
+                </div>
+
+                <div className="pt-3 border-t border-slate-700/50 flex items-center justify-between text-slate-300 text-[10px]">
+                  <span className="flex items-center gap-1.5 font-medium">
+                    <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+                    Live Syncing with Telegram Bot
+                  </span>
+                  <span className="font-mono bg-slate-800/80 px-2 py-0.5 rounded border border-slate-700">v5.0.0</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Registered users → open Telegram bot directly */}
         {session && botUsername && (
