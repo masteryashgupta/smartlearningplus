@@ -8,6 +8,7 @@ const TABS = [
   { key: "timetable", label: "Timetable" },
   { key: "holidays",  label: "Holidays" },
   { key: "users",     label: "Users" },
+  { key: "registrations", label: "Registration Requests" },
   { key: "whitelist", label: "Whitelist" },
   { key: "materials", label: "Approvals" },
   { key: "attendance",label: "Attendance" },
@@ -104,6 +105,33 @@ export default function AdminPanel({ onClose }) {
   const [whitelistEmailInput, setWhitelistEmailInput] = useState("");
   const [whitelistSearch, setWhitelistSearch] = useState("");
   const [whitelistLoading, setWhitelistLoading] = useState(false);
+  const [registrations, setRegistrations] = useState([]);
+
+  function reloadRegistrations() {
+    api.get("/admin/registrations").then((r) => setRegistrations(r.data));
+  }
+
+  async function handleApproveRegistration(id) {
+    if (!window.confirm("Approve this registration request?")) return;
+    try {
+      await api.post(`/admin/registrations/${id}/approve`);
+      showToast("Registration approved! User created and welcome email sent.");
+      reloadRegistrations();
+    } catch (err) {
+      showToast(err.response?.data?.error || "Failed to approve registration", false);
+    }
+  }
+
+  async function handleRejectRegistration(id) {
+    if (!window.confirm("Reject this registration request?")) return;
+    try {
+      await api.post(`/admin/registrations/${id}/reject`);
+      showToast("Registration rejected!");
+      reloadRegistrations();
+    } catch (err) {
+      showToast("Failed to reject registration", false);
+    }
+  }
 
   function showToast(msg, ok = true) {
     setToast({ msg, ok });
@@ -259,6 +287,7 @@ export default function AdminPanel({ onClose }) {
     }
     if (tab === "health") loadHealth();
     if (tab === "moderator-logs") reloadModeratorLogs();
+    if (tab === "registrations") reloadRegistrations();
   }, [tab, attendanceDate, week]);
 
   async function addSlot(e) {
@@ -691,6 +720,46 @@ export default function AdminPanel({ onClose }) {
                   ))}
                 </div>
               )}
+            </div>
+          </div>
+        )}
+
+        {/* ── REGISTRATIONS ── */}
+        {tab === "registrations" && (
+          <div className="card p-4 sm:p-6 fade-in">
+            <h2 className="text-xl font-bold font-display mb-4">Pending Registrations</h2>
+            <div className="overflow-x-auto rounded-xl border border-line">
+              <table className="w-full text-left text-sm">
+                <thead>
+                  <tr className="bg-surface text-muted">
+                    <th className="p-3 font-semibold">Name</th>
+                    <th className="p-3 font-semibold">Email</th>
+                    <th className="p-3 font-semibold">Batch</th>
+                    <th className="p-3 font-semibold">Date</th>
+                    <th className="p-3 font-semibold text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-line bg-paper">
+                  {registrations.length === 0 ? (
+                    <tr><td colSpan="5" className="p-8 text-center text-muted">No pending registrations</td></tr>
+                  ) : (
+                    registrations.map(r => (
+                      <tr key={r.id} className="hover:bg-surface/50 transition-colors">
+                        <td className="p-3 font-medium text-ink">{r.name}</td>
+                        <td className="p-3 text-muted">{r.email}</td>
+                        <td className="p-3">
+                          <span className="bg-primary/10 text-primary px-2 py-0.5 rounded text-xs font-bold">{r.batch}</span>
+                        </td>
+                        <td className="p-3 text-muted">{new Date(r.created_at).toLocaleDateString()}</td>
+                        <td className="p-3 text-right space-x-2">
+                          <button onClick={() => handleApproveRegistration(r.id)} className="text-xs bg-good text-white px-3 py-1.5 rounded-lg font-semibold hover:opacity-90">Approve</button>
+                          <button onClick={() => handleRejectRegistration(r.id)} className="text-xs bg-bad text-white px-3 py-1.5 rounded-lg font-semibold hover:opacity-90">Reject</button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
             </div>
           </div>
         )}

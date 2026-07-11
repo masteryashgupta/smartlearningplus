@@ -72,7 +72,7 @@ export default function Login({ compact = false }) {
         password: studentPassword,
         batch: studentBatch,
       });
-      setRegisterSuccess(data.message || "Registration successful! Please check your email to verify your account.");
+      setRegisterSuccess(data.message || "Registration request submitted! Please wait up to 24 hours for admin approval.");
       setStudentAction("login");
       setStudentPassword("");
     } catch (e) {
@@ -213,8 +213,8 @@ export default function Login({ compact = false }) {
           ) : (
             <form onSubmit={handleStudentRegister} className="space-y-3">
               <div className="text-[11px] text-[#2563eb] text-center bg-[#eff6ff] py-1.5 px-3 rounded-lg border border-[#dbeafe] mb-3.5 font-semibold flex flex-col gap-1">
-                <span>⚠️ Invite-only Platform</span>
-                <span className="font-normal opacity-90">Only manually approved student emails can register.</span>
+                <span>⚠️ Premium Platform</span>
+                <span className="font-normal opacity-90">Access to premium features is manually approved by the admin. Kindly register below and wait for approval. Registration will be approved or rejected within 24 hours.</span>
               </div>
               <input className="input" type="text" placeholder="Full name" value={studentName}
                 onChange={(e) => setStudentName(e.target.value)} required />
