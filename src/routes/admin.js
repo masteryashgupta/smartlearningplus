@@ -484,13 +484,6 @@ router.get("/moderator-logs", requireAuth("admin"), async (req, res) => {
 });
 
 function formatTelegramMessage(name, message) {
-  let frontendBase = process.env.FRONTEND_URL || "https://smartlearningplus.me";
-  if (frontendBase.includes(",")) {
-    const urls = frontendBase.split(",").map((u) => u.trim());
-    const prodUrl = urls.find((u) => !u.includes("localhost"));
-    frontendBase = prodUrl || urls[0];
-  }
-
   // Escape HTML tags to prevent broken XML formatting errors on Telegram API
   let escaped = message
     .replace(/&/g, "&amp;")
@@ -523,10 +516,7 @@ function formatTelegramMessage(name, message) {
 
 Hi <b>${name}</b>,
 
-${body}
-
-━━━━━━━━━━━━━━━━━━━━
-🌐 <a href="${frontendBase}">Go to Dashboard</a>`;
+${body}`;
 }
 
 // ---- Broadcast Announcement to All Users ----
@@ -566,7 +556,29 @@ router.post("/broadcast", requireAuth("admin"), async (req, res) => {
         if (channels.includes("telegram") && user.telegram_id && bot) {
           try {
             const formattedTgMsg = formatTelegramMessage(user.name, message);
-            await bot.sendMessage(user.telegram_id, formattedTgMsg, { parse_mode: "HTML" });
+            
+            let telegramLink = buttonLink || process.env.FRONTEND_URL || "https://smartlearningplus.me";
+            if (!buttonLink && telegramLink.includes(",")) {
+              const urls = telegramLink.split(",").map((u) => u.trim());
+              const prodUrl = urls.find((u) => !u.includes("localhost"));
+              telegramLink = prodUrl || urls[0];
+            }
+
+            const inlineKeyboard = {
+              inline_keyboard: [
+                [
+                  {
+                    text: buttonText || "Go to Dashboard",
+                    url: telegramLink
+                  }
+                ]
+              ]
+            };
+
+            await bot.sendMessage(user.telegram_id, formattedTgMsg, {
+              parse_mode: "HTML",
+              reply_markup: inlineKeyboard
+            });
             tgSuccessCount++;
           } catch (err) {
             console.error(`[broadcast] Failed Telegram to ${user.telegram_id}:`, err.message || err);
