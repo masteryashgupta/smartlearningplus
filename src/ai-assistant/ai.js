@@ -18,17 +18,20 @@ export async function getEmbedding(text, retries = 3, delay = 2000) {
   
   for (let i = 0; i < retries; i++) {
     try {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          model: "models/gemini-embedding-001",
-          content: { parts: [{ text }] },
-          outputDimensionality: 768
-        })
-      });
+      const response = await withTimeout(
+        fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            model: "models/gemini-embedding-001",
+            content: { parts: [{ text }] },
+            outputDimensionality: 768
+          })
+        }),
+        10000
+      );
       
       if (response.status === 429) {
         console.warn(`Rate limited (429). Retrying in ${delay}ms...`);

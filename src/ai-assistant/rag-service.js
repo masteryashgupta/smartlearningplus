@@ -34,22 +34,26 @@ export async function askRAG(question, subjectCode, mode) {
     [`[${embedding.join(",")}]`, subjectFilter]
   );
 
-  if (chunks.length === 0) {
-    return {
-      answer: "Sorry, this topic is not covered in my syllabus data.",
-      sources: [],
-      served_by: "fallback"
-    };
+  // 3. Build context grounded prompt
+  let contextText = "";
+  if (chunks.length > 0) {
+    contextText = chunks
+      .map((c, i) => `[Context ${i + 1}] Source: ${c.source_type} (${c.subject_code} - ${c.topic} ${c.year ? `Year: ${c.year}` : ""})\nContent:\n${c.content}`)
+      .join("\n\n---\n\n");
   }
 
-  // 3. Build context grounded prompt
-  const contextText = chunks
-    .map((c, i) => `[Context ${i + 1}] Source: ${c.source_type} (${c.subject_code} - ${c.topic} ${c.year ? `Year: ${c.year}` : ""})\nContent:\n${c.content}`)
-    .join("\n\n---\n\n");
+  const systemInstruction = `You are the Smart Learning Plus AI tutor and assistant for RTU B.Tech CSE students. 
 
-  const systemInstruction = `You are the Smart Learning Plus AI tutor for RTU B.Tech CSE students. Answer the user's question ONLY using the provided Context below. If the answer is not in the context, say "Sorry, this topic is not covered in my syllabus data" honestly. Do not make up answers.
+If the user's question is about their syllabus or exams, answer it using the provided Context below if available. If the answer to a syllabus question is not in the context, say you don't have that in your syllabus data but try to help using your general knowledge.
 
-Explain in a highly engaging, clear mix of English and Hinglish, matching the style of university exams. Use bullet points, bold text, and clean headings where appropriate.
+If the user's question is a general greeting or conversation, respond naturally and politely.
+If the user asks about website features, how to do things on the site, or where to find things, you MUST provide the relevant links formatted as markdown links:
+- Mark Attendance: [Mark Attendance](/)
+- Leaderboard: [Leaderboard](/)
+- Share Study Material: [Share Study Material](/)
+- Subject Attendance Breakdown / Heatmap: [Dashboard](/)
+
+Explain in a highly engaging, clear mix of English and Hinglish, matching the style of university exams when answering study questions. Use bullet points, bold text, and clean headings where appropriate.
 If context details include PYQ sources, specify the number of times or years that topic appeared to highlight exam patterns.
 Mode selected: ${mode || "explain"}. 
 Keep formatting clean — use headers/bullets for explain mode, numbered question lists for pyq-pattern mode.`;
