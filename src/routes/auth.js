@@ -25,6 +25,43 @@ router.get("/bot-info", async (req, res) => {
   }
 });
 
+// ---- Public: Website Contact Form (for non-registered visitors) ----
+// Accepts name, email, message and forwards to admin Telegram.
+router.post("/contact", async (req, res) => {
+  const { name, email, message } = req.body;
+  if (!name || !name.trim()) return res.status(400).json({ error: "Name is required" });
+  if (!email || !email.trim()) return res.status(400).json({ error: "Email is required" });
+  if (!message || !message.trim()) return res.status(400).json({ error: "Message is required" });
+
+  // Basic email format check
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+    return res.status(400).json({ error: "Invalid email format" });
+  }
+
+  try {
+    const envAdminId = process.env.ADMIN_TELEGRAM_ID?.trim();
+    if (!envAdminId || !bot) {
+      console.warn("[contact] ADMIN_TELEGRAM_ID not set or bot unavailable — cannot forward message");
+      // Still respond OK to user (don't expose config details)
+      return res.json({ ok: true });
+    }
+
+    const safeMsg = message.trim()
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+
+    const tgMsg = `📬 <b>Website Contact Form</b>\n\n<b>Name:</b> ${name.trim()}\n<b>Email:</b> <code>${email.trim()}</code>\n<b>Message:</b>\n${safeMsg}\n\n<i>Reply to this person at: ${email.trim()}</i>`;
+
+    await bot.sendMessage(envAdminId, tgMsg, { parse_mode: "HTML" });
+    console.log(`[contact] Forwarded contact form from ${email.trim()} to admin`);
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("[contact] Failed to forward contact message:", err.message || err);
+    res.status(500).json({ error: "Failed to send message. Please try again." });
+  }
+});
+
 // ---- Admin login (website only) ----
 router.post("/admin/login", async (req, res) => {
   const { email, password } = req.body;
