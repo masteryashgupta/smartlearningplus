@@ -2,10 +2,10 @@ import { useState, useRef, useEffect } from "react";
 import { api } from "../api.js";
 
 const SUGGESTIONS = [
-  "What are the most repeated PYQ topics?",
-  "Explain SLR vs LALR Parsing in Hinglish",
-  "Summarize the phases of a Compiler",
-  "Explain CPU Scheduling algorithms"
+  "How do I mark attendance?",
+  "Where can I find syllabus PDFs?",
+  "How does the leaderboard work?",
+  "How can I share study material?"
 ];
 
 const SUBJECT_MAP = [
@@ -22,7 +22,7 @@ export default function AskAIWidget() {
   const [messages, setMessages] = useState([
     {
       sender: "ai",
-      text: "Hello! I am your Smart Study Assistant. Ask me anything from your RTU V Semester Syllabus or Nk PYQs! Main aapko English aur Hinglish ke mix mein answers dunga. 📚🤖",
+      text: "Hello! I am your Smart Learning Plus Platform Guide. I can help you navigate the website, explain how features work, and provide direct links. What do you need help with? 🌐🤖",
       sources: []
     }
   ]);
@@ -229,7 +229,7 @@ export default function AskAIWidget() {
           >
             <input
               type="text"
-              placeholder="Ask a syllabus or exam prep question..."
+              placeholder="Ask me how to use the website..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
               disabled={loading}
