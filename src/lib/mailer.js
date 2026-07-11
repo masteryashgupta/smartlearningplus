@@ -269,7 +269,7 @@ export async function sendRejectionEmail(to, name) {
  * @param {string} subject  Email subject
  * @param {string} message  Email message content (plain text or markdown format)
  */
-export async function sendAnnouncementEmail(to, name, subject, message) {
+export async function sendAnnouncementEmail(to, name, subject, message, buttonText, buttonLink) {
   const client = getClient();
   if (!client) {
     console.warn("[mailer] Skipping email — Resend client not configured");
@@ -286,8 +286,8 @@ export async function sendAnnouncementEmail(to, name, subject, message) {
     "Announcement",
     contentHtml,
     name,
-    "Go to Dashboard",
-    frontendUrl
+    buttonText || "Go to Dashboard",
+    buttonLink || frontendUrl
   );
 
   const { data, error } = await client.emails.send({

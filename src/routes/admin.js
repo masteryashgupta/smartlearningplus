@@ -531,7 +531,7 @@ ${body}
 
 // ---- Broadcast Announcement to All Users ----
 router.post("/broadcast", requireAuth("admin"), async (req, res) => {
-  const { subject, message, channels, userIds } = req.body;
+  const { subject, message, channels, userIds, buttonText, buttonLink } = req.body;
   if (!message) return res.status(400).json({ error: "Message content is required" });
   if (!channels || !Array.isArray(channels) || channels.length === 0) {
     return res.status(400).json({ error: "At least one channel (email or telegram) is required" });
@@ -550,12 +550,12 @@ router.post("/broadcast", requireAuth("admin"), async (req, res) => {
     const runBroadcast = async () => {
       let emailSuccessCount = 0;
       let tgSuccessCount = 0;
-
+ 
       for (const user of users) {
         // Send email
         if (channels.includes("email") && user.email) {
           try {
-            await sendAnnouncementEmail(user.email, user.name, subject, message);
+            await sendAnnouncementEmail(user.email, user.name, subject, message, buttonText, buttonLink);
             emailSuccessCount++;
           } catch (err) {
             console.error(`[broadcast] Failed email to ${user.email}:`, err.message || err);
