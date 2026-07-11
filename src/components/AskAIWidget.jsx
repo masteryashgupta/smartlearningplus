@@ -93,7 +93,7 @@ export default function AskAIWidget() {
     html = html.replace(/^\*\s+(.*$)/gim, "<li>$1</li>");
     html = html.replace(/(<li>.*<\/li>)/gs, "<ul class='list-disc pl-4 space-y-1 my-2'>$1</ul>");
     // Links
-    html = html.replace(/\[(.*?)\]\((.*?)\)/g, "<a href='$2' class='text-primary hover:underline' target='_blank' rel='noopener noreferrer'>$1</a>");
+    html = html.replace(/\[(.*?)\]\((.*?)\)/g, "<a href='$2' class='text-primary hover:underline'>$1</a>");
     // Line breaks
     html = html.replace(/\n/g, "<br/>");
     return html;
@@ -165,6 +165,17 @@ export default function AskAIWidget() {
                   <div
                     className="leading-relaxed whitespace-pre-line"
                     dangerouslySetInnerHTML={{ __html: renderSimpleMarkdown(msg.text) }}
+                    onClick={(e) => {
+                      if (e.target.tagName === 'A') {
+                        const href = e.target.getAttribute('href');
+                        if (href && href.startsWith('#')) {
+                          e.preventDefault();
+                          const targetId = href.substring(1);
+                          const el = document.getElementById(targetId);
+                          if (el) el.scrollIntoView({ behavior: 'smooth' });
+                        }
+                      }
+                    }}
                   />
                   
                   {/* Sources chips */}
