@@ -124,18 +124,8 @@ export default function AskAIWidget() {
               <h3 className="font-bold font-mono text-sm tracking-tight">SmartAI Assistant</h3>
             </div>
             
-            {/* Subject Selector */}
+            {/* Header Actions */}
             <div className="flex items-center gap-2">
-              <select
-                value={subject}
-                onChange={(e) => setSubject(e.target.value)}
-                className="bg-surface border border-line text-[10px] text-ink rounded-lg px-2 py-1 focus:outline-none focus:border-primary/50"
-              >
-                {SUBJECT_MAP.map((s) => (
-                  <option key={s.code} value={s.code}>{s.name}</option>
-                ))}
-              </select>
-
               <button
                 onClick={() => setIsOpen(false)}
                 className="text-muted hover:text-ink transition-colors p-1"
