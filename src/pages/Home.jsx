@@ -7,6 +7,7 @@ import SubjectGauge from "../components/SubjectGauge.jsx";
 import Heatmap from "../components/Heatmap.jsx";
 import DayEditor from "../components/DayEditor.jsx";
 import AskAIWidget from "../components/AskAIWidget.jsx";
+import ShareWidget from "../components/ShareWidget.jsx";
 
 export default function Home() {
   const session = getSession();
@@ -1508,6 +1509,7 @@ export default function Home() {
         </footer>
         
         <AskAIWidget />
+        <ShareWidget />
       </div>
     </div>
   );
