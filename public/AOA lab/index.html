@@ -486,29 +486,37 @@
       }
     };
 
-    // Load file contents from same folder
-    async function loadExpFiles() {
-      for (let key in expData) {
-        try {
-          const aimRes = await fetch(expData[key].aimFile);
-          expData[key].aim = await aimRes.text();
-          
-          const codeRes = await fetch(expData[key].codeFile);
-          expData[key].code = await codeRes.text();
-
-          const outputRes = await fetch(expData[key].outputFile);
-          expData[key].output = await outputRes.text();
-        } catch (err) {
-          console.error("Error fetching experiment files:", err);
-        }
+    // Load file contents for a single experiment on demand
+    async function loadExpFiles(expId) {
+      const data = expData[expId];
+      if (data.aim && data.code && data.output) {
+        return; // Already fetched
       }
-      renderActiveTab();
+      try {
+        const aimRes = await fetch(data.aimFile);
+        data.aim = await aimRes.text();
+        
+        const codeRes = await fetch(data.codeFile);
+        data.code = await codeRes.text();
+
+        const outputRes = await fetch(data.outputFile);
+        data.output = await outputRes.text();
+      } catch (err) {
+        console.error(`Error fetching files for ${expId}:`, err);
+      }
     }
 
-    function switchExperiment(expId, btn) {
+    async function switchExperiment(expId, btn) {
       document.querySelectorAll('.exp-tab-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       activeExperiment = expId;
+      
+      // Show loading state while retrieving
+      document.getElementById('aim-text').textContent = 'Loading Aim...';
+      document.getElementById('code-text').textContent = 'Loading Code...';
+      document.getElementById('output-text').textContent = 'Loading Output...';
+
+      await loadExpFiles(expId);
       renderActiveTab();
     }
 
@@ -531,6 +539,7 @@
     async function copyCode() {
       try {
         const codeText = expData[activeExperiment].code;
+        if (!codeText) return;
         await navigator.clipboard.writeText(codeText);
         const btn = document.querySelector('.copy-btn');
         btn.textContent = 'Copied!';
@@ -549,8 +558,12 @@
       }
     }
 
-    // Initialize loader
-    loadExpFiles();
+    // Initialize loader for first experiment
+    async function init() {
+      await loadExpFiles(activeExperiment);
+      renderActiveTab();
+    }
+    init();
 
     // Scroll animation observer
     const io = new IntersectionObserver((entries) => {
