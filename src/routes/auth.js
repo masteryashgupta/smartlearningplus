@@ -77,13 +77,23 @@ router.post("/student/register", async (req, res) => {
       [name.trim(), cleanEmail, hash, batch]
     );
 
-    // Send Telegram notification to all admins who have a telegram_id
+    // Send Telegram notification to admin
     try {
-      const adminRes = await q("select telegram_id from admins where telegram_id is not null");
-      if (adminRes.rows.length > 0 && bot) {
+      if (bot) {
         const msg = `🚨 *New Registration Request*\n\n*Name:* ${name.trim()}\n*Email:* ${cleanEmail}\n*Batch:* ${batch}\n\nPlease review this request in the Admin Panel.`;
+        
+        // 1. Send to ADMIN_TELEGRAM_ID from env
+        const envAdminId = process.env.ADMIN_TELEGRAM_ID;
+        if (envAdminId) {
+          bot.sendMessage(envAdminId, msg, { parse_mode: "Markdown" }).catch(err => {
+            console.error(`Failed to send telegram message to env admin ${envAdminId}:`, err);
+          });
+        }
+
+        // 2. Fallback or addition: send to any DB admins with telegram_id
+        const adminRes = await q("select telegram_id from admins where telegram_id is not null");
         for (const admin of adminRes.rows) {
-          if (admin.telegram_id) {
+          if (admin.telegram_id && String(admin.telegram_id) !== String(envAdminId)) {
             bot.sendMessage(admin.telegram_id, msg, { parse_mode: "Markdown" }).catch(err => {
               console.error(`Failed to send telegram message to admin ${admin.telegram_id}:`, err);
             });
