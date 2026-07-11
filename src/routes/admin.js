@@ -485,14 +485,20 @@ router.get("/moderator-logs", requireAuth("admin"), async (req, res) => {
 
 // ---- Broadcast Announcement to All Users ----
 router.post("/broadcast", requireAuth("admin"), async (req, res) => {
-  const { subject, message, channels } = req.body;
+  const { subject, message, channels, userIds } = req.body;
   if (!message) return res.status(400).json({ error: "Message content is required" });
   if (!channels || !Array.isArray(channels) || channels.length === 0) {
     return res.status(400).json({ error: "At least one channel (email or telegram) is required" });
   }
 
   try {
-    const { rows: users } = await q("select name, email, telegram_id from users where is_active = true");
+    let query = "select name, email, telegram_id from users where is_active = true";
+    let params = [];
+    if (userIds && Array.isArray(userIds) && userIds.length > 0) {
+      query += " and id = any($1)";
+      params.push(userIds);
+    }
+    const { rows: users } = await q(query, params);
     
     // Run broadcast in background
     const runBroadcast = async () => {
