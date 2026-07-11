@@ -5,6 +5,8 @@ import { requireAuth } from "../auth.js";
 import { computeStats } from "../lib/timetable.js";
 import { signUrls, checkB2Health } from "../lib/b2.js";
 import { getBotStatus } from "../bot/bot.js";
+import crypto from "crypto";
+import { sendVerificationEmail } from "../lib/mailer.js";
 
 const router = Router();
 
@@ -137,6 +139,76 @@ router.delete("/whitelist/:id", requireAuth("moderator"), async (req, res) => {
     res.json({ ok: true });
   } catch (err) {
     console.error("Delete whitelist error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// ---- Registration Requests ----
+router.get("/registrations", requireAuth("moderator"), async (req, res) => {
+  try {
+    const { rows } = await q("select * from registration_requests where status = 'pending' order by created_at desc");
+    res.json(rows);
+  } catch (err) {
+    console.error("Fetch registrations error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.post("/registrations/:id/approve", requireAuth("moderator"), async (req, res) => {
+  try {
+    const { rows } = await q("select * from registration_requests where id = $1", [req.params.id]);
+    const reqData = rows[0];
+    if (!reqData) return res.status(404).json({ error: "Request not found" });
+    if (reqData.status !== 'pending') return res.status(400).json({ error: "Request already processed" });
+
+    // 1. Add to whitelist
+    await q("insert into whitelisted_emails (email) values ($1) on conflict (email) do nothing", [reqData.email]);
+
+    // 2. Insert into users
+    const connectToken = crypto.randomBytes(16).toString("hex");
+    const verifyToken = crypto.randomBytes(32).toString("hex");
+
+    const userRes = await q(
+      `insert into users (name, email, password_hash, batch, telegram_connect_token, email_verified, verification_token)
+       values ($1, $2, $3, $4, $5, false, $6) returning *`,
+      [reqData.name, reqData.email, reqData.password_hash, reqData.batch, connectToken, verifyToken]
+    );
+    const user = userRes.rows[0];
+
+    // 3. Mark request as approved
+    await q("update registration_requests set status = 'approved' where id = $1", [reqData.id]);
+
+    // 4. Send verification email
+    let frontendBase = process.env.FRONTEND_URL || "https://smartlearningplus.me";
+    if (frontendBase.includes(",")) {
+      const urls = frontendBase.split(",").map((u) => u.trim());
+      const prodUrl = urls.find((u) => !u.includes("localhost"));
+      frontendBase = prodUrl || urls[0];
+    }
+    const verifyUrl = `${frontendBase}/index.html#/verify-email?token=${verifyToken}`;
+    try {
+      await sendVerificationEmail(user.email, verifyUrl, user.name);
+    } catch (mailErr) {
+      console.error("[approve] Verification email send failed:", mailErr.message);
+    }
+
+    await logModeratorActivity(req, "registration_approve", `Approved registration for "${user.email}"`);
+    res.json({ ok: true, message: "Request approved and user created" });
+  } catch (err) {
+    console.error("Approve registration error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.post("/registrations/:id/reject", requireAuth("moderator"), async (req, res) => {
+  try {
+    const { rows } = await q("update registration_requests set status = 'rejected' where id = $1 returning email", [req.params.id]);
+    if (rows.length > 0) {
+      await logModeratorActivity(req, "registration_reject", `Rejected registration for "${rows[0].email}"`);
+    }
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("Reject registration error:", err);
     res.status(500).json({ error: "Internal server error" });
   }
 });

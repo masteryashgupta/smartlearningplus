@@ -54,51 +54,47 @@ router.post("/student/register", async (req, res) => {
   if (!name || !email || !password || !batch) {
     return res.status(400).json({ error: "All fields (name, email, password, batch) are required" });
   }
-  if (!["G1", "G2"].includes(batch)) {
-    return res.status(400).json({ error: "Invalid batch. Must be G1 or G2." });
-  }
 
   try {
-    // Check if email already exists
     const cleanEmail = email.toLowerCase().trim();
-    const checkEmail = await q("select * from users where email = $1", [cleanEmail]);
-    if (checkEmail.rows.length > 0) {
+    
+    // Check if email already registered as user
+    const checkUser = await q("select * from users where email = $1", [cleanEmail]);
+    if (checkUser.rows.length > 0) {
       return res.status(400).json({ error: "Email is already registered" });
     }
 
-    // Check if email is whitelisted
-    const whitelistCheck = await q("select * from whitelisted_emails where email = $1", [cleanEmail]);
-    if (whitelistCheck.rows.length === 0) {
-      return res.status(403).json({ error: "Registration failed. Your email is not whitelisted by the admin." });
+    // Check if there is already a pending request
+    const checkPending = await q("select * from registration_requests where email = $1 and status = 'pending'", [cleanEmail]);
+    if (checkPending.rows.length > 0) {
+      return res.status(400).json({ error: "You already have a pending registration request. Please wait for admin approval." });
     }
 
     const hash = await bcrypt.hash(password, 10);
-    const connectToken = crypto.randomBytes(16).toString("hex");
-    const verifyToken = crypto.randomBytes(32).toString("hex");
-
-    const { rows } = await q(
-      `insert into users (name, email, password_hash, batch, telegram_connect_token, email_verified, verification_token)
-       values ($1, $2, $3, $4, $5, false, $6) returning *`,
-      [name.trim(), email.toLowerCase().trim(), hash, batch, connectToken, verifyToken]
+    
+    await q(
+      `insert into registration_requests (name, email, password_hash, batch) values ($1, $2, $3, $4)`,
+      [name.trim(), cleanEmail, hash, batch]
     );
-    const user = rows[0];
 
-    // Build verification link
-    let frontendBase = process.env.FRONTEND_URL || "https://smartlearningplus.me";
-    if (frontendBase.includes(",")) {
-      const urls = frontendBase.split(",").map((u) => u.trim());
-      const prodUrl = urls.find((u) => !u.includes("localhost"));
-      frontendBase = prodUrl || urls[0];
-    }
-    const verifyUrl = `${frontendBase}/index.html#/verify-email?token=${verifyToken}`;
-
+    // Send Telegram notification to all admins who have a telegram_id
     try {
-      await sendVerificationEmail(user.email, verifyUrl, user.name);
-    } catch (mailErr) {
-      console.error("[register] Verification email send failed:", mailErr.message);
+      const adminRes = await q("select telegram_id from admins where telegram_id is not null");
+      if (adminRes.rows.length > 0 && bot) {
+        const msg = `🚨 *New Registration Request*\n\n*Name:* ${name.trim()}\n*Email:* ${cleanEmail}\n*Batch:* ${batch}\n\nPlease review this request in the Admin Panel.`;
+        for (const admin of adminRes.rows) {
+          if (admin.telegram_id) {
+            bot.sendMessage(admin.telegram_id, msg, { parse_mode: "Markdown" }).catch(err => {
+              console.error(`Failed to send telegram message to admin ${admin.telegram_id}:`, err);
+            });
+          }
+        }
+      }
+    } catch (err) {
+      console.error("Failed to notify admins via telegram:", err);
     }
 
-    res.status(201).json({ ok: true, message: "Registration successful! Please check your email to verify your account." });
+    res.status(201).json({ ok: true, message: "Registration request submitted! Please wait up to 24 hours for admin approval." });
   } catch (err) {
     console.error("Student registration error:", err);
     res.status(500).json({ error: "Internal server error" });
