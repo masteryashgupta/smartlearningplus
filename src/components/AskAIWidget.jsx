@@ -100,15 +100,15 @@ export default function AskAIWidget() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 font-sans">
+    <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 font-sans">
       {/* Floating Button */}
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="flex items-center gap-2 px-4 py-3 bg-surface text-ink rounded-full border border-line hover:border-primary/50 shadow-soft transition-all cursor-pointer group"
+          className="flex items-center gap-1.5 sm:gap-2 px-3 py-3 sm:px-4 sm:py-3 bg-surface text-ink rounded-full border border-line hover:border-primary/50 shadow-soft transition-all cursor-pointer group"
         >
           <span className="text-lg group-hover:scale-110 transition-transform">🤖</span>
-          <span className="text-xs font-bold font-mono tracking-wider uppercase">Ask AI</span>
+          <span className="text-xs font-bold font-mono tracking-wider uppercase hidden sm:inline">Ask AI</span>
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
         </button>
       )}

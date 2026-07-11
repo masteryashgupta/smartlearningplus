@@ -29,6 +29,12 @@ export default function Home() {
   const [subjects, setSubjects] = useState([]);
   const [myUploads, setMyUploads] = useState([]);
 
+  // Mobile collapse toggles
+  const [showMobileLogin, setShowMobileLogin] = useState(false);
+  const [showMobileLockedPreview, setShowMobileLockedPreview] = useState(false);
+  const [showMobileWelcome, setShowMobileWelcome] = useState(false);
+  const [showMobileAttendance, setShowMobileAttendance] = useState(false);
+
   // Contribution Form States
   const [contribTab, setContribTab] = useState("upload");
   const [contribTitle, setContribTitle] = useState("");
@@ -748,6 +754,44 @@ export default function Home() {
         .animate-fade-in {
           animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
+        .contact-admin-fab {
+          position: fixed;
+          bottom: 90px;
+          right: 20px;
+          z-index: 9998;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 10px 16px;
+          background: linear-gradient(135deg, #2563eb, #06b6d4);
+          color: #fff;
+          border-radius: 999px;
+          font-weight: 700;
+          font-size: 13px;
+          text-decoration: none;
+          box-shadow: 0 4px 18px rgba(37,99,235,0.35);
+          transition: transform 0.18s, box-shadow 0.18s;
+          border: none;
+          cursor: pointer;
+        }
+        .contact-admin-fab:hover {
+          transform: translateY(-2px);
+        }
+        @media (max-width: 640px) {
+          .contact-admin-fab {
+            bottom: 75px;
+            right: 16px;
+            padding: 12px;
+            gap: 0;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            justify-content: center;
+          }
+          .contact-admin-fab span:last-child {
+            display: none;
+          }
+        }
       `}</style>
 
 
@@ -816,49 +860,112 @@ export default function Home() {
 
         {/* DASHBOARD HEADER & WELCOME CARD */}
         {session && session.role === "student" && (
-          <div className="dashboard-welcome-card my-6">
-            <div>
-              <h2 className="text-xl font-bold text-ink">Hello, {profile?.name || session?.name} 👋</h2>
-              <p className="text-xs text-muted mt-1">B.Tech CSE V Semester • {profile?.batch || "G2"} Batch</p>
-            </div>
-            {(() => {
-              const overallPct = stats?.overall.percentage ?? null;
-              const safeColor = overallPct === null ? "#6D5EF5" : overallPct >= 75 ? "#16A34A" : overallPct >= 65 ? "#F59E0B" : "#E11D48";
-              return (
-                <div className="flex items-center gap-4">
-                  <div className="text-right">
-                    <div className="text-xs text-muted">Overall Attendance</div>
-                    <div className="text-sm font-mono font-bold mt-0.5" style={{ color: safeColor }}>
-                      {overallPct !== null ? `${overallPct}%` : "—"} ({stats?.overall.present ?? 0}/{stats?.overall.total ?? 0} classes)
+          <>
+            {/* Desktop View */}
+            <div className="dashboard-welcome-card my-6 hidden md:flex">
+              <div>
+                <h2 className="text-xl font-bold text-ink">Hello, {profile?.name || session?.name} 👋</h2>
+                <p className="text-xs text-muted mt-1">B.Tech CSE V Semester • {profile?.batch || "G2"} Batch</p>
+              </div>
+              {(() => {
+                const overallPct = stats?.overall.percentage ?? null;
+                const safeColor = overallPct === null ? "#6D5EF5" : overallPct >= 75 ? "#16A34A" : overallPct >= 65 ? "#F59E0B" : "#E11D48";
+                return (
+                  <div className="flex items-center gap-4">
+                    <div className="text-right">
+                      <div className="text-xs text-muted">Overall Attendance</div>
+                      <div className="text-sm font-mono font-bold mt-0.5" style={{ color: safeColor }}>
+                        {overallPct !== null ? `${overallPct}%` : "—"} ({stats?.overall.present ?? 0}/{stats?.overall.total ?? 0} classes)
+                      </div>
+                    </div>
+                    
+                    {/* Telegram Status Pill */}
+                    <div className="flex items-center gap-1 bg-white border border-line/60 rounded-xl p-1 shadow-soft">
+                      {loadingProfile ? (
+                        <span className="text-[10px] text-muted px-2 py-1">Syncing...</span>
+                      ) : profile?.telegram_id ? (
+                        <div className="flex items-center gap-1.5 px-2 py-1">
+                          <span className="text-[10px] text-green-600 font-medium">🤖 connected</span>
+                          <button onClick={handleDisconnectTelegram} className="text-[9px] bg-red-50 hover:bg-red-100 text-red-600 px-1.5 py-0.5 rounded transition-all font-semibold border border-red-200">Unlink</button>
+                        </div>
+                      ) : profile?.telegram_connect_token && profile?.bot_username ? (
+                        <a
+                          href={`https://t.me/${profile.bot_username}?start=${profile.telegram_connect_token}`}
+                          target="_blank" rel="noopener noreferrer"
+                          className="bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] font-bold py-1 px-2.5 rounded-lg transition-colors border border-indigo-700"
+                          style={{ cursor: "none" }}
+                        >
+                          Link Telegram Bot
+                        </a>
+                      ) : (
+                        <span className="text-[10px] text-muted px-2 py-1">Loading...</span>
+                      )}
                     </div>
                   </div>
-                  
-                  {/* Telegram Status Pill */}
-                  <div className="flex items-center gap-1 bg-white border border-line/60 rounded-xl p-1 shadow-soft">
-                    {loadingProfile ? (
-                      <span className="text-[10px] text-muted px-2 py-1">Syncing...</span>
-                    ) : profile?.telegram_id ? (
-                      <div className="flex items-center gap-1.5 px-2 py-1">
-                        <span className="text-[10px] text-green-600 font-medium">🤖 connected</span>
-                        <button onClick={handleDisconnectTelegram} className="text-[9px] bg-red-50 hover:bg-red-100 text-red-600 px-1.5 py-0.5 rounded transition-all font-semibold border border-red-200">Unlink</button>
-                      </div>
-                    ) : profile?.telegram_connect_token && profile?.bot_username ? (
-                      <a
-                        href={`https://t.me/${profile.bot_username}?start=${profile.telegram_connect_token}`}
-                        target="_blank" rel="noopener noreferrer"
-                        className="bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] font-bold py-1 px-2.5 rounded-lg transition-colors border border-indigo-700"
-                        style={{ cursor: "none" }}
-                      >
-                        Link Telegram Bot
-                      </a>
-                    ) : (
-                      <span className="text-[10px] text-muted px-2 py-1">Loading...</span>
-                    )}
-                  </div>
+                );
+              })()}
+            </div>
+
+            {/* Mobile Collapsible View */}
+            <div className="block md:hidden my-4">
+              <button
+                onClick={() => setShowMobileWelcome(!showMobileWelcome)}
+                className="w-full text-left p-4 rounded-xl bg-gradient-to-r from-indigo-50/60 to-cyan-50/40 border border-indigo-100 flex items-center justify-between shadow-soft animate-fade-in"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">👋</span>
+                  <span className="text-sm font-bold text-ink">Hello, {profile?.name || session?.name}</span>
                 </div>
-              );
-            })()}
-          </div>
+                <span className="text-xs text-indigo-600 font-bold bg-white px-2.5 py-1 rounded-lg border border-indigo-100/50">
+                  {showMobileWelcome ? "▲ Close" : "▼ Stats & Bot"}
+                </span>
+              </button>
+              {showMobileWelcome && (
+                <div className="mt-2 p-4 rounded-xl bg-gradient-to-br from-white to-indigo-50/20 border border-indigo-100/60 shadow-inner animate-fade-in flex flex-col gap-4">
+                  <div>
+                    <p className="text-xs font-bold text-ink">B.Tech CSE V Semester</p>
+                    <p className="text-xs text-muted mt-0.5">{profile?.batch || "G2"} Batch</p>
+                  </div>
+                  {(() => {
+                    const overallPct = stats?.overall.percentage ?? null;
+                    const safeColor = overallPct === null ? "#6D5EF5" : overallPct >= 75 ? "#16A34A" : overallPct >= 65 ? "#F59E0B" : "#E11D48";
+                    return (
+                      <div className="flex items-center justify-between border-t border-line/40 pt-3">
+                        <div>
+                          <div className="text-xs text-muted">Overall Attendance</div>
+                          <div className="text-sm font-mono font-bold mt-0.5" style={{ color: safeColor }}>
+                            {overallPct !== null ? `${overallPct}%` : "—"} ({stats?.overall.present ?? 0}/{stats?.overall.total ?? 0} classes)
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center gap-1 bg-white border border-line/60 rounded-xl p-1 shadow-soft">
+                          {loadingProfile ? (
+                            <span className="text-[10px] text-muted px-2 py-1">Syncing...</span>
+                          ) : profile?.telegram_id ? (
+                            <div className="flex items-center gap-1.5 px-2 py-1">
+                              <span className="text-[10px] text-green-600 font-medium">🤖 connected</span>
+                              <button onClick={handleDisconnectTelegram} className="text-[9px] bg-red-50 hover:bg-red-100 text-red-600 px-1.5 py-0.5 rounded transition-all font-semibold border border-red-200">Unlink</button>
+                            </div>
+                          ) : profile?.telegram_connect_token && profile?.bot_username ? (
+                            <a
+                              href={`https://t.me/${profile.bot_username}?start=${profile.telegram_connect_token}`}
+                              target="_blank" rel="noopener noreferrer"
+                              className="bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] font-bold py-1 px-2.5 rounded-lg transition-colors border border-indigo-700"
+                              style={{ cursor: "none" }}
+                            >
+                              Link Telegram
+                            </a>
+                          ) : (
+                            <span className="text-[10px] text-muted px-2 py-1">Loading...</span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })()}
+                </div>
+              )}
+            </div>
+          </>
         )}
 
         {/* MAIN DASHBOARD GRID */}
@@ -866,42 +973,60 @@ export default function Home() {
           <div className="dashboard-grid">
             {/* LEFT COLUMN: TIMETABLE & SUBJECT GAUGES */}
             <div className="dashboard-main-col" id="attendance-section">
-              {/* TIMETABLE TRACKER */}
-              <div className="card p-5 bg-white border border-line rounded-2xl shadow-soft">
-                <DayEditor onAttendanceChange={refreshData} />
+              {/* Mobile Toggle Button */}
+              <div className="block md:hidden">
+                <button
+                  onClick={() => setShowMobileAttendance(!showMobileAttendance)}
+                  className="w-full text-left p-4 rounded-xl bg-white border border-indigo-100 flex items-center justify-between shadow-soft font-bold text-indigo-650 text-sm animate-fade-in"
+                >
+                  <span className="flex items-center gap-2">
+                    <span>📅</span> Attendance Tracker (Timetable & Heatmap)
+                  </span>
+                  <span className="text-xs bg-indigo-50 px-2.5 py-1 rounded-lg">
+                    {showMobileAttendance ? "▲ Close" : "▼ Open"}
+                  </span>
+                </button>
               </div>
 
-              {/* SUBJECT BREAKDOWN */}
-              <div className="card p-5 bg-white border border-line rounded-2xl shadow-soft">
-                <h3 className="font-bold text-xs text-ink mb-4 uppercase tracking-wider">Subject Attendance breakdown</h3>
-                {stats?.perSubject && stats.perSubject.length > 0 ? (
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "repeat(auto-fill, minmax(78px, 1fr))",
-                      gap: "10px",
-                    }}
-                  >
-                    {stats.perSubject.map((sub) => (
-                      <SubjectGauge key={sub.subject_id} subject={sub} />
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-4 text-muted text-xs font-medium">
-                    No subject attendance logged. Use the timetable scheduler above to log attendance!
-                  </div>
-                )}
-              </div>
-
-              {/* HEATMAP */}
-              <div className="card p-5 bg-white border border-line rounded-2xl shadow-soft flex flex-col justify-between">
-                <h3 className="font-bold text-xs text-ink mb-3 uppercase tracking-wider">📅 Consistency Heatmap</h3>
-                <div className="flex items-center justify-center py-2 overflow-x-auto">
-                  <Heatmap data={heatmap} />
+              {/* Collapsible Content Wrapper */}
+              <div className={`flex-col gap-6 ${showMobileAttendance ? 'flex animate-fade-in' : 'hidden md:flex'}`}>
+                {/* TIMETABLE TRACKER */}
+                <div className="card p-5 bg-white border border-line rounded-2xl shadow-soft">
+                  <DayEditor onAttendanceChange={refreshData} />
                 </div>
-                <p className="text-[9px] text-muted text-center mt-2 leading-relaxed">
-                  Hover over the grid blocks to inspect date details. Brighter green represents higher presence rate.
-                </p>
+
+                {/* SUBJECT BREAKDOWN */}
+                <div className="card p-5 bg-white border border-line rounded-2xl shadow-soft">
+                  <h3 className="font-bold text-xs text-ink mb-4 uppercase tracking-wider">Subject Attendance breakdown</h3>
+                  {stats?.perSubject && stats.perSubject.length > 0 ? (
+                    <div
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: "repeat(auto-fill, minmax(78px, 1fr))",
+                        gap: "10px",
+                      }}
+                    >
+                      {stats.perSubject.map((sub) => (
+                        <SubjectGauge key={sub.subject_id} subject={sub} />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-4 text-muted text-xs font-medium">
+                      No subject attendance logged. Use the timetable scheduler above to log attendance!
+                    </div>
+                  )}
+                </div>
+
+                {/* HEATMAP */}
+                <div className="card p-5 bg-white border border-line rounded-2xl shadow-soft flex flex-col justify-between">
+                  <h3 className="font-bold text-xs text-ink mb-3 uppercase tracking-wider">📅 Consistency Heatmap</h3>
+                  <div className="flex items-center justify-center py-2 overflow-x-auto">
+                    <Heatmap data={heatmap} />
+                  </div>
+                  <p className="text-[9px] text-muted text-center mt-2 leading-relaxed">
+                    Hover over the grid blocks to inspect date details. Brighter green represents higher presence rate.
+                  </p>
+                </div>
               </div>
             </div>
 
@@ -1273,71 +1398,161 @@ export default function Home() {
 
         {/* LOCKED DASHBOARD PREVIEW & SIGN IN (For Logged-Out Users) */}
         {!session && (
-          <div id="login-section" className="locked-preview-container my-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-            {/* Left: Creative Glassmorphic Mockup Dashboard (High visual impact) */}
-            <div className="lg:col-span-7 card relative overflow-hidden bg-gradient-to-br from-[#1e1b4b] to-[#0f172a] border border-white/10 p-6 sm:p-8 rounded-2xl flex flex-col justify-between shadow-soft min-h-[380px] backdrop-blur-md">
-              {/* Background glowing rings */}
-              <div className="absolute top-10 right-10 w-48 h-48 bg-cyan-500/10 rounded-full blur-3xl" />
-              <div className="absolute bottom-5 left-5 w-40 h-40 bg-indigo-500/10 rounded-full blur-3xl" />
-              
-              <div className="relative z-10">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/20 border border-indigo-500/30 text-xs font-bold text-indigo-200 tracking-wide uppercase mb-6">
-                  <span>🔒 Attendance Tracker</span>
-                </div>
+          <div id="login-section">
+            {/* Desktop: side-by-side grid */}
+            <div className="locked-preview-container my-6 hidden lg:grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+              {/* Left: Creative Glassmorphic Mockup Dashboard (High visual impact) */}
+              <div className="lg:col-span-7 card relative overflow-hidden bg-gradient-to-br from-[#1e1b4b] to-[#0f172a] border border-white/10 p-6 sm:p-8 rounded-2xl flex flex-col justify-between shadow-soft min-h-[380px] backdrop-blur-md">
+                {/* Background glowing rings */}
+                <div className="absolute top-10 right-10 w-48 h-48 bg-cyan-500/10 rounded-full blur-3xl" />
+                <div className="absolute bottom-5 left-5 w-40 h-40 bg-indigo-500/10 rounded-full blur-3xl" />
                 
-                <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight mb-4">
-                  Analyze Your Attendance <br className="hidden sm:inline" />&amp; Consistency
-                </h1>
-                <p className="text-sm text-slate-300 max-w-lg leading-relaxed mb-8">
-                  Log in to visualize your weekly class timetable, track real-time attendance statistics, compare with friends on the leaderboard, and maintain your green streak on the heatmap.
-                </p>
+                <div className="relative z-10">
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/20 border border-indigo-500/30 text-xs font-bold text-indigo-200 tracking-wide uppercase mb-6">
+                    <span>🔒 Attendance Tracker</span>
+                  </div>
+                  
+                  <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight mb-4">
+                    Analyze Your Attendance <br className="hidden sm:inline" />&amp; Consistency
+                  </h1>
+                  <p className="text-sm text-slate-300 max-w-lg leading-relaxed mb-8">
+                    Log in to visualize your weekly class timetable, track real-time attendance statistics, compare with friends on the leaderboard, and maintain your green streak on the heatmap.
+                  </p>
 
-                {/* Grid of Mock Visual Items (Visual Wow Factor) */}
-                <div className="grid grid-cols-3 gap-4 opacity-50 select-none pointer-events-none">
-                  {/* Mock Subject Gauge */}
-                  <div className="bg-slate-800/50 border border-slate-700/40 rounded-xl p-4 text-center">
-                    <div className="w-12 h-12 rounded-full border-4 border-cyan-400/30 border-t-cyan-400 mx-auto flex items-center justify-center text-xs text-cyan-300 font-mono font-bold">85%</div>
-                    <div className="text-xs text-white mt-2.5 font-bold truncate">Compiler Design</div>
-                  </div>
-                  {/* Mock Leaderboard Rank */}
-                  <div className="bg-slate-800/50 border border-slate-700/40 rounded-xl p-4 text-center flex flex-col justify-center">
-                    <div className="text-2xl">🏆</div>
-                    <div className="text-xs text-white font-bold mt-2">#1 in Batch</div>
-                  </div>
-                  {/* Mock Heatmap Preview */}
-                  <div className="bg-slate-800/50 border border-slate-700/40 rounded-xl p-4 text-center flex flex-col items-center justify-center">
-                    <div className="grid grid-cols-4 gap-1">
-                      <div className="w-3 h-3 rounded-sm bg-emerald-500" />
-                      <div className="w-3 h-3 rounded-sm bg-emerald-600" />
-                      <div className="w-3 h-3 rounded-sm bg-slate-700" />
-                      <div className="w-3 h-3 rounded-sm bg-emerald-400" />
-                      <div className="w-3 h-3 rounded-sm bg-emerald-700" />
-                      <div className="w-3 h-3 rounded-sm bg-slate-700" />
-                      <div className="w-3 h-3 rounded-sm bg-emerald-500" />
-                      <div className="w-3 h-3 rounded-sm bg-emerald-600" />
+                  {/* Grid of Mock Visual Items (Visual Wow Factor) */}
+                  <div className="grid grid-cols-3 gap-4 opacity-50 select-none pointer-events-none">
+                    {/* Mock Subject Gauge */}
+                    <div className="bg-slate-800/50 border border-slate-700/40 rounded-xl p-4 text-center">
+                      <div className="w-12 h-12 rounded-full border-4 border-cyan-400/30 border-t-cyan-400 mx-auto flex items-center justify-center text-xs text-cyan-300 font-mono font-bold">85%</div>
+                      <div className="text-xs text-white mt-2.5 font-bold truncate">Compiler Design</div>
                     </div>
-                    <div className="text-xs text-white mt-3.5 font-bold">Consistency Grid</div>
+                    {/* Mock Leaderboard Rank */}
+                    <div className="bg-slate-800/50 border border-slate-700/40 rounded-xl p-4 text-center flex flex-col justify-center">
+                      <div className="text-2xl">🏆</div>
+                      <div className="text-xs text-white font-bold mt-2">#1 in Batch</div>
+                    </div>
+                    {/* Mock Heatmap Preview */}
+                    <div className="bg-slate-800/50 border border-slate-700/40 rounded-xl p-4 text-center flex flex-col items-center justify-center">
+                      <div className="grid grid-cols-4 gap-1">
+                        <div className="w-3 h-3 rounded-sm bg-emerald-500" />
+                        <div className="w-3 h-3 rounded-sm bg-emerald-600" />
+                        <div className="w-3 h-3 rounded-sm bg-slate-700" />
+                        <div className="w-3 h-3 rounded-sm bg-emerald-400" />
+                        <div className="w-3 h-3 rounded-sm bg-emerald-700" />
+                        <div className="w-3 h-3 rounded-sm bg-slate-700" />
+                        <div className="w-3 h-3 rounded-sm bg-emerald-500" />
+                        <div className="w-3 h-3 rounded-sm bg-emerald-600" />
+                      </div>
+                      <div className="text-xs text-white mt-3.5 font-bold">Consistency Grid</div>
+                    </div>
                   </div>
+                </div>
+
+                {/* Large locked callout */}
+                <div className="relative z-10 mt-8 pt-4 border-t border-slate-700/50 flex items-center justify-between text-slate-300 text-xs">
+                  <span className="flex items-center gap-2 font-medium">
+                    <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse" />
+                    Live Syncing with Telegram Bot
+                  </span>
+                  <span className="font-mono text-xs bg-slate-800/80 px-2.5 py-1 rounded border border-slate-700">v5.0.0</span>
                 </div>
               </div>
 
-              {/* Large locked callout */}
-              <div className="relative z-10 mt-8 pt-4 border-t border-slate-700/50 flex items-center justify-between text-slate-300 text-xs">
-                <span className="flex items-center gap-2 font-medium">
-                  <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse" />
-                  Live Syncing with Telegram Bot
-                </span>
-                <span className="font-mono text-xs bg-slate-800/80 px-2.5 py-1 rounded border border-slate-700">v5.0.0</span>
+              {/* Right: The Login/Registration Card container */}
+              <div className="lg:col-span-5 flex flex-col justify-center">
+                <div className="relative group p-1 bg-gradient-to-b from-indigo-500/20 to-cyan-500/10 rounded-2xl border border-white/5 shadow-lg">
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-cyan-500 rounded-2xl blur opacity-30 group-hover:opacity-40 transition duration-1000" />
+                  <div className="relative bg-white rounded-[1rem] overflow-hidden p-0.5">
+                    <Login compact={true} />
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Right: The Login/Registration Card container */}
-            <div className="lg:col-span-5 flex flex-col justify-center">
-              <div className="relative group p-1 bg-gradient-to-b from-indigo-500/20 to-cyan-500/10 rounded-2xl border border-white/5 shadow-lg">
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-cyan-500 rounded-2xl blur opacity-30 group-hover:opacity-40 transition duration-1000" />
-                <div className="relative bg-white rounded-[1rem] overflow-hidden p-0.5">
-                  <Login compact={true} />
-                </div>
+            {/* Mobile collapsible UI */}
+            <div className="block lg:hidden my-6 space-y-4">
+              {/* Toggle 1: Sign In & Register */}
+              <div className="w-full">
+                <button
+                  onClick={() => setShowMobileLogin(!showMobileLogin)}
+                  className="w-full text-left p-5 rounded-2xl bg-gradient-to-r from-indigo-650 to-indigo-600 text-white font-bold flex items-center justify-between shadow-md"
+                  style={{ background: "linear-gradient(135deg, #4f46e5 0%, #3730a3 100%)" }}
+                >
+                  <span className="flex items-center gap-2.5">
+                    <span className="text-lg">🔑</span>
+                    <span>Sign In / Register</span>
+                  </span>
+                  <span className="text-xs bg-white/20 px-2.5 py-1 rounded-lg">
+                    {showMobileLogin ? "Close" : "Open"}
+                  </span>
+                </button>
+                {showMobileLogin && (
+                  <div className="mt-3 bg-white rounded-2xl p-1 border border-indigo-100 shadow-lg animate-fade-in">
+                    <Login compact={true} />
+                  </div>
+                )}
+              </div>
+
+              {/* Toggle 2: Attendance Tracker Feature Preview */}
+              <div className="w-full">
+                <button
+                  onClick={() => setShowMobileLockedPreview(!showMobileLockedPreview)}
+                  className="w-full text-left p-5 rounded-2xl bg-gradient-to-br from-[#1e1b4b] to-[#0f172a] border border-white/10 text-white font-bold flex items-center justify-between shadow-soft"
+                >
+                  <span className="flex items-center gap-2.5">
+                    <span className="text-lg">🔒</span>
+                    <span>Attendance Tracker Feature</span>
+                  </span>
+                  <span className="text-xs bg-white/10 px-2.5 py-1 rounded-lg">
+                    {showMobileLockedPreview ? "Close" : "Preview"}
+                  </span>
+                </button>
+                {showMobileLockedPreview && (
+                  <div className="mt-3 card relative overflow-hidden bg-gradient-to-br from-[#1e1b4b] to-[#0f172a] border border-white/10 p-5 rounded-2xl flex flex-col justify-between shadow-soft min-h-[340px] backdrop-blur-md animate-fade-in text-white">
+                    {/* Background glowing rings */}
+                    <div className="absolute top-10 right-10 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl" />
+                    
+                    <div className="relative z-10">
+                      <h2 className="text-xl font-extrabold text-white tracking-tight mb-3">
+                        Analyze Your Attendance &amp; Consistency
+                      </h2>
+                      <p className="text-xs text-slate-300 leading-relaxed mb-6">
+                        Log in to visualize your weekly class timetable, track real-time attendance statistics, compare with friends on the leaderboard, and maintain your green streak on the heatmap.
+                      </p>
+
+                      {/* Grid of Mock Visual Items */}
+                      <div className="grid grid-cols-3 gap-3 opacity-55 select-none pointer-events-none mb-6">
+                        <div className="bg-slate-800/60 border border-slate-700/50 rounded-xl p-3 text-center">
+                          <div className="w-10 h-10 rounded-full border-4 border-cyan-400/30 border-t-cyan-400 mx-auto flex items-center justify-center text-[10px] text-cyan-300 font-mono font-bold">85%</div>
+                          <div className="text-[10px] text-white mt-2 font-bold truncate">Compiler</div>
+                        </div>
+                        <div className="bg-slate-800/60 border border-slate-700/50 rounded-xl p-3 text-center flex flex-col justify-center">
+                          <div className="text-xl">🏆</div>
+                          <div className="text-[10px] text-white font-bold mt-2.5">#1 in Batch</div>
+                        </div>
+                        <div className="bg-slate-800/60 border border-slate-700/50 rounded-xl p-3 text-center flex flex-col items-center justify-center">
+                          <div className="grid grid-cols-4 gap-0.5">
+                            <div className="w-2.5 h-2.5 rounded-sm bg-emerald-500" />
+                            <div className="w-2.5 h-2.5 rounded-sm bg-emerald-600" />
+                            <div className="w-2.5 h-2.5 rounded-sm bg-slate-700" />
+                            <div className="w-2.5 h-2.5 rounded-sm bg-emerald-400" />
+                            <div className="w-2.5 h-2.5 rounded-sm bg-emerald-700" />
+                            <div className="w-2.5 h-2.5 rounded-sm bg-slate-700" />
+                          </div>
+                          <div className="text-[10px] text-white mt-3 font-bold">Heatmap</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="relative z-10 pt-3 border-t border-slate-700/50 flex items-center justify-between text-slate-300 text-[10px]">
+                      <span className="flex items-center gap-1.5 font-medium">
+                        <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+                        Live Syncing with Telegram Bot
+                      </span>
+                      <span className="font-mono bg-slate-800/80 px-2 py-0.5 rounded border border-slate-700">v5.0.0</span>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -1522,7 +1737,6 @@ export default function Home() {
         <AskAIWidget />
         <ShareWidget />
 
-        {/* ── CONTACT ADMIN FLOATING BUTTON & MODAL ── */}
         {/* Registered users → open Telegram bot directly */}
         {session && botUsername && (
           <a
@@ -1530,17 +1744,7 @@ export default function Home() {
             target="_blank"
             rel="noopener noreferrer"
             title="Send a message to the admin via Telegram"
-            style={{
-              position: "fixed", bottom: "90px", right: "20px", zIndex: 9998,
-              display: "flex", alignItems: "center", gap: "8px",
-              padding: "10px 16px",
-              background: "linear-gradient(135deg, #2563eb, #06b6d4)",
-              color: "#fff", borderRadius: "999px", fontWeight: 700, fontSize: "13px",
-              textDecoration: "none", boxShadow: "0 4px 18px rgba(37,99,235,0.35)",
-              transition: "transform 0.18s, box-shadow 0.18s",
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; }}
+            className="contact-admin-fab"
           >
             <span style={{ fontSize: "17px", lineHeight: 1 }}>&#9993;&#65039;</span>
             <span>Contact Admin</span>
@@ -1552,17 +1756,7 @@ export default function Home() {
           <button
             onClick={() => { setShowContactModal(true); setContactResult(null); setContactForm({ name: "", email: "", message: "" }); }}
             title="Contact the administrator"
-            style={{
-              position: "fixed", bottom: "90px", right: "20px", zIndex: 9998,
-              display: "flex", alignItems: "center", gap: "8px",
-              padding: "10px 16px",
-              background: "linear-gradient(135deg, #2563eb, #06b6d4)",
-              color: "#fff", borderRadius: "999px", fontWeight: 700, fontSize: "13px",
-              border: "none", cursor: "pointer", boxShadow: "0 4px 18px rgba(37,99,235,0.35)",
-              transition: "transform 0.18s, box-shadow 0.18s",
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; }}
+            className="contact-admin-fab"
           >
             <span style={{ fontSize: "17px", lineHeight: 1 }}>&#9993;&#65039;</span>
             <span>Contact Admin</span>

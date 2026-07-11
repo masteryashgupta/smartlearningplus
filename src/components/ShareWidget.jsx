@@ -38,7 +38,7 @@ export default function ShareWidget() {
   const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`;
 
   return (
-    <div className="fixed bottom-6 left-6 z-50 font-sans">
+    <div className="fixed bottom-4 left-4 sm:bottom-6 sm:left-6 z-50 font-sans">
       {/* Custom Share Dialog */}
       {isOpen && (
         <div className="absolute bottom-16 left-0 w-72 bg-white border border-slate-200/80 rounded-2xl shadow-lg p-4 animate-fade-in text-slate-800">
@@ -108,10 +108,10 @@ export default function ShareWidget() {
       {/* Floating Share FAB */}
       <button
         onClick={handleShareClick}
-        className="flex items-center gap-2 px-4 py-3 bg-white text-slate-800 rounded-full border border-slate-200/80 hover:border-indigo-500/50 shadow-md transition-all cursor-pointer group"
+        className="flex items-center gap-1.5 sm:gap-2 px-3 py-3 sm:px-4 sm:py-3 bg-white text-slate-800 rounded-full border border-slate-200/80 hover:border-indigo-500/50 shadow-md transition-all cursor-pointer group"
       >
         <span className="text-sm group-hover:rotate-12 transition-transform">📤</span>
-        <span className="text-xs font-bold font-mono tracking-wider uppercase">Share</span>
+        <span className="text-xs font-bold font-mono tracking-wider uppercase hidden sm:inline">Share</span>
       </button>
     </div>
   );
