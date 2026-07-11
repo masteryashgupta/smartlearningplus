@@ -236,9 +236,9 @@
         <p class="sl-msub">RTU V Semester · Practical &amp; Laboratory Work</p>
         <p class="sl-mmeta">Algorithm Design, Complexity Analysis &amp; Implementation</p>
 
-        <div class="sl-stats">
+        <div class="exp-stats">
           <div class="sl-stat">
-            <div class="sl-stat-num">1</div>
+            <div class="sl-stat-num">2</div>
             <div class="sl-stat-label">Programs</div>
           </div>
           <div class="sl-stat">
@@ -256,6 +256,7 @@
         <div class="exp-container">
           <div class="exp-nav">
             <button class="exp-tab-btn active" onclick="switchExperiment('exp1', this)">Experiment 1 (Quick Sort)</button>
+            <button class="exp-tab-btn" onclick="switchExperiment('exp2', this)">Experiment 2 (Merge Sort)</button>
           </div>
 
           <div class="sub-tab-nav">
@@ -306,9 +307,17 @@
     // File Content Vault
     const expData = {
       exp1: {
-        aimFile: 'aim1.c.txt',
-        codeFile: 'exp1.c',
-        outputFile: 'output1.c.txt',
+        aimFile: 'exp1/aim1.c.txt',
+        codeFile: 'exp1/exp1.c',
+        outputFile: 'exp1/output1.c.txt',
+        aim: '',
+        code: '',
+        output: ''
+      },
+      exp2: {
+        aimFile: 'exp2/aim2.txt',
+        codeFile: 'exp2/exp2.c',
+        outputFile: 'exp2/output2.txt',
         aim: '',
         code: '',
         output: ''
