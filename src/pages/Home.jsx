@@ -20,6 +20,7 @@ export default function Home() {
   const [profile, setProfile] = useState(null);
   const [loadingProfile, setLoadingProfile] = useState(false);
   const [selectedUserStats, setSelectedUserStats] = useState(null);
+  const [botUsername, setBotUsername] = useState(null);
   const [subjects, setSubjects] = useState([]);
   const [myUploads, setMyUploads] = useState([]);
 
@@ -181,6 +182,11 @@ export default function Home() {
       refreshData();
       fetchProfile();
     }
+
+    // Fetch Telegram bot username for Contact Admin button
+    api.get("/auth/bot-info")
+      .then((r) => { if (r.data?.botUsername) setBotUsername(r.data.botUsername); })
+      .catch(() => {});
   }, []);
 
   // Poll for telegram connection status
@@ -1510,6 +1516,40 @@ export default function Home() {
         
         <AskAIWidget />
         <ShareWidget />
+
+        {/* ── CONTACT ADMIN FLOATING BUTTON ── */}
+        {botUsername && (
+          <a
+            href={`https://t.me/${botUsername}?start=contact_admin`}
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Send a message to the admin via Telegram"
+            style={{
+              position: "fixed",
+              bottom: "90px",
+              right: "20px",
+              zIndex: 9999,
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              padding: "10px 16px",
+              background: "linear-gradient(135deg, #2563eb, #06b6d4)",
+              color: "#fff",
+              borderRadius: "999px",
+              fontWeight: 700,
+              fontSize: "13px",
+              textDecoration: "none",
+              boxShadow: "0 4px 18px rgba(37,99,235,0.35)",
+              transition: "transform 0.18s, box-shadow 0.18s",
+              backdropFilter: "blur(4px)",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 8px 24px rgba(37,99,235,0.45)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 4px 18px rgba(37,99,235,0.35)"; }}
+          >
+            <span style={{ fontSize: "18px", lineHeight: 1 }}>✉️</span>
+            <span>Contact Admin</span>
+          </a>
+        )}
       </div>
     </div>
   );
