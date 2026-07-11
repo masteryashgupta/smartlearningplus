@@ -12,10 +12,10 @@ async function activeStudents() {
   return rows;
 }
 
-// 8:30 AM daily — "bunking the whole day?" prompt
+// 8:00 AM daily — "bunking the whole day?" prompt
 function scheduleMorningDigest() {
   cron.schedule(
-    "30 8 * * *",
+    "0 8 * * *",
     async () => {
       if (!bot) return;
       const date = dateStr(todayInIST());
@@ -94,5 +94,5 @@ export function startScheduler() {
   }
   scheduleMorningDigest();
   schedulePostClassReminders();
-  console.log("✅ Scheduler running (morning digest 8:30 IST, post-class checks every 10 min)");
+  console.log("✅ Scheduler running (morning digest 8:00 IST, post-class checks every 10 min)");
 }
