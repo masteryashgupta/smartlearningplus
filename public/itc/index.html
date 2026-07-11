@@ -75,7 +75,11 @@
   .sl-stat { background: var(--surface); padding:18px 8px; text-align:center; }
   .sl-stat-num { font-size:22px; font-weight:800; color: var(--mc); letter-spacing:-0.02em; }
   .sl-stat-label { font-size:10.5px; color: var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.4px; margin-top:3px; }
-  @media (max-width:520px){ .sl-stats{ grid-template-columns: repeat(2,1fr);} }
+  @media (max-width:768px){
+    .sl-shell { padding-left: 16px !important; padding-right: 16px !important; }
+    .sl-stats { grid-template-columns: repeat(2,1fr); max-width:100% !important; width:100% !important; margin:0 !important; }
+    .sl-mhero { padding: 28px 0 20px !important; }
+  }
 
   /* ── TIP BANNER ── */
   .sl-tip {

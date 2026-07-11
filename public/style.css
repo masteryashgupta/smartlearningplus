@@ -637,6 +637,14 @@ svg text { fill: var(--text); }
   }
 }
 
+/* Hide Share widget on mobile when AI chat is open */
+@media (max-width: 640px) {
+  body.ai-chat-open .fixed.bottom-4.left-4,
+  body.ai-chat-open .fixed.bottom-6.left-6 {
+    display: none !important;
+  }
+}
+
 /* ── SYLLABUS BLOCK ── */
 .syllabus-block {
   background: var(--surface); border: 1.5px solid var(--border);

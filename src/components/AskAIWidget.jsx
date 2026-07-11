@@ -32,6 +32,20 @@ export default function AskAIWidget() {
   
   const chatEndRef = useRef(null);
 
+  // Hide/show other FABs when chat opens/closes
+  const openChat = () => {
+    setIsOpen(true);
+    document.body.classList.add("ai-chat-open");
+  };
+  const closeChat = () => {
+    setIsOpen(false);
+    document.body.classList.remove("ai-chat-open");
+  };
+
+  useEffect(() => {
+    return () => document.body.classList.remove("ai-chat-open");
+  }, []);
+
   useEffect(() => {
     if (chatEndRef.current) {
       chatEndRef.current.scrollIntoView({ behavior: "smooth" });
@@ -104,7 +118,7 @@ export default function AskAIWidget() {
       {/* Floating Button */}
       {!isOpen && (
         <button
-          onClick={() => setIsOpen(true)}
+          onClick={openChat}
           className="flex items-center gap-1.5 sm:gap-2 px-3 py-3 sm:px-4 sm:py-3 bg-surface text-ink rounded-full border border-line hover:border-primary/50 shadow-soft transition-all cursor-pointer group"
         >
           <span className="text-lg group-hover:scale-110 transition-transform">🤖</span>
@@ -134,7 +148,7 @@ export default function AskAIWidget() {
             {/* Header Actions */}
             <div className="flex items-center gap-2">
               <button
-                onClick={() => setIsOpen(false)}
+                onClick={closeChat}
                 className="text-muted hover:text-ink transition-colors p-1"
                 aria-label="Close"
               >
