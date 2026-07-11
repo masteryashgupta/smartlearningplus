@@ -6,6 +6,7 @@ import Login from "./Login.jsx";
 import SubjectGauge from "../components/SubjectGauge.jsx";
 import Heatmap from "../components/Heatmap.jsx";
 import DayEditor from "../components/DayEditor.jsx";
+import AskAIWidget from "../components/AskAIWidget.jsx";
 
 export default function Home() {
   const session = getSession();
@@ -1505,6 +1506,8 @@ export default function Home() {
             © {new Date().getFullYear()} Smart Learning Plus &nbsp;·&nbsp; V Semester
           </p>
         </footer>
+        
+        <AskAIWidget />
       </div>
     </div>
   );
