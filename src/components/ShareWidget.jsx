@@ -10,8 +10,9 @@ export default function ShareWidget() {
   const fullShareText = `${shareText}\n\n👉 ${shareUrl}`;
 
   const handleShareClick = async () => {
-    // If Web Share API is available (native share on mobile)
-    if (navigator.share) {
+    // If Web Share API is available (only use native share on mobile devices)
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    if (navigator.share && isMobile) {
       try {
         await navigator.share({
           title: shareTitle,
