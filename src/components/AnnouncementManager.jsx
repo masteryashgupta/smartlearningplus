@@ -8,6 +8,8 @@ import { api } from "../api.js";
 export default function AnnouncementManager() {
   const [text, setText] = useState("");
   const [isActive, setIsActive] = useState(true);
+  const [scrollSpeed, setScrollSpeed] = useState(45);
+  const [gap, setGap] = useState(20);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState(null); // { type: "success"|"error", text }
@@ -25,6 +27,8 @@ export default function AnnouncementManager() {
       .then(({ data }) => {
         setText(data.text || "");
         setIsActive(data.isActive !== false);
+        setScrollSpeed(data.scrollSpeed || 45);
+        setGap(data.gap || 20);
         setUpdatedAt(data.updatedAt || null);
         setUpdatedBy(data.updatedBy || null);
       })
@@ -37,7 +41,7 @@ export default function AnnouncementManager() {
     setSaving(true);
     setMessage(null);
     try {
-      await api.put("/announcement", { text: text.trim(), isActive });
+      await api.put("/announcement", { text: text.trim(), isActive, scrollSpeed, gap });
       setMessage({ type: "success", text: "Announcement updated successfully! Changes are live instantly." });
       // Refresh updatedAt
       const { data } = await api.get("/announcement");
@@ -55,7 +59,7 @@ export default function AnnouncementManager() {
     setSaving(true);
     setMessage(null);
     try {
-      await api.put("/announcement", { text: "", isActive: false });
+      await api.put("/announcement", { text: "", isActive: false, scrollSpeed, gap });
       setText("");
       setIsActive(false);
       setMessage({ type: "success", text: "Announcement cleared and bar hidden." });
@@ -73,6 +77,9 @@ export default function AnnouncementManager() {
       hour: "2-digit", minute: "2-digit",
     });
   };
+
+  const spacesPreview = "\u00A0".repeat(gap);
+  const repeatedPreview = text ? `${text}${spacesPreview}·${spacesPreview}${text}${spacesPreview}·${spacesPreview}` : "";
 
   return (
     <div style={{ maxWidth: 680 }}>
@@ -157,7 +164,7 @@ export default function AnnouncementManager() {
           font-weight:500; padding:0 16px; white-space:nowrap;
           text-overflow:ellipsis;
         }
-        .ann-mgr .btn-row { display:flex; gap:10px; flex-wrap:wrap; }
+        .ann-mgr .btn-row { display:flex; gap:10px; flex-wrap:wrap; margin-top:20px; }
         .ann-mgr .btn {
           padding:10px 22px; border-radius:8px; border:none; cursor:pointer;
           font-size:14px; font-weight:600; transition:all .18s; outline:none;
@@ -183,6 +190,17 @@ export default function AnnouncementManager() {
         .ann-mgr .tips-title { font-size:12px; font-weight:700; color:#1d4ed8; margin:0 0 6px; }
         .ann-mgr .tips ul { margin:0; padding-left:18px; }
         .ann-mgr .tips li { font-size:12px; color:#3b82f6; margin-bottom:3px; }
+        .ann-mgr .setting-group {
+          background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:10px;
+          padding:16px; margin: 18px 0;
+        }
+        .ann-mgr .setting-title { font-size:13px; font-weight:700; color:#475569; text-transform:uppercase; margin-bottom:12px; }
+        .ann-mgr .slider-col { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+        .ann-mgr .slider-label { display:flex; justify-content:space-between; font-size:14px; font-weight:600; color:#334155; }
+        .ann-mgr .slider-desc { font-size:11px; color:#64748b; }
+        .ann-mgr input[type="range"] { -webkit-appearance:none; width:100%; height:6px; border-radius:3px; background:#cbd5e1; outline:none; margin: 8px 0; }
+        .ann-mgr input[type="range"]::-webkit-slider-thumb { -webkit-appearance:none; width:16px; height:16px; border-radius:50%; background:#2563eb; cursor:pointer; transition:transform 0.1s; }
+        .ann-mgr input[type="range"]::-webkit-slider-thumb:hover { transform:scale(1.2); }
       `}</style>
 
       <div className="ann-mgr">
@@ -204,7 +222,7 @@ export default function AnnouncementManager() {
                   <div className="preview-badge">
                     <span>📢</span> Live
                   </div>
-                  <div className="preview-text">{text} · {text} · {text}</div>
+                  <div className="preview-text" style={{ whiteSpace: "pre" }}>{repeatedPreview}</div>
                 </div>
               </div>
             )}
@@ -232,6 +250,48 @@ export default function AnnouncementManager() {
               placeholder="Enter the announcement text that will scroll across the top of the site… (max 300 chars)"
               spellCheck
             />
+
+            {/* Marquee Customizer settings */}
+            <div className="setting-group">
+              <div className="setting-title">⚙️ Marquee Style Customizer</div>
+              <div style={{ display: "flex", gap: "24px", flexWrap: "wrap" }}>
+                <div className="slider-col">
+                  <div className="slider-label">
+                    <span>Scroll Duration</span>
+                    <span style={{ color: "#2563eb" }}>{scrollSpeed}s</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="10"
+                    max="120"
+                    value={scrollSpeed}
+                    onChange={(e) => {
+                      setScrollSpeed(parseInt(e.target.value, 10));
+                      setMessage(null);
+                    }}
+                  />
+                  <span className="slider-desc">Lower = Faster (e.g. 15s), Higher = Slower (e.g. 60s).</span>
+                </div>
+
+                <div className="slider-col">
+                  <div className="slider-label">
+                    <span>Repetition Gap</span>
+                    <span style={{ color: "#2563eb" }}>{gap} spaces</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="5"
+                    max="80"
+                    value={gap}
+                    onChange={(e) => {
+                      setGap(parseInt(e.target.value, 10));
+                      setMessage(null);
+                    }}
+                  />
+                  <span className="slider-desc">Space separation between scrolled text repeats.</span>
+                </div>
+              </div>
+            </div>
 
             {/* Active toggle */}
             <div className="toggle-row">

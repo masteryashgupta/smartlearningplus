@@ -45,8 +45,10 @@ export default function AnnouncementBar() {
   }
 
   const text = announcement.text;
-  // Repeat the text several times so the marquee feels continuous on wide screens
-  const repeated = `${text}   ·   ${text}   ·   ${text}   ·   ${text}   ·   `;
+  const scrollSpeed = announcement.scrollSpeed || 45;
+  const gapSize = announcement.gap || 20;
+  const spaces = "\u00A0".repeat(gapSize);
+  const repeated = `${text}${spaces}·${spaces}${text}${spaces}·${spaces}${text}${spaces}·${spaces}${text}${spaces}·${spaces}`;
 
   return (
     <>
@@ -107,7 +109,7 @@ export default function AnnouncementBar() {
           display: flex;
           white-space: nowrap;
           will-change: transform;
-          animation: sl-marquee-scroll 28s linear infinite;
+          animation: sl-marquee-scroll 45s linear infinite;
         }
 
         .sl-ann-bar .sl-ann-inner.paused {
@@ -161,7 +163,10 @@ export default function AnnouncementBar() {
           onTouchStart={() => setPaused(true)}
           onTouchEnd={() => setPaused(false)}
         >
-          <div className={`sl-ann-inner${hovered ? " paused" : ""}`}>
+          <div 
+            className={`sl-ann-inner${hovered ? " paused" : ""}`}
+            style={{ animationDuration: `${scrollSpeed}s` }}
+          >
             <span className="sl-ann-text">{repeated}</span>
             <span className="sl-ann-text" aria-hidden="true">{repeated}</span>
           </div>
