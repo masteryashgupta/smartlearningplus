@@ -483,6 +483,52 @@ router.get("/moderator-logs", requireAuth("admin"), async (req, res) => {
   }
 });
 
+function formatTelegramMessage(name, message) {
+  let frontendBase = process.env.FRONTEND_URL || "https://smartlearningplus.me";
+  if (frontendBase.includes(",")) {
+    const urls = frontendBase.split(",").map((u) => u.trim());
+    const prodUrl = urls.find((u) => !u.includes("localhost"));
+    frontendBase = prodUrl || urls[0];
+  }
+
+  // Escape HTML tags to prevent broken XML formatting errors on Telegram API
+  let escaped = message
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+
+  // Bold **text** -> <b>text</b>
+  escaped = escaped.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+
+  // Italic *text* or _text_ -> <i>text</i>
+  escaped = escaped.replace(/\*(.*?)\*/g, "<i>$1</i>");
+  escaped = escaped.replace(/_(.*?)_/g, "<i>$1</i>");
+
+  // Links [text](url) -> <a href="$2">$1</a>
+  escaped = escaped.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>');
+
+  // Bullet points: lines starting with "- " or "* " -> "• "
+  const lines = escaped.split(/\r?\n/);
+  const formattedLines = lines.map((line) => {
+    const trimmed = line.trim();
+    if (trimmed.startsWith("- ") || trimmed.startsWith("* ")) {
+      return `• ${trimmed.substring(2)}`;
+    }
+    return line;
+  });
+
+  const body = formattedLines.join("\n");
+
+  return `📢 <b>Smart Learning+ Announcement</b>
+
+Hi <b>${name}</b>,
+
+${body}
+
+━━━━━━━━━━━━━━━━━━━━
+🌐 <a href="${frontendBase}">Go to Dashboard</a>`;
+}
+
 // ---- Broadcast Announcement to All Users ----
 router.post("/broadcast", requireAuth("admin"), async (req, res) => {
   const { subject, message, channels, userIds } = req.body;
@@ -492,7 +538,7 @@ router.post("/broadcast", requireAuth("admin"), async (req, res) => {
   }
 
   try {
-    let query = "select name, email, telegram_id from users where is_active = true";
+    let query = "select id, name, email, telegram_id from users where is_active = true";
     let params = [];
     if (userIds && Array.isArray(userIds) && userIds.length > 0) {
       query += " and id = any($1)";
@@ -519,7 +565,8 @@ router.post("/broadcast", requireAuth("admin"), async (req, res) => {
         // Send Telegram
         if (channels.includes("telegram") && user.telegram_id && bot) {
           try {
-            await bot.sendMessage(user.telegram_id, message);
+            const formattedTgMsg = formatTelegramMessage(user.name, message);
+            await bot.sendMessage(user.telegram_id, formattedTgMsg, { parse_mode: "HTML" });
             tgSuccessCount++;
           } catch (err) {
             console.error(`[broadcast] Failed Telegram to ${user.telegram_id}:`, err.message || err);
