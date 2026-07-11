@@ -13,6 +13,7 @@ import attendanceRoutes from "./routes/attendance.js";
 import adminRoutes from "./routes/admin.js";
 import materialsRoutes from "./routes/materials.js";
 import { askRouter } from "./ai-assistant/routes.js";
+import announcementRoutes from "./routes/announcement.js";
 import { registerHandlers } from "./bot/handlers.js";
 import { startScheduler } from "./bot/scheduler.js";
 import { setupWebhook, getBotStatus } from "./bot/bot.js";
@@ -427,6 +428,7 @@ app.use("/api/attendance", attendanceRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/materials", materialsRoutes);
 app.use("/api/ask", askRouter);
+app.use("/api/announcement", announcementRoutes);
 
 async function migrateDatabase() {
   console.log("🔄 Running database migrations...");
@@ -529,6 +531,17 @@ async function migrateDatabase() {
       UPDATE subjects SET name = 'ITC - DR. YZU' WHERE code = 'ITC' AND name != 'ITC - DR. YZU';
       UPDATE subjects SET name = 'OS - AS' WHERE code = 'OS' AND name != 'OS - AS';
     `);
+    // Create announcement singleton table (one row, always updated in-place)
+    await q(`
+      CREATE TABLE IF NOT EXISTS announcement_singleton (
+        id text PRIMARY KEY,
+        text text NOT NULL DEFAULT '',
+        is_active boolean NOT NULL DEFAULT true,
+        updated_at timestamptz DEFAULT now(),
+        updated_by text
+      )
+    `);
+
     console.log("✅ Database migrations completed successfully.");
   } catch (err) {
     console.error("❌ Database migrations failed:", err);
