@@ -78,6 +78,118 @@
   .sl-eyebrow-sm { font-size:12px; font-weight:800; letter-spacing:1.4px; text-transform:uppercase; color: var(--mc); margin-bottom:8px; }
   .sl-section-title { font-size:26px; font-weight:800; color: var(--text); letter-spacing:-0.02em; margin-bottom:26px; }
 
+  /* ── EXPERIMENTS TABS VIEW ── */
+  .exp-container {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 30px;
+    animation: sl-pop .7s cubic-bezier(.2,.8,.2,1) both;
+    animation-delay: .2s;
+  }
+
+  .exp-nav {
+    display: flex;
+    gap: 10px;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+    overflow-x: auto;
+  }
+
+  .exp-tab-btn {
+    padding: 8px 16px;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--muted);
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .exp-tab-btn:hover {
+    color: var(--mc);
+    background: var(--mc-light);
+  }
+
+  .exp-tab-btn.active {
+    color: #fff;
+    background: var(--mc);
+  }
+
+  .sub-tab-nav {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .sub-tab-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .sub-tab-btn:hover {
+    border-color: var(--mc);
+    color: var(--mc);
+  }
+
+  .sub-tab-btn.active {
+    background: var(--mc-light);
+    border-color: var(--mc);
+    color: var(--mc);
+  }
+
+  .exp-content {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    min-height: 150px;
+  }
+
+  .exp-aim-text {
+    font-size: 14px;
+    color: var(--text2);
+    line-height: 1.6;
+  }
+
+  .code-block {
+    background: #0f172a !important;
+    color: #f8fafc !important;
+    padding: 16px;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.5;
+    overflow-x: auto;
+    white-space: pre;
+    margin: 0;
+  }
+
+  .output-block {
+    background: #1e293b;
+    color: #38bdf8;
+    padding: 16px;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.5;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    margin: 0;
+  }
+
   /* ── RESOURCE CARDS ── */
   .sl-res-grid { display:grid; grid-template-columns: repeat(2,1fr); gap:16px; }
   @media (max-width:620px){ .sl-res-grid{ grid-template-columns:1fr; } }
@@ -126,15 +238,50 @@
 
         <div class="sl-stats">
           <div class="sl-stat">
-            <div class="sl-stat-num">—</div>
+            <div class="sl-stat-num">1</div>
             <div class="sl-stat-label">Programs</div>
           </div>
           <div class="sl-stat">
-            <div class="sl-stat-num">—</div>
-            <div class="sl-stat-label">Resources</div>
+            <div class="sl-stat-num">Ready</div>
+            <div class="sl-stat-label">Status</div>
           </div>
         </div>
       </div>
+
+      <!-- EXPERIMENTS TABS MODULE -->
+      <section class="sl-section">
+        <div class="sl-eyebrow-sm">Interactive Lab Manual</div>
+        <h2 class="sl-section-title">Lab Experiments &amp; Tasks</h2>
+
+        <div class="exp-container">
+          <div class="exp-nav">
+            <button class="exp-tab-btn active" onclick="switchExperiment('exp1', this)">Experiment 1 (Quick Sort)</button>
+          </div>
+
+          <div class="sub-tab-nav">
+            <button class="sub-tab-btn active" id="btn-aim" onclick="switchSubTab('aim')">Aim</button>
+            <button class="sub-tab-btn" id="btn-code" onclick="switchSubTab('code')">Code</button>
+            <button class="sub-tab-btn" id="btn-output" onclick="switchSubTab('output')">Output</button>
+          </div>
+
+          <div class="exp-content">
+            <!-- AIM TAB -->
+            <div id="content-aim" class="tab-pane">
+              <p class="exp-aim-text" id="aim-text">Loading Aim...</p>
+            </div>
+            
+            <!-- CODE TAB -->
+            <div id="content-code" class="tab-pane" style="display:none;">
+              <pre class="code-block" id="code-text">Loading Code...</pre>
+            </div>
+
+            <!-- OUTPUT TAB -->
+            <div id="content-output" class="tab-pane" style="display:none;">
+              <pre class="output-block" id="output-text">Loading Output...</pre>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <section class="sl-section">
         <div class="sl-eyebrow-sm">Laboratory Resources</div>
@@ -152,6 +299,68 @@
   </div>
 
   <script>
+    // Tab switching state
+    let activeExperiment = 'exp1';
+    let activeSubTab = 'aim';
+
+    // File Content Vault
+    const expData = {
+      exp1: {
+        aimFile: 'aim1.c.txt',
+        codeFile: 'exp1.c',
+        outputFile: 'output1.c.txt',
+        aim: '',
+        code: '',
+        output: ''
+      }
+    };
+
+    // Load file contents from same folder
+    async function loadExpFiles() {
+      for (let key in expData) {
+        try {
+          const aimRes = await fetch(expData[key].aimFile);
+          expData[key].aim = await aimRes.text();
+          
+          const codeRes = await fetch(expData[key].codeFile);
+          expData[key].code = await codeRes.text();
+
+          const outputRes = await fetch(expData[key].outputFile);
+          expData[key].output = await outputRes.text();
+        } catch (err) {
+          console.error("Error fetching experiment files:", err);
+        }
+      }
+      renderActiveTab();
+    }
+
+    function switchExperiment(expId, btn) {
+      document.querySelectorAll('.exp-tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeExperiment = expId;
+      renderActiveTab();
+    }
+
+    function switchSubTab(subTabId) {
+      document.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(`btn-${subTabId}`).classList.add('active');
+      
+      document.querySelectorAll('.tab-pane').forEach(p => p.style.display = 'none');
+      document.getElementById(`content-${subTabId}`).style.display = 'block';
+      activeSubTab = subTabId;
+    }
+
+    function renderActiveTab() {
+      const data = expData[activeExperiment];
+      document.getElementById('aim-text').textContent = data.aim || 'Aim text not loaded.';
+      document.getElementById('code-text').textContent = data.code || 'Code text not loaded.';
+      document.getElementById('output-text').textContent = data.output || 'Output text not loaded.';
+    }
+
+    // Initialize loader
+    loadExpFiles();
+
+    // Scroll animation observer
     const io = new IntersectionObserver((entries) => {
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('sl-in'); });
     }, { threshold: 0.12 });
