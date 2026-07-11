@@ -8,6 +8,19 @@ import { getBotStatus } from "../bot/bot.js";
 
 const router = Router();
 
+async function logModeratorActivity(req, action, details) {
+  if (req.auth && req.auth.role === "student") {
+    try {
+      await q(
+        "insert into moderator_logs (moderator_id, moderator_name, action, details) values ($1, $2, $3, $4)",
+        [req.auth.id, req.auth.name || "Moderator", action, details]
+      );
+    } catch (err) {
+      console.error("Failed to log moderator activity:", err);
+    }
+  }
+}
+
 // ---- Holidays ----
 // slot_id = null -> whole day off for everyone
 router.get("/holidays", requireAuth("admin"), async (req, res) => {
@@ -105,6 +118,9 @@ router.post("/whitelist", requireAuth("moderator"), async (req, res) => {
       "insert into whitelisted_emails (email) values ($1) on conflict (email) do nothing returning *",
       [email]
     );
+    if (rows.length > 0) {
+      await logModeratorActivity(req, "whitelist_add", `Added "${email}" to the whitelist`);
+    }
     res.json({ ok: true, email: email });
   } catch (err) {
     console.error("Add to whitelist error:", err);
@@ -114,7 +130,10 @@ router.post("/whitelist", requireAuth("moderator"), async (req, res) => {
 
 router.delete("/whitelist/:id", requireAuth("moderator"), async (req, res) => {
   try {
-    await q("delete from whitelisted_emails where id = $1", [req.params.id]);
+    const { rows } = await q("delete from whitelisted_emails where id = $1 returning email", [req.params.id]);
+    if (rows.length > 0) {
+      await logModeratorActivity(req, "whitelist_remove", `Removed "${rows[0].email}" from the whitelist`);
+    }
     res.json({ ok: true });
   } catch (err) {
     console.error("Delete whitelist error:", err);
@@ -213,6 +232,7 @@ router.post("/materials/:id/approve", requireAuth("moderator"), async (req, res)
     if (rows.length === 0) {
       return res.status(404).json({ error: "Material not found" });
     }
+    await logModeratorActivity(req, "approve_material", `Approved material "${rows[0].title}"`);
     res.json({ ok: true, message: "Material approved successfully", material: rows[0] });
   } catch (err) {
     console.error("[materials-approve] Error:", err);
@@ -237,6 +257,7 @@ router.post("/materials/:id/reject", requireAuth("moderator"), async (req, res) 
     if (rows.length === 0) {
       return res.status(404).json({ error: "Material not found" });
     }
+    await logModeratorActivity(req, "reject_material", `Rejected material "${rows[0].title}". Reason: "${reason.trim()}"`);
     res.json({ ok: true, message: "Material rejected successfully", material: rows[0] });
   } catch (err) {
     console.error("[materials-reject] Error:", err);
@@ -271,6 +292,8 @@ router.post("/materials/:id/toggle-hidden", requireAuth("moderator"), async (req
       [req.params.id]
     );
     if (rows.length === 0) return res.status(404).json({ error: "Material not found" });
+    const verb = rows[0].is_hidden ? "Hid" : "Unhid";
+    await logModeratorActivity(req, "toggle_hidden_material", `${verb} material "${rows[0].title}"`);
     res.json({ ok: true, is_hidden: rows[0].is_hidden });
   } catch (err) {
     console.error("[materials-toggle-hidden] Error:", err);
@@ -281,11 +304,12 @@ router.post("/materials/:id/toggle-hidden", requireAuth("moderator"), async (req
 // Permanently delete a material (any status)
 router.delete("/materials/:id", requireAuth("moderator"), async (req, res) => {
   try {
-    const { rowCount } = await q(
-      `delete from community_materials where id = $1`,
+    const { rows } = await q(
+      `delete from community_materials where id = $1 returning title`,
       [req.params.id]
     );
-    if (rowCount === 0) return res.status(404).json({ error: "Material not found" });
+    if (rows.length === 0) return res.status(404).json({ error: "Material not found" });
+    await logModeratorActivity(req, "delete_material", `Deleted material "${rows[0].title}"`);
     res.json({ ok: true });
   } catch (err) {
     console.error("[materials-delete] Error:", err);
@@ -342,6 +366,22 @@ router.get("/health", requireAuth("admin"), async (req, res) => {
   }
 
   res.json(health);
+});
+
+// ---- Moderator Logs ----
+router.get("/moderator-logs", requireAuth("admin"), async (req, res) => {
+  try {
+    const { rows } = await q(
+      `select ml.*, u.email as moderator_email
+       from moderator_logs ml
+       left join users u on u.id = ml.moderator_id
+       order by ml.created_at desc`
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error("Fetch moderator logs error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 export default router;

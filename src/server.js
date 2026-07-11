@@ -475,6 +475,18 @@ async function migrateDatabase() {
       drop constraint if exists community_materials_reviewed_by_fkey
     `);
 
+    // Create moderator logs table to record moderator activities
+    await q(`
+      create table if not exists moderator_logs (
+        id uuid primary key default gen_random_uuid(),
+        moderator_id uuid references users(id) on delete set null,
+        moderator_name text not null,
+        action text not null,
+        details text,
+        created_at timestamptz default now()
+      )
+    `);
+
     // Update subject names to match timetable formatting (code - lecturer)
     await q(`
       UPDATE subjects SET name = 'HCI - PT' WHERE code = 'HCI' AND name != 'HCI - PT';
