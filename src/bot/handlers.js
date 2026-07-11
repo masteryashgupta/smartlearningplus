@@ -2,6 +2,20 @@ import { bot } from "./bot.js";
 import { q } from "../db.js";
 import { getUserDayView, dateStr, todayInIST, computeStats } from "../lib/timetable.js";
 import crypto from "crypto";
+import { askRAG, isRateLimited } from "../ai-assistant/rag-service.js";
+
+async function sendLongMessage(chatId, text, options = {}) {
+  const limit = 4000;
+  if (text.length <= limit) {
+    return bot.sendMessage(chatId, text, options);
+  }
+  let offset = 0;
+  while (offset < text.length) {
+    const chunk = text.slice(offset, offset + limit);
+    await bot.sendMessage(chatId, chunk, options);
+    offset += limit;
+  }
+}
 
 // tiny in-memory state machine for the /start registration flow
 const pendingRegistration = new Map(); // telegram_id -> { step, name }
@@ -221,6 +235,80 @@ export function registerHandlers() {
     await bot.sendMessage(msg.chat.id, `Your personal dashboard (link expires when you request a new one):\n${link}`);
   });
 
+  bot.onText(/^\/ask\s+(.+)/, async (msg, match) => {
+    const chatId = msg.chat.id;
+    const question = match[1].trim();
+
+    const user = await getUser(chatId);
+    if (!user) return bot.sendMessage(chatId, "Please /start first to register.");
+
+    const rateLimitKey = `tg-${chatId}`;
+    if (isRateLimited(rateLimitKey)) {
+      return bot.sendMessage(chatId, "Rate limit reached. Max 20 questions per hour.");
+    }
+
+    const typingMsg = await bot.sendMessage(chatId, "Thinking... 🤖");
+    try {
+      const result = await askRAG(question);
+      let formattedText = result.answer;
+      formattedText = formattedText.replace(/^### (.*$)/gim, "*$1*");
+      formattedText = formattedText.replace(/^## (.*$)/gim, "*$1*");
+      formattedText = formattedText.replace(/^# (.*$)/gim, "*$1*");
+
+      if (result.sources && result.sources.length > 0) {
+        formattedText += "\n\n*Sources:*";
+        for (const s of result.sources) {
+          formattedText += `\n• ${s.subject_code} · ${s.topic} (${s.source_type === 'pyq' ? `NK PYQ ${s.year}` : 'Syllabus'})`;
+        }
+      }
+      formattedText += `\n\n_Answered by ${result.served_by.toUpperCase()}_`;
+
+      await bot.deleteMessage(chatId, typingMsg.message_id);
+      await sendLongMessage(chatId, formattedText, { parse_mode: "Markdown" });
+    } catch (err) {
+      console.error(err);
+      if (typingMsg) await bot.deleteMessage(chatId, typingMsg.message_id);
+      await bot.sendMessage(chatId, "Sorry, I ran into an error. Please try again.");
+    }
+  });
+
+  bot.onText(/^\/pyq\s+(.+)/, async (msg, match) => {
+    const chatId = msg.chat.id;
+    const subjectRaw = match[1].trim().toUpperCase();
+
+    const user = await getUser(chatId);
+    if (!user) return bot.sendMessage(chatId, "Please /start first to register.");
+
+    const rateLimitKey = `tg-${chatId}`;
+    if (isRateLimited(rateLimitKey)) {
+      return bot.sendMessage(chatId, "Rate limit reached. Max 20 questions per hour.");
+    }
+
+    let subjectCode = subjectRaw;
+    if (subjectRaw === "AOA" || subjectRaw === "ALGORITHMS") subjectCode = "AOA";
+    if (subjectRaw === "CD" || subjectRaw === "COMPILER") subjectCode = "CD";
+    if (subjectRaw === "CG" || subjectRaw === "CGM" || subjectRaw === "GRAPHICS") subjectCode = "CGM";
+    if (subjectRaw === "ITC" || subjectRaw === "INFORMATION") subjectCode = "ITC";
+    if (subjectRaw === "OS" || subjectRaw === "OPERATING") subjectCode = "OS";
+
+    const question = `What are the most repeated PYQ topics for ${subjectCode}?`;
+    const typingMsg = await bot.sendMessage(chatId, "Analyzing exam patterns... 📊");
+    try {
+      const result = await askRAG(question, subjectCode, "pyq-pattern");
+      let formattedText = result.answer;
+      formattedText = formattedText.replace(/^### (.*$)/gim, "*$1*");
+      formattedText = formattedText.replace(/^## (.*$)/gim, "*$1*");
+      formattedText = formattedText.replace(/^# (.*$)/gim, "*$1*");
+
+      await bot.deleteMessage(chatId, typingMsg.message_id);
+      await sendLongMessage(chatId, formattedText, { parse_mode: "Markdown" });
+    } catch (err) {
+      console.error(err);
+      if (typingMsg) await bot.deleteMessage(chatId, typingMsg.message_id);
+      await bot.sendMessage(chatId, "Failed to analyze PYQ patterns. Please try again.");
+    }
+  });
+
   // Fallback: any other text
   bot.on("message", async (msg) => {
     const chatId = msg.chat.id;
@@ -241,15 +329,40 @@ export function registerHandlers() {
       return; // waiting on batch button
     }
 
-    // not registered and typed something random
+    // Registered user typing free text — route to AI Study Assistant!
     const user = await getUser(chatId);
     if (!user) {
       return bot.sendMessage(chatId, "Hey! Send /start to register first.");
     }
 
-    // Registered user typing free text — show the guide + quick menu
-    await bot.sendMessage(chatId, "I respond best to buttons and commands. Here's what I can do:", mainKeyboard());
-    await bot.sendMessage(chatId, HELP_TEXT, { parse_mode: "Markdown" });
+    const rateLimitKey = `tg-${chatId}`;
+    if (isRateLimited(rateLimitKey)) {
+      return bot.sendMessage(chatId, "Rate limit reached. Max 20 questions per hour.");
+    }
+
+    const typingMsg = await bot.sendMessage(chatId, "Thinking... 🤖");
+    try {
+      const result = await askRAG(text);
+      let formattedText = result.answer;
+      formattedText = formattedText.replace(/^### (.*$)/gim, "*$1*");
+      formattedText = formattedText.replace(/^## (.*$)/gim, "*$1*");
+      formattedText = formattedText.replace(/^# (.*$)/gim, "*$1*");
+
+      if (result.sources && result.sources.length > 0) {
+        formattedText += "\n\n*Sources:*";
+        for (const s of result.sources) {
+          formattedText += `\n• ${s.subject_code} · ${s.topic} (${s.source_type === 'pyq' ? `NK PYQ ${s.year}` : 'Syllabus'})`;
+        }
+      }
+      formattedText += `\n\n_Answered by ${result.served_by.toUpperCase()}_`;
+
+      await bot.deleteMessage(chatId, typingMsg.message_id);
+      await sendLongMessage(chatId, formattedText, { parse_mode: "Markdown" });
+    } catch (err) {
+      console.error("Bot AI error:", err);
+      if (typingMsg) await bot.deleteMessage(chatId, typingMsg.message_id);
+      await bot.sendMessage(chatId, "Sorry, I ran into an error. Please try again in a moment.");
+    }
   });
 
   bot.on("callback_query", async (query) => {

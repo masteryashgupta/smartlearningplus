@@ -12,6 +12,7 @@ import timetableRoutes from "./routes/timetable.js";
 import attendanceRoutes from "./routes/attendance.js";
 import adminRoutes from "./routes/admin.js";
 import materialsRoutes from "./routes/materials.js";
+import { askRouter } from "./ai-assistant/routes.js";
 import { registerHandlers } from "./bot/handlers.js";
 import { startScheduler } from "./bot/scheduler.js";
 import { setupWebhook, getBotStatus } from "./bot/bot.js";
@@ -424,6 +425,7 @@ app.use("/api/timetable", timetableRoutes);
 app.use("/api/attendance", attendanceRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/materials", materialsRoutes);
+app.use("/api/ask", askRouter);
 
 async function migrateDatabase() {
   console.log("🔄 Running database migrations...");
@@ -486,6 +488,36 @@ async function migrateDatabase() {
         created_at timestamptz default now()
       )
     `);
+
+    // Ensure pgvector extension is enabled
+    try {
+      await q("create extension if not exists vector");
+    } catch (e) {
+      console.warn("⚠️ Could not create vector extension (might already exist or permission issue):", e.message);
+    }
+
+    // Ensure study_chunks table exists
+    await q(`
+      create table if not exists study_chunks (
+        id uuid primary key default gen_random_uuid(),
+        subject text,
+        subject_code text,
+        topic text,
+        source_type text,
+        year text,
+        content text,
+        embedding vector(768),
+        content_hash text unique,
+        created_at timestamptz default now()
+      )
+    `);
+
+    // Create index on study_chunks (use try/catch since index might already exist and CREATE INDEX IF NOT EXISTS is supported in PG 9.5+)
+    try {
+      await q("create index if not exists study_chunks_embedding_idx on study_chunks using ivfflat (embedding vector_cosine_ops)");
+    } catch (e) {
+      console.warn("⚠️ Could not create vector index:", e.message);
+    }
 
     // Update subject names to match timetable formatting (code - lecturer)
     await q(`
