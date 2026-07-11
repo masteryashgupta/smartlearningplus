@@ -8,6 +8,23 @@ import { sendResetEmail, sendVerificationEmail } from "../lib/mailer.js";
 
 const router = Router();
 
+// ---- Public: Bot info for frontend "Contact Admin" button ----
+// Returns the bot's username so frontend can build t.me deep links.
+let _cachedBotUsername = null;
+router.get("/bot-info", async (req, res) => {
+  if (!bot) return res.json({ botUsername: null });
+  try {
+    if (!_cachedBotUsername) {
+      const me = await bot.getMe();
+      _cachedBotUsername = me.username;
+    }
+    res.json({ botUsername: _cachedBotUsername });
+  } catch (err) {
+    console.error("[bot-info] Failed to get bot info:", err.message || err);
+    res.json({ botUsername: null });
+  }
+});
+
 // ---- Admin login (website only) ----
 router.post("/admin/login", async (req, res) => {
   const { email, password } = req.body;

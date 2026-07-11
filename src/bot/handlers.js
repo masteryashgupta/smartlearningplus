@@ -20,6 +20,10 @@ async function sendLongMessage(chatId, text, options = {}) {
 // tiny in-memory state machine for the /start registration flow
 const pendingRegistration = new Map(); // telegram_id -> { step, name }
 
+// State machine for contact-admin flow (for unregistered users)
+// Map: telegram_id -> { step: "awaiting_message", senderName }
+const pendingContactAdmin = new Map();
+
 const HELP_TEXT = `*Attendance Bot — Guide*
 
 I track your daily attendance for every class & lab in your timetable.
@@ -34,14 +38,36 @@ I track your daily attendance for every class & lab in your timetable.
 /status – your attendance % per subject
 /week – this week's attendance summary
 /dashboard – get your personal web dashboard link
+/contact – send a message to the admin
 /help – show this guide again
 
 Just tap the buttons on my messages — no typing needed for marking attendance 🙂`;
 
+const UNREGISTERED_TEXT = `👋 *Welcome to Smart Learning+!*
+
+This bot is primarily for registered students of Smart Learning+ to track their attendance.
+
+*To use full features:*
+1️⃣ Register on the website first
+2️⃣ Connect your Telegram from your dashboard
+
+🌐 *Website:* https://smartlearningplus.me
+
+*Don't have access?* You can still send a message to the admin using /contact`;
+
 function mainKeyboard() {
   return {
     reply_markup: {
-      keyboard: [["/today", "/status"], ["/week", "/dashboard"], ["/help"]],
+      keyboard: [["/today", "/status"], ["/week", "/dashboard"], ["/contact", "/help"]],
+      resize_keyboard: true,
+    },
+  };
+}
+
+function unregisteredKeyboard() {
+  return {
+    reply_markup: {
+      keyboard: [["/contact"], ["/help"]],
       resize_keyboard: true,
     },
   };
@@ -153,9 +179,33 @@ async function sendWeek(chatId, user) {
   await bot.sendMessage(chatId, msg, { parse_mode: "Markdown" });
 }
 
+/**
+ * Forward a contact message from an unregistered/any user to the admin Telegram ID.
+ */
+async function forwardToAdmin(chatId, fromUser, text) {
+  const envAdminId = process.env.ADMIN_TELEGRAM_ID?.trim();
+  if (!envAdminId || !bot) return false;
+
+  const displayName = fromUser.first_name
+    ? `${fromUser.first_name}${fromUser.last_name ? " " + fromUser.last_name : ""}`
+    : "Unknown";
+  const username = fromUser.username ? `@${fromUser.username}` : "No username";
+
+  const adminMsg = `📬 <b>New Message via Website Contact Button</b>\n\n<b>From:</b> ${displayName}\n<b>Username:</b> ${username}\n<b>Telegram ID:</b> <code>${chatId}</code>\n\n<b>Message:</b>\n${text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}`;
+
+  try {
+    await bot.sendMessage(envAdminId, adminMsg, { parse_mode: "HTML" });
+    return true;
+  } catch (err) {
+    console.error("[contact-admin] Failed to forward message to admin:", err.message || err);
+    return false;
+  }
+}
+
 export function registerHandlers() {
   if (!bot) return;
 
+  // ── /start ──────────────────────────────────────────────────────────
   bot.onText(/^\/start/, async (msg) => {
     const chatId = msg.chat.id;
     const text = (msg.text || "").trim();
@@ -163,6 +213,23 @@ export function registerHandlers() {
 
     if (parts.length > 1) {
       const connectToken = parts[1];
+      // Special deep link for "contact admin" from website
+      if (connectToken === "contact_admin") {
+        pendingContactAdmin.set(chatId, { step: "awaiting_message", senderName: msg.from.first_name || "Visitor" });
+        await bot.sendMessage(
+          chatId,
+          `👋 Hi ${msg.from.first_name || "there"}!\n\nType your message below and I'll forward it to the admin. Please include your name and query clearly.`,
+          {
+            reply_markup: {
+              keyboard: [["❌ Cancel"]],
+              resize_keyboard: true,
+              one_time_keyboard: true,
+            },
+          }
+        );
+        return;
+      }
+
       try {
         const { rows } = await q("select * from users where telegram_connect_token = $1", [connectToken]);
         const user = rows[0];
@@ -180,14 +247,14 @@ export function registerHandlers() {
 
           await bot.sendMessage(
             chatId,
-            `Successfully connected! Welcome, ${user.name} (Batch ${user.batch}).\n\nI will now notify you here and track your attendance.`,
-            mainKeyboard()
+            `✅ *Successfully connected!* Welcome, ${user.name} (Batch ${user.batch}).\n\nYou now have full access to attendance tracking and smart alerts.`,
+            { parse_mode: "Markdown", ...mainKeyboard() }
           );
           return;
         } else {
           await bot.sendMessage(
             chatId,
-            "This connection link is invalid or has already been used. Please get a new one from your website dashboard."
+            "⚠️ This connection link is invalid or has already been used. Please get a new one from your website dashboard."
           );
           return;
         }
@@ -202,45 +269,84 @@ export function registerHandlers() {
     if (existing) {
       return bot.sendMessage(chatId, `Welcome back, ${existing.name}! 👋`, mainKeyboard());
     }
+
+    await bot.sendMessage(chatId, UNREGISTERED_TEXT, { parse_mode: "Markdown", ...unregisteredKeyboard() });
+  });
+
+  // ── /help ────────────────────────────────────────────────────────────
+  bot.onText(/^\/help/, async (msg) => {
+    const user = await getUser(msg.chat.id);
+    if (!user) {
+      return bot.sendMessage(msg.chat.id, UNREGISTERED_TEXT, { parse_mode: "Markdown", ...unregisteredKeyboard() });
+    }
+    bot.sendMessage(msg.chat.id, HELP_TEXT, { parse_mode: "Markdown", ...mainKeyboard() });
+  });
+
+  // ── /contact ─────────────────────────────────────────────────────────
+  bot.onText(/^\/contact/, async (msg) => {
+    const chatId = msg.chat.id;
+    pendingContactAdmin.set(chatId, { step: "awaiting_message", senderName: msg.from.first_name || "User" });
     await bot.sendMessage(
       chatId,
-      "Welcome! To track your attendance, please register on our website first:\nhttps://smartlearningplus.me\n\nOnce registered, you can link your Telegram account directly from your dashboard! 🤖"
+      `📬 *Send a message to Admin*\n\nType your message below (include your name and query). I'll forward it directly.\n\nType /cancel to abort.`,
+      {
+        parse_mode: "Markdown",
+        reply_markup: {
+          keyboard: [["❌ Cancel"]],
+          resize_keyboard: true,
+          one_time_keyboard: true,
+        },
+      }
     );
   });
 
-  bot.onText(/^\/help/, (msg) => bot.sendMessage(msg.chat.id, HELP_TEXT, { parse_mode: "Markdown", ...mainKeyboard() }));
+  // ── /cancel ──────────────────────────────────────────────────────────
+  bot.onText(/^\/cancel/, async (msg) => {
+    const chatId = msg.chat.id;
+    const inContact = pendingContactAdmin.has(chatId);
+    pendingContactAdmin.delete(chatId);
+    pendingRegistration.delete(chatId);
+    const user = await getUser(chatId);
+    const keyboard = user ? mainKeyboard() : unregisteredKeyboard();
+    bot.sendMessage(chatId, inContact ? "Message cancelled." : "Nothing to cancel.", keyboard);
+  });
 
+  // ── /today ────────────────────────────────────────────────────────────
   bot.onText(/^\/today/, async (msg) => {
     const user = await getUser(msg.chat.id);
-    if (!user) return bot.sendMessage(msg.chat.id, "Please /start first to register.");
+    if (!user) return bot.sendMessage(msg.chat.id, UNREGISTERED_TEXT, { parse_mode: "Markdown", ...unregisteredKeyboard() });
     await sendTodayList(msg.chat.id, user);
   });
 
+  // ── /status ───────────────────────────────────────────────────────────
   bot.onText(/^\/status/, async (msg) => {
     const user = await getUser(msg.chat.id);
-    if (!user) return bot.sendMessage(msg.chat.id, "Please /start first to register.");
+    if (!user) return bot.sendMessage(msg.chat.id, UNREGISTERED_TEXT, { parse_mode: "Markdown", ...unregisteredKeyboard() });
     await sendStatus(msg.chat.id, user);
   });
 
+  // ── /week ─────────────────────────────────────────────────────────────
   bot.onText(/^\/week/, async (msg) => {
     const user = await getUser(msg.chat.id);
-    if (!user) return bot.sendMessage(msg.chat.id, "Please /start first to register.");
+    if (!user) return bot.sendMessage(msg.chat.id, UNREGISTERED_TEXT, { parse_mode: "Markdown", ...unregisteredKeyboard() });
     await sendWeek(msg.chat.id, user);
   });
 
+  // ── /dashboard ────────────────────────────────────────────────────────
   bot.onText(/^\/dashboard/, async (msg) => {
     const user = await getUser(msg.chat.id);
-    if (!user) return bot.sendMessage(msg.chat.id, "Please /start first to register.");
+    if (!user) return bot.sendMessage(msg.chat.id, UNREGISTERED_TEXT, { parse_mode: "Markdown", ...unregisteredKeyboard() });
     const link = await issueDashboardLink(user.id);
-    await bot.sendMessage(msg.chat.id, `Your personal dashboard (link expires when you request a new one):\n${link}`);
+    await bot.sendMessage(msg.chat.id, `🔗 Your personal dashboard link:\n${link}\n\n_(Link expires when you request a new one)_`, { parse_mode: "Markdown" });
   });
 
+  // ── /ask ──────────────────────────────────────────────────────────────
   bot.onText(/^\/ask\s+(.+)/, async (msg, match) => {
     const chatId = msg.chat.id;
     const question = match[1].trim();
 
     const user = await getUser(chatId);
-    if (!user) return bot.sendMessage(chatId, "Please /start first to register.");
+    if (!user) return bot.sendMessage(chatId, UNREGISTERED_TEXT, { parse_mode: "Markdown", ...unregisteredKeyboard() });
 
     const rateLimitKey = `tg-${chatId}`;
     if (isRateLimited(rateLimitKey)) {
@@ -272,12 +378,13 @@ export function registerHandlers() {
     }
   });
 
+  // ── /pyq ──────────────────────────────────────────────────────────────
   bot.onText(/^\/pyq\s+(.+)/, async (msg, match) => {
     const chatId = msg.chat.id;
     const subjectRaw = match[1].trim().toUpperCase();
 
     const user = await getUser(chatId);
-    if (!user) return bot.sendMessage(chatId, "Please /start first to register.");
+    if (!user) return bot.sendMessage(chatId, UNREGISTERED_TEXT, { parse_mode: "Markdown", ...unregisteredKeyboard() });
 
     const rateLimitKey = `tg-${chatId}`;
     if (isRateLimited(rateLimitKey)) {
@@ -309,13 +416,43 @@ export function registerHandlers() {
     }
   });
 
-  // Fallback: any other text
+  // ── Fallback: any other text ──────────────────────────────────────────
   bot.on("message", async (msg) => {
     const chatId = msg.chat.id;
     const text = (msg.text || "").trim();
     if (text.startsWith("/")) return; // handled above
 
-    // registration flow
+    // ── Contact Admin flow (highest priority) ─────────────────────────
+    const contactState = pendingContactAdmin.get(chatId);
+    if (contactState && contactState.step === "awaiting_message") {
+      if (text === "❌ Cancel") {
+        pendingContactAdmin.delete(chatId);
+        const user = await getUser(chatId);
+        return bot.sendMessage(chatId, "Message cancelled.", user ? mainKeyboard() : unregisteredKeyboard());
+      }
+
+      pendingContactAdmin.delete(chatId);
+      const sent = await forwardToAdmin(chatId, msg.from, text);
+      const user = await getUser(chatId);
+      const keyboard = user ? mainKeyboard() : unregisteredKeyboard();
+
+      if (sent) {
+        await bot.sendMessage(
+          chatId,
+          `✅ *Your message has been sent to the admin!*\n\nThey will get back to you as soon as possible.`,
+          { parse_mode: "Markdown", ...keyboard }
+        );
+      } else {
+        await bot.sendMessage(
+          chatId,
+          "⚠️ Couldn't forward your message right now. Please try again later.",
+          keyboard
+        );
+      }
+      return;
+    }
+
+    // ── Registration flow ─────────────────────────────────────────────
     const reg = pendingRegistration.get(chatId);
     if (reg) {
       if (reg.step === "name") {
@@ -329,10 +466,14 @@ export function registerHandlers() {
       return; // waiting on batch button
     }
 
-    // Registered user typing free text — route to AI Study Assistant!
+    // ── Registered user: route to AI Study Assistant ──────────────────
     const user = await getUser(chatId);
     if (!user) {
-      return bot.sendMessage(chatId, "Hey! Send /start to register first.");
+      return bot.sendMessage(
+        chatId,
+        UNREGISTERED_TEXT,
+        { parse_mode: "Markdown", ...unregisteredKeyboard() }
+      );
     }
 
     const rateLimitKey = `tg-${chatId}`;
@@ -365,6 +506,7 @@ export function registerHandlers() {
     }
   });
 
+  // ── Callback queries ──────────────────────────────────────────────────
   bot.on("callback_query", async (query) => {
     const chatId = query.message.chat.id;
     const data = query.data;
