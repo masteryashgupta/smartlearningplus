@@ -15,8 +15,7 @@ export default function ShareWidget() {
       try {
         await navigator.share({
           title: shareTitle,
-          text: shareText,
-          url: shareUrl,
+          text: fullShareText,
         });
         return;
       } catch (err) {
