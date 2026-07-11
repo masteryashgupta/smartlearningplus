@@ -92,6 +92,8 @@ export default function AskAIWidget() {
     // Bullet lists
     html = html.replace(/^\*\s+(.*$)/gim, "<li>$1</li>");
     html = html.replace(/(<li>.*<\/li>)/gs, "<ul class='list-disc pl-4 space-y-1 my-2'>$1</ul>");
+    // Links
+    html = html.replace(/\[(.*?)\]\((.*?)\)/g, "<a href='$2' class='text-primary hover:underline' target='_blank' rel='noopener noreferrer'>$1</a>");
     // Line breaks
     html = html.replace(/\n/g, "<br/>");
     return html;
@@ -103,7 +105,7 @@ export default function AskAIWidget() {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="flex items-center gap-2 px-4 py-3 bg-slate-900 text-white rounded-full border border-indigo-500/40 hover:border-indigo-500/90 shadow-[0_0_15px_rgba(99,102,241,0.2)] hover:shadow-[0_0_20px_rgba(99,102,241,0.4)] transition-all cursor-pointer group"
+          className="flex items-center gap-2 px-4 py-3 bg-surface text-ink rounded-full border border-line hover:border-primary/50 shadow-soft transition-all cursor-pointer group"
         >
           <span className="text-lg group-hover:scale-110 transition-transform">🤖</span>
           <span className="text-xs font-bold font-mono tracking-wider uppercase">Ask AI</span>
@@ -113,12 +115,12 @@ export default function AskAIWidget() {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="w-[360px] sm:w-[420px] h-[550px] max-h-[85vh] bg-slate-950 border border-indigo-500/30 rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-fade-in text-slate-100">
+        <div className="w-[360px] sm:w-[420px] h-[550px] max-h-[85vh] bg-surface border border-line rounded-2xl shadow-soft flex flex-col overflow-hidden animate-fade-in text-ink">
           
           {/* Header */}
-          <div className="p-4 bg-slate-900 border-b border-indigo-500/20 flex items-center justify-between shrink-0">
+          <div className="p-4 bg-paper border-b border-line flex items-center justify-between shrink-0">
             <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-indigo-500 animate-pulse"></span>
+              <span className="w-2.5 h-2.5 rounded-full bg-primary animate-pulse"></span>
               <h3 className="font-bold font-mono text-sm tracking-tight">SmartAI Assistant</h3>
             </div>
             
@@ -127,7 +129,7 @@ export default function AskAIWidget() {
               <select
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
-                className="bg-slate-950 border border-slate-800 text-[10px] text-slate-300 rounded-lg px-2 py-1 focus:outline-none focus:border-indigo-500/50"
+                className="bg-surface border border-line text-[10px] text-ink rounded-lg px-2 py-1 focus:outline-none focus:border-primary/50"
               >
                 {SUBJECT_MAP.map((s) => (
                   <option key={s.code} value={s.code}>{s.name}</option>
@@ -136,7 +138,7 @@ export default function AskAIWidget() {
 
               <button
                 onClick={() => setIsOpen(false)}
-                className="text-slate-400 hover:text-white transition-colors p-1"
+                className="text-muted hover:text-ink transition-colors p-1"
                 aria-label="Close"
               >
                 ✕
@@ -145,19 +147,19 @@ export default function AskAIWidget() {
           </div>
 
           {/* Messages Area */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-950">
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-paper">
             {messages.map((msg, idx) => (
               <div
                 key={idx}
                 className={`flex flex-col ${msg.sender === "user" ? "items-end" : "items-start"}`}
               >
                 <div
-                  className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-xs ${
+                  className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-xs shadow-sm ${
                     msg.sender === "user"
-                      ? "bg-indigo-600 text-white rounded-br-none"
+                      ? "bg-primary text-white rounded-br-none"
                       : msg.isError
-                      ? "bg-rose-950/40 border border-rose-900 text-rose-200 rounded-bl-none"
-                      : "bg-slate-900 text-slate-200 border border-slate-800 rounded-bl-none"
+                      ? "bg-red-50 border border-red-200 text-red-700 rounded-bl-none"
+                      : "bg-surface text-ink border border-line rounded-bl-none"
                   }`}
                 >
                   <div
@@ -167,11 +169,11 @@ export default function AskAIWidget() {
                   
                   {/* Sources chips */}
                   {msg.sources && msg.sources.length > 0 && (
-                    <div className="mt-3 pt-2 border-t border-slate-800/80 flex flex-wrap gap-1.5">
+                    <div className="mt-3 pt-2 border-t border-line flex flex-wrap gap-1.5">
                       {msg.sources.map((s, sIdx) => (
                         <span
                           key={sIdx}
-                          className="px-1.5 py-0.5 rounded bg-slate-950 border border-slate-800 text-[9px] text-indigo-300 font-medium"
+                          className="px-1.5 py-0.5 rounded bg-paper border border-line text-[9px] text-primary font-medium"
                         >
                           {s.subject_code} · {s.topic} ({s.source_type === "pyq" ? `PYQ ${s.year}` : "Syllabus"})
                         </span>
@@ -182,7 +184,7 @@ export default function AskAIWidget() {
 
                 {/* Served by badge */}
                 {msg.servedBy && (
-                  <span className="text-[9px] text-slate-500 font-mono mt-1 px-1">
+                  <span className="text-[9px] text-muted font-mono mt-1 px-1">
                     Served by {msg.servedBy.toUpperCase()}
                   </span>
                 )}
@@ -191,10 +193,10 @@ export default function AskAIWidget() {
 
             {loading && (
               <div className="flex flex-col items-start">
-                <div className="bg-slate-900 border border-slate-800 rounded-2xl rounded-bl-none px-4 py-3 flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-bounce" style={{ animationDelay: "0ms" }}></span>
-                  <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-bounce" style={{ animationDelay: "150ms" }}></span>
-                  <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-bounce" style={{ animationDelay: "300ms" }}></span>
+                <div className="bg-surface border border-line rounded-2xl rounded-bl-none px-4 py-3 flex items-center gap-1.5 shadow-sm">
+                  <span className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: "0ms" }}></span>
+                  <span className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: "150ms" }}></span>
+                  <span className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: "300ms" }}></span>
                 </div>
               </div>
             )}
@@ -204,12 +206,12 @@ export default function AskAIWidget() {
 
           {/* Quick Suggestions (Render if last message is from AI and we are not loading) */}
           {!loading && messages[messages.length - 1]?.sender === "ai" && (
-            <div className="px-4 py-2 bg-slate-950/90 border-t border-slate-900 flex gap-2 overflow-x-auto shrink-0" style={{ scrollbarWidth: "none" }}>
+            <div className="px-4 py-2 bg-paper border-t border-line flex gap-2 overflow-x-auto shrink-0" style={{ scrollbarWidth: "none" }}>
               {SUGGESTIONS.map((s, idx) => (
                 <button
                   key={idx}
                   onClick={() => handleSend(s)}
-                  className="px-2.5 py-1 rounded-full border border-slate-800 text-[10px] text-slate-400 hover:text-indigo-400 hover:border-indigo-500/30 whitespace-nowrap transition-all cursor-pointer bg-slate-900/40"
+                  className="px-2.5 py-1 rounded-full border border-line text-[10px] text-muted hover:text-primary hover:border-primary/30 whitespace-nowrap transition-all cursor-pointer bg-surface shadow-sm"
                 >
                   {s}
                 </button>
@@ -223,7 +225,7 @@ export default function AskAIWidget() {
               e.preventDefault();
               handleSend();
             }}
-            className="p-3 bg-slate-900 border-t border-indigo-500/10 flex gap-2 shrink-0"
+            className="p-3 bg-surface border-t border-line flex gap-2 shrink-0"
           >
             <input
               type="text"
@@ -231,12 +233,12 @@ export default function AskAIWidget() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               disabled={loading}
-              className="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500/50"
+              className="flex-1 bg-paper border border-line rounded-xl px-3 py-2 text-xs text-ink placeholder-muted focus:outline-none focus:border-primary/50"
             />
             <button
               type="submit"
               disabled={loading || !input.trim()}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl px-3.5 py-2 text-xs font-bold transition-all disabled:opacity-50 cursor-pointer"
+              className="bg-primary hover:bg-primary-dark text-white rounded-xl px-3.5 py-2 text-xs font-bold transition-all disabled:opacity-50 cursor-pointer"
             >
               Send
             </button>
