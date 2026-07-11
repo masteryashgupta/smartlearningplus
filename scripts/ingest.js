@@ -1,7 +1,9 @@
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
-import pdfParse from "pdf-parse";
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const pdfParse = require("pdf-parse");
 import dotenv from "dotenv";
 import { q } from "../src/db.js";
 import { getEmbedding, callAI } from "../src/ai-assistant/ai.js";
