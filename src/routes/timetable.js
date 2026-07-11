@@ -2,6 +2,7 @@ import { Router } from "express";
 import { q } from "../db.js";
 import { requireAuth } from "../auth.js";
 import { getSlotsForDay } from "../lib/timetable.js";
+import { logModeratorActivity } from "./admin.js";
 
 const router = Router();
 
@@ -36,6 +37,7 @@ router.post("/subjects", requireAuth("admin"), async (req, res) => {
     `insert into subjects (code, name, type, color) values ($1,$2,$3,$4) returning *`,
     [code || null, name, type || "theory", color || "#6D5EF5"]
   );
+  await logModeratorActivity(req, "subject_add", `Added subject ${name}`);
   res.json(rows[0]);
 });
 
@@ -45,11 +47,13 @@ router.put("/subjects/:id", requireAuth("admin"), async (req, res) => {
     `update subjects set code=$1, name=$2, type=$3, color=$4 where id=$5 returning *`,
     [code, name, type, color, req.params.id]
   );
+  await logModeratorActivity(req, "subject_edit", `Edited subject ${name}`);
   res.json(rows[0]);
 });
 
 router.delete("/subjects/:id", requireAuth("admin"), async (req, res) => {
   await q("delete from subjects where id = $1", [req.params.id]);
+  await logModeratorActivity(req, "subject_delete", `Deleted subject ${req.params.id}`);
   res.json({ ok: true });
 });
 
@@ -61,6 +65,7 @@ router.post("/slots", requireAuth("admin"), async (req, res) => {
      values ($1,$2,$3,$4,$5,$6,$7) returning *`,
     [day_of_week, slot_number, start_time, end_time, subject_id, batch || "ALL", label || null]
   );
+  await logModeratorActivity(req, "slot_add", `Added slot ${slot_number} on day ${day_of_week}`);
   res.json(rows[0]);
 });
 
@@ -71,11 +76,13 @@ router.put("/slots/:id", requireAuth("admin"), async (req, res) => {
        subject_id=$5, batch=$6, label=$7, is_active=$8 where id=$9 returning *`,
     [day_of_week, slot_number, start_time, end_time, subject_id, batch, label, is_active ?? true, req.params.id]
   );
+  await logModeratorActivity(req, "slot_edit", `Edited slot ${req.params.id}`);
   res.json(rows[0]);
 });
 
 router.delete("/slots/:id", requireAuth("admin"), async (req, res) => {
   await q("delete from timetable_slots where id = $1", [req.params.id]);
+  await logModeratorActivity(req, "slot_delete", `Deleted slot ${req.params.id}`);
   res.json({ ok: true });
 });
 

@@ -4,22 +4,38 @@ import { q } from "../db.js";
 import { requireAuth } from "../auth.js";
 import { computeStats } from "../lib/timetable.js";
 import { signUrls, checkB2Health } from "../lib/b2.js";
-import { getBotStatus } from "../bot/bot.js";
+import { getBotStatus, bot } from "../bot/bot.js";
 import crypto from "crypto";
 import { sendVerificationEmail } from "../lib/mailer.js";
 
 const router = Router();
 
-async function logModeratorActivity(req, action, details) {
+export async function logModeratorActivity(req, action, details) {
+  const actorName = req.auth ? (req.auth.name || (req.auth.role === "admin" ? "Admin" : "Moderator")) : "System";
+  
+  // Log to database only if it's a student moderator
   if (req.auth && req.auth.role === "student") {
     try {
       await q(
         "insert into moderator_logs (moderator_id, moderator_name, action, details) values ($1, $2, $3, $4)",
-        [req.auth.id, req.auth.name || "Moderator", action, details]
+        [req.auth.id, actorName, action, details]
       );
     } catch (err) {
       console.error("Failed to log moderator activity:", err);
     }
+  }
+
+  // Always notify via Telegram
+  try {
+    const envAdminId = process.env.ADMIN_TELEGRAM_ID;
+    if (envAdminId && bot) {
+      const msg = `🛡️ *Platform Activity*\n\n*By:* ${actorName}\n*Action:* ${action}\n*Details:* ${details}`;
+      bot.sendMessage(envAdminId, msg, { parse_mode: "Markdown" }).catch(err => {
+        console.error("Failed to send log to telegram:", err);
+      });
+    }
+  } catch (err) {
+    console.error("Telegram notification error:", err);
   }
 }
 
@@ -43,11 +59,13 @@ router.post("/holidays", requireAuth("admin"), async (req, res) => {
      on conflict (date, slot_id) do update set reason = $3 returning *`,
     [date, slot_id || null, reason || null, req.auth.id]
   );
+  await logModeratorActivity(req, "holiday_add", `Added/updated holiday on ${date}`);
   res.json(rows[0]);
 });
 
 router.delete("/holidays/:id", requireAuth("admin"), async (req, res) => {
   await q("delete from holidays where id = $1", [req.params.id]);
+  await logModeratorActivity(req, "holiday_remove", `Deleted holiday ${req.params.id}`);
   res.json({ ok: true });
 });
 
@@ -78,11 +96,13 @@ router.put("/users/:id", requireAuth("admin"), async (req, res) => {
        is_moderator = coalesce($5,is_moderator) where id = $6 returning *`,
     [name, batch, section, is_active, is_moderator, req.params.id]
   );
+  await logModeratorActivity(req, "user_edit", `Edited user profile: ${rows[0]?.email || req.params.id}`);
   res.json(rows[0]);
 });
 
 router.delete("/users/:id", requireAuth("admin"), async (req, res) => {
   await q("delete from users where id = $1", [req.params.id]);
+  await logModeratorActivity(req, "user_delete", `Deleted user ${req.params.id}`);
   res.json({ ok: true });
 });
 
