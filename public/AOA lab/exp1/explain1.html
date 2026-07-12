@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AOA Lab // Experiment 1 - Theory</title>
+<link rel="stylesheet" href="../style.css">
+<style>
+  :root {
+    --mc: #0284c7;
+    --mc-light: rgba(2, 132, 199, 0.08);
+  }
+
+  body { overflow-x: hidden; }
+  .sl-mod { position: relative; min-height: 100vh; }
+
+  .sl-mesh { position: fixed; inset: 0; z-index: -1; overflow: hidden; background: var(--bg); }
+  .sl-mesh span { position: absolute; border-radius: 50%; filter: blur(60px); opacity: .28; animation: sl-float 20s ease-in-out infinite; }
+  .sl-mesh span:nth-child(1) { width: 380px; height: 380px; background: var(--mc); top: -120px; left: -80px; animation-delay: 0s; }
+  .sl-mesh span:nth-child(2) { width: 300px; height: 300px; background: var(--accent2); top: 40%; right: -100px; animation-delay: -7s; }
+  .sl-mesh span:nth-child(3) { width: 260px; height: 260px; background: var(--mc); bottom: -100px; left: 25%; animation-delay: -13s; opacity:.18; }
+  @keyframes sl-float {
+    0%, 100% { transform: translate(0,0) scale(1); }
+    33% { transform: translate(35px,-25px) scale(1.07); }
+    66% { transform: translate(-25px,20px) scale(0.95); }
+  }
+  .sl-grid-overlay {
+    position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background-image: linear-gradient(rgba(2,132,199,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(2,132,199,0.03) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, black 35%, transparent 90%);
+  }
+
+  .sl-shell { max-width: 900px; margin: 0 auto; padding: 0 24px 60px; }
+
+  /* ── TOPBAR ── */
+  .sl-topbar {
+    position: sticky; top:0; z-index:50; background: rgba(245,247,255,0.85); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border); padding: 14px 0; margin-bottom: 8px;
+  }
+  .sl-topbar-inner { display:flex; align-items:center; gap:16px; flex-wrap:wrap; max-width:900px; margin:0 auto; padding:0 24px; }
+  .sl-back {
+    display:inline-flex; align-items:center; gap:6px; font-size:13.5px; font-weight:700; color: var(--mc);
+    background: var(--mc-light); border:1.5px solid var(--mc-light); padding:8px 14px; border-radius:10px; text-decoration:none; transition:.2s;
+  }
+  .sl-back:hover { background: var(--mc); color:#fff; border-color: var(--mc); }
+  .sl-topbar-brand { font-weight:800; font-size:15px; color: var(--text); display:flex; align-items:center; gap:6px; }
+  .sl-topbar-brand .sub { color: var(--muted); font-weight:500; font-size:13px; }
+
+  /* ── CONTAINER ── */
+  .exp-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: var(--shadow-sm);
+    margin-top: 40px;
+  }
+
+  .exp-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .exp-meta {
+    font-size: 12.5px;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 16px;
+  }
+
+  .section-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px;
+    color: var(--mc); font-weight: 700; margin: 32px 0 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .out-scenario {
+    background: #0f172a; border-radius: 10px; padding: 18px 20px;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #38bdf8;
+    line-height: 1.7; margin: 14px 0; white-space: pre-wrap; overflow-x: auto;
+  }
+  .out-scenario .comment { color: #64748b; }
+</style>
+</head>
+<body>
+  <div class="sl-mod">
+    <div class="sl-mesh">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <div class="sl-grid-overlay"></div>
+
+    <header class="sl-topbar">
+      <div class="sl-topbar-inner">
+        <a href="index.html" class="sl-back">⬅ Back to Lab</a>
+        <div class="sl-topbar-brand">
+          Smart<span>Learning</span>+
+          <span class="sub">// Experiment 1 - Theory</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="sl-shell">
+      <div class="exp-card">
+        <h1 class="exp-title">Experiment 1: Quick Sort Method</h1>
+        <div class="exp-meta">THEORY & EXPLANATION · English + Hinglish</div>
+
+        <!-- ═══ DEFINITION ═══ -->
+        <div class="section-label">Definition</div>
+
+        <div class="card def">
+          <span class="tag">English</span>
+          <p>Quick Sort is a <strong>divide-and-conquer</strong> sorting algorithm. It selects an element from the array called the <strong>pivot</strong>, and rearranges (partitions) the array so that all elements smaller than the pivot come before it, and all elements greater come after it. The same process is then applied recursively to the two resulting sub-arrays until the whole array is sorted.</p>
+        </div>
+
+        <div class="hin">
+          <span class="tag">Hinglish</span>
+          <p>Quick Sort ek <strong>divide-and-conquer</strong> wala sorting algorithm hai. Isme array mein se ek element ko <strong>pivot</strong> bana lete hain, aur baaki sab elements ko is tarah rearrange karte hain ki pivot se chhote elements uske left mein aa jaayein aur bade elements right mein. Fir yehi process left aur right dono parts pe dobara (recursively) chalate hain, jab tak pura array sorted na ho jaaye.</p>
+        </div>
+
+        <!-- ═══ HOW IT WORKS ═══ -->
+        <div class="section-label">How It Works (Algorithm Steps)</div>
+
+        <div class="steps">
+          <ol>
+            <li><strong>Choose a pivot</strong> — in this program, the last element of the array/sub-array is picked as the pivot.</li>
+            <li><strong>Partition</strong> — go through the array and move every element smaller than the pivot to its left side, and every element larger to its right side. After this step, the pivot lands exactly at its correct sorted position.</li>
+            <li><strong>Recurse on the left part</strong> — apply the same Quick Sort process to all elements before the pivot.</li>
+            <li><strong>Recurse on the right part</strong> — apply the same Quick Sort process to all elements after the pivot.</li>
+            <li><strong>Base case</strong> — a sub-array with 0 or 1 element is already sorted, so recursion stops there.</li>
+          </ol>
+        </div>
+
+        <div class="hin">
+          <span class="tag">Hinglish</span>
+          <p>Sabse pehle last element ko pivot bana lete hain. Fir <code>partition()</code> function chalta hai jo array ko is tarah todta hai ki pivot se chhote number left mein aur bade number right mein chale jaayein — is process ke baad pivot apni final sorted position pe pahunch jaata hai. Uske baad wahi function left wale part pe aur right wale part pe alag-alag call hota hai (recursion), jab tak har chhota sa part sirf 1 ya 0 element ka na reh jaaye — wahi base case hai jahan recursion ruk jaata hai.</p>
+        </div>
+
+        <!-- ═══ EXAMPLE ═══ -->
+        <div class="section-label">Example Walkthrough</div>
+
+        <div class="card example">
+          <span class="tag">Example</span>
+          <p>Let's sort <code>[10, 7, 8, 9, 1, 5]</code> using Quick Sort:</p>
+        </div>
+
+        <div class="formula">
+          <span class="label">Step-by-step trace (pivot = last element)</span>
+Initial array:        [10, 7, 8, 9, 1, 5]   pivot = 5
+
+Partition around 5:   [1] 5 [10, 7, 8, 9]   → 5 is now at its correct position (index 1)
+
+Left sub-array [1]:    already sorted (1 element)
+
+Right sub-array [10, 7, 8, 9]  pivot = 9
+Partition around 9:   [10, 7, 8] 9 []       → 9 is now at its correct position
+
+Sub-array [10, 7, 8]  pivot = 8
+Partition around 8:   [7] 8 [10]            → 8 fixed
+
+Final merged result:  [1, 5, 7, 8, 9, 10]
+        </div>
+
+        <div class="hin">
+          <span class="tag">Hinglish</span>
+          <p>Dekh kaise chal raha hai: <code>5</code> ko pivot banaya, usse chhote number (<code>1</code>) uske left mein chala gaya aur bade number (<code>10, 7, 8, 9</code>) right mein — ab <code>5</code> apni sahi jagah pe fix ho gaya. Ab yehi kaam left part <code>[1]</code> pe (jo already sorted hai, kuch karne ki zarurat nahi) aur right part <code>[10, 7, 8, 9]</code> pe alag se hota hai. Ye process tab tak chalta rehta hai jab tak har part 1 element ka na reh jaaye — end mein sab jagah pivot fix hote hote pura array sorted ban jaata hai: <code>[1, 5, 7, 8, 9, 10]</code>.</p>
+        </div>
+
+        <!-- ═══ COMPLEXITY ═══ -->
+        <div class="section-label">Time Complexity</div>
+
+        <table>
+          <tr><th>Case</th><th>Complexity</th><th>When it happens</th></tr>
+          <tr><td class="hi">Best Case</td><td>O(n log n)</td><td>Pivot always splits array into two roughly equal halves</td></tr>
+          <tr><td class="hi">Average Case</td><td>O(n log n)</td><td>Random/typical input data (like random numbers used in this program)</td></tr>
+          <tr><td class="warn2">Worst Case</td><td>O(n²)</td><td>Pivot is always the smallest or largest element (e.g. already sorted array with last-element pivot)</td></tr>
+        </table>
+
+        <div class="hin">
+          <span class="tag">Hinglish</span>
+          <p>Normal (random data) case mein Quick Sort <code>O(n log n)</code> time leta hai, jo kaafi fast hai. Lekin worst case mein (jaise agar array pehle se hi sorted ho aur pivot hamesha last element ho), ye <code>O(n²)</code> tak slow ho sakta hai kyunki partition har baar sirf ek element ko alag karta hai. Isi wajah se practical implementations mein random pivot ya median-of-three jaisi techniques use ki jaati hain worst case avoid karne ke liye.</p>
+        </div>
+
+        <!-- ═══ OUTPUT SCENARIO ═══ -->
+        <div class="section-label">Output Scenario (What the Program Actually Does)</div>
+
+        <div class="card def">
+          <span class="tag">English</span>
+          <p>When you run <code>exp1.c</code>, the program first asks you how many elements to sort. It then uses <code>rand()</code> (seeded with the current time via <code>srand(time(NULL))</code>) to generate that many random numbers between 0 and 999, and prints them as the <strong>Unsorted Array</strong>. It then starts a timer using <code>clock()</code>, runs the <code>quickSort()</code> function on the array, stops the timer, and prints the same array — now rearranged in ascending order — as the <strong>Sorted Array</strong>. Finally, it prints the <strong>Execution Time</strong>, which is the CPU time taken purely by the sorting step (not including input/output), calculated as <code>(end - start) / CLOCKS_PER_SEC</code>.</p>
+        </div>
+
+        <div class="out-scenario">Enter number of elements: 15
+
+Unsorted Array:
+97 544 715 958 721 93 838 413 874 468 113 442 547 368 955
+
+Sorted Array:
+93 97 113 368 413 442 468 544 547 715 721 838 874 955 958
+
+Execution Time = 0.000005 seconds
+<span class="comment">// Actual verified output from running exp1.c — numbers will differ
+// on each run since they are randomly generated via srand(time(NULL))</span></div>
+
+        <div class="hin">
+          <span class="tag">Hinglish</span>
+          <p>Program chalate hi sabse pehle pucha jaata hai kitne elements sort karne hain. Fir random numbers generate hote hain (0 se 999 ke beech) aur unhe <strong>Unsorted Array</strong> ke naam se print kar diya jaata hai. Uske baad <code>clock()</code> se ek timer start hota hai, <code>quickSort()</code> function chalta hai jo array ko sort kar deta hai, timer stop hota hai, aur wahi array ab sorted form mein <strong>Sorted Array</strong> ke naam se print hota hai. Last mein <strong>Execution Time</strong> print hota hai — ye bas sorting mein lagne wala actual CPU time hai (input/output ka time isme count nahi hota), seconds mein. Numbers har run pe alag-alag aayenge kyunki random hain, lekin logic aur output ka format hamesha same rahega.</p>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</body>
+</html>

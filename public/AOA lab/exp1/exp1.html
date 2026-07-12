@@ -222,6 +222,7 @@
           <button class="sub-tab-btn active" id="btn-aim" onclick="switchSubTab('aim')">Aim</button>
           <button class="sub-tab-btn" id="btn-code" onclick="switchSubTab('code')">Code</button>
           <button class="sub-tab-btn" id="btn-output" onclick="switchSubTab('output')">Output</button>
+          <button class="sub-tab-btn" id="btn-explanation" onclick="switchSubTab('explanation')">💡 Explanation</button>
         </div>
 
         <div class="exp-content">
@@ -241,6 +242,18 @@
           <!-- OUTPUT TAB -->
           <div id="content-output" class="tab-pane" style="display:none;">
             <pre class="output-block" id="output-text">Loading Output...</pre>
+          </div>
+
+          <!-- EXPLANATION TAB -->
+          <div id="content-explanation" class="tab-pane" style="display:none;">
+            <iframe
+              id="explain-frame"
+              src="explain1.html"
+              frameborder="0"
+              scrolling="no"
+              style="width:100%; min-height:500px; border:none; border-radius:8px; display:block;"
+              onload="resizeExplainFrame(this)"
+            ></iframe>
           </div>
         </div>
       </div>
@@ -299,6 +312,30 @@
         }, 2000);
       } catch (err) {
         console.error("Copy failed:", err);
+      }
+    }
+
+    function resizeExplainFrame(frame) {
+      try {
+        const doc = frame.contentDocument || frame.contentWindow.document;
+        // Hide the topbar inside iframe since we already have one
+        const topbar = doc.querySelector('.sl-topbar');
+        if (topbar) topbar.style.display = 'none';
+        // Remove outer background/padding
+        const mod = doc.querySelector('.sl-mod');
+        if (mod) { mod.style.minHeight = 'unset'; }
+        const mesh = doc.querySelector('.sl-mesh');
+        if (mesh) mesh.style.display = 'none';
+        const grid = doc.querySelector('.sl-grid-overlay');
+        if (grid) grid.style.display = 'none';
+        const shell = doc.querySelector('.sl-shell');
+        if (shell) shell.style.padding = '0 0 20px';
+        const expCard = doc.querySelector('.exp-card');
+        if (expCard) { expCard.style.marginTop = '0'; expCard.style.boxShadow = 'none'; expCard.style.border = 'none'; expCard.style.padding = '0'; }
+        // Auto-resize iframe height
+        frame.style.minHeight = (doc.body.scrollHeight + 20) + 'px';
+      } catch(e) {
+        // cross-origin guard — should not happen since same origin
       }
     }
 
