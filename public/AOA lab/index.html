@@ -348,14 +348,7 @@
 
             <!-- EXPLANATION TAB (exp1 only) -->
             <div id="content-explanation" class="tab-pane" style="display:none;">
-              <iframe
-                id="explain-frame"
-                src=""
-                frameborder="0"
-                scrolling="no"
-                style="width:100%; min-height:520px; border:none; border-radius:8px; display:block;"
-                onload="resizeExplainFrame(this)"
-              ></iframe>
+              <pre class="output-block" id="explanation-text">Loading Explanation...</pre>
             </div>
           </div>
         </div>
@@ -389,9 +382,11 @@
         aimFile: 'exp1/aim1.c.txt',
         codeFile: 'exp1/exp1.c',
         outputFile: 'exp1/output1.c.txt',
+        explainFile: 'exp1/explain1.txt',
         aim: '',
         code: '',
-        output: ''
+        output: '',
+        explanation: ''
       },
       exp2: {
         aimFile: 'exp2/aim2.txt',
@@ -514,6 +509,12 @@
 
         const outputRes = await fetch(data.outputFile);
         data.output = await outputRes.text();
+
+        // Load explanation file if this experiment has one
+        if (data.explainFile && !data.explanation) {
+          const explainRes = await fetch(data.explainFile);
+          data.explanation = await explainRes.text();
+        }
       } catch (err) {
         console.error(`Error fetching files for ${expId}:`, err);
       }
@@ -529,18 +530,12 @@
       document.getElementById('code-text').textContent = 'Loading Code...';
       document.getElementById('output-text').textContent = 'Loading Output...';
 
-      // Show/hide Explanation tab based on experiment
+      // Show Explanation tab only for experiments that have an explanation file
       const explainBtn = document.getElementById('btn-explanation');
-      if (expId === 'exp1') {
+      if (expData[expId].explainFile) {
         explainBtn.style.display = '';
-        // Load iframe src if not set
-        const frame = document.getElementById('explain-frame');
-        if (!frame.src || frame.src === window.location.href) {
-          frame.src = 'exp1/explain1.html';
-        }
       } else {
         explainBtn.style.display = 'none';
-        // If currently on explanation tab, switch back to aim
         if (activeSubTab === 'explanation') {
           switchSubTab('aim');
         }
@@ -564,6 +559,9 @@
       document.getElementById('aim-text').textContent = data.aim || 'Aim text not loaded.';
       document.getElementById('code-text').textContent = data.code || 'Code text not loaded.';
       document.getElementById('output-text').textContent = data.output || 'Output text not loaded.';
+      if (document.getElementById('explanation-text')) {
+        document.getElementById('explanation-text').textContent = data.explanation || '';
+      }
     }
 
     async function copyCode() {
@@ -592,48 +590,11 @@
     async function init() {
       await loadExpFiles(activeExperiment);
       renderActiveTab();
-      // exp1 is default — show explanation button and preload iframe
+      // exp1 is default — show explanation tab button
       document.getElementById('btn-explanation').style.display = '';
-      document.getElementById('explain-frame').src = 'exp1/explain1.html';
     }
     init();
 
-    function resizeExplainFrame(frame) {
-      try {
-        const doc = frame.contentDocument || frame.contentWindow.document;
-        // Hide decorative chrome elements inside the iframe
-        const topbar = doc.querySelector('.sl-topbar');
-        if (topbar) topbar.style.display = 'none';
-        const mesh = doc.querySelector('.sl-mesh');
-        if (mesh) mesh.style.display = 'none';
-        const grid = doc.querySelector('.sl-grid-overlay');
-        if (grid) grid.style.display = 'none';
-        // Remove fixed/min heights so the document collapses to real content height
-        const mod = doc.querySelector('.sl-mod');
-        if (mod) { mod.style.minHeight = 'unset'; mod.style.height = 'auto'; }
-        doc.documentElement.style.height = 'auto';
-        doc.body.style.height = 'auto';
-        doc.body.style.overflow = 'hidden';
-        // Flatten card padding
-        const shell = doc.querySelector('.sl-shell');
-        if (shell) shell.style.padding = '0 0 20px';
-        const expCard = doc.querySelector('.exp-card');
-        if (expCard) { expCard.style.marginTop = '0'; expCard.style.boxShadow = 'none'; expCard.style.border = 'none'; expCard.style.padding = '4px 0'; }
-        // Measure after browser reflows the changes
-        setTimeout(() => {
-          try {
-            const h = Math.max(
-              doc.body.scrollHeight,
-              doc.documentElement.scrollHeight,
-              doc.body.offsetHeight,
-              doc.documentElement.offsetHeight
-            );
-            frame.style.height = (h + 24) + 'px';
-            frame.style.minHeight = 'unset';
-          } catch(e) {}
-        }, 80);
-      } catch(e) { /* same-origin only */ }
-    }
 
     // Scroll animation observer
     const io = new IntersectionObserver((entries) => {

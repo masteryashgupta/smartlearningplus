@@ -246,14 +246,7 @@
 
           <!-- EXPLANATION TAB -->
           <div id="content-explanation" class="tab-pane" style="display:none;">
-            <iframe
-              id="explain-frame"
-              src="explain1.html"
-              frameborder="0"
-              scrolling="no"
-              style="width:100%; min-height:500px; border:none; border-radius:8px; display:block;"
-              onload="resizeExplainFrame(this)"
-            ></iframe>
+            <pre class="output-block" id="explanation-text">Loading Explanation...</pre>
           </div>
         </div>
       </div>
@@ -268,7 +261,8 @@
     const files = {
       aim: 'aim1.c.txt',
       code: 'exp1.c',
-      output: 'output1.c.txt'
+      output: 'output1.c.txt',
+      explanation: 'explain1.txt'
     };
 
     async function loadData() {
@@ -282,6 +276,9 @@
 
         const outputRes = await fetch(files.output);
         document.getElementById('output-text').textContent = await outputRes.text();
+
+        const explainRes = await fetch(files.explanation);
+        document.getElementById('explanation-text').textContent = await explainRes.text();
       } catch (err) {
         console.error("Error loading files:", err);
       }
@@ -315,44 +312,6 @@
       }
     }
 
-    function resizeExplainFrame(frame) {
-      try {
-        const doc = frame.contentDocument || frame.contentWindow.document;
-        // Hide decorative chrome since the parent page already has it
-        const topbar = doc.querySelector('.sl-topbar');
-        if (topbar) topbar.style.display = 'none';
-        const mesh = doc.querySelector('.sl-mesh');
-        if (mesh) mesh.style.display = 'none';
-        const grid = doc.querySelector('.sl-grid-overlay');
-        if (grid) grid.style.display = 'none';
-        // Remove fixed/min heights so document collapses to real content height
-        const mod = doc.querySelector('.sl-mod');
-        if (mod) { mod.style.minHeight = 'unset'; mod.style.height = 'auto'; }
-        doc.documentElement.style.height = 'auto';
-        doc.body.style.height = 'auto';
-        doc.body.style.overflow = 'hidden';
-        // Flatten card padding
-        const shell = doc.querySelector('.sl-shell');
-        if (shell) shell.style.padding = '0 0 20px';
-        const expCard = doc.querySelector('.exp-card');
-        if (expCard) { expCard.style.marginTop = '0'; expCard.style.boxShadow = 'none'; expCard.style.border = 'none'; expCard.style.padding = '4px 0'; }
-        // Measure AFTER browser reflows the changes
-        setTimeout(() => {
-          try {
-            const h = Math.max(
-              doc.body.scrollHeight,
-              doc.documentElement.scrollHeight,
-              doc.body.offsetHeight,
-              doc.documentElement.offsetHeight
-            );
-            frame.style.height = (h + 24) + 'px';
-            frame.style.minHeight = 'unset';
-          } catch(e) {}
-        }, 80);
-      } catch(e) {
-        // cross-origin guard — should not happen since same origin
-      }
-    }
 
     loadData();
   </script>
