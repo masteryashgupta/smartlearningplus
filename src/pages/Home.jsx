@@ -157,7 +157,7 @@ export default function Home() {
     html = html.replace(/^## (.*$)/gim, "<h2>$1</h2>");
     html = html.replace(/^# (.*$)/gim, "<h1>$1</h1>");
     
-    html = html.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+    html = html.replace(/\*\*(.*?)\*\//g, "<strong>$1</strong>");
     html = html.replace(/\*(.*?)\*/g, "<em>$1</em>");
     
     html = html.replace(/```([\s\S]*?)```/g, "<pre><code>$1</code></pre>");
@@ -339,8 +339,7 @@ export default function Home() {
           display: flex; align-items: center; justify-content: space-between;
           padding: 22px 0; position: relative; z-index: 5;
         }
-        .sl-logo { display:flex; align-items:center; gap:12px; font-weight:800; font-size:22px; color: var(--text); }
-.sl-logo-center { justify-content: center; width: 100%; }
+        .sl-logo { display:flex; align-items:center; gap:10px; font-weight:800; font-size:17px; color: var(--text); }
         .sl-logo-mark {
           width: 34px; height: 34px; border-radius: 10px;
           background: linear-gradient(135deg, var(--accent), var(--accent2));
@@ -448,21 +447,10 @@ export default function Home() {
         /* section label */
         .sl-section { padding: 10px 0 60px; }
         .sl-eyebrow-sm {
-          font-size:14px; font-weight:800; letter-spacing:1.4px; text-transform:uppercase;
-          color: var(--accent); margin-bottom: 12px;
-          text-align: center;
+          font-size:12px; font-weight:800; letter-spacing:1.4px; text-transform:uppercase;
+          color: var(--accent); margin-bottom: 8px;
         }
-        .sl-section-title { 
-          font-size: 36px; 
-          font-weight: 800; 
-          color: #1e3a8a; 
-          letter-spacing:-0.02em; 
-          margin-bottom: 24px;
-          text-align: center;
-        }
-        @media (max-width: 640px) {
-          .sl-section-title { font-size: 28px; }
-        }
+        .sl-section-title { font-size: 30px; font-weight: 800; color: #1e3a8a; letter-spacing:-0.02em; margin-bottom: 34px; }
 
         /* bento subject grid */
         .sl-bento {
@@ -848,14 +836,14 @@ export default function Home() {
       </div>
       <div className="sl-grid-overlay"></div>
 
-        <div className="sl-shell">
-          {/* NAV */}
-          <nav className="sl-nav">
-            <div className="sl-logo" style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-              <img src="/logo.png?v=3" alt="Logo" style={{ width: "32px", height: "32px", objectFit: "contain" }} />
-              Smart Learning
-              <span style={{ color: "var(--accent)" }}>+</span>
-            </div>
+      <div className="sl-shell">
+        {/* NAV */}
+        <nav className="sl-nav">
+          <div className="sl-logo" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <img src="/logo.png?v=3" alt="Logo" style={{ width: "24px", height: "24px", objectFit: "contain" }} />
+            Smart Learning
+            <span style={{ color: "var(--accent)" }}>+</span>
+          </div>
           <div className="flex items-center gap-6">
             {session && session.role === "student" ? (
               <div className="flex items-center gap-4">
@@ -1452,75 +1440,14 @@ export default function Home() {
 
         {/* LOCKED DASHBOARD PREVIEW & SIGN IN (For Logged-Out Users) */}
         {!session && (
-          <>
-            {/* Hero Section for Site Name */}
-            <div className="sl-hero-container">
-              <div className="sl-hero-left">
-                <div className="sl-eyebrow">
-                  <span className="dot"></span>
-                  Smart Learning Platform
-                </div>
-                <h1 className="sl-headline">
-                  <span className="grad">Smart Learning</span> <span style={{ color: "var(--accent)" }}>+</span>
-                </h1>
-                <p className="sl-sub">
-                  Your all-in-one platform for <strong>attendance tracking</strong>, <strong>study materials</strong>, and <strong>academic resources</strong>. 
-                  Join now to unlock the full potential of your learning journey.
-                </p>
-                <div className="sl-hero-actions">
-                  <a href="#login-section" onClick={(e) => {
-                    e.preventDefault();
-                    setShowMobileLogin(prev => {
-                      const next = !prev;
-                      if (next) {
-                        setTimeout(() => {
-                          document.getElementById('login-section')?.scrollIntoView({ behavior: 'smooth' });
-                        }, 50);
-                      }
-                      return next;
-                    });
-                  }} className="sl-btn-primary">
-                    🚀 Get Started
-                  </a>
-                  <a href="#subjects" onClick={(e) => {
-                    e.preventDefault();
-                    document.getElementById('subjects')?.scrollIntoView({ behavior: 'smooth' });
-                  }} className="sl-btn-ghost">
-                    📚 Browse Materials
-                  </a>
-                </div>
+          <div id="login-section">
+            {/* Collapsible Login Form (both mobile & desktop) */}
+            {showMobileLogin && (
+              <div className="mt-3 bg-white rounded-[1rem] overflow-hidden p-0.5 border border-indigo-100/80 shadow-lg animate-fade-in max-w-md mx-auto">
+                <Login compact={true} />
               </div>
-              <div className="sl-hero-right">
-                <div className="sl-stats">
-                  <div className="sl-stat">
-                    <div className="sl-stat-num">6+</div>
-                    <div className="sl-stat-label">Subjects</div>
-                  </div>
-                  <div className="sl-stat">
-                    <div className="sl-stat-num">4+</div>
-                    <div className="sl-stat-label">Labs</div>
-                  </div>
-                  <div className="sl-stat">
-                    <div className="sl-stat-num">100%</div>
-                    <div className="sl-stat-label">Free</div>
-                  </div>
-                  <div className="sl-stat">
-                    <div className="sl-stat-num">24/7</div>
-                    <div className="sl-stat-label">Access</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div id="login-section">
-              {/* Collapsible Login Form (both mobile & desktop) */}
-              {showMobileLogin && (
-                <div className="mt-3 bg-white rounded-[1rem] overflow-hidden p-0.5 border border-indigo-100/80 shadow-lg animate-fade-in max-w-md mx-auto">
-                  <Login compact={true} />
-                </div>
-              )}
-            </div>
-          </>
+            )}
+          </div>
         )}
 
         {/* STUDY MATERIALS SECTION */}
