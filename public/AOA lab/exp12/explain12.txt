@@ -1,0 +1,44 @@
+Matrix Chain Multiplication kya hai?
+
+Socho tere paas kayi matrices hain jinhe multiply karna hai, jaise A x B x C x D. Matrix multiplication ka result to hamesha same rahega chahe tu kisi bhi order mein brackets lagaye (jaise (AxB)xC ya Ax(BxC)) — lekin ye jaanna zaroori hai ki brackets kis tarah lagayein taaki total multiplications (calculations) SABSE KAM lagen.
+
+Har matrix ka ek shape hota hai (rows x columns). Jab do matrices multiply hoti hain, unke dimensions ke hisaab se multiplications ki count nikalti hai. Alag-alag order mein bracket lagane se total multiplications ka count bahut alag ho sakta hai — kabhi bahut zyada, kabhi bahut kam. Is problem ka goal hai: SABSE SASTA (kam multiplications wala) order dhundna, matrices ko actually multiply kiye bina.
+
+Ye bhi Dynamic Programming se solve hota hai. Hum chhote chain-lengths (2 matrices, fir 3 matrices, fir 4...) ke liye best cost pehle nikaal lete hain, aur unhe combine karke bade chain ka best cost nikaal lete hain.
+
+
+Chhota example:
+
+6 matrices hain, unke dimensions (p array) hain:
+p = [30, 35, 15, 5, 10, 20, 25]
+
+Iska matlab:
+Matrix 1: 30x35
+Matrix 2: 35x15
+Matrix 3: 15x5
+Matrix 4: 5x10
+Matrix 5: 10x20
+Matrix 6: 20x25
+
+DP table banti hai jisme chhoti chains (2 matrices ka combo) se shuru karke, dheere-dheere badi chains (poori 6 matrices) tak best (minimum) multiplication cost calculate hoti hai. Har chain ke liye ye check kiya jaata hai ki use kahan se do parts mein todein taaki total cost sabse kam ho.
+
+Is process ke baad:
+Minimum number of multiplications = 15125
+
+(Agar galat order mein bracket lagate, jaise bilkul left-to-right ((((AB)C)D)E)F), to multiplications kai guna zyada lag sakti thi — is example mein sahi order se hi ye kam se kam 15125 tak aata hai)
+
+
+Speed ka mamla:
+
+Matrix Chain Multiplication DP ka time complexity O(n^3) hai, jahan n matrices ki sankhya hai. Brute-force tarike se (saare possible bracket orders try karke) ye exponential time leta, jo bahut zyada slow hota bade n ke liye — isliye DP approach yahan bahut important hai.
+
+
+Tera program kya karta hai:
+
+1. Tujhse pucha jaata hai kitni matrices hain.
+2. Tujhse unke dimensions enter karwaye jaate hain (p0, p1, ... pn — jahan matrix i ka shape p[i-1] x p[i] hota hai).
+3. Program ek DP table banata hai jo chhoti chains se shuru karke badi chains tak minimum cost calculate karta hai (upar wala process).
+4. Last mein minimum number of multiplications print hota hai.
+5. Calculation mein kitna time laga, wo bhi dikhaya jaata hai.
+
+Bas itna hi — chhoti matrix-chains ka best cost pehle nikaalo, unhe combine karke badi chains ka best cost nikaalo, jab tak poori chain ka answer na mil jaaye.

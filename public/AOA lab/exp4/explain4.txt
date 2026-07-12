@@ -1,0 +1,39 @@
+Linear Search kya hai?
+
+Socho tere paas ek array hai jisme numbers hain, jaise [70, 206, 592, 194, 912, 40]. Tujhe check karna hai ki ek specific number (jaise 194) is array mein hai ya nahi, aur agar hai to kahan pe hai.
+
+Linear Search sabse simple aur seedha tarika hai search karne ka. Isme tu array ke shuru se lekar end tak, ek-ek karke har element ko check karta jaata hai. Jaise hi tujhe wo number mil jaata hai jo tu dhund raha hai, tu ruk jaata hai aur uski position bata deta hai. Agar pura array check karne ke baad bhi number nahi mila, to "not found" bol deta hai.
+
+Isko "Linear" isliye kehte hain kyunki ye ek seedhi line mein, ek-ek step, aage badhte hue check karta hai — koi shortcut nahi leta.
+
+
+Chhota example:
+
+Array: [70, 206, 592, 194, 912, 40]
+Dhundna hai: 194
+
+Step 1: index 0 -> 70   (194 nahi hai)
+Step 2: index 1 -> 206  (194 nahi hai)
+Step 3: index 2 -> 592  (194 nahi hai)
+Step 4: index 3 -> 194  -> mil gaya!
+
+Result: "Element 194 found at position 4"
+
+Agar hum 500 dhundte (jo array mein hai hi nahi), to program pura array check karke bolta "Element 500 not found in the array".
+
+
+Speed ka mamla:
+
+Linear Search ka time complexity O(n) hai — matlab worst case mein (jab element last mein ho ya array mein ho hi nahi) tujhe pura array check karna padta hai. Best case mein (jab element sabse pehle hi mil jaaye) time O(1) lagta hai. Chhote arrays ke liye ye theek hai, lekin bade sorted data ke liye Binary Search (agla experiment) zyada fast hota hai.
+
+
+Tera program kya karta hai:
+
+1. Pehle tujhse pucha jaata hai kitne numbers hain array mein.
+2. Random numbers generate hote hain (0-999 ke beech), unhe "Generated Elements" ke naam se dikhaya jaata hai.
+3. Fir tujhse pucha jaata hai kaunsa number dhundna hai (search key).
+4. Program timer start karta hai aur ek-ek karke array check karta hai (upar wala process).
+5. Agar mil jaaye to uski position batata hai, warna "not found" bolta hai.
+6. Search mein kitna time laga (seconds mein), wo bhi dikhaya jaata hai.
+
+Bas itna hi — shuru se end tak ek-ek element check karo, jab match mile to ruk jao.

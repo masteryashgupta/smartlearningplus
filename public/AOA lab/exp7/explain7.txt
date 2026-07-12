@@ -1,0 +1,46 @@
+Greedy Knapsack (Fractional Knapsack) kya hai?
+
+Socho tere paas ek bag hai jiska weight-limit (capacity) fix hai, jaise 50 kg. Aur tere paas kuch items hain, har item ka apna weight aur profit (value) hai. Tujhe bag mein aise items daalne hain ki total profit sabse zyada ho, bina weight-limit cross kiye.
+
+Greedy Method ka idea simple hai: sabse "value-for-weight" wale item ko pehle utha lo. Matlab, har item ka ratio nikalo — profit/weight. Jis item ka ye ratio sabse zyada hai, wo sabse "best deal" hai, use pehle poora bag mein daal do. Fir agla best-ratio wala item, aur aise hi karte jao jab tak bag bhar na jaaye.
+
+Khaas baat: is method mein item ko TODA bhi ja sakta hai (fraction mein lena)! Agar last item pura fit nahi ho raha, to jitni jagah bachi hai utna hi fraction utha lo. Isiliye ise "Fractional Knapsack" bhi kehte hain.
+
+
+Chhota example:
+
+3 items hain:
+Item 1: weight=10, profit=60   -> ratio = 60/10 = 6.0
+Item 2: weight=20, profit=100  -> ratio = 100/20 = 5.0
+Item 3: weight=30, profit=120  -> ratio = 120/30 = 4.0
+
+Bag capacity = 50
+
+Sabse pehle best ratio wala item lo (Item 1, ratio=6.0):
+Weight liya: 10, bacha capacity: 40, profit mila: 60
+
+Agla best ratio wala (Item 2, ratio=5.0):
+Weight liya: 20, bacha capacity: 20, profit mila: 100 (total 160)
+
+Agla best ratio wala (Item 3, ratio=4.0), lekin sirf 20 capacity bachi hai aur item ka weight 30 hai:
+To item 3 ka sirf fraction lo: 20/30 = 0.67 hissa
+Profit mila: 120 x 0.67 = 80 (total 240)
+
+Bag ab full bhar gaya (capacity khatam), aur total maximum profit = 240
+
+
+Speed ka mamla:
+
+Sabse zyada time lagta hai items ko ratio ke hisaab se sort karne mein, jo O(n log n) hota hai. Uske baad ek hi baar sabhi items check karke bag bharna O(n) hai. Isliye total time O(n log n) hai — kaafi fast approach hai.
+
+
+Tera program kya karta hai:
+
+1. Tujhse pucha jaata hai kitne items hain, aur har item ka weight aur profit.
+2. Tujhse bag ki capacity puchi jaati hai.
+3. Program har item ka profit/weight ratio nikaalta hai aur unhe best-ratio-pehle ke hisaab se sort kar deta hai.
+4. Fir ek-ek karke items ko bag mein daalta hai — jo poora fit ho jaaye wo "Fully taken", jo poora fit na ho uska fraction "Fraction taken" bata deta hai.
+5. Last mein total maximum profit print karta hai.
+6. Calculation mein kitna time laga, wo bhi dikhaya jaata hai.
+
+Bas itna hi — sabse value-for-weight wale item pehle lo, aur zarurat pade to last item ka tukda (fraction) le lo bag bharne ke liye.

@@ -1,0 +1,48 @@
+Kruskal's Algorithm kya hai?
+
+Ye bhi Prim's Algorithm ki tarah hi Minimum Cost Spanning Tree (MST) nikaalta hai — matlab saari cities ko sabse kam total cost mein is tarah connect karna ki koi city chhoote nahi aur koi cycle/loop bhi na bane. Lekin Kruskal's ka tarika Prim's se thoda alag hai.
+
+Prim's Algorithm ek jagah se shuru hoke dheere-dheere group badhata hai. Kruskal's Algorithm iske ulat — ye sabhi roads (edges) ko ek list mein le leta hai, unhe SASTI SE MEHENGI order mein sort kar deta hai, aur fir sabse sasti road se shuru karke ek-ek karke edges lena shuru karta hai. Bas ek hi condition hai: agar koi edge cycle (loop) bana rahi ho (matlab dono cities pehle se hi kisi tarah connected hain), to us edge ko skip kar do. Baaki sab le lo, jab tak (n-1) edges na mil jaayein (n = total cities).
+
+Ye check karne ke liye ki do cities pehle se connected hain ya nahi, ek technique use hoti hai jise "Union-Find" kehte hain.
+
+
+Chhota example:
+
+5 cities (0 se 4), edges cost ke saath (sasti se mehengi sorted):
+0-1 = 2
+1-2 = 3
+1-4 = 5
+0-3 = 6
+1-3 = 8
+2-4 = 7
+3-4 = 9
+
+Step 1: 0-1 (cost=2) -> koi cycle nahi, le lo. Connected: {0,1}
+Step 2: 1-2 (cost=3) -> koi cycle nahi, le lo. Connected: {0,1,2}
+Step 3: 1-4 (cost=5) -> koi cycle nahi, le lo. Connected: {0,1,2,4}
+Step 4: 0-3 (cost=6) -> koi cycle nahi, le lo. Connected: {0,1,2,3,4} -> sab connect ho gaye!
+
+(Agar isi list mein 1-3=8 bhi try karte, to ye SKIP ho jaata kyunki 1 aur 3 already connected hain — ye cycle bana deta)
+
+Total minimum cost = 2+3+5+6 = 16
+
+Dekh — same graph pe Prim's Algorithm ka bhi yahi answer (16) aaya tha, kyunki dono hi correct MST dhundte hain, bas tarika alag hai.
+
+
+Speed ka mamla:
+
+Kruskal's Algorithm mein sabse zyada time edges ko sort karne mein lagta hai, O(E log E) — jahan E total edges hain. Ye Prim's se better hota hai jab graph mein edges kam hon lekin vertices zyada hon (sparse graph).
+
+
+Tera program kya karta hai:
+
+1. Tujhse pucha jaata hai kitni vertices (cities) aur kitni edges (roads) hain.
+2. Tujhse har edge enter karwayi jaati hai (do cities aur unke beech ki cost).
+3. Program saari edges ko sasti se mehengi sort kar deta hai.
+4. Fir ek-ek karke edges leta hai — agar cycle na bane to le leta hai, warna skip kar deta hai (Union-Find technique se check karta hai).
+5. Har chuni gayi edge print hoti hai, saath uski cost bhi.
+6. Last mein total minimum cost print hota hai.
+7. Calculation mein kitna time laga, wo bhi dikhaya jaata hai.
+
+Bas itna hi — saari roads ko sasti se mehengi sort karo, ek-ek karke lo jab tak cycle na bane, jab tak sab cities connect na ho jaayein.

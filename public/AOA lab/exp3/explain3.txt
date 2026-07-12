@@ -1,0 +1,48 @@
+Bubble Sort kya hai?
+
+Socho tere paas ek array hai jisme random numbers hain, jaise [5, 1, 4, 2, 8]. Tujhe inko chhote se bade order mein arrange karna hai.
+
+Bubble Sort sabse simple tarika hai sorting ka. Isme tu array mein baar baar left se right jaata hai aur paas-paas ke do numbers ko compare karta hai. Agar left wala number right wale se bada hai, to unko swap kar deta hai (jagah badal deta hai). Ye process pura array ek baar cover karta hai, aur har baar sabse bada number "bubble" hoke sabse last mein pahunch jaata hai — bilkul jaise pani mein hawa ka bubble upar aata hai, isiliye naam Bubble Sort hai.
+
+Ye process tab tak repeat hota hai jab tak pura array sorted na ho jaaye.
+
+
+Chhota example:
+
+[5, 1, 4, 2, 8]
+
+Pehla pass (left se right compare karo):
+5,1 -> swap -> [1, 5, 4, 2, 8]
+5,4 -> swap -> [1, 4, 5, 2, 8]
+5,2 -> swap -> [1, 4, 2, 5, 8]
+5,8 -> no swap -> [1, 4, 2, 5, 8]
+(8 sabse bada tha, ab last mein fix ho gaya)
+
+Dusra pass:
+1,4 -> no swap
+4,2 -> swap -> [1, 2, 4, 5, 8]
+4,5 -> no swap
+(5 ab apni jagah fix)
+
+Teesra pass:
+1,2 -> no swap
+2,4 -> no swap
+(kuch swap nahi hua, matlab array sorted ho chuka)
+
+Final: [1, 2, 4, 5, 8]  -> sorted!
+
+
+Speed ka mamla:
+
+Bubble Sort simple hai lekin slow hai — average aur worst case dono mein O(n^2) time leta hai, kyunki har number ko baar baar apne paas wale se compare karna padta hai. Chhote arrays ke liye theek hai, lekin bade data ke liye Quick Sort ya Merge Sort jyada fast hote hain.
+
+
+Tera program kya karta hai:
+
+1. Pehle tujhse pucha jaata hai kitne numbers sort karne hain.
+2. Random numbers generate hote hain (0-999 ke beech), unhe "Generated Elements" ke naam se dikhaya jaata hai.
+3. Fir Bubble Sort chalta hai (upar wala paas-paas compare-swap process), aur timer bhi start hota hai.
+4. Sort hone ke baad "Sorted Elements" print hota hai.
+5. Aur sorting mein kitna time laga (seconds mein), wo bhi dikhaya jaata hai.
+
+Bas itna hi — paas-paas ke numbers compare karo, bade ko aage bhejo (swap), aur baar baar repeat karo jab tak sab sorted na ho jaaye.

@@ -1,0 +1,46 @@
+Binary Search kya hai?
+
+Socho tere paas ek SORTED array hai, jaise [12, 166, 241, 740, 758, 881]. Tujhe check karna hai ki ek specific number (jaise 740) is array mein hai ya nahi.
+
+Binary Search Linear Search se kaafi zyada smart aur fast hai — lekin condition ye hai ki array pehle se sorted hona chahiye. Isका idea hai: pura array check karne ke bajaye, seedha beech wale (middle) element ko check karo.
+- Agar middle wala hi tera number hai -> mil gaya, khatam.
+- Agar tera number middle se CHHOTA hai -> matlab wo sirf LEFT half mein ho sakta hai, to right half ko poori tarah ignore kar do.
+- Agar tera number middle se BADA hai -> matlab wo sirf RIGHT half mein ho sakta hai, to left half ko ignore kar do.
+
+Har step pe array ka aadha hissa fek diya jaata hai — isiliye ye bahut fast hai, bade arrays mein bhi.
+
+
+Chhota example:
+
+Array: [12, 166, 241, 740, 758, 881]   (indices 0 se 5)
+Dhundna hai: 740
+
+Step 1: low=0, high=5, mid=2 -> array[2]=241
+        740 > 241, to left half chhod do, ab low=3
+
+Step 2: low=3, high=5, mid=4 -> array[4]=758
+        740 < 758, to right half chhod do, ab high=3
+
+Step 3: low=3, high=3, mid=3 -> array[3]=740
+        Match mil gaya!
+
+Result: "Element 740 found at position 4"
+
+Dekh — sirf 3 steps mein number mil gaya, jabki Linear Search mein 5 steps lagte (index 0 se check karte karte).
+
+
+Speed ka mamla:
+
+Binary Search ka time complexity O(log n) hai — matlab agar array mein 1000 elements bhi hon, to sirf ~10 steps mein answer mil jaata hai (kyunki har step pe aadha data fek diya jaata hai). Ye Linear Search ke O(n) se bahut fast hai, lekin condition yaad rakhna: array HAMESHA sorted hona chahiye, warna Binary Search galat result dega.
+
+
+Tera program kya karta hai:
+
+1. Pehle tujhse pucha jaata hai kitne numbers hain array mein.
+2. Random numbers generate hote hain, aur unhe sort kar diya jaata hai (kyunki Binary Search ko sorted data chahiye) — ye "Generated (Sorted) Elements" ke naam se dikhaye jaate hain.
+3. Fir tujhse pucha jaata hai kaunsa number dhundna hai.
+4. Program timer start karta hai aur beech-beech mein cut karte hue (upar wala low-high-mid process) search karta hai.
+5. Agar mil jaaye to uski position batata hai, warna "not found" bolta hai.
+6. Search mein kitna time laga (seconds mein), wo bhi dikhaya jaata hai.
+
+Bas itna hi — beech wala check karo, jis half mein number ho sakta hai sirf usi mein aage badho, dusra half fek do.

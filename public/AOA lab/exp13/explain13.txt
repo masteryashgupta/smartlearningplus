@@ -1,0 +1,49 @@
+N-Queen's Problem (Backtracking) kya hai?
+
+Socho tere paas ek N x N ka chessboard hai (jaise 4x4), aur tujhe usme N Queens (rani) is tarah rakhni hain ki koi bhi do Queens ek-dusre ko attack na kar sakein. Chess mein Queen kisi bhi direction mein chal sakti hai — seedhi line mein (same row/column) ya diagonal mein. Isliye condition ye hai: koi do Queens same row mein na hon, same column mein na hon, aur same diagonal pe bhi na hon.
+
+Isko solve karne ka tarika hai "Backtracking" — matlab try-and-undo approach. Idea ye hai:
+1. Ek row mein ek Queen rakhne ki koshish karo (kisi bhi safe column mein).
+2. Agar wo jagah safe hai, to agli row pe badho aur wahan bhi Queen rakhne ki koshish karo.
+3. Agar kisi row mein koi bhi column safe nahi mil raha, to peeche jao (backtrack karo) — pichli row ki Queen ko hata ke usko kisi aur column mein try karo.
+4. Ye process tab tak chalta hai jab tak saari N Queens safe positions pe na aa jaayein (ek solution mil jaaye), ya saari possibilities khatam na ho jaayein.
+
+Ek se zyada solutions ho sakte hain — program saare valid solutions dhund ke dikhata hai.
+
+
+Chhota example (N=4):
+
+Board 4x4 hai. Chessboard pe 2 tarike se 4 Queens is tarah rakhi ja sakti hain ki koi attack na ho:
+
+Solution 1:
+. Q . .
+. . . Q
+Q . . .
+. . Q .
+
+Solution 2:
+. . Q .
+Q . . .
+. . . Q
+. Q . .
+
+Total solutions for 4-Queens = 2
+
+Dono solutions mein check karke dekho — kisi bhi row, column, ya diagonal mein 2 Queens saath nahi hain.
+
+
+Speed ka mamla:
+
+N-Queen's Problem ka time complexity worst case mein bahut zyada hota hai (roughly O(N!)) kyunki bahut saari combinations try karni padti hain. Lekin Backtracking is process ko fast banata hai kyunki jaise hi koi position "unsafe" dikhti hai, us poori branch ko turant chhod diya jaata hai (bina aage explore kiye) — isse bahut sara useless kaam bach jaata hai.
+
+
+Tera program kya karta hai:
+
+1. Tujhse pucha jaata hai kitni Queens rakhni hain (N).
+2. Program row-by-row Queens place karne ki koshish karta hai, har jagah safety check karta hai (upar wala process).
+3. Jahan bhi ek complete valid solution milta hai, use board ki tarah print kar deta hai (Q = Queen, . = khaali jagah).
+4. Ye process tab tak chalta hai jab tak saare possible solutions na mil jaayein.
+5. Last mein total solutions ki ginti print hoti hai.
+6. Calculation mein kitna time laga, wo bhi dikhaya jaata hai.
+
+Bas itna hi — ek-ek row mein Queen rakho, agar aage jaake fasa (koi safe jagah na mile) to peeche jaake pichli Queen ko hata ke naya try karo, jab tak solution na mil jaaye.

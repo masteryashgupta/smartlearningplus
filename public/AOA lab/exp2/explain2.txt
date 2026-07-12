@@ -1,0 +1,51 @@
+Merge Sort kya hai?
+
+Socho tere paas ek array hai jisme random numbers hain, jaise [38, 27, 43, 3, 9, 82, 10]. Tujhe inko chhote se bade order mein arrange karna hai.
+
+Merge Sort ka idea Quick Sort se thoda alag hai — isme pivot nahi chunte. Iska tarika hai: array ko baar baar aadha-aadha todte jao (divide), jab tak har piece mein sirf 1 hi element na reh jaaye (1 element hamesha "sorted" hota hai). Fir un chhote pieces ko wapas jodo (merge), lekin jodte waqt unhe sorted order mein jodo. Ye jodne wala kaam hi Merge Sort ka asli magic hai.
+
+Do steps hain:
+- Divide -> array ko baar baar aadha karte jao
+- Merge -> chhote sorted pieces ko jod ke bada sorted piece banao
+
+
+Chhota example:
+
+[38, 27, 43, 3, 9, 82, 10]
+
+Divide (aadha-aadha todo):
+[38, 27, 43]        [3, 9, 82, 10]
+
+Aur todo:
+[38] [27, 43]        [3, 9] [82, 10]
+
+Aur todo (jab tak single element na reh jaaye):
+[38] [27] [43]        [3] [9] [82] [10]
+
+Ab wapas jodna shuru (merge), sorted order mein:
+[27, 43] ban gaya [27] aur [43] ko jod ke
+[3, 9] aur [10, 82] bane apne pairs se
+
+Fir aur upar jodo:
+[27, 38, 43]   aur   [3, 9, 10, 82]
+
+Last mein dono halves ko jodo:
+[3, 9, 10, 27, 38, 43, 82]  -> sorted!
+
+Jodte waqt hamesha dono groups ke sabse chhote element ko compare karte hain aur jo chhota hai use pehle result mein daal dete hain — isi tarah pura sorted array ban jaata hai.
+
+
+Speed ka mamla:
+
+Merge Sort hamesha O(n log n) time leta hai — chahe array already sorted ho, reverse sorted ho, ya random ho, speed hamesha same rehti hai. Ye Quick Sort se is maamle mein better hai (jisme worst case O(n^2) ho sakta hai). Lekin Merge Sort ko extra memory chahiye hota hai (temporary arrays banane ke liye), jabki Quick Sort usi array mein kaam kar leta hai.
+
+
+Tera program kya karta hai:
+
+1. Pehle tujhse pucha jaata hai kitne numbers sort karne hain.
+2. Random numbers generate hote hain (0-999 ke beech), unhe "Generated Elements" ke naam se dikhaya jaata hai.
+3. Fir Merge Sort chalta hai (upar wala divide-and-merge process), aur timer bhi start hota hai.
+4. Sort hone ke baad "Sorted Elements" print hota hai.
+5. Aur sorting mein kitna time laga (seconds mein), wo bhi dikhaya jaata hai.
+
+Bas itna hi — array ko todte jao jab tak single elements na reh jaayein, fir unhe sorted order mein wapas jodo.
