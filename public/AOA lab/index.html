@@ -601,19 +601,37 @@
     function resizeExplainFrame(frame) {
       try {
         const doc = frame.contentDocument || frame.contentWindow.document;
+        // Hide decorative chrome elements inside the iframe
         const topbar = doc.querySelector('.sl-topbar');
         if (topbar) topbar.style.display = 'none';
         const mesh = doc.querySelector('.sl-mesh');
         if (mesh) mesh.style.display = 'none';
         const grid = doc.querySelector('.sl-grid-overlay');
         if (grid) grid.style.display = 'none';
+        // Remove fixed/min heights so the document collapses to real content height
         const mod = doc.querySelector('.sl-mod');
-        if (mod) mod.style.minHeight = 'unset';
+        if (mod) { mod.style.minHeight = 'unset'; mod.style.height = 'auto'; }
+        doc.documentElement.style.height = 'auto';
+        doc.body.style.height = 'auto';
+        doc.body.style.overflow = 'hidden';
+        // Flatten card padding
         const shell = doc.querySelector('.sl-shell');
         if (shell) shell.style.padding = '0 0 20px';
         const expCard = doc.querySelector('.exp-card');
-        if (expCard) { expCard.style.marginTop = '0'; expCard.style.boxShadow = 'none'; expCard.style.border = 'none'; expCard.style.padding = '0'; }
-        frame.style.minHeight = (doc.body.scrollHeight + 20) + 'px';
+        if (expCard) { expCard.style.marginTop = '0'; expCard.style.boxShadow = 'none'; expCard.style.border = 'none'; expCard.style.padding = '4px 0'; }
+        // Measure after browser reflows the changes
+        setTimeout(() => {
+          try {
+            const h = Math.max(
+              doc.body.scrollHeight,
+              doc.documentElement.scrollHeight,
+              doc.body.offsetHeight,
+              doc.documentElement.offsetHeight
+            );
+            frame.style.height = (h + 24) + 'px';
+            frame.style.minHeight = 'unset';
+          } catch(e) {}
+        }, 80);
       } catch(e) { /* same-origin only */ }
     }
 
