@@ -42,7 +42,7 @@
 <div class="card" style="margin-bottom:28px;">
   <div style="color:var(--accent2); font-weight:700; margin-bottom:10px;">📑 Unit 3 Quick Navigation</div>
   <div class="toc" style="columns:2; column-gap:24px;">
-    <div><a href="#u3-greedy">3.1 Greedy Method — Concept</a></div>
+    <div><a href="#u3-greedy">3.1 Greedy Method — Concept &amp; Flowchart</a></div>
     <div><a href="#u3-knapsack-frac">3.2 Fractional Knapsack Problem</a></div>
     <div><a href="#u3-jobseq">3.3 Job Sequencing with Deadlines</a></div>
     <div><a href="#u3-merge">3.4 Optimal Merge Patterns</a></div>
@@ -51,8 +51,10 @@
     <div><a href="#u3-mcm">3.7 Matrix Chain Multiplication</a></div>
     <div><a href="#u3-lcs">3.8 Longest Common Subsequence</a></div>
     <div><a href="#u3-01knap">3.9 0/1 Knapsack Problem (DP)</a></div>
-    <div><a href="#u3-tables">3.10 Comparison Tables</a></div>
-    <div><a href="#u3-qa">3.11 RTU Exam Q&amp;A</a></div>
+    <div><a href="#u3-complexity">3.10 Complexity Cheat-Table</a></div>
+    <div><a href="#u3-tables">3.11 Comparison Tables</a></div>
+    <div><a href="#u3-mistakes">3.12 Common Exam Mistakes</a></div>
+    <div><a href="#u3-qa">3.13 RTU Exam Q&amp;A</a></div>
   </div>
 </div>
 
@@ -77,6 +79,84 @@
   </ul>
 </div>
 
+<h3 class="sub">General Structure of a Greedy Algorithm</h3>
+<div class="card steps">
+  <ol>
+    <li><strong>Candidate Set:</strong> Identify the full set of candidates/inputs from which the solution will be built (items, jobs, edges, files, etc.).</li>
+    <li><strong>Selection Function / Heuristic:</strong> Define an ordering rule — e.g. sort by profit/weight ratio, by deadline, by edge weight, by file size.</li>
+    <li><strong>Feasibility Check:</strong> At each step, test whether adding the next-best candidate still keeps the partial solution valid (does not violate the capacity/deadline/cycle constraint).</li>
+    <li><strong>Objective Function:</strong> The function being maximised/minimised (total profit, total cost, total weight).</li>
+    <li><strong>Solution Function:</strong> Tests whether a complete solution has been reached (all vertices covered, all slots tried, capacity exhausted).</li>
+  </ol>
+</div>
+
+<div class="svgbox">
+<svg viewBox="0 0 640 560" xmlns="http://www.w3.org/2000/svg" style="max-width:520px;width:100%;">
+  <defs>
+    <marker id="arrGreedy" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" style="fill:var(--accent)"/></marker>
+  </defs>
+  <ellipse cx="320" cy="30" rx="90" ry="24" style="fill:var(--accent-light);stroke:var(--accent);stroke-width:1.5"/>
+  <text x="320" y="35" text-anchor="middle" font-size="14" font-weight="700" style="fill:var(--accent)">START</text>
+
+  <rect x="180" y="80" width="280" height="46" rx="8" style="fill:var(--surface);stroke:var(--border2);stroke-width:1.5"/>
+  <text x="320" y="108" text-anchor="middle" font-size="13" style="fill:var(--text)">List all candidates (items / jobs / edges)</text>
+
+  <rect x="150" y="150" width="340" height="46" rx="8" style="fill:var(--surface);stroke:var(--border2);stroke-width:1.5"/>
+  <text x="320" y="178" text-anchor="middle" font-size="13" style="fill:var(--text)">Sort by greedy heuristic (ratio / profit / weight)</text>
+
+  <polygon points="320,220 420,270 320,320 220,270" style="fill:var(--amber-light);stroke:var(--amber);stroke-width:1.5"/>
+  <text x="320" y="266" text-anchor="middle" font-size="12" font-weight="700" style="fill:#b45309">Candidates</text>
+  <text x="320" y="282" text-anchor="middle" font-size="12" font-weight="700" style="fill:#b45309">remaining?</text>
+
+  <rect x="170" y="350" width="300" height="46" rx="8" style="fill:var(--surface);stroke:var(--border2);stroke-width:1.5"/>
+  <text x="320" y="378" text-anchor="middle" font-size="13" style="fill:var(--text)">Pick next-best candidate</text>
+
+  <polygon points="320,420 440,470 320,520 200,470" style="fill:var(--red-light);stroke:var(--red);stroke-width:1.5"/>
+  <text x="320" y="466" text-anchor="middle" font-size="12" font-weight="700" style="fill:var(--red)">Feasible (fits</text>
+  <text x="320" y="482" text-anchor="middle" font-size="12" font-weight="700" style="fill:var(--red)">constraint)?</text>
+
+  <line x1="320" y1="54" x2="320" y2="78" style="stroke:var(--accent);stroke-width:2" marker-end="url(#arrGreedy)"/>
+  <line x1="320" y1="126" x2="320" y2="148" style="stroke:var(--accent);stroke-width:2" marker-end="url(#arrGreedy)"/>
+  <line x1="320" y1="196" x2="320" y2="218" style="stroke:var(--accent);stroke-width:2" marker-end="url(#arrGreedy)"/>
+  <line x1="320" y1="320" x2="320" y2="348" style="stroke:var(--accent);stroke-width:2" marker-end="url(#arrGreedy)"/>
+  <text x="345" y="335" font-size="11" style="fill:var(--green)">yes</text>
+  <line x1="320" y1="396" x2="320" y2="418" style="stroke:var(--accent);stroke-width:2" marker-end="url(#arrGreedy)"/>
+
+  <path d="M 220 470 C 60 470, 60 270, 218 270" style="fill:none;stroke:var(--green);stroke-width:2" marker-end="url(#arrGreedy)"/>
+  <text x="65" y="375" font-size="11" font-weight="700" style="fill:var(--green)">add to</text>
+  <text x="65" y="390" font-size="11" font-weight="700" style="fill:var(--green)">solution</text>
+
+  <path d="M 440 470 C 600 470, 600 270, 422 270" style="fill:none;stroke:var(--muted);stroke-width:2" marker-end="url(#arrGreedy)"/>
+  <text x="565" y="375" font-size="11" font-weight="700" style="fill:var(--muted)">discard /</text>
+  <text x="565" y="390" font-size="11" font-weight="700" style="fill:var(--muted)">reject</text>
+
+  <ellipse cx="320" cy="200" rx="0" ry="0"/>
+  <text x="440" y="250" font-size="11" style="fill:var(--muted)">no</text>
+  <path d="M 420 270 C 520 270, 520 60, 412 32" style="fill:none;stroke:var(--muted);stroke-width:2" marker-end="url(#arrGreedy)"/>
+
+  <ellipse cx="320" cy="30" rx="0" ry="0"/>
+  <ellipse cx="320" cy="540" rx="0" ry="0" style="fill:none"/>
+  <ellipse cx="320" cy="540" rx="90" ry="0"/>
+</svg>
+<div class="cap">Fig 3.1 — General flow of any Greedy Algorithm: sort → pick best → check feasibility → loop until candidates exhausted.</div>
+</div>
+
+<h3 class="sub">Advantages, Limitations &amp; Real-World Uses</h3>
+<div class="compare">
+  <div class="compare-card">
+    <h4 style="color:var(--green);">✅ Advantages</h4>
+    <p>Simple to design and implement, usually runs in polynomial time (often O(n log n) due to sorting), needs very little extra memory, and gives exact optimal answers for a well-defined class of problems (matroid-structured problems).</p>
+  </div>
+  <div class="compare-card">
+    <h4 style="color:var(--red);">⚠ Limitations</h4>
+    <p>Never reconsiders a decision once made, so it can get trapped in a locally-optimal but globally-suboptimal solution (classic failure: 0/1 Knapsack). It must be proved correct for each problem separately — there is no universal correctness guarantee.</p>
+  </div>
+</div>
+<div class="keypoint">
+  <span class="icon">📌</span>
+  <span><strong>Real-life analogy:</strong> Giving minimum currency notes/coins for change (coin-change with standard denominations), Huffman encoding for compression, Dijkstra's shortest path, and network routing protocols all use the greedy strategy.</span>
+</div>
+
 <!-- 3.2 FRACTIONAL KNAPSACK -->
 <h2 class="topic" id="u3-knapsack-frac">3.2 Fractional Knapsack Problem (Greedy) <span class="imp h">EXAM HOT — NUMERICAL</span></h2>
 
@@ -99,14 +179,26 @@
      else: take fraction = remaining_capacity / weight[i]; STOP</div>
 </div>
 
+<h3 class="sub">🖥️ Step-by-Step Simulation</h3>
 <div class="card example">
   <div class="tag">💡 Numerical Example: W=50, Items (profit,weight): (60,10),(100,20),(120,30)</div>
   <p style="margin-top:6px;">Ratios: 60/10=6, 100/20=5, 120/30=4 → sort by ratio: Item1(6), Item2(5), Item3(4).</p>
-  <div class="formula">Take Item1 fully: weight=10, profit=60, remaining capacity=40
-Take Item2 fully: weight=20, profit=100, remaining capacity=20
-Item3 needs 30 but only 20 left → take fraction 20/30 = 2/3
-   profit added = 120 × 2/3 = 80
-Total Profit = 60+100+80 = 240</div>
+  <table style="margin-top:10px;">
+    <tr><th>Step</th><th>Item taken</th><th>Fraction</th><th>Weight used</th><th>Capacity left</th><th>Profit added</th></tr>
+    <tr><td>1</td><td>Item1 (60,10)</td><td>1 (full)</td><td>10</td><td>50−10 = 40</td><td>60</td></tr>
+    <tr><td>2</td><td>Item2 (100,20)</td><td>1 (full)</td><td>20</td><td>40−20 = 20</td><td>100</td></tr>
+    <tr><td>3</td><td>Item3 (120,30)</td><td>20/30 = 2/3</td><td>20</td><td>20−20 = 0</td><td class="hi">120×2/3 = 80</td></tr>
+  </table>
+  <div class="formula">Total Profit = 60 + 100 + 80 = <strong>240</strong>  (knapsack fully utilised — 50/50)</div>
+</div>
+
+<h3 class="sub">Why Greedy is Provably Optimal Here</h3>
+<div class="card">
+  <p>This can be proved by an <strong>exchange argument</strong>: suppose an optimal solution does not pick items in decreasing ratio order. Then two adjacent items can be swapped (moving more of the higher-ratio item in, and less of the lower-ratio item) without decreasing total profit — because fractions are allowed, there is no "wasted" leftover capacity, so the greedy choice never costs anything.</p>
+</div>
+<div class="keypoint">
+  <span class="icon">📌</span>
+  <span><strong>Complexity:</strong> Sorting dominates — O(n log n) time, O(1) extra space (in-place greedy scan after sort).</span>
 </div>
 
 <!-- 3.3 JOB SEQUENCING -->
@@ -132,15 +224,60 @@ Total Profit = 60+100+80 = 240</div>
      Else: reject the job</div>
 </div>
 
+<div class="svgbox">
+<svg viewBox="0 0 620 340" xmlns="http://www.w3.org/2000/svg" style="max-width:480px;width:100%;">
+  <defs>
+    <marker id="arrJob" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" style="fill:var(--accent)"/></marker>
+  </defs>
+  <ellipse cx="310" cy="26" rx="80" ry="22" style="fill:var(--accent-light);stroke:var(--accent);stroke-width:1.5"/>
+  <text x="310" y="31" text-anchor="middle" font-size="13" font-weight="700" style="fill:var(--accent)">Sort jobs ↓profit</text>
+
+  <rect x="170" y="68" width="280" height="42" rx="8" style="fill:var(--surface);stroke:var(--border2);stroke-width:1.5"/>
+  <text x="310" y="94" text-anchor="middle" font-size="12.5" style="fill:var(--text)">Take next job Ji (highest profit left)</text>
+
+  <polygon points="310,135 430,180 310,225 190,180" style="fill:var(--amber-light);stroke:var(--amber);stroke-width:1.5"/>
+  <text x="310" y="176" text-anchor="middle" font-size="12" font-weight="700" style="fill:#b45309">Free slot ≤</text>
+  <text x="310" y="192" text-anchor="middle" font-size="12" font-weight="700" style="fill:#b45309">deadline(Ji)?</text>
+
+  <rect x="150" y="255" width="180" height="42" rx="8" style="fill:var(--green-light);stroke:var(--green);stroke-width:1.5"/>
+  <text x="240" y="281" text-anchor="middle" font-size="12.5" style="fill:#065f46">Place Ji in that slot</text>
+
+  <rect x="360" y="255" width="180" height="42" rx="8" style="fill:var(--red-light);stroke:var(--red);stroke-width:1.5"/>
+  <text x="450" y="281" text-anchor="middle" font-size="12.5" style="fill:var(--red)">Reject Ji</text>
+
+  <line x1="310" y1="48" x2="310" y2="66" style="stroke:var(--accent);stroke-width:2" marker-end="url(#arrJob)"/>
+  <line x1="310" y1="110" x2="310" y2="133" style="stroke:var(--accent);stroke-width:2" marker-end="url(#arrJob)"/>
+  <line x1="270" y1="210" x2="240" y2="253" style="stroke:var(--green);stroke-width:2" marker-end="url(#arrJob)"/>
+  <text x="200" y="230" font-size="11" style="fill:var(--green)">yes</text>
+  <line x1="350" y1="210" x2="440" y2="253" style="stroke:var(--red);stroke-width:2" marker-end="url(#arrJob)"/>
+  <text x="400" y="230" font-size="11" style="fill:var(--red)">no</text>
+
+  <path d="M 240 297 C 60 320, 60 90, 168 90" style="fill:none;stroke:var(--muted);stroke-width:2" marker-end="url(#arrJob)"/>
+  <path d="M 450 297 C 590 320, 590 90, 452 90" style="fill:none;stroke:var(--muted);stroke-width:2" marker-end="url(#arrJob)"/>
+  <text x="60" y="200" font-size="11" style="fill:var(--muted)">next job</text>
+  <text x="555" y="200" font-size="11" style="fill:var(--muted)">next job</text>
+</svg>
+<div class="cap">Fig 3.2 — Decision flow for placing each job into the latest available free slot.</div>
+</div>
+
+<h3 class="sub">🖥️ Step-by-Step Simulation</h3>
 <div class="card example">
   <div class="tag">💡 Numerical Example</div>
-  <p style="margin-top:6px;">Jobs (Job, Deadline, Profit): J1(2,100), J2(1,19), J3(2,27), J4(1,25), J5(3,15) — sorted by profit: J1(100),J3(27),J4(25),J2(19),J5(15).</p>
-  <div class="formula">J1 (deadline 2): place in slot 2 → [_, J1]
-J3 (deadline 2): slot 2 taken → try slot 1 → [J3, J1]
-J4 (deadline 1): slot 1 taken → no earlier slot → REJECT
-J2 (deadline 1): slot 1 taken → REJECT
-J5 (deadline 3): no slot 3 exists (max deadline=2) → REJECT
-Selected: J3, J1 | Total Profit = 27+100 = 127</div>
+  <p style="margin-top:6px;">Jobs (Job, Deadline, Profit): J1(2,100), J2(1,19), J3(2,27), J4(1,25), J5(3,15) — sorted by profit: J1(100), J3(27), J4(25), J2(19), J5(15). Max deadline = 3, so slots [1][2][3].</p>
+  <table style="margin-top:10px;">
+    <tr><th>Job (d,p)</th><th>Latest free slot ≤ d</th><th>Action</th><th>Slot 1</th><th>Slot 2</th><th>Slot 3</th></tr>
+    <tr><td>J1 (2,100)</td><td>slot 2 free</td><td class="hi">Placed</td><td>—</td><td>J1</td><td>—</td></tr>
+    <tr><td>J3 (2,27)</td><td>slot 2 taken → slot 1 free</td><td class="hi">Placed</td><td>J3</td><td>J1</td><td>—</td></tr>
+    <tr><td>J4 (1,25)</td><td>slot 1 taken, no earlier slot</td><td class="warn2">Rejected</td><td>J3</td><td>J1</td><td>—</td></tr>
+    <tr><td>J2 (1,19)</td><td>slot 1 taken</td><td class="warn2">Rejected</td><td>J3</td><td>J1</td><td>—</td></tr>
+    <tr><td>J5 (3,15)</td><td>slot 3 free</td><td class="hi">Placed</td><td>J3</td><td>J1</td><td>J5</td></tr>
+  </table>
+  <div class="formula">Selected jobs: J3, J1, J5 | Total Profit = 27+100+15 = <strong>142</strong>
+(Note: if only deadlines up to max=2 are considered, i.e. slot 3 does not exist, J5 is rejected and profit = 127 — always re-check d_max from the actual job list first.)</div>
+</div>
+<div class="keypoint">
+  <span class="icon">📌</span>
+  <span><strong>Optimisation:</strong> Linear scanning for "latest free slot" is O(n²) in the worst case; using a <strong>Disjoint Set (Union-Find)</strong> over slots reduces this to nearly O(n α(n)). Overall complexity with sorting: O(n log n) + O(n²) (array) or O(n log n) (union-find version).</span>
 </div>
 
 <!-- 3.4 OPTIMAL MERGE -->
@@ -166,13 +303,46 @@ Selected: J3, J1 | Total Profit = 27+100 = 127</div>
 3. Total cost = sum of all merge costs (weighted path length)</div>
 </div>
 
+<h3 class="sub">🖥️ Step-by-Step Simulation (Min-Heap Trace)</h3>
 <div class="card example">
   <div class="tag">💡 Numerical Example: Files of sizes 20, 30, 10, 5</div>
-  <div class="formula">Sorted: 5,10,20,30
-Merge 5+10=15  (cost=15)   → remaining: 15,20,30
-Merge 15+20=35 (cost=35)   → remaining: 35,30
-Merge 30+35=65 (cost=65)   → remaining: 65
-Total Merge Cost = 15+35+65 = 115</div>
+  <table style="margin-top:10px;">
+    <tr><th>Step</th><th>Heap contents (sorted)</th><th>Extract 2 smallest</th><th>Merge cost</th><th>Insert back</th></tr>
+    <tr><td>1</td><td>5, 10, 20, 30</td><td>5, 10</td><td>15</td><td>15, 20, 30</td></tr>
+    <tr><td>2</td><td>15, 20, 30</td><td>15, 20</td><td>35</td><td>35, 30</td></tr>
+    <tr><td>3</td><td>30, 35</td><td>30, 35</td><td>65</td><td>65</td></tr>
+  </table>
+  <div class="formula">Total Merge Cost = 15 + 35 + 65 = <strong>115</strong></div>
+</div>
+
+<div class="svgbox">
+<svg viewBox="0 0 460 260" xmlns="http://www.w3.org/2000/svg" style="max-width:360px;width:100%;">
+  <circle cx="230" cy="30" r="26" style="fill:var(--purple-light);stroke:var(--purple);stroke-width:1.5"/>
+  <text x="230" y="35" text-anchor="middle" font-size="13" font-weight="700" style="fill:var(--purple)">65</text>
+  <circle cx="140" cy="100" r="24" style="fill:var(--accent-light);stroke:var(--accent);stroke-width:1.5"/>
+  <text x="140" y="105" text-anchor="middle" font-size="13" font-weight="700" style="fill:var(--accent)">30</text>
+  <circle cx="320" cy="100" r="24" style="fill:var(--accent-light);stroke:var(--accent);stroke-width:1.5"/>
+  <text x="320" y="105" text-anchor="middle" font-size="13" font-weight="700" style="fill:var(--accent)">35</text>
+  <circle cx="260" cy="170" r="22" style="fill:var(--green-light);stroke:var(--green);stroke-width:1.5"/>
+  <text x="260" y="175" text-anchor="middle" font-size="12" font-weight="700" style="fill:#065f46">15</text>
+  <circle cx="380" cy="170" r="22" style="fill:var(--surface);stroke:var(--border2);stroke-width:1.5"/>
+  <text x="380" y="175" text-anchor="middle" font-size="12" font-weight="700" style="fill:var(--text)">20</text>
+  <circle cx="220" cy="230" r="20" style="fill:var(--surface);stroke:var(--border2);stroke-width:1.5"/>
+  <text x="220" y="235" text-anchor="middle" font-size="11" font-weight="700" style="fill:var(--text)">5</text>
+  <circle cx="300" cy="230" r="20" style="fill:var(--surface);stroke:var(--border2);stroke-width:1.5"/>
+  <text x="300" y="235" text-anchor="middle" font-size="11" font-weight="700" style="fill:var(--text)">10</text>
+  <line x1="230" y1="56" x2="140" y2="76" style="stroke:var(--border2);stroke-width:1.5"/>
+  <line x1="230" y1="56" x2="320" y2="76" style="stroke:var(--border2);stroke-width:1.5"/>
+  <line x1="140" y1="124" x2="260" y2="148" style="stroke:var(--border2);stroke-width:1.5"/>
+  <line x1="140" y1="124" x2="380" y2="148" style="stroke:var(--border2);stroke-width:1.5"/>
+  <line x1="260" y1="192" x2="220" y2="210" style="stroke:var(--border2);stroke-width:1.5"/>
+  <line x1="260" y1="192" x2="300" y2="210" style="stroke:var(--border2);stroke-width:1.5"/>
+</svg>
+<div class="cap">Fig 3.3 — Merge tree (identical structure to a Huffman coding tree): leaves = original file sizes, internal nodes = merge costs.</div>
+</div>
+<div class="keypoint">
+  <span class="icon">📌</span>
+  <span><strong>Complexity:</strong> With a min-heap, each extract-min/insert is O(log n) and there are (n−1) merges → total O(n log n). This is exactly the same technique used to build a Huffman coding tree.</span>
 </div>
 
 <!-- 3.5 MST -->
@@ -211,14 +381,83 @@ Total Merge Cost = 15+35+65 = 115</div>
   <p>Uses the <strong>Union-Find (Disjoint Set)</strong> data structure to efficiently detect cycles; grows the forest edge by edge.</p>
 </div>
 
+<h3 class="sub">🖥️ Fully Worked Graph Example</h3>
+<div class="svgbox">
+<svg viewBox="0 0 480 320" xmlns="http://www.w3.org/2000/svg" style="max-width:420px;width:100%;">
+  <line x1="80" y1="60" x2="240" y2="40" style="stroke:var(--border2);stroke-width:2"/>
+  <text x="150" y="42" font-size="12" style="fill:var(--muted)">4</text>
+  <line x1="80" y1="60" x2="80" y2="220" style="stroke:var(--border2);stroke-width:2"/>
+  <text x="60" y="145" font-size="12" style="fill:var(--muted)">8</text>
+  <line x1="240" y1="40" x2="400" y2="60" style="stroke:var(--border2);stroke-width:2"/>
+  <text x="320" y="42" font-size="12" style="fill:var(--muted)">8</text>
+  <line x1="240" y1="40" x2="80" y2="220" style="stroke:var(--border2);stroke-width:2"/>
+  <text x="150" y="145" font-size="12" style="fill:var(--muted)">11</text>
+  <line x1="240" y1="40" x2="240" y2="200" style="stroke:var(--border2);stroke-width:2"/>
+  <text x="248" y="120" font-size="12" style="fill:var(--muted)">7</text>
+  <line x1="400" y1="60" x2="240" y2="200" style="stroke:var(--border2);stroke-width:2"/>
+  <text x="330" y="130" font-size="12" style="fill:var(--muted)">4</text>
+  <line x1="80" y1="220" x2="240" y2="200" style="stroke:var(--border2);stroke-width:2"/>
+  <text x="155" y="225" font-size="12" style="fill:var(--muted)">2</text>
+  <line x1="80" y1="220" x2="240" y2="280" style="stroke:var(--border2);stroke-width:2"/>
+  <text x="150" y="260" font-size="12" style="fill:var(--muted)">7</text>
+  <line x1="240" y1="200" x2="240" y2="280" style="stroke:var(--border2);stroke-width:2"/>
+  <text x="248" y="245" font-size="12" style="fill:var(--muted)">6</text>
+  <line x1="400" y1="60" x2="240" y2="280" style="stroke:var(--border2);stroke-width:2"/>
+  <text x="345" y="180" font-size="12" style="fill:var(--muted)">14</text>
+
+  <circle cx="80" cy="60" r="20" style="fill:var(--accent-light);stroke:var(--accent);stroke-width:2"/><text x="80" y="65" text-anchor="middle" font-size="13" font-weight="700" style="fill:var(--accent)">A</text>
+  <circle cx="240" cy="40" r="20" style="fill:var(--accent-light);stroke:var(--accent);stroke-width:2"/><text x="240" y="45" text-anchor="middle" font-size="13" font-weight="700" style="fill:var(--accent)">B</text>
+  <circle cx="400" cy="60" r="20" style="fill:var(--accent-light);stroke:var(--accent);stroke-width:2"/><text x="400" y="65" text-anchor="middle" font-size="13" font-weight="700" style="fill:var(--accent)">C</text>
+  <circle cx="240" cy="200" r="20" style="fill:var(--accent-light);stroke:var(--accent);stroke-width:2"/><text x="240" y="205" text-anchor="middle" font-size="13" font-weight="700" style="fill:var(--accent)">D</text>
+  <circle cx="80" cy="220" r="20" style="fill:var(--accent-light);stroke:var(--accent);stroke-width:2"/><text x="80" y="225" text-anchor="middle" font-size="13" font-weight="700" style="fill:var(--accent)">E</text>
+  <circle cx="240" cy="280" r="20" style="fill:var(--accent-light);stroke:var(--accent);stroke-width:2"/><text x="240" y="285" text-anchor="middle" font-size="13" font-weight="700" style="fill:var(--accent)">F</text>
+</svg>
+<div class="cap">Fig 3.4 — Sample connected weighted graph, 6 vertices (A–F), 9 edges. Used for both Prim's and Kruskal's trace below.</div>
+</div>
+
+<div class="card">
+  <div class="tag" style="color:var(--accent2);text-transform:uppercase;font-size:11px;font-weight:700;letter-spacing:1.5px;">Edge List (sorted by weight for Kruskal's)</div>
+  <table style="margin-top:10px;">
+    <tr><th>Edge</th><th>E–D</th><th>A–E</th><th>C–D</th><th>A–B</th><th>D–F</th><th>B–C</th><th>E–F</th><th>A–D</th><th>C–F</th></tr>
+    <tr><td>Weight</td><td>2</td><td>8</td><td>4</td><td>4</td><td>6</td><td>8</td><td>7</td><td>11</td><td>14</td></tr>
+  </table>
+</div>
+
+<h4 style="color:var(--purple);margin-top:20px;font-size:14px;">🔹 Kruskal's Trace (Union-Find)</h4>
 <div class="card example">
-  <div class="tag">💡 Example</div>
-  <p style="margin-top:8px;">For a graph with 5 vertices and 7 edges, Kruskal's picks edges in increasing weight order (e.g., 1,2,3,4,5,...) skipping any edge that would form a cycle with already-selected edges, stopping once 4 edges (n&#x2212;1) are chosen — this gives the same total MST weight as Prim's, though the order of edge selection differs.</p>
+  <table style="margin-top:10px;">
+    <tr><th>Edge (w)</th><th>find(u) vs find(v)</th><th>Decision</th><th>MST edges so far</th></tr>
+    <tr><td>E–D (2)</td><td>different sets</td><td class="hi">Accept</td><td>E–D</td></tr>
+    <tr><td>A–E (8)... skip, check next lowest C–D(4)</td><td>—</td><td>—</td><td>—</td></tr>
+    <tr><td>C–D (4)</td><td>different sets</td><td class="hi">Accept</td><td>E–D, C–D</td></tr>
+    <tr><td>A–B (4)</td><td>different sets</td><td class="hi">Accept</td><td>E–D, C–D, A–B</td></tr>
+    <tr><td>D–F (6)</td><td>different sets</td><td class="hi">Accept</td><td>E–D, C–D, A–B, D–F</td></tr>
+    <tr><td>B–C (8)</td><td>different sets</td><td class="hi">Accept</td><td>E–D, C–D, A–B, D–F, B–C</td></tr>
+    <tr><td>E–F (7)</td><td>same set (cycle)</td><td class="warn2">Reject</td><td>— (no change)</td></tr>
+    <tr><td>A–D (11)</td><td>same set (cycle)</td><td class="warn2">Reject</td><td>— (no change)</td></tr>
+  </table>
+  <div class="formula">MST complete with (6−1)=5 edges: {E–D, C–D, A–B, D–F, B–C}
+Total MST weight = 2+4+4+6+8 = <strong>24</strong></div>
+</div>
+
+<h4 style="color:var(--purple);margin-top:20px;font-size:14px;">🔹 Prim's Trace (starting from vertex A)</h4>
+<div class="card example">
+  <table style="margin-top:10px;">
+    <tr><th>Step</th><th>MST set</th><th>Candidate edges crossing cut</th><th>Min edge chosen</th></tr>
+    <tr><td>1</td><td>{A}</td><td>A–B(4), A–E(8), A–D(11)</td><td class="hi">A–B (4)</td></tr>
+    <tr><td>2</td><td>{A,B}</td><td>A–E(8), B–C(8), A–D(11)</td><td class="hi">A–E (8)</td></tr>
+    <tr><td>3</td><td>{A,B,E}</td><td>E–D(2), B–C(8), E–F(7)</td><td class="hi">E–D (2)</td></tr>
+    <tr><td>4</td><td>{A,B,E,D}</td><td>C–D(4), D–F(6), B–C(8)</td><td class="hi">C–D (4)</td></tr>
+    <tr><td>5</td><td>{A,B,E,D,C}</td><td>D–F(6), C–F(14)</td><td class="hi">D–F (6)</td></tr>
+    <tr><td>6</td><td>{A,B,E,D,C,F}</td><td>— all vertices covered —</td><td>Stop</td></tr>
+  </table>
+  <div class="formula">MST edges: {A–B, A–E, E–D, C–D, D–F}
+Total MST weight = 4+8+2+4+6 = <strong>24</strong>  (same weight as Kruskal's, confirming correctness)</div>
 </div>
 
 <div class="keypoint">
   <span class="icon">📌</span>
-  <span><strong>Prim's vs Kruskal's:</strong> Prim's works well on dense graphs (grows one connected tree), while Kruskal's works well on sparse graphs (sorts all edges globally and uses Union-Find). Both always produce a minimum-weight spanning tree, though it may not be unique if edge weights repeat.</span>
+  <span><strong>Prim's vs Kruskal's:</strong> Prim's works well on dense graphs (grows one connected tree), while Kruskal's works well on sparse graphs (sorts all edges globally and uses Union-Find). Both always produce a minimum-weight spanning tree, though the specific set of edges may differ if weights repeat — the total weight will not.</span>
 </div>
 
 <!-- 3.6 DP CONCEPT -->
@@ -242,15 +481,39 @@ Total Merge Cost = 15+35+65 = 115</div>
   </ul>
 </div>
 
+<h3 class="sub">Why Plain Recursion Fails — Fibonacci Example</h3>
+<div class="svgbox">
+<svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" style="max-width:440px;width:100%;">
+  <circle cx="260" cy="26" r="20" style="fill:var(--accent-light);stroke:var(--accent);stroke-width:1.5"/><text x="260" y="31" text-anchor="middle" font-size="12" font-weight="700" style="fill:var(--accent)">F(5)</text>
+  <circle cx="150" cy="90" r="20" style="fill:var(--accent-light);stroke:var(--accent);stroke-width:1.5"/><text x="150" y="95" text-anchor="middle" font-size="12" font-weight="700" style="fill:var(--accent)">F(4)</text>
+  <circle cx="370" cy="90" r="20" style="fill:var(--red-light);stroke:var(--red);stroke-width:1.5"/><text x="370" y="95" text-anchor="middle" font-size="12" font-weight="700" style="fill:var(--red)">F(3)</text>
+  <circle cx="80" cy="155" r="18" style="fill:var(--accent-light);stroke:var(--accent);stroke-width:1.5"/><text x="80" y="160" text-anchor="middle" font-size="11" font-weight="700" style="fill:var(--accent)">F(3)</text>
+  <circle cx="220" cy="155" r="18" style="fill:var(--red-light);stroke:var(--red);stroke-width:1.5"/><text x="220" y="160" text-anchor="middle" font-size="11" font-weight="700" style="fill:var(--red)">F(2)</text>
+  <circle cx="310" cy="155" r="18" style="fill:var(--red-light);stroke:var(--red);stroke-width:1.5"/><text x="310" y="160" text-anchor="middle" font-size="11" font-weight="700" style="fill:var(--red)">F(2)</text>
+  <circle cx="430" cy="155" r="18" style="fill:var(--red-light);stroke:var(--red);stroke-width:1.5"/><text x="430" y="160" text-anchor="middle" font-size="11" font-weight="700" style="fill:var(--red)">F(1)</text>
+  <circle cx="40" cy="215" r="16" style="fill:var(--red-light);stroke:var(--red);stroke-width:1.5"/><text x="40" y="220" text-anchor="middle" font-size="10" font-weight="700" style="fill:var(--red)">F(2)</text>
+  <circle cx="120" cy="215" r="16" style="fill:var(--red-light);stroke:var(--red);stroke-width:1.5"/><text x="120" y="220" text-anchor="middle" font-size="10" font-weight="700" style="fill:var(--red)">F(1)</text>
+  <line x1="260" y1="46" x2="150" y2="72" style="stroke:var(--border2);stroke-width:1.5"/>
+  <line x1="260" y1="46" x2="370" y2="72" style="stroke:var(--border2);stroke-width:1.5"/>
+  <line x1="150" y1="108" x2="80" y2="139" style="stroke:var(--border2);stroke-width:1.5"/>
+  <line x1="150" y1="108" x2="220" y2="139" style="stroke:var(--border2);stroke-width:1.5"/>
+  <line x1="370" y1="108" x2="310" y2="139" style="stroke:var(--border2);stroke-width:1.5"/>
+  <line x1="370" y1="108" x2="430" y2="139" style="stroke:var(--border2);stroke-width:1.5"/>
+  <line x1="80" y1="171" x2="40" y2="201" style="stroke:var(--border2);stroke-width:1.5"/>
+  <line x1="80" y1="171" x2="120" y2="201" style="stroke:var(--border2);stroke-width:1.5"/>
+</svg>
+<div class="cap">Fig 3.5 — Recursion tree for naive Fibonacci F(5). Red nodes (F(3), F(2), F(1)) are recomputed multiple times — these are the "overlapping sub-problems" that DP eliminates by caching.</div>
+</div>
+
 <h3 class="sub">Top-Down (Memoization) vs Bottom-Up (Tabulation)</h3>
 <div class="compare">
   <div class="compare-card">
     <h4 style="color:var(--accent);">Top-Down (Memoization)</h4>
-    <p>Recursive solution + a lookup table (cache) to store already-computed results, avoiding recomputation.</p>
+    <p>Recursive solution + a lookup table (cache) to store already-computed results, avoiding recomputation. Natural to write, computes only the sub-problems actually needed.</p>
   </div>
   <div class="compare-card">
     <h4 style="color:var(--accent2);">Bottom-Up (Tabulation)</h4>
-    <p>Iterative approach that fills a table starting from base cases, building up to the final solution — usually more space/time efficient (no recursion overhead).</p>
+    <p>Iterative approach that fills a table starting from base cases, building up to the final solution — usually more space/time efficient (no recursion/call-stack overhead).</p>
   </div>
 </div>
 
@@ -275,12 +538,43 @@ m[i][j] = min over k (i<=k<j) of:
 where matrix Ai has dimensions p[i-1] × p[i]</div>
 </div>
 
+<h3 class="sub">🖥️ Full Worked Example — 4 Matrices</h3>
+<div class="card example">
+  <div class="tag">💡 Dimensions p = [5, 4, 6, 2, 7]  →  A1(5×4), A2(4×6), A3(6×2), A4(2×7)</div>
+  <p style="margin-top:6px;">The DP fills the upper-triangular m-table diagonal by diagonal (chain length L = 2, then 3, then 4):</p>
+  <table style="margin-top:10px;">
+    <tr><th>m[i][j]</th><th>j=1</th><th>j=2</th><th>j=3</th><th>j=4</th></tr>
+    <tr><td>i=1</td><td>0</td><td>120</td><td>88</td><td>158</td></tr>
+    <tr><td>i=2</td><td>—</td><td>0</td><td>48</td><td>104</td></tr>
+    <tr><td>i=3</td><td>—</td><td>—</td><td>0</td><td>84</td></tr>
+    <tr><td>i=4</td><td>—</td><td>—</td><td>—</td><td>0</td></tr>
+  </table>
+  <div class="formula">m[1][2] = p0·p1·p2 = 5×4×6 = 120
+m[2][3] = p1·p2·p3 = 4×6×2 = 48
+m[3][4] = p2·p3·p4 = 6×2×7 = 84
+m[1][3] = min( m[1][1]+m[2][3]+p0p1p3 , m[1][2]+m[3][3]+p0p2p3 )
+        = min( 0+48+5·4·2 , 120+0+5·6·2 ) = min(88, 180) = 88   (split at k=1)
+m[2][4] = min( m[2][2]+m[3][4]+p1p2p4 , m[2][3]+m[4][4]+p1p3p4 )
+        = min( 0+84+4·6·7 , 48+0+4·2·7 ) = min(252, 104) = 104  (split at k=3)
+m[1][4] = min over k=1,2,3 of m[1][k]+m[k+1][4]+p0·pk·p4
+   k=1: 0 + 104 + 5·4·7 = 244
+   k=2: 120 + 84 + 5·6·7 = 414
+   k=3: 88  + 0  + 5·2·7 =  158   ← minimum
+m[1][4] = 158, optimal split at k=3</div>
+  <p style="margin-top:10px;">Tracing splits back: <strong>((A1(A2A3))A4)</strong> is <em>not</em> the optimum — the recorded split k=3 at the top level gives <strong>(A1A2A3)(A4)</strong> reducing to parenthesization <strong>((A1(A2A3))A4)</strong> only if k=1 at the inner level; here k=3 means split into (A1A2A3) and (A4), and since m[1][3] used k=1, the full optimal parenthesization is <strong>(A1(A2A3))A4</strong>, costing a minimum of <strong>158</strong> scalar multiplications.</p>
+</div>
+
+<h3 class="sub">Quick Example (3 Matrices, for fast revision)</h3>
 <div class="card example">
   <div class="tag">💡 Numerical Example: Dimensions p = [10,20,30,40] (3 matrices A1,A2,A3)</div>
   <div class="formula">A1: 10×20, A2: 20×30, A3: 30×40
 Option 1: (A1A2)A3 = (10×20×30) + (10×30×40) = 6000+12000 = 18000
 Option 2: A1(A2A3) = (20×30×40) + (10×20×40) = 24000+8000  = 32000
 Minimum cost = 18000, achieved by parenthesization (A1A2)A3</div>
+</div>
+<div class="keypoint">
+  <span class="icon">📌</span>
+  <span><strong>Complexity:</strong> O(n³) time (three nested loops over chain length, i, and split point k), O(n²) space for the DP table. A second table s[i][j] stores the optimal split point to reconstruct the actual parenthesization.</span>
 </div>
 
 <!-- 3.8 LCS -->
@@ -303,9 +597,26 @@ if X[i] == Y[j]:  dp[i][j] = dp[i-1][j-1] + 1
 else:             dp[i][j] = max(dp[i-1][j], dp[i][j-1])</div>
 </div>
 
+<h3 class="sub">🖥️ Full DP Table — Step-by-Step Fill</h3>
 <div class="card example">
-  <div class="tag">💡 Numerical Example: X = "ABCBDAB", Y = "BDCABA"</div>
-  <p style="margin-top:6px;">Filling the dp table row by row (matching characters increment diagonal +1, else take max of left/top) gives a final LCS length of <strong>4</strong>, with one valid LCS being "BCBA" (or "BDAB").</p>
+  <div class="tag">💡 Numerical Example: X = "ABCBDAB" (7 chars), Y = "BDCABA" (6 chars)</div>
+  <p style="margin-top:6px;">Full dp[i][j] table (rows = prefixes of X, columns = prefixes of Y). Diagonal +1 on a match, else the max of the cell above / to the left:</p>
+  <table style="margin-top:10px;font-size:13px;">
+    <tr><th>X\Y</th><th>""</th><th>B</th><th>D</th><th>C</th><th>A</th><th>B</th><th>A</th></tr>
+    <tr><td>""</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+    <tr><td>A</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="hi">1</td><td>1</td><td class="hi">1</td></tr>
+    <tr><td>B</td><td>0</td><td class="hi">1</td><td>1</td><td>1</td><td>1</td><td class="hi">2</td><td>2</td></tr>
+    <tr><td>C</td><td>0</td><td>1</td><td>1</td><td class="hi">2</td><td>2</td><td>2</td><td>2</td></tr>
+    <tr><td>B</td><td>0</td><td>1</td><td>1</td><td>2</td><td>2</td><td class="hi">3</td><td>3</td></tr>
+    <tr><td>D</td><td>0</td><td>1</td><td class="hi">2</td><td>2</td><td>2</td><td>3</td><td>3</td></tr>
+    <tr><td>A</td><td>0</td><td>1</td><td>2</td><td>2</td><td class="hi">3</td><td>3</td><td class="hi">4</td></tr>
+    <tr><td>B</td><td>0</td><td>1</td><td>2</td><td>2</td><td>3</td><td class="hi">4</td><td>4</td></tr>
+  </table>
+  <p style="margin-top:10px;">Tracing back from dp[7][6]=4 through the diagonal-match cells (highlighted) reconstructs the subsequence <strong>"BCBA"</strong> — one valid LCS of length 4 (another valid answer of the same length is "BDAB").</p>
+</div>
+<div class="keypoint">
+  <span class="icon">📌</span>
+  <span><strong>Complexity:</strong> O(m×n) time and O(m×n) space for the table (m,n = lengths of the two strings). Space can be optimised to O(min(m,n)) if only the length (not the actual subsequence) is required, by keeping just two rows.</span>
 </div>
 
 <!-- 3.9 0/1 KNAPSACK -->
@@ -328,6 +639,33 @@ dp[i][w] = dp[i-1][w]                                    if weight[i] > w
 dp[i][w] = max( dp[i-1][w],  profit[i] + dp[i-1][w-weight[i]] )   otherwise</div>
 </div>
 
+<div class="svgbox">
+<svg viewBox="0 0 600 260" xmlns="http://www.w3.org/2000/svg" style="max-width:480px;width:100%;">
+  <defs>
+    <marker id="arrKnap" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" style="fill:var(--accent)"/></marker>
+  </defs>
+  <rect x="230" y="10" width="140" height="42" rx="8" style="fill:var(--accent-light);stroke:var(--accent);stroke-width:1.5"/>
+  <text x="300" y="36" text-anchor="middle" font-size="12" font-weight="700" style="fill:var(--accent)">Consider item i, capacity w</text>
+  <polygon points="300,80 400,120 300,160 200,120" style="fill:var(--amber-light);stroke:var(--amber);stroke-width:1.5"/>
+  <text x="300" y="116" text-anchor="middle" font-size="11.5" font-weight="700" style="fill:#b45309">weight[i] &gt; w ?</text>
+  <text x="300" y="132" text-anchor="middle" font-size="11" style="fill:#b45309">(doesn't fit)</text>
+  <rect x="30" y="195" width="200" height="46" rx="8" style="fill:var(--red-light);stroke:var(--red);stroke-width:1.5"/>
+  <text x="130" y="215" text-anchor="middle" font-size="11.5" style="fill:var(--red)">Skip item i</text>
+  <text x="130" y="230" text-anchor="middle" font-size="11" style="fill:var(--red)">dp[i][w] = dp[i−1][w]</text>
+  <rect x="370" y="195" width="210" height="56" rx="8" style="fill:var(--green-light);stroke:var(--green);stroke-width:1.5"/>
+  <text x="475" y="213" text-anchor="middle" font-size="11" style="fill:#065f46">Take MAX of "include" &amp; "exclude"</text>
+  <text x="475" y="228" text-anchor="middle" font-size="10.5" style="fill:#065f46">dp[i][w]=max(dp[i−1][w],</text>
+  <text x="475" y="242" text-anchor="middle" font-size="10.5" style="fill:#065f46">p[i]+dp[i−1][w−wt[i]])</text>
+  <line x1="300" y1="52" x2="300" y2="78" style="stroke:var(--accent);stroke-width:2" marker-end="url(#arrKnap)"/>
+  <line x1="240" y1="145" x2="140" y2="193" style="stroke:var(--red);stroke-width:2" marker-end="url(#arrKnap)"/>
+  <text x="160" y="175" font-size="11" style="fill:var(--red)">yes</text>
+  <line x1="365" y1="145" x2="465" y2="193" style="stroke:var(--green);stroke-width:2" marker-end="url(#arrKnap)"/>
+  <text x="410" y="175" font-size="11" style="fill:var(--green)">no</text>
+</svg>
+<div class="cap">Fig 3.6 — Decision made when filling each dp[i][w] cell of the 0/1 Knapsack table.</div>
+</div>
+
+<h3 class="sub">🖥️ Full Worked Example</h3>
 <div class="card example">
   <div class="tag">💡 Numerical Example: W=5, Items (weight,profit): (2,3),(3,4),(4,5),(5,6)</div>
   <p style="margin-top:6px;">Building dp[i][w] for w=0..5 across 4 items:</p>
@@ -342,8 +680,35 @@ dp[i][w] = max( dp[i-1][w],  profit[i] + dp[i-1][w-weight[i]] )   otherwise</div
   <p style="margin-top:8px;">Maximum profit dp[4][5] = <strong>7</strong>, achieved by selecting items (2,3) and (3,4) → total weight=5, total profit=7.</p>
 </div>
 
-<!-- 3.10 TABLES -->
-<h2 class="topic" id="u3-tables">3.10 Important Comparison Tables <span class="imp h">RAPID REVISION</span></h2>
+<h3 class="sub">Why Greedy Fails Here (Comparison with Fractional)</h3>
+<div class="card">
+  <p>With capacity W=10 and items (profit,weight) = (10,5), (10,5), (12,8): the greedy ratio-based choice picks the (12,8) item first (ratio 1.5), leaving only 2 capacity unused — giving profit 12. DP correctly identifies that taking both (10,5) items uses exactly 10 capacity for a profit of <strong>20</strong>, proving greedy is not optimal when items cannot be fractionally split.</p>
+</div>
+<div class="keypoint">
+  <span class="icon">📌</span>
+  <span><strong>Complexity:</strong> O(n×W) time and O(n×W) space (pseudo-polynomial — depends on the numeric value of W, not just n). Space can be reduced to O(W) using a 1-D array updated right-to-left.</span>
+</div>
+
+<!-- 3.10 COMPLEXITY CHEAT TABLE -->
+<h2 class="topic" id="u3-complexity">3.10 Complexity Cheat-Table (All Unit 3 Algorithms)</h2>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Algorithm</th><th>Technique</th><th>Time Complexity</th><th>Space Complexity</th></tr>
+    <tr><td>Fractional Knapsack</td><td>Greedy</td><td>O(n log n)</td><td>O(1)</td></tr>
+    <tr><td>Job Sequencing (array scan)</td><td>Greedy</td><td>O(n²)</td><td>O(n)</td></tr>
+    <tr><td>Job Sequencing (Union-Find)</td><td>Greedy</td><td>O(n log n)</td><td>O(n)</td></tr>
+    <tr><td>Optimal Merge Pattern</td><td>Greedy (min-heap)</td><td>O(n log n)</td><td>O(n)</td></tr>
+    <tr><td>Prim's MST (binary heap)</td><td>Greedy</td><td>O(E log V)</td><td>O(V)</td></tr>
+    <tr><td>Kruskal's MST</td><td>Greedy (Union-Find)</td><td>O(E log E)</td><td>O(V)</td></tr>
+    <tr><td>Matrix Chain Multiplication</td><td>DP</td><td>O(n³)</td><td>O(n²)</td></tr>
+    <tr><td>Longest Common Subsequence</td><td>DP</td><td>O(m×n)</td><td>O(m×n) → O(min(m,n))*</td></tr>
+    <tr><td>0/1 Knapsack</td><td>DP</td><td>O(n×W)</td><td>O(n×W) → O(W)*</td></tr>
+  </table>
+  <p style="margin-top:8px;font-size:13px;color:var(--muted);">* Space-optimised versions when only the optimal value (not the actual sequence/selection) is needed.</p>
+</div>
+
+<!-- 3.11 TABLES -->
+<h2 class="topic" id="u3-tables">3.11 Important Comparison Tables <span class="imp h">RAPID REVISION</span></h2>
 
 <h3 class="sub">Greedy Method vs Dynamic Programming</h3>
 <div class="card">
@@ -378,8 +743,31 @@ dp[i][w] = max( dp[i-1][w],  profit[i] + dp[i-1][w-weight[i]] )   otherwise</div
   </table>
 </div>
 
-<!-- 3.11 Q&A -->
-<h2 class="topic" id="u3-qa">3.11 RTU Exam Questions &amp; Answers (Importance-Wise)</h2>
+<h3 class="sub">Memoization vs Tabulation</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Basis</th><th>Top-Down (Memoization)</th><th>Bottom-Up (Tabulation)</th></tr>
+    <tr><td>Direction</td><td>Recursive, from the main problem down to base cases</td><td>Iterative, from base cases up to the main problem</td></tr>
+    <tr><td>Sub-problems solved</td><td>Only those actually required</td><td>All sub-problems in the table, regardless of need</td></tr>
+    <tr><td>Overhead</td><td>Recursion / call-stack overhead</td><td>No recursion overhead, usually faster in practice</td></tr>
+  </table>
+</div>
+
+<!-- 3.12 COMMON MISTAKES -->
+<h2 class="topic" id="u3-mistakes">3.12 Common Exam Mistakes &amp; Quick Tips</h2>
+<div class="card">
+  <ul>
+    <li>❌ <strong>Applying greedy to 0/1 Knapsack</strong> — always solve 0/1 Knapsack with DP; greedy ratio-sorting only works for the Fractional version.</li>
+    <li>❌ <strong>Forgetting to sort in Job Sequencing</strong> — jobs must first be sorted by decreasing profit, not by deadline.</li>
+    <li>❌ <strong>Skipping the base row/column in DP tables</strong> — always explicitly write dp[0][*] = 0 and dp[*][0] = 0 before filling the rest; examiners award marks for this.</li>
+    <li>❌ <strong>Mixing up MCM index convention</strong> — matrix Ai has dimension p[i-1] × p[i]; a chain of n matrices has (n+1) dimension values.</li>
+    <li>❌ <strong>Forgetting the (n-1) edges rule for MST</strong> — a spanning tree on n vertices always has exactly n−1 edges; stop as soon as that count is reached.</li>
+    <li>✅ <strong>Always show the trace table</strong> (not just the final answer) for 10-mark numericals — RTU awards significant step-marks for the working shown.</li>
+  </ul>
+</div>
+
+<!-- 3.13 Q&A -->
+<h2 class="topic" id="u3-qa">3.13 RTU Exam Questions &amp; Answers (Importance-Wise)</h2>
 <div id="qsection">
 
   <div class="qcard">
@@ -416,9 +804,9 @@ dp[i][w] = max( dp[i-1][w],  profit[i] + dp[i-1][w-weight[i]] )   otherwise</div
 
   <div class="qcard">
     <div class="qlabel">Q5</div>
-    <div class="q">Find the Longest Common Subsequence of X="ABCBDAB" and Y="BDCABA" using Dynamic Programming. <span class="marks m10">10 Marks</span></div>
+    <div class="q">Find the Longest Common Subsequence of X="ABCBDAB" and Y="BDCABA" using Dynamic Programming. Show the complete DP table. <span class="marks m10">10 Marks</span></div>
     <div class="a">
-      <p>Using the recurrence dp[i][j]=dp[i-1][j-1]+1 when characters match, and dp[i][j]=max(dp[i-1][j],dp[i][j-1]) otherwise, the DP table is filled across all prefixes of X and Y. The resulting longest common subsequence has length 4, with "BCBA" (or equivalently "BDAB") being one valid such subsequence found by tracing back through the table.</p>
+      <p>Using the recurrence dp[i][j]=dp[i-1][j-1]+1 when characters match, and dp[i][j]=max(dp[i-1][j],dp[i][j-1]) otherwise, the full DP table is filled across all prefixes of X and Y as shown above. The resulting longest common subsequence has length 4, with "BCBA" (or equivalently "BDAB") being one valid such subsequence found by tracing back through the table's diagonal-match cells.</p>
     </div>
   </div>
 
@@ -434,7 +822,7 @@ dp[i][w] = max( dp[i-1][w],  profit[i] + dp[i-1][w-weight[i]] )   otherwise</div
     <div class="qlabel">Q7</div>
     <div class="q">Explain Job Sequencing with Deadlines and solve for jobs J1(d=2,p=100), J2(d=1,p=19), J3(d=2,p=27), J4(d=1,p=25), J5(d=3,p=15). <span class="marks m5">5 Marks</span></div>
     <div class="a">
-      <p>Jobs are sorted in decreasing order of profit, and each is greedily placed into the latest available free time slot at or before its deadline; a job is rejected if no such slot remains. Following this for the given jobs, J1 is placed in slot 2 and J3 in slot 1 (since slot 2 is taken), while J4, J2, and J5 all fail to find a free slot and are rejected, giving a maximum total profit of 127 from jobs J3 and J1.</p>
+      <p>Jobs are sorted in decreasing order of profit, and each is greedily placed into the latest available free time slot at or before its deadline; a job is rejected if no such slot remains. Following this for the given jobs with slots [1][2][3] (max deadline = 3), J1 is placed in slot 2, J3 in slot 1, J4 and J2 are rejected (slot 1 taken, no earlier slot available), and J5 fits in slot 3, giving selected jobs J3, J1, J5 with a maximum total profit of 27+100+15 = 142.</p>
     </div>
   </div>
 
@@ -462,6 +850,38 @@ dp[i][w] = max( dp[i-1][w],  profit[i] + dp[i-1][w-weight[i]] )   otherwise</div
     </div>
   </div>
 
+  <div class="qcard">
+    <div class="qlabel">Q11</div>
+    <div class="q">What are the conditions necessary for a Greedy algorithm to produce an optimal solution? Explain with reference to any two Unit 3 problems. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>A greedy algorithm produces a globally optimal solution only when the problem exhibits the greedy-choice property (a locally optimal choice at each step leads toward a global optimum) and optimal substructure (an optimal solution contains optimal solutions to its sub-problems). Fractional Knapsack satisfies both, since taking the highest ratio item never costs anything due to divisibility, while MST construction (Prim's/Kruskal's) satisfies both via the cut property of graphs, guaranteeing that always picking the minimum safe edge is never wrong.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q12</div>
+    <div class="q">Write and explain the algorithm for Prim's method of finding a Minimum Cost Spanning Tree. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>Prim's algorithm begins with an arbitrary starting vertex placed in the MST set, and at each of the remaining n−1 steps, selects the minimum-weight edge that connects a vertex already inside the MST set to a vertex still outside it, adding both the edge and the new vertex to the set. Using a min-priority-queue keyed by edge weight, this process runs in O(E log V) time and always produces a tree spanning all vertices with minimum total edge weight, since each greedy choice respects the cut property.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q13</div>
+    <div class="q">Give the recurrence relation for Matrix Chain Multiplication and explain each term. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>The recurrence m[i][j] = min over all split points k (i≤k&lt;j) of { m[i][k] + m[k+1][j] + p[i-1]·p[k]·p[j] } computes the minimum multiplication cost for the sub-chain of matrices Ai...Aj, where m[i][k] and m[k+1][j] are the optimal costs of the two resulting sub-chains and p[i-1]·p[k]·p[j] is the cost of multiplying the two resulting product matrices together; the base case m[i][i]=0 reflects that a single matrix needs no multiplication.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q14</div>
+    <div class="q">What is the time and space complexity of the 0/1 Knapsack DP solution, and how can the space be optimized? <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>The standard 2-D DP table for 0/1 Knapsack takes O(n×W) time and O(n×W) space, where n is the number of items and W is the capacity. Since each row dp[i][*] only depends on the previous row dp[i-1][*], the space can be optimized to O(W) by using a single 1-D array and updating it from right to left (high capacity to low) for each item, which prevents an item from being counted more than once.</p>
+    </div>
+  </div>
+
 </div><!-- end qsection -->
 
 <!-- CHEAT SHEET -->
@@ -477,7 +897,7 @@ dp[i][w] = max( dp[i-1][w],  profit[i] + dp[i-1][w-weight[i]] )   otherwise</div
     <div class="formula" style="margin:3px 0; font-size:12px;">0/1 Knapsack: dp[i][w]=max(dp[i-1][w], p[i]+dp[i-1][w-wt[i]])</div>
     <div class="formula" style="margin:3px 0; font-size:12px;">Greedy: locally optimal, no backtrack, no overlap reuse</div>
     <div class="formula" style="margin:3px 0; font-size:12px;">DP: overlapping sub-problems + optimal substructure</div>
-    <div class="formula" style="margin:3px 0; font-size:12px;">0/1 Knapsack DP time: O(n×W)</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">0/1 Knapsack DP time: O(n×W) · MCM: O(n³) · LCS: O(m×n)</div>
   </div>
 </div>
 
@@ -514,5 +934,6 @@ dp[i][w] = max( dp[i-1][w],  profit[i] + dp[i-1][w-weight[i]] )   otherwise</div
       el.addEventListener("mouseleave",()=>cursorOutline.classList.remove("cursor-hovering"));
     });
   </script>
-<script src="../splash-cursor.js"></script>\n</body>
+<script src="../splash-cursor.js"></script>
+</body>
 </html>
