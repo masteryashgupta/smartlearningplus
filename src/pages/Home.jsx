@@ -1854,7 +1854,7 @@ const handleContribSubmit = async (e) => {
                     <div style={{ color: "#64748b", fontSize: "12.5px", lineHeight: 1.55, background: contactTakedownMode ? "#fef2f2" : "#f0f9ff", border: contactTakedownMode ? "1px solid #fca5a5" : "1px solid #bae6fd", borderRadius: "10px", padding: "10px 14px" }}>
                       {contactTakedownMode 
                         ? "&#9888; This is a copyright takedown request. Please describe the content in question and we will review it promptly for removal."
-                        : "&#8505;&#65039; Fill in your details below. The admin will reply to your email address."}
+                        : "Fill in your details below. The admin will reply to your email address."}
                     </div>
 
                     <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
