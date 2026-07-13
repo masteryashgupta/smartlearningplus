@@ -5,47 +5,733 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Smart Learning Plus // HCI · Unit 4</title>
 <link rel="stylesheet" href="../style.css">
-<style>
-  .placeholder-vault {
-    text-align: center; padding: 60px 24px;
-  }
-  .placeholder-vault .icon { font-size: 64px; margin-bottom: 20px; opacity: 0.5; }
-  .placeholder-vault h2 { font-size: 22px; font-weight: 800; color: var(--text); margin-bottom: 10px; }
-  .placeholder-vault p { color: var(--muted); font-size: 15px; max-width: 400px; margin: 0 auto 24px; }
-</style>
 </head>
 <body>
   <main class="main-wrapper" style="width:100%;">
     <div class="topbar">
-      <a href="index.html" class="back-btn">⬅ HCI Hub</a>
+      <a href="../hci/index.html" class="back-btn">⬅ HCI Hub</a>
       <div class="brand">Smart<span>Learning</span>+ <span style="color:var(--muted);font-weight:400;font-size:14px;">// HCI · Unit 4</span></div>
       <div class="nav">
-        <a href="index.html">🏠 HCI Hub</a>
+        <a href="../hci/index.html">🏠 HCI Hub</a>
         <a href="#content">📖 Content</a>
-        <a href="#qa">❓ Q&A</a>
-        <a href="unit3.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev</a>
+        <a href="#qa">❓ Q&amp;A</a>
+        <a href="unit3.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
         <a href="unit5.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
       </div>
     </div>
     <div class="wrap">
       <div class="hero">
-        <h1>📕 Unit 4 — Guidelines & Heuristics</h1>
-        <p>Shneiderman's 8 Golden Rules, Norman's 7 principles, Nielsen's 10 heuristics · Hours: 05</p>
+        <h1>🧭 Unit 4 — Guidelines in HCI</h1>
+        <p>Shneiderman's Rules · Norman's Principles · Norman's Model · Nielsen's Heuristics · Evaluation Methods | Hours: 05</p>
         <div class="badges" style="margin-top:14px;">
-          <a href="index.html" style="text-decoration:none;"><span class="badge b-teal">← Back to HCI Hub</span></a>
+          <a href="../hci/index.html" style="text-decoration:none;"><span class="badge b-teal">← Back to HCI Hub</span></a>
           <span class="badge b-gold">5CS5-12 · HCI · RTU</span>
         </div>
       </div>
+      <div id="content">
 
-      <div class="placeholder-vault">
-        <div class="icon">📕</div>
-        <h2>Unit 4 Content Coming Soon</h2>
-        <p>Content for Unit 4 (Shneiderman's eight golden rules, Norman's seven principles, Norman's model of interaction, Nielsen's ten heuristics, Heuristic evaluation, Contextual inquiry, Cognitive walkthrough) is being prepared. Check back later for detailed notes and Q&A.</p>
+  <div class="hero" id="unit4">
+    <h1>UNIT 4 — GUIDELINES IN HCI</h1>
+    <div class="sub">5CS5-12 · Human Computer Interaction · RTU Kota · III Year – V Sem · B.Tech CSE</div>
+    <div class="sub" style="margin-top:4px;">Credit: 2 &nbsp;|&nbsp; Max Marks: 100 (IA:30, ETE:70) &nbsp;|&nbsp; End Term: 3 Hours</div>
+    <div class="badges">
+      <span class="badge b-red">⚠ HIGH PRIORITY UNIT</span>
+      <span class="badge b-gold">⭐ 5 &amp; 10 Mark Questions</span>
+      <span class="badge b-teal">✦ 5 Hours Weightage</span>
+    </div>
+  </div>
+
+  <div class="progress-bar"></div>
+
+  <div class="toc scroll-anchor" id="toc">
+    <h3>📋 UNIT 4 — CONTENTS</h3>
+    <ol>
+      <li><a href="#intro">Introduction — Why Guidelines Matter</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#shneiderman">Shneiderman's Eight Golden Rules</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#norman7">Norman's Seven Principles of Design</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#normanmodel">Norman's Model of Interaction (Action Cycle)</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#gulfs">Gulf of Execution &amp; Gulf of Evaluation</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#nielsen">Nielsen's Ten Usability Heuristics</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#nielsenexample">Example Application of Nielsen's Heuristics</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#heuristiceval">Heuristic Evaluation</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#contextual">Contextual Inquiry</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#cogwalk">Cognitive Walkthrough</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#compareall">Comparison — Evaluation Methods</a> <span class="sublabel">MEDIUM ★★</span></li>
+      <li><a href="#qa">RTU Exam Q&amp;A Bank (5-mark &amp; 10-mark)</a> <span class="sublabel">EXAM GOLD</span></li>
+    </ol>
+  </div>
+
+  <!-- ============ 01 INTRO ============ -->
+  <div class="unit-title scroll-anchor" id="intro">
+    <span style="color:var(--accent2);">01.</span> Introduction — Why Guidelines Matter
+    <span class="imp h">HIGH</span>
+  </div>
+  <div class="unit-sub">Guidelines, principles aur heuristics interface design ko "guess-work" se "science" banate hain</div>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>Design Guidelines</strong> in HCI are a set of recommendations, rules, and principles derived from research on human cognition, perception, and behavior that help designers create interfaces which are easy to learn, efficient to use, and pleasant to interact with.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish Explanation</div>
+    Jab bhi hum koi software ya app design karte hain, hume pata nahi hota ki user kaise sochega, kya expect karega. Isliye HCI experts ne years of research ke baad kuch <strong>"guidelines" aur "rules"</strong> banaye hain jo bataate hain ki ek <em>good interface</em> kaisa hona chahiye. Ye guidelines designer ko batati hain — consistency rakho, feedback do, errors se bachao, user ko control do, waghera. Is unit mein hum 4 major frameworks padhenge: <strong>Shneiderman's 8 Golden Rules, Norman's 7 Principles, Norman's Interaction Model,</strong> aur <strong>Nielsen's 10 Heuristics</strong> — plus unhe evaluate karne ke 3 tareeke: Heuristic Evaluation, Contextual Inquiry, aur Cognitive Walkthrough.
+  </div>
+
+  <div class="keypoint">
+    <div class="icon">💡</div>
+    <div><strong>Exam Tip:</strong> RTU mein "Shneiderman's 8 rules list karo", "Nielsen's 10 heuristics with example" aur "Norman's 7 stage model diagram" — ye teeno bahut common 10-mark questions hain. Diagram bana kar dikhana bonus marks deta hai.</div>
+  </div>
+
+  <hr class="sep">
+
+  <!-- ============ 02 SHNEIDERMAN ============ -->
+  <h2 class="topic scroll-anchor" id="shneiderman">
+    <span>02.</span> Shneiderman's Eight Golden Rules
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>Ben Shneiderman's Eight Golden Rules</strong> are a set of interface design principles proposed to guide the design of interactive systems so that they are consistent, predictable, and reduce the user's cognitive load and error rate.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Ben Shneiderman ek famous HCI researcher hai jisne 8 "golden rules" batayi jo har achhe interface mein follow honi chahiye — chahe woh website ho, mobile app ho ya desktop software. Ye rules generic hain, kisi bhi domain pe apply hote hain.
+  </div>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:700px;">
+      <rect x="0" y="0" width="700" height="380" fill="#f8fafc" rx="10"/>
+      <circle cx="350" cy="190" r="70" fill="#eef2ff" stroke="#4f46e5" stroke-width="2"/>
+      <text x="350" y="185" text-anchor="middle" font-size="13" font-weight="700" fill="#4f46e5" font-family="Inter">Shneiderman's</text>
+      <text x="350" y="202" text-anchor="middle" font-size="13" font-weight="700" fill="#4f46e5" font-family="Inter">8 Golden Rules</text>
+      <!-- 8 nodes around circle -->
+      <g font-family="Inter" font-size="10.5" fill="#0f172a">
+        <g><circle cx="350" cy="40" r="42" fill="#ecfeff" stroke="#06b6d4" stroke-width="1.5"/><text x="350" y="35" text-anchor="middle">1. Strive for</text><text x="350" y="48" text-anchor="middle">Consistency</text></g>
+        <g><circle cx="520" cy="80" r="42" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5"/><text x="520" y="75" text-anchor="middle">2. Enable Shortcuts</text><text x="520" y="88" text-anchor="middle">(Universal Usability)</text></g>
+        <g><circle cx="600" cy="220" r="42" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/><text x="600" y="215" text-anchor="middle">3. Offer</text><text x="600" y="228" text-anchor="middle">Informative Feedback</text></g>
+        <g><circle cx="520" cy="330" r="42" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5"/><text x="520" y="325" text-anchor="middle">4. Design Dialogs</text><text x="520" y="338" text-anchor="middle">for Closure</text></g>
+        <g><circle cx="350" cy="360" r="42" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="1.5"/><text x="350" y="355" text-anchor="middle">5. Prevent</text><text x="350" y="368" text-anchor="middle">Errors</text></g>
+        <g><circle cx="180" cy="330" r="42" fill="#ecfeff" stroke="#06b6d4" stroke-width="1.5"/><text x="180" y="325" text-anchor="middle">6. Permit Easy</text><text x="180" y="338" text-anchor="middle">Reversal of Actions</text></g>
+        <g><circle cx="100" cy="220" r="42" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5"/><text x="100" y="215" text-anchor="middle">7. Support Internal</text><text x="100" y="228" text-anchor="middle">Locus of Control</text></g>
+        <g><circle cx="180" cy="80" r="42" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/><text x="180" y="75" text-anchor="middle">8. Reduce Short-Term</text><text x="180" y="88" text-anchor="middle">Memory Load</text></g>
+      </g>
+    </svg>
+    <p class="cap">Fig 1: Shneiderman's Eight Golden Rules of Interface Design</p>
+  </div>
+
+  <table>
+    <tr><th>#</th><th>Rule</th><th>Meaning</th><th>Example</th></tr>
+    <tr><td class="hi">1</td><td>Strive for Consistency</td><td>Same terminology, layout, colour and command sequence should be used throughout</td><td>All "Save" buttons look and behave the same across all screens of an app</td></tr>
+    <tr><td class="hi">2</td><td>Enable Frequent Users to Use Shortcuts</td><td>Provide accelerators like keyboard shortcuts, macros for expert users</td><td>Ctrl+C / Ctrl+V for copy-paste instead of navigating menus every time</td></tr>
+    <tr><td class="hi">3</td><td>Offer Informative Feedback</td><td>Every action should have an appropriate, visible system response</td><td>Progress bar while uploading a file; green tick after form submission</td></tr>
+    <tr><td class="hi">4</td><td>Design Dialogs to Yield Closure</td><td>Group actions into sequences with a beginning, middle and end so user feels a sense of completion</td><td>"Order placed successfully" confirmation screen after checkout</td></tr>
+    <tr><td class="hi">5</td><td>Offer Error Prevention &amp; Simple Error Handling</td><td>Design so users cannot easily make serious errors; if they do, give clear recovery instructions</td><td>Greying-out "Submit" button until all mandatory fields filled</td></tr>
+    <tr><td class="hi">6</td><td>Permit Easy Reversal of Actions</td><td>Actions should be undoable, reducing anxiety of exploring the interface</td><td>Ctrl+Z Undo; "Move to Trash" instead of permanent delete</td></tr>
+    <tr><td class="hi">7</td><td>Support Internal Locus of Control</td><td>Experienced users want to feel they are in charge of the system, not the system controlling them</td><td>User can cancel a long-running download/search anytime</td></tr>
+    <tr><td class="hi">8</td><td>Reduce Short-Term Memory Load</td><td>Human short-term memory is limited (7±2 items); interface should minimize the need to remember information</td><td>Auto-fill/auto-suggest of previously entered address instead of retyping</td></tr>
+  </table>
+
+  <div class="card example">
+    <div class="tag">Mnemonic to Remember</div>
+    <p><strong>"C-S-F-C-E-R-L-M"</strong> → Consistency, Shortcuts, Feedback, Closure, Errors, Reversal, Locus of control, Memory load. Yaad rakhne ke liye story bana lo: "<em>Consistent Shopping Feels Complete, Errors Reverse, Locus Matters</em>".</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- ============ 03 NORMAN 7 PRINCIPLES ============ -->
+  <h2 class="topic scroll-anchor" id="norman7">
+    <span>03.</span> Norman's Seven Principles of Design
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>Don Norman's Seven Principles</strong> (from his book <em>"The Design of Everyday Things"</em>) are design principles that help transform difficult, hard-to-use tasks into simple ones by considering how humans perceive, think about, and interact with objects and systems.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Don Norman ne apni book mein bताया ki achhe products (chahe door handle ho ya software) users ko khud batate hain ki unhe kaise use karna hai — bina manual padhe. Ye 7 principles wahi cheez software design mein achieve karne ke liye use hote hain.
+  </div>
+
+  <table>
+    <tr><th>#</th><th>Principle</th><th>Explanation</th><th>Example</th></tr>
+    <tr><td class="hi">1</td><td>Use both Knowledge in the World &amp; in the Head</td><td>People use a combination of information stored in memory and information available in the environment (labels, icons, cues)</td><td>Icon of a printer on a button — user doesn't need to memorize a code, the icon itself gives the cue</td></tr>
+    <tr><td class="hi">2</td><td>Simplify the Structure of Tasks</td><td>Reduce the mental effort needed by breaking complex tasks into simple steps or using automation/tools</td><td>Multi-step wizard for account setup instead of one huge complex form</td></tr>
+    <tr><td class="hi">3</td><td>Make Things Visible</td><td>Bridge the gulf of execution and evaluation by making controls and system state visible to the user</td><td>Visible "Save" icon, visible battery/wifi status icons on a phone</td></tr>
+    <tr><td class="hi">4</td><td>Get the Mappings Right</td><td>Ensure a correct relationship between controls and their effects, matching user's mental model</td><td>Steering wheel turn right → car turns right (natural mapping); volume slider up = louder</td></tr>
+    <tr><td class="hi">5</td><td>Exploit the Power of Constraints</td><td>Use physical, logical, semantic and cultural constraints to guide the user and prevent incorrect actions</td><td>SIM card/USB slot shaped so it can only be inserted one correct way</td></tr>
+    <tr><td class="hi">6</td><td>Design for Error</td><td>Assume errors will happen; design the system so errors can be easily detected and reversed</td><td>Confirmation dialog "Are you sure you want to delete this file?"</td></tr>
+    <tr><td class="hi">7</td><td>When All Else Fails, Standardize</td><td>Where no natural mapping exists, provide a standard that everyone can learn once (e.g., across an industry/platform)</td><td>QWERTY keyboard layout; steering wheel always on left/right per country standard</td></tr>
+  </table>
+
+  <div class="card example">
+    <div class="tag">Constraint Types (Principle 5, expand this in answers)</div>
+    <p><strong>Physical constraints</strong> — shape/size restricts action (a plug fits one way).<br>
+    <strong>Semantic constraints</strong> — meaning of a situation restricts action (a rider can only sit facing forward on a bike, that's the meaning of "sitting on a bike").<br>
+    <strong>Cultural constraints</strong> — social conventions guide behaviour (red colour = stop/danger, universally understood).<br>
+    <strong>Logical constraints</strong> — logical relationship between layout and function (if one part left, others must fit the remaining slot in a puzzle).</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- ============ 04 NORMAN'S MODEL ============ -->
+  <h2 class="topic scroll-anchor" id="normanmodel">
+    <span>04.</span> Norman's Model of Interaction (Seven-Stage Action Cycle)
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>Norman's Model of Interaction</strong> describes the interaction between a user and a system as a cycle of seven stages, divided into an <em>Execution</em> phase (forming and carrying out an action) and an <em>Evaluation</em> phase (perceiving and interpreting the result), connected via a goal.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Jab bhi hum computer pe koi kaam karte hain (jaise email bhejna), hamara brain automatically 7 steps follow karta hai — pehle goal sochte hain, phir plan banate hain ki kya action lena hai, phir action execute karte hain, aur phir screen dekh kar samajhte hain ki humara action successful hua ya nahi. Norman ne is poore cycle ko 7 stages mein divide kiya hai.
+  </div>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:560px;">
+      <rect x="0" y="0" width="640" height="480" fill="#f8fafc" rx="10"/>
+      <!-- GOAL top -->
+      <rect x="250" y="10" width="140" height="42" rx="8" fill="#eef2ff" stroke="#4f46e5" stroke-width="2"/>
+      <text x="320" y="36" text-anchor="middle" font-size="13" font-weight="700" fill="#4f46e5" font-family="Inter">GOAL</text>
+
+      <!-- Execution side (left) -->
+      <text x="130" y="70" text-anchor="middle" font-size="11" font-weight="700" fill="#ef4444" font-family="Inter">EXECUTION →</text>
+      <rect x="40" y="80" width="180" height="40" rx="8" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5"/>
+      <text x="130" y="105" text-anchor="middle" font-size="11.5" font-family="Inter">1. Form the Goal</text>
+
+      <rect x="40" y="145" width="180" height="40" rx="8" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5"/>
+      <text x="130" y="170" text-anchor="middle" font-size="11.5" font-family="Inter">2. Form the Intention</text>
+
+      <rect x="40" y="210" width="180" height="40" rx="8" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5"/>
+      <text x="130" y="235" text-anchor="middle" font-size="11.5" font-family="Inter">3. Specify the Action</text>
+
+      <rect x="40" y="275" width="180" height="40" rx="8" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5"/>
+      <text x="130" y="300" text-anchor="middle" font-size="11.5" font-family="Inter">4. Execute the Action</text>
+
+      <!-- Arrow down to world -->
+      <rect x="60" y="340" width="140" height="34" rx="8" fill="#0d1820" opacity="0.05" stroke="var(--border2)"/>
+      <text x="130" y="362" text-anchor="middle" font-size="11" font-family="Inter" font-style="italic">THE WORLD / SYSTEM</text>
+
+      <!-- Evaluation side (right) -->
+      <text x="510" y="70" text-anchor="middle" font-size="11" font-weight="700" fill="#10b981" font-family="Inter">← EVALUATION</text>
+      <rect x="420" y="80" width="180" height="40" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+      <text x="510" y="105" text-anchor="middle" font-size="11.5" font-family="Inter">7. Evaluate Outcome</text>
+
+      <rect x="420" y="145" width="180" height="40" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+      <text x="510" y="170" text-anchor="middle" font-size="11.5" font-family="Inter">6. Interpret the Result</text>
+
+      <rect x="420" y="210" width="180" height="40" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+      <text x="510" y="235" text-anchor="middle" font-size="11.5" font-family="Inter">5. Perceive the State</text>
+
+      <!-- connecting arrows -->
+      <g stroke="#64748b" stroke-width="1.5" fill="none" marker-end="url(#arrHead)">
+        <path d="M320,52 L130,80"/>
+        <path d="M130,120 L130,145"/>
+        <path d="M130,185 L130,210"/>
+        <path d="M130,250 L130,275"/>
+        <path d="M130,315 L130,340"/>
+        <path d="M200,357 L510,240" stroke-dasharray="3,3"/>
+        <path d="M510,210 L510,185"/>
+        <path d="M510,145 L510,120"/>
+        <path d="M420,100 L320,52"/>
+      </g>
+      <defs><marker id="arrHead" markerWidth="8" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#64748b"/></marker></defs>
+
+      <text x="320" y="420" text-anchor="middle" font-size="12" fill="#64748b" font-family="Inter">Bridge between world and mind = GULF OF EXECUTION (left) &amp; GULF OF EVALUATION (right)</text>
+    </svg>
+    <p class="cap">Fig 2: Norman's Seven-Stage Model of Interaction (Action Cycle)</p>
+  </div>
+
+  <div class="steps">
+    <ol>
+      <li><strong>Form the Goal</strong> — user decides what they want to accomplish (e.g., "I want to print this document").</li>
+      <li><strong>Form the Intention</strong> — user decides on a specific intention to reach that goal (e.g., "I will use the print command").</li>
+      <li><strong>Specify the Action</strong> — user plans the exact sequence of actions needed (e.g., "click File then Print").</li>
+      <li><strong>Execute the Action</strong> — user physically performs the action (clicking the mouse, pressing keys).</li>
+      <li><strong>Perceive the State of the World</strong> — user observes the system/environment after the action (sees the print dialog or a printed page).</li>
+      <li><strong>Interpret the State</strong> — user makes sense of what they perceived (understands that printing has started or an error occurred).</li>
+      <li><strong>Evaluate the Outcome</strong> — user compares the interpreted outcome with the original goal to check if it was achieved.</li>
+    </ol>
+  </div>
+
+  <hr class="sep">
+
+  <!-- ============ 05 GULFS ============ -->
+  <h2 class="topic scroll-anchor" id="gulfs">
+    <span>05.</span> Gulf of Execution &amp; Gulf of Evaluation
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>Gulf of Execution</strong> is the gap between a user's intentions and the actions allowed/available by the system. <strong>Gulf of Evaluation</strong> is the gap between the physical presentation of the system's state and the user's expectation/interpretation of it.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Simple bhasha mein: <strong>Gulf of Execution</strong> = "Mujhe pata nahi ye kaam kaise karna hai, system mujhe batata hi nahi" (user confuse hai ki kya karna chahiye). <strong>Gulf of Evaluation</strong> = "Maine action kar diya lekin samajh nahi aa raha ki hua kya, system ne bataya hi nahi" (user confuse hai ki result kya hua). Good design in dono gulfs ko chhota kar deta hai — clear labels, feedback, icons ke through.
+  </div>
+
+  <div class="compare">
+    <div class="compare-card">
+      <h4 style="color:var(--red);">Gulf of Execution</h4>
+      <p>Occurs when user doesn't know what actions are possible or how to perform them. Reduced by making controls, options and their functions <strong>visible</strong> and matching the user's mental model (good mapping).</p>
+      <p><em>Example:</em> A remote control with 40 unlabeled buttons — user doesn't know which button does what.</p>
+    </div>
+    <div class="compare-card">
+      <h4 style="color:var(--green);">Gulf of Evaluation</h4>
+      <p>Occurs when user cannot easily tell whether the goal was achieved from the feedback the system provides. Reduced by giving clear, immediate <strong>feedback</strong>.</p>
+      <p><em>Example:</em> Clicking "Submit" and nothing happens on screen — user unsure if the form was submitted.</p>
+    </div>
+  </div>
+
+  <div class="card example">
+    <div class="tag">Exam Angle</div>
+    <p>Questions often ask: "How can designers reduce the Gulf of Execution and Evaluation?" → Answer: Execution gulf is reduced through good <strong>mapping and visibility of controls</strong>; Evaluation gulf is reduced through good <strong>feedback and system status visibility</strong> (this directly connects to Norman's Principle 3 &amp; 4 above).</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- ============ 06 NIELSEN'S 10 HEURISTICS ============ -->
+  <h2 class="topic scroll-anchor" id="nielsen">
+    <span>06.</span> Nielsen's Ten Usability Heuristics
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>Jakob Nielsen's Ten Usability Heuristics</strong> are general, broadly-applicable rules of thumb used to evaluate the usability of a user interface, developed by Jakob Nielsen and Rolf Molich in 1990 (refined in 1994).</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Ye sabse zyada exam mein pucha jaane wala topic hai. Nielsen ke 10 heuristics ek checklist ki tarah use hote hain — koi bhi interface evaluate karte waqt hum in 10 points ko check karte hain ki interface unhe follow kar raha hai ya nahi.
+  </div>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:700px;">
+      <rect x="0" y="0" width="700" height="300" fill="#f8fafc" rx="10"/>
+      <g font-family="Inter" font-size="11" fill="#0f172a">
+        <rect x="10" y="10" width="165" height="55" rx="8" fill="#eef2ff" stroke="#4f46e5"/><text x="92" y="32" text-anchor="middle">1. Visibility of</text><text x="92" y="47" text-anchor="middle">System Status</text>
+        <rect x="185" y="10" width="165" height="55" rx="8" fill="#ecfeff" stroke="#06b6d4"/><text x="267" y="32" text-anchor="middle">2. Match Between</text><text x="267" y="47" text-anchor="middle">System &amp; Real World</text>
+        <rect x="360" y="10" width="165" height="55" rx="8" fill="#ecfdf5" stroke="#10b981"/><text x="442" y="32" text-anchor="middle">3. User Control</text><text x="442" y="47" text-anchor="middle">&amp; Freedom</text>
+        <rect x="535" y="10" width="155" height="55" rx="8" fill="#fffbeb" stroke="#f59e0b"/><text x="612" y="32" text-anchor="middle">4. Consistency</text><text x="612" y="47" text-anchor="middle">&amp; Standards</text>
+
+        <rect x="10" y="85" width="165" height="55" rx="8" fill="#fef2f2" stroke="#ef4444"/><text x="92" y="107" text-anchor="middle">5. Error</text><text x="92" y="122" text-anchor="middle">Prevention</text>
+        <rect x="185" y="85" width="165" height="55" rx="8" fill="#f5f3ff" stroke="#8b5cf6"/><text x="267" y="107" text-anchor="middle">6. Recognition</text><text x="267" y="122" text-anchor="middle">rather than Recall</text>
+        <rect x="360" y="85" width="165" height="55" rx="8" fill="#eef2ff" stroke="#4f46e5"/><text x="442" y="107" text-anchor="middle">7. Flexibility &amp;</text><text x="442" y="122" text-anchor="middle">Efficiency of Use</text>
+        <rect x="535" y="85" width="155" height="55" rx="8" fill="#ecfeff" stroke="#06b6d4"/><text x="612" y="107" text-anchor="middle">8. Aesthetic &amp;</text><text x="612" y="122" text-anchor="middle">Minimalist Design</text>
+
+        <rect x="95" y="160" width="220" height="55" rx="8" fill="#ecfdf5" stroke="#10b981"/><text x="205" y="182" text-anchor="middle">9. Help Users Recognize, Diagnose</text><text x="205" y="197" text-anchor="middle">&amp; Recover from Errors</text>
+        <rect x="385" y="160" width="220" height="55" rx="8" fill="#fffbeb" stroke="#f59e0b"/><text x="495" y="182" text-anchor="middle">10. Help &amp;</text><text x="495" y="197" text-anchor="middle">Documentation</text>
+      </g>
+      <text x="350" y="260" text-anchor="middle" font-size="12" fill="#64748b" font-family="Inter">Fig 3: Nielsen's Ten Usability Heuristics — used as a checklist during Heuristic Evaluation</text>
+    </svg>
+  </div>
+
+  <table>
+    <tr><th>#</th><th>Heuristic</th><th>Meaning</th></tr>
+    <tr><td class="hi">1</td><td>Visibility of System Status</td><td>System should always keep users informed about what is going on, through appropriate feedback within reasonable time</td></tr>
+    <tr><td class="hi">2</td><td>Match Between System and the Real World</td><td>System should speak the user's language, with familiar words/phrases/concepts rather than system-oriented terms</td></tr>
+    <tr><td class="hi">3</td><td>User Control and Freedom</td><td>Users need a clearly marked "emergency exit" to leave an unwanted state, without having to go through an extended process; support undo/redo</td></tr>
+    <tr><td class="hi">4</td><td>Consistency and Standards</td><td>Users should not have to wonder whether different words, situations, or actions mean the same thing — follow platform conventions</td></tr>
+    <tr><td class="hi">5</td><td>Error Prevention</td><td>Careful design which prevents a problem from occurring in the first place, better than good error messages</td></tr>
+    <tr><td class="hi">6</td><td>Recognition Rather than Recall</td><td>Minimize memory load by making objects, actions and options visible; user shouldn't need to remember info from one part of dialog to another</td></tr>
+    <tr><td class="hi">7</td><td>Flexibility and Efficiency of Use</td><td>Accelerators (unseen by novice users) may speed up interaction for expert users, so the system can cater to both inexperienced and experienced users</td></tr>
+    <tr><td class="hi">8</td><td>Aesthetic and Minimalist Design</td><td>Dialogues/screens should not contain irrelevant or rarely needed information which competes with relevant units of information</td></tr>
+    <tr><td class="hi">9</td><td>Help Users Recognize, Diagnose, and Recover from Errors</td><td>Error messages should be expressed in plain language (no codes), precisely indicate the problem, and constructively suggest a solution</td></tr>
+    <tr><td class="hi">10</td><td>Help and Documentation</td><td>Even though it's better if the system can be used without documentation, it may be necessary to provide help that is easy to search, focused on the user's task, lists concrete steps</td></tr>
+  </table>
+
+  <hr class="sep">
+
+  <!-- ============ 07 NIELSEN EXAMPLE ============ -->
+  <h2 class="topic scroll-anchor" id="nielsenexample">
+    <span>07.</span> Example: Applying Nielsen's Heuristics to an Interface
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Exam mein aksar pucha jata hai — "kisi bhi ek app/website ka example lekar Nielsen ke heuristics apply karo". Neeche ek <strong>Online Shopping App (like Amazon/Flipkart)</strong> ka example diya hai jisse aap kisi bhi app pe apply kar sakte ho.
+  </div>
+
+  <div class="card example">
+    <div class="tag">Case Study — E-Commerce App</div>
+    <table>
+      <tr><th>Heuristic</th><th>How the App Applies It</th></tr>
+      <tr><td class="hi">Visibility of System Status</td><td>Order tracking bar showing "Ordered → Shipped → Out for Delivery → Delivered" with live status</td></tr>
+      <tr><td class="hi">Match with Real World</td><td>"Add to Cart" and shopping cart icon mimic a real physical shopping trolley concept</td></tr>
+      <tr><td class="hi">User Control &amp; Freedom</td><td>"Remove from Cart", "Cancel Order", "Return/Refund" options let user undo actions</td></tr>
+      <tr><td class="hi">Consistency &amp; Standards</td><td>Same red "Buy Now" button colour and position on every product page</td></tr>
+      <tr><td class="hi">Error Prevention</td><td>Confirmation popup before placing a high-value order or removing an item</td></tr>
+      <tr><td class="hi">Recognition over Recall</td><td>"Recently Viewed", "Saved Addresses" dropdown so user doesn't retype address every time</td></tr>
+      <tr><td class="hi">Flexibility &amp; Efficiency</td><td>"Buy Again" for repeat/expert customers vs full browse-and-search for new customers</td></tr>
+      <tr><td class="hi">Aesthetic &amp; Minimalist Design</td><td>Product page shows only image, price, rating, buy button — reviews are collapsed until clicked</td></tr>
+      <tr><td class="hi">Help Recognize/Recover from Errors</td><td>"Payment failed — please check your card details or try another payment method" (not just "Error 402")</td></tr>
+      <tr><td class="hi">Help &amp; Documentation</td><td>FAQ section, live chat support, "How to return an item" help article</td></tr>
+    </table>
+  </div>
+
+  <hr class="sep">
+
+  <!-- ============ 08 HEURISTIC EVALUATION ============ -->
+  <h2 class="topic scroll-anchor" id="heuristiceval">
+    <span>08.</span> Heuristic Evaluation
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>Heuristic Evaluation</strong> is a usability inspection method in which a small set of expert evaluators independently examine a user interface and judge its compliance with a list of recognized usability principles (heuristics), most commonly Nielsen's ten heuristics.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Heuristic evaluation ek "expert review" method hai — real users ko involve kiye bina, kuch usability experts interface ko check karte hain aur Nielsen ke 10 rules ke against dekhte hain ki kahan-kahan violation ho raha hai. Ye method fast aur cheap hai, real user testing se pehle use hota hai.
+  </div>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 640 200" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:640px;">
+      <rect x="0" y="0" width="640" height="200" fill="#f8fafc" rx="10"/>
+      <g font-family="Inter" font-size="11.5" fill="#0f172a">
+        <rect x="10" y="70" width="120" height="50" rx="8" fill="#eef2ff" stroke="#4f46e5"/><text x="70" y="90" text-anchor="middle">Select 3-5</text><text x="70" y="105" text-anchor="middle">Expert Evaluators</text>
+        <rect x="160" y="70" width="120" height="50" rx="8" fill="#ecfeff" stroke="#06b6d4"/><text x="220" y="90" text-anchor="middle">Each Evaluates</text><text x="220" y="105" text-anchor="middle">Interface Alone</text>
+        <rect x="310" y="70" width="120" height="50" rx="8" fill="#ecfdf5" stroke="#10b981"/><text x="370" y="90" text-anchor="middle">Rate Violations</text><text x="370" y="105" text-anchor="middle">vs 10 Heuristics</text>
+        <rect x="460" y="70" width="160" height="50" rx="8" fill="#fffbeb" stroke="#f59e0b"/><text x="540" y="90" text-anchor="middle">Aggregate &amp; Rank</text><text x="540" y="105" text-anchor="middle">Issues by Severity</text>
+      </g>
+      <g stroke="#64748b" stroke-width="1.5" marker-end="url(#arrH)">
+        <line x1="130" y1="95" x2="158" y2="95"/>
+        <line x1="280" y1="95" x2="308" y2="95"/>
+        <line x1="430" y1="95" x2="458" y2="95"/>
+      </g>
+      <defs><marker id="arrH" markerWidth="8" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#64748b"/></marker></defs>
+      <text x="320" y="160" text-anchor="middle" font-size="12" fill="#64748b" font-family="Inter">Fig 4: Heuristic Evaluation Process Flow</text>
+    </svg>
+  </div>
+
+  <h3 class="sub">Steps of Heuristic Evaluation</h3>
+  <div class="steps">
+    <ol>
+      <li><strong>Select Evaluators:</strong> Choose 3–5 usability experts (studies show a single evaluator finds only ~35% of usability problems, while 5 evaluators together find ~75%).</li>
+      <li><strong>Briefing:</strong> Evaluators are briefed about the scope of the system, scenario, and target users.</li>
+      <li><strong>Independent Evaluation:</strong> Each evaluator inspects the interface alone (not as a group) against Nielsen's 10 heuristics, noting every usability violation found.</li>
+      <li><strong>Severity Rating:</strong> Each problem is rated on a severity scale (0 = not a problem, 1 = cosmetic, 2 = minor, 3 = major, 4 = usability catastrophe).</li>
+      <li><strong>Aggregation:</strong> All findings from evaluators are combined into a master list; duplicate issues are merged.</li>
+      <li><strong>Debriefing / Report:</strong> Results are discussed with the design team and prioritized fixes are suggested.</li>
+    </ol>
+  </div>
+
+  <table>
+    <tr><th>Severity</th><th>Rating</th><th>Meaning</th></tr>
+    <tr><td>0</td><td>Not a problem</td><td>No usability issue at all</td></tr>
+    <tr><td>1</td><td>Cosmetic</td><td>Fix only if extra time available</td></tr>
+    <tr><td>2</td><td>Minor</td><td>Fixing should be given low priority</td></tr>
+    <tr><td class="warn2">3</td><td>Major</td><td>Important to fix, should be given high priority</td></tr>
+    <tr><td class="warn2">4</td><td>Catastrophe</td><td>Imperative to fix before product release</td></tr>
+  </table>
+
+  <div class="card example">
+    <div class="tag">Pros &amp; Cons</div>
+    <p><strong>Advantages:</strong> Cheap, fast, does not require real users, can be done early in design cycle.<br>
+    <strong>Disadvantages:</strong> Depends heavily on expertise of evaluators; may miss issues that only real users encounter; can find "false positives" (issues that aren't real problems for actual users).</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- ============ 09 CONTEXTUAL INQUIRY ============ -->
+  <h2 class="topic scroll-anchor" id="contextual">
+    <span>09.</span> Contextual Inquiry
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>Contextual Inquiry</strong> is a user-centered field research method in which the designer/researcher observes and interviews users while they perform their real tasks in their actual work environment, to understand the true context of use.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Contextual Inquiry mein hum user ke real environment (office, ghar, factory) mein jaate hain aur unko unka normal kaam karte hue dekhte hain — interview room mein baithkar poochne ke bajaye. Isse hume "real" problems pata chalte hain jo user khud bata bhi nahi paata kyunki woh unhe itni aadat ho chuki hoti hai unhe notice hi nahi karta.
+  </div>
+
+  <h3 class="sub">Four Core Principles of Contextual Inquiry</h3>
+  <table>
+    <tr><th>Principle</th><th>Meaning</th></tr>
+    <tr><td class="hi">Context</td><td>Go to the user's workplace/environment and observe actual, ongoing work rather than asking users to recall or summarize past experience</td></tr>
+    <tr><td class="hi">Partnership</td><td>Researcher and user collaborate as partners to understand the work — more like an apprentice learning from a master than an interviewer questioning a subject</td></tr>
+    <tr><td class="hi">Interpretation</td><td>Researcher shares their interpretation of what they observed with the user, immediately, to confirm or correct understanding</td></tr>
+    <tr><td class="hi">Focus</td><td>Researcher steers the conversation with a clear focus/objective in mind, so relevant data is gathered instead of unrelated conversation</td></tr>
+  </table>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 600 180" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:600px;">
+      <rect x="0" y="0" width="600" height="180" fill="#f8fafc" rx="10"/>
+      <g font-family="Inter" font-size="12" fill="#0f172a">
+        <rect x="20" y="60" width="150" height="55" rx="8" fill="#eef2ff" stroke="#4f46e5"/><text x="95" y="83" text-anchor="middle">Go to User's</text><text x="95" y="98" text-anchor="middle">Real Workplace</text>
+        <rect x="215" y="60" width="150" height="55" rx="8" fill="#ecfeff" stroke="#06b6d4"/><text x="290" y="83" text-anchor="middle">Observe + Interview</text><text x="290" y="98" text-anchor="middle">During Actual Task</text>
+        <rect x="410" y="60" width="170" height="55" rx="8" fill="#ecfdf5" stroke="#10b981"/><text x="495" y="83" text-anchor="middle">Build Model of</text><text x="495" y="98" text-anchor="middle">User's Real Workflow</text>
+      </g>
+      <g stroke="#64748b" stroke-width="1.5" marker-end="url(#arrCI)">
+        <line x1="170" y1="87" x2="213" y2="87"/>
+        <line x1="365" y1="87" x2="408" y2="87"/>
+      </g>
+      <defs><marker id="arrCI" markerWidth="8" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#64748b"/></marker></defs>
+      <text x="300" y="150" text-anchor="middle" font-size="12" fill="#64748b" font-family="Inter">Fig 5: Contextual Inquiry Field Study Flow</text>
+    </svg>
+  </div>
+
+  <div class="card example">
+    <div class="tag">Real-World Example</div>
+    <p>To redesign a hospital's patient record software, a designer visits the ward and watches a nurse actually use the current system while attending patients — noticing that the nurse often has to enter data <em>one-handed</em> while holding equipment, which a lab-based interview would never reveal.</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- ============ 10 COGNITIVE WALKTHROUGH ============ -->
+  <h2 class="topic scroll-anchor" id="cogwalk">
+    <span>10.</span> Cognitive Walkthrough
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>Cognitive Walkthrough</strong> is a usability inspection method where evaluators walk through a sequence of steps/tasks in an interface, at each step asking a set of standard questions from the perspective of a new/first-time user, to identify how "learnable" (explorable) the interface is.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Cognitive Walkthrough mein evaluator khud ek naya user ban jaata hai aur ek-ek step follow karta hai jaise task complete kar raha ho, aur har step pe khud se 4 sawaal poochta hai — "kya main ye action try karunga?", "kya mujhe pata chalega ye action available hai?", waghera. Ye specifically <strong>"ease of learning" (first-time use)</strong> pe focus karta hai, na ki overall usability pe.
+  </div>
+
+  <h3 class="sub">Four Key Questions Asked at Every Step</h3>
+  <table>
+    <tr><th>#</th><th>Question</th></tr>
+    <tr><td class="hi">Q1</td><td>Will the user try to achieve the right effect? (Does the user have the correct goal at this point?)</td></tr>
+    <tr><td class="hi">Q2</td><td>Will the user notice that the correct action is available? (Is the control visible?)</td></tr>
+    <tr><td class="hi">Q3</td><td>Will the user associate the correct action with the effect they are trying to achieve? (Is the label/icon clear enough?)</td></tr>
+    <tr><td class="hi">Q4</td><td>If the correct action is performed, will the user see that progress is being made toward the goal? (Is feedback given?)</td></tr>
+  </table>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 640 220" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:640px;">
+      <rect x="0" y="0" width="640" height="220" fill="#f8fafc" rx="10"/>
+      <g font-family="Inter" font-size="11.5" fill="#0f172a">
+        <rect x="10" y="20" width="150" height="50" rx="8" fill="#eef2ff" stroke="#4f46e5"/><text x="85" y="40" text-anchor="middle">Define Task</text><text x="85" y="55" text-anchor="middle">&amp; Correct Action Sequence</text>
+        <rect x="10" y="90" width="150" height="50" rx="8" fill="#ecfeff" stroke="#06b6d4"/><text x="85" y="110" text-anchor="middle">Identify</text><text x="85" y="125" text-anchor="middle">Target User Profile</text>
+        <rect x="230" y="55" width="180" height="80" rx="10" fill="#fffbeb" stroke="#f59e0b" stroke-width="2"/>
+        <text x="320" y="80" text-anchor="middle" font-weight="700">For Each Step, Ask:</text>
+        <text x="320" y="98" text-anchor="middle" font-size="10.5">Q1 Goal? Q2 Visible?</text>
+        <text x="320" y="113" text-anchor="middle" font-size="10.5">Q3 Correct link? Q4 Feedback?</text>
+        <rect x="470" y="55" width="150" height="50" rx="8" fill="#ecfdf5" stroke="#10b981"/><text x="545" y="75" text-anchor="middle">Record Failures /</text><text x="545" y="90" text-anchor="middle">Learnability Gaps</text>
+        <rect x="470" y="125" width="150" height="50" rx="8" fill="#fef2f2" stroke="#ef4444"/><text x="545" y="145" text-anchor="middle">Suggest Fixes:</text><text x="545" y="160" text-anchor="middle">Labels, Cues, Feedback</text>
+      </g>
+      <g stroke="#64748b" stroke-width="1.5" marker-end="url(#arrCW)">
+        <line x1="160" y1="45" x2="228" y2="80"/>
+        <line x1="160" y1="115" x2="228" y2="100"/>
+        <line x1="410" y1="80" x2="468" y2="80"/>
+        <line x1="410" y1="110" x2="468" y2="145"/>
+      </g>
+      <defs><marker id="arrCW" markerWidth="8" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#64748b"/></marker></defs>
+      <text x="320" y="200" text-anchor="middle" font-size="12" fill="#64748b" font-family="Inter">Fig 6: Cognitive Walkthrough Process</text>
+    </svg>
+  </div>
+
+  <h3 class="sub">Steps to Conduct a Cognitive Walkthrough</h3>
+  <div class="steps">
+    <ol>
+      <li><strong>Define Inputs:</strong> Identify the users, the specific task, the correct action sequence to complete it, and the interface (or a prototype/mockup of it).</li>
+      <li><strong>Walk through Each Action:</strong> For every single step in the correct sequence, the evaluator asks the 4 key questions from a first-time user's perspective.</li>
+      <li><strong>Record Failure Stories:</strong> Whenever the answer to any question is "No", the evaluator writes a "failure story" explaining why a real new user might fail at that step.</li>
+      <li><strong>Revise Design:</strong> Based on the failure stories, the interface is redesigned — e.g. adding clearer labels, more visible buttons, or better feedback.</li>
+    </ol>
+  </div>
+
+  <div class="card example">
+    <div class="tag">Worked Example</div>
+    <p>Task: "Change your profile picture" on a website. Step: click the small pencil icon overlapping the profile photo.<br>
+    Q2 (Will user notice the action is available?) → <strong>Fails</strong> if the pencil icon is tiny/grey and blends into the background — evaluator records this as a failure story and recommends making the icon larger/more visible on hover.</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- ============ 11 COMPARISON ============ -->
+  <h2 class="topic scroll-anchor" id="compareall">
+    <span>11.</span> Comparison of Usability Evaluation Methods
+    <span class="imp m">MEDIUM</span>
+  </h2>
+
+  <table>
+    <tr><th>Aspect</th><th>Heuristic Evaluation</th><th>Cognitive Walkthrough</th><th>Contextual Inquiry</th></tr>
+    <tr><td class="hi">Who is Involved</td><td>Usability experts only</td><td>Usability experts / designers</td><td>Real users, in their real environment</td></tr>
+    <tr><td class="hi">Focus</td><td>Overall usability vs. general heuristics (10 rules)</td><td>Ease of learning for first-time / novice users</td><td>Real context, real tasks, real workflow</td></tr>
+    <tr><td class="hi">When Used</td><td>Early to mid design stage</td><td>Early design stage, task-based screens</td><td>Requirements gathering / early research stage</td></tr>
+    <tr><td class="hi">Requires Real Users?</td><td>No</td><td>No</td><td>Yes — essential</td></tr>
+    <tr><td class="hi">Output</td><td>List of usability violations with severity ratings</td><td>List of "failure stories" per task step</td><td>Rich understanding of user's actual work &amp; needs</td></tr>
+    <tr><td class="hi">Cost / Speed</td><td>Low cost, fast</td><td>Low cost, fast (but tedious for long tasks)</td><td>Higher cost, time-consuming (field visits)</td></tr>
+  </table>
+
+  <div class="keypoint">
+    <div class="icon">🎯</div>
+    <div>All three are called <strong>Usability Inspection / Evaluation Methods</strong>. Heuristic Evaluation and Cognitive Walkthrough are "expert-based" / analytical methods (no real users needed), while Contextual Inquiry is an "empirical" / field method involving real users. Usability Testing (lab-based, with real users performing tasks while being observed) is another empirical method often compared alongside these three.</div>
+  </div>
+
+  <hr class="sep">
+
+  <!-- ============ Q&A SECTION ============ -->
+  <div class="qsection" id="qa">
+    <div class="unit-title" style="margin-top:0;">
+      <span style="color:var(--accent2);">📝</span> RTU Exam Q&amp;A Bank — Unit 4
+      <span class="imp h">EXAM GOLD</span>
+    </div>
+    <div class="unit-sub">Previously asked / most-likely 5-mark and 10-mark questions with model answers</div>
+
+    <div class="qcard">
+      <div class="qlabel">Q1 · 10 MARKS</div>
+      <span class="marks m10">10 MARKS</span>
+      <div class="q">Explain Shneiderman's Eight Golden Rules of interface design with suitable examples.</div>
+      <div class="a">
+        <p>Ben Shneiderman proposed eight golden rules to guide good interface design: (1) Strive for consistency, (2) Enable frequent users to use shortcuts, (3) Offer informative feedback, (4) Design dialogs to yield closure, (5) Offer error prevention and simple error handling, (6) Permit easy reversal of actions, (7) Support internal locus of control, and (8) Reduce short-term memory load.</p>
+        <p>Each rule reduces cognitive load or error rate — for example, "informative feedback" is applied through progress bars or confirmation messages, while "reduce short-term memory load" is applied through auto-fill and recently-used lists. (See full table in section 02 above for detailed examples of each rule.)</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q2 · 10 MARKS</div>
+      <span class="marks m10">10 MARKS</span>
+      <div class="q">Describe Norman's Seven Stage Model of Interaction with a neat diagram. What are Gulf of Execution and Gulf of Evaluation?</div>
+      <div class="a">
+        <p>Norman's model views interaction as a cycle of 7 stages split into Execution (Form Goal → Form Intention → Specify Action → Execute Action) and Evaluation (Perceive State → Interpret State → Evaluate Outcome), connected through a shared Goal.</p>
+        <p>The <strong>Gulf of Execution</strong> is the gap between the user's intentions and the actions the system allows — reduced by good visibility and mapping of controls. The <strong>Gulf of Evaluation</strong> is the gap between the system's actual state/output and the user's understanding of it — reduced by clear, immediate feedback. Good interface design aims to minimize both gulfs.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q3 · 10 MARKS</div>
+      <span class="marks m10">10 MARKS</span>
+      <div class="q">List and explain Nielsen's Ten Usability Heuristics. Illustrate with an example of an application.</div>
+      <div class="a">
+        <p>The ten heuristics are: (1) Visibility of system status, (2) Match between system and real world, (3) User control and freedom, (4) Consistency and standards, (5) Error prevention, (6) Recognition rather than recall, (7) Flexibility and efficiency of use, (8) Aesthetic and minimalist design, (9) Help users recognize, diagnose and recover from errors, and (10) Help and documentation.</p>
+        <p>Example: In an e-commerce app, "visibility of system status" is shown through order tracking; "error prevention" through a confirmation dialog before placing a costly order; "recognition rather than recall" through saved addresses. (Full mapping given in section 07 above.)</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q4 · 10 MARKS</div>
+      <span class="marks m10">10 MARKS</span>
+      <div class="q">What is Heuristic Evaluation? Explain its process and severity rating scale.</div>
+      <div class="a">
+        <p>Heuristic Evaluation is a usability inspection method where 3-5 expert evaluators independently examine an interface against a set of recognized usability heuristics (commonly Nielsen's 10) to identify usability problems.</p>
+        <p>Process: select evaluators → brief them on scope → each evaluator independently inspects the interface, noting violations → each violation is rated on a severity scale (0=not a problem to 4=usability catastrophe) → results are aggregated and debriefed with the design team to prioritize fixes.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q5 · 10 MARKS</div>
+      <span class="marks m10">10 MARKS</span>
+      <div class="q">Explain Cognitive Walkthrough as a usability evaluation technique with the four key questions asked at each step.</div>
+      <div class="a">
+        <p>Cognitive Walkthrough is a usability inspection method where evaluators simulate a first-time user stepping through a task, asking at each step: (1) Will the user try to achieve the right effect? (2) Will the user notice the correct action is available? (3) Will the user associate the correct action with the desired effect? (4) Will the user see that progress is being made toward the goal?</p>
+        <p>Whenever an answer is "No", a failure story is recorded, and the interface is redesigned to fix that learnability gap — for example, making a hidden icon more visible.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q6 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">Write short note on Contextual Inquiry.</div>
+      <div class="a">
+        <p>Contextual Inquiry is a field research method where the designer observes and interviews users while they perform actual tasks in their real work environment. It is based on four principles: Context (observe real, ongoing work), Partnership (researcher and user collaborate like master-apprentice), Interpretation (share understanding with user for confirmation), and Focus (keep a clear objective during the study).</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q7 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">Differentiate between Heuristic Evaluation and Cognitive Walkthrough.</div>
+      <div class="a">
+        <table>
+          <tr><th>Aspect</th><th>Heuristic Evaluation</th><th>Cognitive Walkthrough</th></tr>
+          <tr><td>Basis</td><td>Nielsen's 10 general heuristics</td><td>4 specific questions per task step</td></tr>
+          <tr><td>Focus</td><td>Overall usability</td><td>Learnability for first-time users</td></tr>
+          <tr><td>Approach</td><td>Free-form expert review</td><td>Structured step-by-step task simulation</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q8 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">Explain any four of Norman's Seven Principles of Design with examples.</div>
+      <div class="a">
+        <p><strong>Make things visible:</strong> controls and system status should be visible (e.g. visible Wi-Fi icon).<br>
+        <strong>Get the mappings right:</strong> controls should relate naturally to their effect (e.g. steering wheel direction).<br>
+        <strong>Exploit constraints:</strong> use physical/cultural constraints to prevent wrong actions (e.g. SIM tray shape).<br>
+        <strong>Design for error:</strong> assume errors will happen and allow easy recovery (e.g. "Are you sure?" dialogs).</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q9 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">What is the severity rating scale used in Heuristic Evaluation?</div>
+      <div class="a">
+        <p>Nielsen's severity scale ranges from 0 (not a usability problem) to 4 (usability catastrophe, must fix before release), with 1=cosmetic, 2=minor, and 3=major problems in between. This helps prioritize which issues to fix first when resources are limited.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q10 · 5 MARKS — Short Note</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">Write a short note on "Recognition rather than Recall" heuristic with an example.</div>
+      <div class="a">
+        <p>This Nielsen heuristic states that users' memory load should be minimized by making objects, actions, and options visible, rather than requiring the user to recall information from memory. Example: A word processor showing a visible toolbar with icons (recognition) is easier to use than requiring the user to remember and type keyboard commands for every function (recall).</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q11 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">What are the four core principles of Contextual Inquiry?</div>
+      <div class="a">
+        <p><strong>Context:</strong> Study happens in the user's real environment during actual work.<br>
+        <strong>Partnership:</strong> Researcher and user collaborate, more like apprentice-master than interviewer-subject.<br>
+        <strong>Interpretation:</strong> Researcher shares observations with the user immediately to validate understanding.<br>
+        <strong>Focus:</strong> Researcher steers the study with a clear goal so relevant data is collected.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q12 · 10 MARKS</div>
+      <span class="marks m10">10 MARKS</span>
+      <div class="q">Compare Heuristic Evaluation, Cognitive Walkthrough, and Contextual Inquiry as usability evaluation techniques.</div>
+      <div class="a">
+        <p>All three are usability evaluation methods but differ in approach: Heuristic Evaluation uses experts checking an interface against Nielsen's 10 general heuristics without involving real users; Cognitive Walkthrough has experts simulate a first-time user going step-by-step through a task, asking 4 specific questions at each step, again without real users; Contextual Inquiry, unlike the other two, involves real users and requires the researcher to observe/interview them performing genuine tasks in their real work environment.</p>
+        <p>Heuristic Evaluation and Cognitive Walkthrough are fast, cheap, analytical/expert-based methods used early in design; Contextual Inquiry is slower and costlier but produces the richest, most realistic understanding of actual user needs and is typically used during requirements gathering. (Full comparison table given in section 11 above.)</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="margin-top:60px; padding:20px 24px; border:1px dashed var(--border2); border-radius:10px; color:var(--muted); font-size:13px;">
+    <div style="color:var(--accent); font-family:'JetBrains Mono',monospace; font-weight:700; margin-bottom:6px;">SMART LEARNING+ // HCI_VAULT — UNIT 4 · Guidelines in HCI</div>
+    <p>RTU B.Tech CSE 5th Semester · 5CS5-12 Human Computer Interaction · Unit 4 of 6</p>
+    <p style="margin-top:6px;">📌 Focus areas for exam: Shneiderman's 8 rules (full list), Norman's 7-stage model diagram + gulfs, Nielsen's 10 heuristics with a worked example, and the 3-way comparison of Heuristic Evaluation / Cognitive Walkthrough / Contextual Inquiry.</p>
+    <p style="margin-top:6px;">Mnemonics: Shneiderman = "Consistency, Shortcuts, Feedback, Closure, Errors, Reversal, Locus, Memory" &nbsp;|&nbsp; Cognitive Walkthrough 4Qs = "Goal? Notice? Associate? Progress?"</p>
+  </div>
+
       </div>
     </div>
     <div style="display:flex;gap:12px;justify-content:center;padding:30px 20px;flex-wrap:wrap;">
-      <a href="index.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">🏠 HCI Hub</a>
       <a href="unit3.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+      <a href="../hci/index.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">🏠 HCI Hub</a>
       <a href="unit5.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
     </div>
   </main>
@@ -63,6 +749,5 @@
       el.addEventListener("mouseleave",()=>cursorOutline.classList.remove("cursor-hovering"));
     });
   </script>
-<script src="../splash-cursor.js"></script>
 </body>
 </html>

@@ -5,14 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Smart Learning Plus // HCI · Unit 3</title>
 <link rel="stylesheet" href="../style.css">
-<style>
-  .placeholder-vault {
-    text-align: center; padding: 60px 24px;
-  }
-  .placeholder-vault .icon { font-size: 64px; margin-bottom: 20px; opacity: 0.5; }
-  .placeholder-vault h2 { font-size: 22px; font-weight: 800; color: var(--text); margin-bottom: 10px; }
-  .placeholder-vault p { color: var(--muted); font-size: 15px; max-width: 400px; margin: 0 auto 24px; }
-</style>
 </head>
 <body>
   <main class="main-wrapper" style="width:100%;">
@@ -22,47 +14,698 @@
       <div class="nav">
         <a href="index.html">🏠 HCI Hub</a>
         <a href="#content">📖 Content</a>
-        <a href="#qa">❓ Q&A</a>
-        <a href="unit2.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev</a>
+        <a href="#u3-qa">❓ Q&amp;A</a>
+        <a href="unit2.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
         <a href="unit4.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
       </div>
     </div>
     <div class="wrap">
       <div class="hero">
-        <h1>📙 Unit 3 — Model-based Design</h1>
-        <p>GOMS, KLM, CMN-GOMS models, Fitts' Law, Hick-Hyman Law · Hours: 03</p>
+        <h1>🧠 Unit 3 — Model-Based Design and Evaluation</h1>
+        <p>Basic idea of models in HCI · Types of models · GOMS family (KLM &amp; CMN-GOMS) · Fitts' Law · Hick-Hyman's Law · Model-based design case studies | Hours: 03</p>
         <div class="badges" style="margin-top:14px;">
           <a href="index.html" style="text-decoration:none;"><span class="badge b-teal">← Back to HCI Hub</span></a>
-          <span class="badge b-gold">5CS5-12 · HCI · RTU</span>
+          <span class="badge b-gold">5CS5-12 · Human Computer Interaction · RTU</span>
         </div>
       </div>
+      <div id="content">
+<div id="unit3">
+<div class="unit-title">🧠 Unit 3 — Model-Based Design and Evaluation</div>
+<div class="unit-sub">Basic Idea &middot; Types of Models &middot; GOMS Family of Models (KLM &amp; CMN-GOMS) &middot; Fitts' Law &middot; Hick-Hyman's Law &middot; Model-Based Design Case Studies</div>
 
-      <div class="placeholder-vault">
-        <div class="icon">📙</div>
-        <h2>Unit 3 Content Coming Soon</h2>
-        <p>Content for Unit 3 (Model-based Design and evaluation: Basic idea, introduction to different types of models, GOMS family of models, Fitts' law and Hick-Hyman's law, Model-based design case studies) is being prepared. Check back later for detailed notes and Q&A.</p>
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;">
+  <span class="imp h">🔥 EXAM HOT — KLM &amp; Fitts' Law Numericals Asked Every Year</span>
+  <span class="imp m">⚠ GOMS vs CMN-GOMS Difference Frequently Asked</span>
+  <span class="imp l">✅ Hick-Hyman's Law — Short Numerical + Theory</span>
+</div>
+
+<div class="card" style="margin-bottom:28px;">
+  <div style="color:var(--accent2); font-weight:700; margin-bottom:10px;">📑 Unit 3 Quick Navigation</div>
+  <div class="toc" style="columns:2; column-gap:24px; background:transparent; border:none; box-shadow:none; padding:0; margin:0;">
+    <div><a href="#u3-basic">3.1 Basic Idea of Model-Based Design</a></div>
+    <div><a href="#u3-types">3.2 Types of Models in HCI</a></div>
+    <div><a href="#u3-goms">3.3 GOMS Family — Overview</a></div>
+    <div><a href="#u3-klm">3.4 KLM — Keystroke-Level Model</a></div>
+    <div><a href="#u3-cmngoms">3.5 CMN-GOMS Model</a></div>
+    <div><a href="#u3-gomstable">3.6 GOMS Variants Comparison</a></div>
+    <div><a href="#u3-fitts">3.7 Fitts' Law</a></div>
+    <div><a href="#u3-hick">3.8 Hick-Hyman's Law</a></div>
+    <div><a href="#u3-fh-compare">3.9 Fitts' vs Hick-Hyman Comparison</a></div>
+    <div><a href="#u3-cases">3.10 Model-Based Design Case Studies</a></div>
+    <div><a href="#u3-cheat">3.11 Master Cheat Sheet</a></div>
+    <div><a href="#u3-qa">3.12 RTU Exam Q&amp;A</a></div>
+  </div>
+</div>
+
+<!-- ============ 3.1 BASIC IDEA ============ -->
+<h2 class="topic" id="u3-basic">3.1 Basic Idea of Model-Based Design and Evaluation <span class="imp h">FOUNDATION</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;"><strong>Model-Based Design and Evaluation</strong> is an approach in HCI where <strong>mathematical, cognitive, or structural models</strong> of the user, the task, and the system are used to <strong>predict, analyze, and evaluate</strong> interface usability — such as task completion time, error rate, or learnability — <strong>without needing to build a full prototype or run expensive user trials</strong> for every design iteration.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish Explanation</div>
+  <p style="margin-top:6px;">Traditional design mein hum interface banate hain, real users se test karwate hain, feedback lete hain aur phir redesign karte hain — yeh cycle bahut costly aur time-consuming hota hai. Model-based design mein hum user ke behaviour, memory, aur motor skills ko ek <strong>mathematical ya predictive model</strong> se represent karte hain (jaise GOMS, Fitts' Law). Fir hum bina real user ke, sirf calculation/formula se yeh predict kar sakte hain ki "kaun sa design fast hoga" ya "kitna time lagega task complete karne mein". Isse design cycle early stage mein hi improve ho jata hai, real users ki zarurat kam pad'ti hai, aur cost/time dono bachte hain.</p>
+</div>
+
+<h3 class="sub">Why Use Models Instead of Only User Testing?</h3>
+<div class="keypoint">
+  <div class="icon">💰</div>
+  <div><strong>Cost &amp; Time Saving:</strong> No need to recruit users and run full usability trials for every small design change.</div>
+</div>
+<div class="keypoint">
+  <div class="icon">⏱️</div>
+  <div><strong>Early-Stage Prediction:</strong> Designers can compare multiple design alternatives quantitatively before any prototype exists.</div>
+</div>
+<div class="keypoint">
+  <div class="icon">🔁</div>
+  <div><strong>Repeatable &amp; Objective:</strong> Model output is consistent (same formula → same result), unlike variable human testers.</div>
+</div>
+<div class="keypoint">
+  <div class="icon">⚠️</div>
+  <div><strong>Limitation:</strong> Models only approximate real behaviour — they usually predict expert, error-free, routine performance and cannot fully replace real user testing for learnability, emotion, or novel tasks.</div>
+</div>
+
+<div class="svgbox">
+<svg viewBox="0 0 900 300" xmlns="http://www.w3.org/2000/svg">
+  <text x="225" y="26" text-anchor="middle" font-size="14" font-weight="700" fill="#1e3a8a">Traditional Empirical Design Cycle</text>
+  <g font-family="Inter, sans-serif" font-size="12">
+    <rect x="30" y="50" width="130" height="50" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+    <text x="95" y="80" text-anchor="middle" fill="#1e3a8a" font-weight="700">Build Prototype</text>
+    <rect x="190" y="50" width="130" height="50" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+    <text x="255" y="80" text-anchor="middle" fill="#1e3a8a" font-weight="700">Test with Real Users</text>
+    <rect x="30" y="140" width="130" height="50" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+    <text x="95" y="170" text-anchor="middle" fill="#1e3a8a" font-weight="700">Redesign</text>
+    <rect x="190" y="140" width="130" height="50" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+    <text x="255" y="170" text-anchor="middle" fill="#1e3a8a" font-weight="700">Analyze Results</text>
+    <path d="M160 75 H190" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow1)"/>
+    <path d="M255 100 V140" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow1)"/>
+    <path d="M190 165 H160" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow1)"/>
+    <path d="M95 140 V100" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow1)"/>
+    <text x="175" y="230" text-anchor="middle" fill="#b45309" font-size="12" font-weight="700">⏱ Slow · 💰 Expensive · Needs real users every cycle</text>
+  </g>
+  <line x1="450" y1="40" x2="450" y2="260" stroke="#e2e8f0" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <text x="675" y="26" text-anchor="middle" font-size="14" font-weight="700" fill="#1e3a8a">Model-Based Design Cycle</text>
+  <g font-family="Inter, sans-serif" font-size="12">
+    <rect x="510" y="50" width="130" height="50" rx="8" fill="#ecfeff" stroke="#06b6d4" stroke-width="1.5"/>
+    <text x="575" y="75" text-anchor="middle" fill="#0369a1" font-weight="700">Design Model</text>
+    <text x="575" y="90" text-anchor="middle" fill="#0369a1" font-size="10">(GOMS / Fitts' Law)</text>
+    <rect x="670" y="50" width="130" height="50" rx="8" fill="#ecfeff" stroke="#06b6d4" stroke-width="1.5"/>
+    <text x="735" y="80" text-anchor="middle" fill="#0369a1" font-weight="700">Predict Metrics</text>
+    <rect x="510" y="140" width="130" height="50" rx="8" fill="#ecfeff" stroke="#06b6d4" stroke-width="1.5"/>
+    <text x="575" y="170" text-anchor="middle" fill="#0369a1" font-weight="700">Refine Design</text>
+    <rect x="670" y="140" width="130" height="50" rx="8" fill="#ecfeff" stroke="#06b6d4" stroke-width="1.5"/>
+    <text x="735" y="165" text-anchor="middle" fill="#0369a1" font-weight="700">Compare Alternatives</text>
+    <path d="M640 75 H670" stroke="#06b6d4" stroke-width="2" marker-end="url(#arrow2)"/>
+    <path d="M735 100 V140" stroke="#06b6d4" stroke-width="2" marker-end="url(#arrow2)"/>
+    <path d="M670 165 H640" stroke="#06b6d4" stroke-width="2" marker-end="url(#arrow2)"/>
+    <path d="M575 140 V100" stroke="#06b6d4" stroke-width="2" marker-end="url(#arrow2)"/>
+    <text x="655" y="230" text-anchor="middle" fill="#0369a1" font-size="12" font-weight="700">⚡ Fast · 💵 Cheap · No real user needed for prediction</text>
+  </g>
+  <defs>
+    <marker id="arrow1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#2563eb"/></marker>
+    <marker id="arrow2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#06b6d4"/></marker>
+  </defs>
+</svg>
+<div class="cap">Fig 3.1 — Empirical (real-user) design cycle vs Model-based design cycle</div>
+</div>
+
+<!-- ============ 3.2 TYPES OF MODELS ============ -->
+<h2 class="topic" id="u3-types">3.2 Types of Models in HCI <span class="imp m">THEORY</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">Models used in HCI can broadly be grouped by <strong>what they represent</strong> (user's cognition, user's task, or the system) and by <strong>what they are used for</strong> — describing existing behaviour, predicting future performance, or prescribing how a design should be built.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">HCI mein models ko roughly teen tarah se classify kiya ja sakta hai — kya wo sirf existing behaviour ko describe kar rahe hain (descriptive), kya wo future performance ko number mein predict kar rahe hain (predictive, jaise Fitts' Law time predict karta hai), ya kya wo designer ko batate hain ki design kaise banaya jaye (prescriptive/normative, jaise Shneiderman ke golden rules). GOMS aur KLM predictive hote hain kyunki time nikal ke dete hain, jabki cognitive walkthrough descriptive/evaluative hota hai.</p>
+</div>
+
+<table>
+  <tr><th>Model Type</th><th>What it Does</th><th>Examples in HCI</th></tr>
+  <tr><td class="hi">Descriptive Models</td><td>Describe/explain existing user behaviour or interaction structure</td><td>Norman's Model of Interaction, Task-Action Grammar</td></tr>
+  <tr><td class="hi">Predictive Models</td><td>Quantitatively predict performance metrics (time, errors) before testing</td><td>GOMS, KLM, Fitts' Law, Hick-Hyman's Law</td></tr>
+  <tr><td class="hi">Prescriptive / Normative Models</td><td>Prescribe rules/guidelines that a good design should follow</td><td>Shneiderman's 8 Golden Rules, Nielsen's 10 Heuristics</td></tr>
+  <tr><td class="hi">Cognitive Models</td><td>Represent how users perceive, think, remember and decide</td><td>Model Human Processor (MHP), GOMS</td></tr>
+  <tr><td class="hi">Task Models</td><td>Represent the structure/hierarchy of tasks a user performs</td><td>Hierarchical Task Analysis (HTA), CTT</td></tr>
+</table>
+
+<div class="card example">
+  <div class="tag">💡 Example</div>
+  <p style="margin-top:6px;">Suppose a designer wants to compare two ATM PIN-entry screens. A <strong>predictive model (KLM)</strong> can estimate that Design A takes 4.2 seconds and Design B takes 3.6 seconds for an expert user — allowing the designer to pick Design B <strong>before</strong> building either screen or testing with real customers.</p>
+</div>
+
+<!-- ============ 3.3 GOMS OVERVIEW ============ -->
+<h2 class="topic" id="u3-goms">3.3 GOMS Family of Models — Overview <span class="imp h">EXAM HOT</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;"><strong>GOMS</strong> (proposed by <strong>Card, Moran and Newell, 1983</strong>) is a family of predictive, engineering-style models that describe a user's task performance in terms of <strong>Goals, Operators, Methods, and Selection Rules</strong>, allowing analysts to predict the time an expert, error-free user takes to complete a task.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">GOMS ek framework hai jo kisi bhi task ko chaar components mein todta hai: <strong>Goal</strong> (user kya achieve karna chahta hai), <strong>Operators</strong> (chhote-chhote actions jo user perform karta hai, jaise key press, mouse move), <strong>Methods</strong> (operators ki sequence jo goal achieve karti hai), aur <strong>Selection Rules</strong> (agar goal achieve karne ke multiple methods hain, toh kaunsa method use karna hai yeh decide karne ke rules). GOMS ka use expert, routine, error-free user ke performance time predict karne ke liye hota hai.</p>
+</div>
+
+<h3 class="sub">The Four Components of GOMS</h3>
+<table>
+  <tr><th>Component</th><th>Meaning</th><th>Example</th></tr>
+  <tr><td class="hi">Goals</td><td>The end state the user wants to achieve</td><td>"Delete a misspelled word"</td></tr>
+  <tr><td class="hi">Operators</td><td>Elementary perceptual, motor, or cognitive actions</td><td>Move mouse, click, press key, think/recall</td></tr>
+  <tr><td class="hi">Methods</td><td>A learned sequence of operators/sub-goals that accomplishes a goal</td><td>"Point-click-drag to select, then press Delete"</td></tr>
+  <tr><td class="hi">Selection Rules</td><td>Rules to choose among multiple applicable methods</td><td>"If mouse is near, use pointing method; else use keyboard shortcut"</td></tr>
+</table>
+
+<div class="svgbox">
+<svg viewBox="0 0 820 300" xmlns="http://www.w3.org/2000/svg">
+  <text x="410" y="24" text-anchor="middle" font-size="14" font-weight="700" fill="#1e3a8a">GOMS Hierarchical Structure</text>
+  <rect x="330" y="45" width="160" height="42" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="410" y="70" text-anchor="middle" font-size="12" font-weight="700" fill="#1e3a8a">GOAL: Delete Word</text>
+
+  <path d="M410 87 V115" stroke="#94a3b8" stroke-width="1.5"/>
+  <path d="M410 115 H180" stroke="#94a3b8" stroke-width="1.5"/>
+  <path d="M410 115 H640" stroke="#94a3b8" stroke-width="1.5"/>
+  <path d="M180 115 V135" stroke="#94a3b8" stroke-width="1.5"/>
+  <path d="M640 115 V135" stroke="#94a3b8" stroke-width="1.5"/>
+
+  <rect x="90" y="135" width="180" height="42" rx="8" fill="#fff7ed" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="180" y="153" text-anchor="middle" font-size="11" font-weight="700" fill="#b45309">METHOD 1 (Mouse)</text>
+  <text x="180" y="168" text-anchor="middle" font-size="10" fill="#7c2d12">Point → Select → Delete key</text>
+
+  <rect x="550" y="135" width="180" height="42" rx="8" fill="#fff7ed" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="640" y="153" text-anchor="middle" font-size="11" font-weight="700" fill="#b45309">METHOD 2 (Keyboard)</text>
+  <text x="640" y="168" text-anchor="middle" font-size="10" fill="#7c2d12">Ctrl+Shift+Right → Delete</text>
+
+  <polygon points="410,190 445,210 410,230 375,210" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="1.5"/>
+  <text x="410" y="214" text-anchor="middle" font-size="9.5" font-weight="700" fill="#5b21b6">SELECTION</text>
+  <text x="410" y="224" text-anchor="middle" font-size="9.5" font-weight="700" fill="#5b21b6">RULE</text>
+
+  <path d="M180 177 V195 H392" stroke="#94a3b8" stroke-width="1.5"/>
+  <path d="M640 177 V195 H428" stroke="#94a3b8" stroke-width="1.5"/>
+
+  <rect x="290" y="250" width="240" height="42" rx="8" fill="#ecfeff" stroke="#06b6d4" stroke-width="1.5"/>
+  <text x="410" y="268" text-anchor="middle" font-size="11" font-weight="700" fill="#0369a1">OPERATORS</text>
+  <text x="410" y="282" text-anchor="middle" font-size="10" fill="#0369a1">K (keystroke), P (point), H (home), M (mental)</text>
+  <path d="M410 230 V250" stroke="#94a3b8" stroke-width="1.5"/>
+</svg>
+<div class="cap">Fig 3.2 — GOMS breaks a Goal into Methods (chosen via Selection Rules), each Method made of Operators</div>
+</div>
+
+<div class="keypoint">
+  <div class="icon">🎯</div>
+  <div><strong>Important:</strong> GOMS models assume the user is a <strong>skilled/expert</strong> operator performing a <strong>routine, error-free</strong> task — they do NOT model learning, errors, or novice exploration behaviour.</div>
+</div>
+
+<!-- ============ 3.4 KLM ============ -->
+<h2 class="topic" id="u3-klm">3.4 KLM — Keystroke-Level Model <span class="imp h">EXAM HOT — NUMERICAL</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">The <strong>Keystroke-Level Model (KLM)</strong>, the simplest member of the GOMS family, predicts the time an expert user takes to execute a task <strong>error-free</strong> by decomposing it into a sequence of elementary <strong>physical and mental operators</strong>, each with an empirically-derived standard execution time, and summing them.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">KLM sabse simple aur most-used GOMS model hai. Isme har task ko chhote-chhote "operators" mein todte hain — jaise ek key press karna (K), mouse point karna (P), hands ko keyboard/mouse par le jaana (H), kuch sochna/decide karna (M), ya system ka response wait karna (R). Har operator ka ek <strong>fixed standard time</strong> hota hai (research se nikala gaya), aur total task time = sab operators ke time ka sum. Isse hum bina real testing ke, sirf calculation se pata laga sakte hain ki task karne mein kitna time lagega.</p>
+</div>
+
+<h3 class="sub">KLM Operators &amp; Standard Times (Card, Moran &amp; Newell)</h3>
+<table>
+  <tr><th>Operator</th><th>Name</th><th>Meaning</th><th>Standard Time</th></tr>
+  <tr><td class="hi">K</td><td>Keystroke</td><td>Pressing a key or mouse button</td><td>0.08s (expert) – 1.20s (novice); avg ≈ 0.28s</td>
+  </tr>
+  <tr><td class="hi">P</td><td>Pointing</td><td>Moving mouse pointer to a target on screen</td><td>≈ 1.10s (Fitts' Law-based avg)</td></tr>
+  <tr><td class="hi">H</td><td>Homing</td><td>Moving hand between keyboard and mouse</td><td>≈ 0.40s</td></tr>
+  <tr><td class="hi">D</td><td>Drawing</td><td>Drawing line segments (e.g., in a drawing tool)</td><td>Variable — formula-based on segments</td></tr>
+  <tr><td class="hi">M</td><td>Mental</td><td>Mentally preparing / deciding / recalling before an action</td><td>≈ 1.35s</td></tr>
+  <tr><td class="hi">R</td><td>System Response</td><td>Waiting for the system to respond</td><td>Variable — depends on system</td></tr>
+</table>
+
+<div class="formula">
+<span class="label">KLM Total Execution Time Formula</span>
+T_execute = T_K + T_P + T_H + T_D + T_M + T_R
+          = sum of times for every operator used in the task
+</div>
+
+<h3 class="sub">Mental Operator (M) Placement — Heuristic Rules</h3>
+<div class="steps">
+<ol>
+<li>Insert an <strong>M</strong> before every K (keystroke) or K-sequence that is <strong>not part of the same cognitive "chunk"</strong> (e.g., before typing a new, unrelated word).</li>
+<li>Do NOT insert M between K's that belong to the <strong>same well-learned unit</strong> (e.g., within one familiar word being typed).</li>
+<li>Insert an M before a P (pointing) if the target's location must first be decided/searched for, but not if it is a habitual, anticipated action.</li>
+<li>Delete any M that is immediately followed by another M — only one M is retained.</li>
+<li>Insert an M before command-terminating actions like pressing Enter, if a decision is being finalized.</li>
+</ol>
+</div>
+
+<div class="card example">
+  <div class="tag">💡 Worked Numerical Example</div>
+  <p style="margin-top:6px;"><strong>Task:</strong> Using the mouse, select a highlighted word on screen and delete it (hand starts on mouse).</p>
+  <div class="formula">Step-by-step Operator Sequence:
+M  → decide to select the word              = 1.35s
+P  → point mouse to the word                = 1.10s
+K  → double-click to select word (1 click)  = 0.28s
+M  → decide to delete                       = 1.35s
+H  → home hand from mouse to keyboard       = 0.40s
+K  → press Delete key                       = 0.28s
+--------------------------------------------------
+Total T = 1.35+1.10+0.28+1.35+0.40+0.28 = 4.76 seconds</div>
+</div>
+
+<h3 class="sub">🧮 Interactive KLM Time Calculator</h3>
+<div class="card" style="background:var(--surface2);">
+  <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">Enter how many times each operator occurs in your task sequence — the calculator sums the standard KLM times.</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;">
+    <div>
+      <label style="font-size:12px;font-weight:700;color:var(--accent);">K — Keystrokes (0.28s each)</label>
+      <input type="number" id="klm-k" value="2" min="0" style="width:100%;padding:8px;border-radius:8px;border:1.5px solid var(--border);margin-top:4px;">
+    </div>
+    <div>
+      <label style="font-size:12px;font-weight:700;color:var(--accent);">P — Pointing (1.10s each)</label>
+      <input type="number" id="klm-p" value="1" min="0" style="width:100%;padding:8px;border-radius:8px;border:1.5px solid var(--border);margin-top:4px;">
+    </div>
+    <div>
+      <label style="font-size:12px;font-weight:700;color:var(--accent);">H — Homing (0.40s each)</label>
+      <input type="number" id="klm-h" value="1" min="0" style="width:100%;padding:8px;border-radius:8px;border:1.5px solid var(--border);margin-top:4px;">
+    </div>
+    <div>
+      <label style="font-size:12px;font-weight:700;color:var(--accent);">M — Mental (1.35s each)</label>
+      <input type="number" id="klm-m" value="2" min="0" style="width:100%;padding:8px;border-radius:8px;border:1.5px solid var(--border);margin-top:4px;">
+    </div>
+    <div>
+      <label style="font-size:12px;font-weight:700;color:var(--accent);">R — System Response (s, total)</label>
+      <input type="number" id="klm-r" value="0" min="0" step="0.1" style="width:100%;padding:8px;border-radius:8px;border:1.5px solid var(--border);margin-top:4px;">
+    </div>
+    <div>
+      <label style="font-size:12px;font-weight:700;color:var(--accent);">D — Drawing (s, total)</label>
+      <input type="number" id="klm-d" value="0" min="0" step="0.1" style="width:100%;padding:8px;border-radius:8px;border:1.5px solid var(--border);margin-top:4px;">
+    </div>
+  </div>
+  <button onclick="calcKLM()" style="margin-top:16px;padding:10px 22px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;">Calculate Total Time</button>
+  <div id="klm-result" class="formula" style="margin-top:16px;">Total Predicted Time = 4.76 seconds</div>
+</div>
+
+<!-- ============ 3.5 CMN-GOMS ============ -->
+<h2 class="topic" id="u3-cmngoms">3.5 CMN-GOMS (Original GOMS by Card, Moran &amp; Newell) <span class="imp m">CONCEPT + EXAMPLE</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;"><strong>CMN-GOMS</strong> is the original, full GOMS model that represents a task as an <strong>explicit hierarchy of goals and sub-goals</strong>, each achievable through one or more <strong>Methods</strong> written in a program-like, stepwise notation, with <strong>Selection Rules</strong> used to choose between competing methods.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">CMN-GOMS mein pura task ek <strong>goal-subgoal hierarchy</strong> ki tarah likha jaata hai, jaise programming pseudocode. Har GOAL ko todha jaata hai chote SUBGOALS mein, aur har subgoal ko achieve karne ka ek METHOD hota hai jo operators ki step-by-step list hoti hai. Agar ek subgoal ko achieve karne ke multiple tarike (methods) hain, toh SELECTION RULE decide karta hai kaunsa method choose karna hai based on context.</p>
+</div>
+
+<h3 class="sub">CMN-GOMS Notation Example — "Delete a Word" Task</h3>
+<div class="formula">GOAL: DELETE-WORD
+  . GOAL: SELECT-WORD
+  .   [select Method-1 if mouse available]
+  .   [select Method-2 if keyboard-only]
+  .   METHOD-1 FOR GOAL: SELECT-WORD USING MOUSE
+  .     STEP 1. MOVE-CURSOR TO word         (Operator: P)
+  .     STEP 2. DOUBLE-CLICK mouse-button   (Operator: K)
+  .     RETURN WITH GOAL ACCOMPLISHED
+  . GOAL: DELETE-SELECTED-TEXT
+  .   METHOD FOR GOAL: DELETE-SELECTED-TEXT
+  .     STEP 1. HOME hand to keyboard        (Operator: H)
+  .     STEP 2. PRESS "Delete" key           (Operator: K)
+  .     RETURN WITH GOAL ACCOMPLISHED</div>
+
+<div class="card example">
+  <div class="tag">💡 Note</div>
+  <p style="margin-top:6px;">CMN-GOMS is <strong>more detailed and structural</strong> than KLM — it captures the full goal hierarchy and decision logic, while KLM only focuses on <strong>predicting execution time</strong> once a single method is chosen. CMN-GOMS is typically used first to model task structure; KLM is then used on the chosen method to predict time.</p>
+</div>
+
+<!-- ============ 3.6 GOMS VARIANTS TABLE ============ -->
+<h2 class="topic" id="u3-gomstable">3.6 GOMS Family Variants — Comparison <span class="imp m">DIFFERENCE TABLE</span></h2>
+
+<table>
+  <tr><th>Variant</th><th>Basis</th><th>Parallelism</th><th>Best Used For</th><th>Complexity</th></tr>
+  <tr><td class="hi">CMN-GOMS</td><td>Original goal-hierarchy + methods + selection rules</td><td>No (sequential)</td><td>Task structure &amp; method analysis</td><td>Medium</td></tr>
+  <tr><td class="hi">KLM (Keystroke-Level Model)</td><td>Sequential operators with fixed standard times</td><td>No (sequential)</td><td>Quick execution-time prediction</td><td>Low (simplest)</td></tr>
+  <tr><td class="hi">NGOMSL</td><td>Natural GOMS Language — structured, learnable production rules</td><td>No</td><td>Predicting learning time along with execution time</td><td>High</td></tr>
+  <tr><td class="hi">CPM-GOMS</td><td>Cognitive-Perceptual-Motor — based on Model Human Processor</td><td>Yes (parallel operators)</td><td>Highly accurate expert performance modelling</td><td>Very High</td></tr>
+</table>
+
+<div class="compare">
+  <div class="compare-card" style="border-left:3px solid var(--accent);">
+    <h4 style="color:var(--accent);">KLM</h4>
+    <ul>
+      <li>Fastest &amp; simplest to apply</li>
+      <li>Only predicts execution time</li>
+      <li>Operators executed strictly one after another</li>
+      <li>No modelling of learning or goal structure</li>
+    </ul>
+  </div>
+  <div class="compare-card" style="border-left:3px solid var(--purple);">
+    <h4 style="color:var(--purple);">CMN-GOMS</h4>
+    <ul>
+      <li>Models full goal/sub-goal hierarchy</li>
+      <li>Includes Selection Rules for method choice</li>
+      <li>More effort to build than KLM</li>
+      <li>Better for understanding task logic, not just timing</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============ 3.7 FITTS' LAW ============ -->
+<h2 class="topic" id="u3-fitts">3.7 Fitts' Law <span class="imp h">EXAM HOT — NUMERICAL</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;"><strong>Fitts' Law</strong> is a predictive model of human movement stating that the <strong>time required to rapidly move to and point at a target</strong> is a function of the <strong>distance</strong> to the target and the target's <strong>width (size)</strong> — larger, closer targets are acquired faster than smaller, farther targets.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Fitts' Law batata hai ki mouse ya finger se kisi target (jaise button) tak pahunchne mein kitna time lagega — yeh depend karta hai target ki <strong>distance (D)</strong> aur target ke <strong>size/width (W)</strong> par. Jitna target bada aur jitna close hoga, utna kam time lagega usko click karne mein — aur jitna chhota aur door hoga, utna zyada time lagega. Isiliye UI design mein important buttons ko bada aur easily reachable rakha jaata hai.</p>
+</div>
+
+<div class="svgbox">
+<svg viewBox="0 0 620 220" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="80" cy="120" r="10" fill="#2563eb"/>
+  <text x="80" y="150" text-anchor="middle" font-size="11" fill="#334155">Start (cursor)</text>
+  <line x1="90" y1="120" x2="470" y2="120" stroke="#94a3b8" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrowf)"/>
+  <text x="280" y="105" text-anchor="middle" font-size="13" font-weight="700" fill="#1e3a8a">Distance (D)</text>
+  <ellipse cx="500" cy="120" rx="45" ry="45" fill="#ecfeff" stroke="#06b6d4" stroke-width="2.5"/>
+  <line x1="500" y1="75" x2="500" y2="165" stroke="#0369a1" stroke-width="1.5"/>
+  <text x="500" y="200" text-anchor="middle" font-size="13" font-weight="700" fill="#0369a1">Width (W)</text>
+  <text x="500" y="125" text-anchor="middle" font-size="11" fill="#0369a1">Target</text>
+  <defs><marker id="arrowf" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#94a3b8"/></marker></defs>
+</svg>
+<div class="cap">Fig 3.3 — Fitts' Law variables: Distance (D) to target and target Width (W)</div>
+</div>
+
+<h3 class="sub">Formula</h3>
+<div class="formula">
+<span class="label">Fitts' Law (Shannon Formulation — most widely used)</span>
+MT = a + b × log2( D / W + 1 )
+
+where:
+MT = Movement (pointing) time
+a, b = empirical constants (depend on device, determined by regression)
+D = distance from starting point to the center of the target
+W = width of the target along the movement axis
+ID = log2(D/W + 1)   → "Index of Difficulty" (measured in "bits")</div>
+
+<div class="card example">
+  <div class="tag">💡 Worked Numerical Example</div>
+  <p style="margin-top:6px;">Given: D = 400 px, W = 40 px, a = 50 ms, b = 150 ms/bit.</p>
+  <div class="formula">ID = log2(400/40 + 1) = log2(11) ≈ 3.46 bits
+MT = 50 + 150 × 3.46 = 50 + 519 = 569 ms ≈ 0.57 seconds</div>
+</div>
+
+<h3 class="sub">🧮 Interactive Fitts' Law Simulator</h3>
+<div class="card" style="background:var(--surface2);">
+  <p style="font-size:13px;color:var(--muted);margin-bottom:10px;">Drag the sliders to change target Distance (D) and Width (W) — see predicted movement time update live. (Illustrative constants: a=50ms, b=150ms/bit)</p>
+  <label style="font-size:12px;font-weight:700;">Distance D = <span id="fitts-d-val">400</span> px</label>
+  <input type="range" id="fitts-d" min="50" max="800" value="400" oninput="calcFitts()" style="width:100%;">
+  <label style="font-size:12px;font-weight:700;">Width W = <span id="fitts-w-val">40</span> px</label>
+  <input type="range" id="fitts-w" min="5" max="150" value="40" oninput="calcFitts()" style="width:100%;">
+  <div id="fitts-result" class="formula" style="margin-top:14px;">ID = 3.46 bits   |   MT ≈ 569 ms</div>
+</div>
+
+<h3 class="sub">Applications of Fitts' Law in UI Design</h3>
+<div class="card">
+  <ul>
+    <li>🎯 <strong>Bigger buttons for frequent/important actions</strong> (e.g., large "Submit" buttons) reduce W → higher error, so bigger targets are used for critical actions.</li>
+    <li>📍 <strong>Screen edges &amp; corners act as "infinite width" targets</strong> — the pointer cannot overshoot past the screen edge, so edge/corner menus (e.g., Start button in a corner) are acquired very fast.</li>
+    <li>📏 <strong>Keep related/frequent controls close together</strong> to reduce distance D and hence movement time.</li>
+    <li>📱 On touchscreens, this generalizes to finger-touch target sizing (minimum recommended touch target ~ 9-10mm).</li>
+  </ul>
+</div>
+
+<!-- ============ 3.8 HICK-HYMAN'S LAW ============ -->
+<h2 class="topic" id="u3-hick">3.8 Hick-Hyman's Law <span class="imp m">EXAM HOT</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">The <strong>Hick-Hyman Law</strong> (Hick 1952, Hyman 1953) states that the <strong>time taken to make a decision</strong> among <strong>n</strong> equally-probable choices increases <strong>logarithmically</strong> with the number of choices/alternatives available.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Hick-Hyman's Law batata hai ki jitne zyada options (choices) user ke saamne honge, decision lene mein utna zyada time lagega — lekin yeh increase <strong>linear nahi, logarithmic</strong> hota hai. Matlab options double karne se time double nahi hota, thoda hi badhta hai. Isliye UI design mein bahut saare options ek hi jagah dikhane se better hai ki unhe categories mein todkar (grouped menus) dikhaya jaaye — isse decision time kam hota hai.</p>
+</div>
+
+<div class="svgbox">
+<svg viewBox="0 0 620 240" xmlns="http://www.w3.org/2000/svg">
+  <text x="310" y="22" text-anchor="middle" font-size="13" font-weight="700" fill="#1e3a8a">Reaction Time Grows Logarithmically with Number of Choices</text>
+  <line x1="60" y1="200" x2="580" y2="200" stroke="#94a3b8" stroke-width="1.5"/>
+  <line x1="60" y1="200" x2="60" y2="40" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="20" y="120" font-size="11" fill="#334155" transform="rotate(-90 20 120)">RT (ms)</text>
+  <text x="310" y="222" text-anchor="middle" font-size="11" fill="#334155">Number of Choices (n)</text>
+  <polyline points="70,185 130,150 190,128 260,110 340,95 430,82 540,70" fill="none" stroke="#06b6d4" stroke-width="3"/>
+  <circle cx="70" cy="185" r="4" fill="#0369a1"/><text x="70" y="200" font-size="10" fill="#334155">2</text>
+  <circle cx="190" cy="128" r="4" fill="#0369a1"/><text x="190" y="212" font-size="10" fill="#334155" text-anchor="middle">4</text>
+  <circle cx="340" cy="95" r="4" fill="#0369a1"/><text x="340" y="212" font-size="10" fill="#334155" text-anchor="middle">8</text>
+  <circle cx="540" cy="70" r="4" fill="#0369a1"/><text x="540" y="212" font-size="10" fill="#334155" text-anchor="middle">16</text>
+</svg>
+<div class="cap">Fig 3.4 — RT vs number of choices: rises fast initially, then flattens (logarithmic curve)</div>
+</div>
+
+<h3 class="sub">Formula</h3>
+<div class="formula">
+<span class="label">Hick-Hyman's Law</span>
+RT = a + b × log2( n + 1 )
+
+where:
+RT = Reaction / decision time
+a, b = empirical constants (device/context dependent)
+n = number of equally likely choices/alternatives
+"+1" accounts for the possibility of making "no choice"</div>
+
+<div class="card example">
+  <div class="tag">💡 Worked Numerical Example</div>
+  <p style="margin-top:6px;">Given: n = 8 menu items, a = 200 ms, b = 150 ms/bit.</p>
+  <div class="formula">RT = 200 + 150 × log2(8 + 1) = 200 + 150 × 3.17 = 200 + 475.5 ≈ 675.5 ms</div>
+</div>
+
+<h3 class="sub">🧮 Interactive Hick-Hyman Simulator</h3>
+<div class="card" style="background:var(--surface2);">
+  <label style="font-size:12px;font-weight:700;">Number of choices n = <span id="hick-n-val">8</span></label>
+  <input type="range" id="hick-n" min="1" max="30" value="8" oninput="calcHick()" style="width:100%;">
+  <div id="hick-result" class="formula" style="margin-top:14px;">RT ≈ 675.5 ms</div>
+</div>
+
+<h3 class="sub">Applications of Hick-Hyman's Law</h3>
+<div class="card">
+  <ul>
+    <li>📋 <strong>Grouped/hierarchical menus</strong> (categories → sub-items) reduce effective choices visible at once, speeding up decisions vs one giant flat menu.</li>
+    <li>🔍 <strong>Search + autocomplete</strong> reduces the number of visible choices dynamically as the user types.</li>
+    <li>⚠️ Too much menu grouping (too many levels) increases navigation time — a trade-off (breadth vs depth) must be balanced.</li>
+  </ul>
+</div>
+
+<!-- ============ 3.9 COMPARISON ============ -->
+<h2 class="topic" id="u3-fh-compare">3.9 Fitts' Law vs Hick-Hyman's Law <span class="imp l">DIFFERENCE TABLE</span></h2>
+
+<table>
+  <tr><th>Aspect</th><th>Fitts' Law</th><th>Hick-Hyman's Law</th></tr>
+  <tr><td class="hi">What it predicts</td><td>Time to physically <strong>move &amp; point</strong> to a target</td><td>Time to <strong>decide/choose</strong> among alternatives</td></tr>
+  <tr><td class="hi">Key variables</td><td>Distance (D) and Width (W) of target</td><td>Number of choices (n)</td></tr>
+  <tr><td class="hi">Nature of task</td><td>Motor / physical movement task</td><td>Cognitive / decision-making task</td></tr>
+  <tr><td class="hi">Formula shape</td><td>MT = a + b·log2(D/W + 1)</td><td>RT = a + b·log2(n + 1)</td></tr>
+  <tr><td class="hi">Typical UI use</td><td>Button size &amp; placement design</td><td>Menu structure &amp; number of options design</td></tr>
+</table>
+
+<!-- ============ 3.10 CASE STUDIES ============ -->
+<h2 class="topic" id="u3-cases">3.10 Model-Based Design Case Studies <span class="imp h">APPLICATION</span></h2>
+
+<div class="card">
+  <div style="color:var(--accent);font-weight:700;margin-bottom:8px;">🏧 Case Study 1 — ATM PIN Entry Screen (KLM)</div>
+  <p>Two ATM keypad layouts are compared using KLM. Design A requires the user to home hands between a physical keypad and a touchscreen "Confirm" button; Design B keeps everything on the touchscreen.</p>
+  <table>
+    <tr><th>Design</th><th>Operator Sequence</th><th>Predicted Time</th></tr>
+    <tr><td>A (Keypad + Touch Confirm)</td><td>M,K,K,K,K,H,M,K</td><td>≈ 5.9s</td></tr>
+    <tr><td>B (All Touchscreen)</td><td>M,K,K,K,K,M,K</td><td>≈ 5.5s</td></tr>
+  </table>
+  <p style="margin-top:8px;">Result: Design B is faster since it removes the Homing (H) operator — confirming the model-based prediction that all-touchscreen input reduces task time.</p>
+</div>
+
+<div class="card">
+  <div style="color:var(--accent);font-weight:700;margin-bottom:8px;">⌨️ Case Study 2 — Keyboard Layout Comparison (Fitts' Law + KLM)</div>
+  <p>QWERTY layout vs an alternative optimized layout are compared for typing a common word — Fitts' Law estimates the pointing/finger-travel time between key positions (distance between frequently-paired letters), while KLM sums total keystroke time.</p>
+  <table>
+    <tr><th>Layout</th><th>Avg. Distance Between Frequent Letter Pairs</th><th>Predicted Typing Time (relative)</th></tr>
+    <tr><td>QWERTY</td><td>Higher (not optimized for English digraphs)</td><td>Baseline (100%)</td></tr>
+    <tr><td>Optimized Layout</td><td>Lower (frequent pairs closer together)</td><td>~10-15% faster (model prediction)</td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <div style="color:var(--accent);font-weight:700;margin-bottom:8px;">📱 Case Study 3 — Mobile Menu Design (Hick-Hyman's Law)</div>
+  <p>A mobile app team compares a <strong>flat menu</strong> of 16 options against a <strong>grouped menu</strong> with 4 categories × 4 items each, using Hick-Hyman's Law to predict decision time at each screen.</p>
+  <table>
+    <tr><th>Menu Style</th><th>Choices Visible</th><th>Predicted Decision Time</th></tr>
+    <tr><td>Flat (16 items)</td><td>n = 16</td><td>RT = 200 + 150×log2(17) ≈ 813 ms</td></tr>
+    <tr><td>Grouped (4 + 4)</td><td>n = 4, then n = 4 again</td><td>2 × (200 + 150×log2(5)) ≈ 2 × 548 = 1096 ms total, but each step feels faster and less overwhelming</td></tr>
+  </table>
+  <p style="margin-top:8px;">Result: While total time can be similar or slightly higher for grouped menus, model-based analysis helps designers make an <strong>informed trade-off</strong> between raw speed and reduced cognitive load — rather than guessing.</p>
+</div>
+
+<!-- ============ 3.11 CHEAT SHEET ============ -->
+<div class="card" id="u3-cheat" style="margin-top:40px; background:linear-gradient(135deg,#eff6ff,#ecfeff); border:2px solid var(--accent);">
+  <div style="color:var(--accent); font-family:'JetBrains Mono',monospace; font-weight:700; font-size:15px; margin-bottom:14px;">📌 UNIT 3 — MASTER FORMULA CHEAT SHEET</div>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+    <div class="formula" style="margin:3px 0; font-size:12px;">GOMS = Goals, Operators, Methods, Selection rules</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">KLM: T = T_K+T_P+T_H+T_D+T_M+T_R</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">K=0.28s, P=1.10s, H=0.40s, M=1.35s (standard values)</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Fitts' Law: MT = a + b·log2(D/W + 1)</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Hick-Hyman: RT = a + b·log2(n + 1)</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Fitts → motor/pointing task; Hick-Hyman → decision task</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">CMN-GOMS = full hierarchy; KLM = time-only, simplest</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">CPM-GOMS = parallel operators (most complex, most accurate)</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">GOMS models expert, routine, error-free performance only</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">ID (Index of Difficulty) = log2(D/W + 1), unit = bits</div>
+  </div>
+</div>
+
+<!-- ============ 3.12 Q&A ============ -->
+<div class="qsection" id="u3-qa">
+  <h2 class="topic" style="margin-top:0;">3.12 RTU Exam Q&amp;A Bank <span class="imp h">MUST PRACTICE</span></h2>
+
+  <div class="qcard">
+    <div class="qlabel">Q1</div>
+    <div class="q">What is Model-Based Design and Evaluation? Explain its basic idea with the different types of models used in HCI. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>Model-based design and evaluation uses mathematical, cognitive, or structural models of the user and task to predict usability metrics like time and errors without building full prototypes or running extensive user tests, allowing early, low-cost comparison of design alternatives. Models in HCI are broadly classed as descriptive (explaining behaviour, e.g. Norman's model), predictive (quantifying performance, e.g. GOMS, Fitts' Law), and prescriptive/normative (offering design guidelines, e.g. Shneiderman's golden rules), along with cognitive models like the Model Human Processor and task models like Hierarchical Task Analysis.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q2</div>
+    <div class="q">Explain the GOMS model with its four components. How does CMN-GOMS differ from KLM? <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>GOMS, proposed by Card, Moran and Newell, models a task using Goals (what the user wants to achieve), Operators (elementary perceptual/motor/cognitive actions), Methods (learned sequences of operators achieving a goal), and Selection Rules (rules choosing between multiple applicable methods) to predict expert, error-free task performance. CMN-GOMS is the original, detailed model that represents the full goal-subgoal hierarchy with explicit methods and selection rules in a program-like notation, whereas KLM is a simplified variant that skips the hierarchy and selection logic, focusing purely on summing standard operator times to predict execution time for one already-chosen method.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q3</div>
+    <div class="q">Using the Keystroke-Level Model (KLM), calculate the time to select a paragraph with the mouse and delete it, given the hand starts on the mouse. Show all operators used. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>The task decomposes into: M (decide to select, 1.35s), P (point to paragraph start, 1.10s), K (click-drag to select, 0.28s), M (decide to delete, 1.35s), H (home hand to keyboard, 0.40s), and K (press Delete, 0.28s), summing to a total predicted execution time of approximately 4.76 seconds. This illustrates how KLM decomposes any routine interactive task into elementary operators with standard times to predict expert performance without user testing.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q4</div>
+    <div class="q">State and explain Fitts' Law. Calculate the movement time for a target at distance D=300px and width W=30px, given a=50ms and b=150ms/bit. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>Fitts' Law predicts that the time to rapidly point at a target depends logarithmically on the ratio of distance to target width, expressed as MT = a + b·log2(D/W + 1), where the log term is called the Index of Difficulty (ID) measured in bits, meaning larger and closer targets are acquired faster. For D=300 and W=30, ID = log2(300/30 + 1) = log2(11) ≈ 3.46 bits, giving MT = 50 + 150×3.46 ≈ 569 milliseconds.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q5</div>
+    <div class="q">State Hick-Hyman's Law and explain its significance in menu design. Calculate reaction time for 12 choices with a=200ms, b=150ms/bit. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>Hick-Hyman's Law states that decision time among n equally likely choices grows logarithmically as RT = a + b·log2(n + 1), meaning that doubling the number of options does not double the decision time — this motivates grouping large flat menus into smaller hierarchical categories to reduce the effective choice count at each step and lower perceived decision time. For n=12, RT = 200 + 150×log2(13) = 200 + 150×3.70 ≈ 755 milliseconds.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q6</div>
+    <div class="q">List and explain the standard KLM operators with their times, and state the heuristic rules for placing the Mental (M) operator. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>The six KLM operators are K (keystroke, ~0.28s average), P (pointing with mouse, ~1.10s), H (homing between input devices, ~0.40s), D (drawing line segments, variable), M (mental preparation, ~1.35s), and R (waiting for system response, variable), which together sum to give the total predicted execution time of a task. The mental operator placement heuristics state that M should be inserted before an unrelated keystroke or decision-requiring pointing action, but omitted within a single well-learned chunk, and that consecutive M's should be collapsed into a single M.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q7</div>
+    <div class="q">Differentiate between Fitts' Law and Hick-Hyman's Law. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>Fitts' Law predicts the time needed to physically move to and point at a target as a function of distance and target width (a motor task), while Hick-Hyman's Law predicts the time needed to cognitively decide among a number of choices (a decision task); both share a similar logarithmic mathematical form but model fundamentally different aspects of interaction — physical movement versus mental choice.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q8</div>
+    <div class="q">What are NGOMSL and CPM-GOMS? How do they extend the basic GOMS model? <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>NGOMSL (Natural GOMS Language) is a more structured variant of GOMS that expresses methods as learnable production rules, allowing prediction of both execution time and the time needed to learn a procedure. CPM-GOMS (Cognitive-Perceptual-Motor GOMS), based on the Model Human Processor, allows perceptual, cognitive, and motor operators to execute in parallel rather than strictly sequentially, giving more accurate but more complex predictions of expert performance than KLM.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q9</div>
+    <div class="q">Explain why models like GOMS and Fitts' Law cannot fully replace real user testing. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>These models assume an expert user performing a routine, well-learned, error-free task, so they cannot capture novice learning curves, exploratory behaviour, error recovery, emotional response, or unpredictable real-world usage patterns that real user testing reveals. They are best used for early, comparative, quantitative screening of design alternatives, with real user testing still required to validate learnability, satisfaction, and error-handling.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q10</div>
+    <div class="q">Give two practical UI design applications each of Fitts' Law and Hick-Hyman's Law. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>Fitts' Law motivates making frequently-used buttons larger and placing them close to the expected cursor position, and placing critical controls at screen edges/corners which act as targets of effectively infinite width. Hick-Hyman's Law motivates organizing large sets of options into grouped or hierarchical menus rather than one long flat list, and using search/autocomplete to dynamically reduce the number of visible choices as the user types.</p>
+    </div>
+  </div>
+
+</div><!-- end qsection -->
+
+<!-- Unit 3 Footer -->
+<div style="margin-top:50px; padding:20px 24px; border:1px dashed var(--border2); border-radius:10px; color:var(--muted); font-size:13px;">
+  <div style="color:var(--accent); font-family:'JetBrains Mono',monospace; font-weight:700; margin-bottom:6px;">SMART LEARNING+ // HCI_VAULT — UNIT 3 · Model-Based Design and Evaluation</div>
+  <p>RTU B.Tech CSE 5th Semester · 5CS5-12 Human Computer Interaction · Unit 3</p>
+  <p style="margin-top:6px;">📌 Key formulas: KLM operator summation · Fitts' Law MT=a+b·log2(D/W+1) · Hick-Hyman RT=a+b·log2(n+1)</p>
+  <p style="margin-top:6px;">⚡ Unit 4 — Empirical Research Methods in HCI can be appended directly below this section.</p>
+</div>
+
+</div><!-- end unit3 -->
+
+<hr class="sep">
       </div>
     </div>
     <div style="display:flex;gap:12px;justify-content:center;padding:30px 20px;flex-wrap:wrap;">
-      <a href="index.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">🏠 HCI Hub</a>
       <a href="unit2.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+      <a href="index.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">🏠 HCI Hub</a>
       <a href="unit4.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
     </div>
   </main>
-  <div class="cursor-dot" data-cursor-dot></div>
-  <div class="cursor-outline" data-cursor-outline></div>
   <script>
-    const cursorDot = document.querySelector("[data-cursor-dot]");
-    const cursorOutline = document.querySelector("[data-cursor-outline]");
-    window.addEventListener("mousemove", function(e){
-      cursorDot.style.left=e.clientX+"px"; cursorDot.style.top=e.clientY+"px";
-      cursorOutline.animate({left:e.clientX+"px",top:e.clientY+"px"},{duration:400,fill:"forwards"});
+    function calcKLM(){
+      var K = parseFloat(document.getElementById('klm-k').value)||0;
+      var P = parseFloat(document.getElementById('klm-p').value)||0;
+      var H = parseFloat(document.getElementById('klm-h').value)||0;
+      var M = parseFloat(document.getElementById('klm-m').value)||0;
+      var R = parseFloat(document.getElementById('klm-r').value)||0;
+      var D = parseFloat(document.getElementById('klm-d').value)||0;
+      var total = (K*0.28)+(P*1.10)+(H*0.40)+(M*1.35)+R+D;
+      document.getElementById('klm-result').innerText = "Total Predicted Time = " + total.toFixed(2) + " seconds";
+    }
+    ['klm-k','klm-p','klm-h','klm-m','klm-r','klm-d'].forEach(function(id){
+      document.getElementById(id).addEventListener('input', calcKLM);
     });
-    document.querySelectorAll("a,button").forEach(el=>{
-      el.addEventListener("mouseenter",()=>cursorOutline.classList.add("cursor-hovering"));
-      el.addEventListener("mouseleave",()=>cursorOutline.classList.remove("cursor-hovering"));
-    });
+
+    function calcFitts(){
+      var D = parseFloat(document.getElementById('fitts-d').value);
+      var W = parseFloat(document.getElementById('fitts-w').value);
+      document.getElementById('fitts-d-val').innerText = D;
+      document.getElementById('fitts-w-val').innerText = W;
+      var ID = Math.log2((D/W)+1);
+      var MT = 50 + 150*ID;
+      document.getElementById('fitts-result').innerText = "ID = " + ID.toFixed(2) + " bits   |   MT ≈ " + MT.toFixed(0) + " ms";
+    }
+
+    function calcHick(){
+      var n = parseFloat(document.getElementById('hick-n').value);
+      document.getElementById('hick-n-val').innerText = n;
+      var RT = 200 + 150*Math.log2(n+1);
+      document.getElementById('hick-result').innerText = "RT ≈ " + RT.toFixed(1) + " ms";
+    }
+
+    calcKLM(); calcFitts(); calcHick();
   </script>
-<script src="../splash-cursor.js"></script>
 </body>
 </html>

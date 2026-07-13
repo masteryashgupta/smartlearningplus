@@ -4,15 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Smart Learning Plus // HCI · Unit 6</title>
-<link rel="stylesheet" href="../style.css">
-<style>
-  .placeholder-vault {
-    text-align: center; padding: 60px 24px;
-  }
-  .placeholder-vault .icon { font-size: 64px; margin-bottom: 20px; opacity: 0.5; }
-  .placeholder-vault h2 { font-size: 22px; font-weight: 800; color: var(--text); margin-bottom: 10px; }
-  .placeholder-vault p { color: var(--muted); font-size: 15px; max-width: 400px; margin: 0 auto 24px; }
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
   <main class="main-wrapper" style="width:100%;">
@@ -22,30 +14,868 @@
       <div class="nav">
         <a href="index.html">🏠 HCI Hub</a>
         <a href="#content">📖 Content</a>
-        <a href="#qa">❓ Q&A</a>
-        <a href="unit5.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev</a>
+        <a href="#qa">❓ Q&amp;A</a>
+        <a href="unit5.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
         <a href="unit7.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
       </div>
     </div>
     <div class="wrap">
       <div class="hero">
-        <h1>🧩 Unit 6 — Task Modeling</h1>
-        <p>HTA, CTT, FSM, Petri Nets, State charts · Hours: 06</p>
+        <h1>🧩 Unit 6 — Task Modelling and Analysis</h1>
+        <p>HTA · Engineering Task Models · CTT · Dialog Design Formalism · FSM · State Charts · Petri Nets | Hours: 06</p>
         <div class="badges" style="margin-top:14px;">
           <a href="index.html" style="text-decoration:none;"><span class="badge b-teal">← Back to HCI Hub</span></a>
           <span class="badge b-gold">5CS5-12 · HCI · RTU</span>
         </div>
       </div>
+      <div id="content">
+  <div class="hero" id="unit6">
+    <h1>UNIT 6 — TASK MODELLING AND ANALYSIS</h1>
+    <div class="sub">5CS5-12 · Human Computer Interaction · RTU Kota · III Year – V Sem · B.Tech CSE</div>
+    <div class="sub" style="margin-top:4px;">Credit: 2 &nbsp;|&nbsp; Max Marks: 100 (IA:30, ETE:70) &nbsp;|&nbsp; End Term: 3 Hours</div>
+    <div class="badges">
+      <span class="badge b-red">⚠ HIGH PRIORITY UNIT</span>
+      <span class="badge b-gold">⭐ 5 &amp; 10 Mark Questions</span>
+      <span class="badge b-teal">✦ 6 Hours Weightage</span>
+    </div>
+  </div>
 
-      <div class="placeholder-vault">
-        <div class="icon">🧩</div>
-        <h2>Unit 6 Content Coming Soon</h2>
-        <p>Content for Unit 6 (Task modelling and analysis: Hierarchical task analysis, Engineering task models and Concur Task Tree, Introduction to formalism in dialog design, design using FSM, State charts and classical Petri Nets in dialog design) is being prepared. Check back later for detailed notes and Q&A.</p>
+  <div class="progress-bar"></div>
+
+  <div class="toc scroll-anchor" id="toc">
+    <h3>📋 UNIT 6 — CONTENTS</h3>
+    <ol>
+      <li><a href="#hta">Hierarchical Task Analysis (HTA)</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#etm">Engineering Task Models</a> <span class="sublabel">MEDIUM ★★</span></li>
+      <li><a href="#ctt">Concur Task Trees (CTT)</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#formalism">Introduction to Formalism in Dialog Design</a> <span class="sublabel">MEDIUM ★★</span></li>
+      <li><a href="#fsm">Finite State Machines (FSM) in Dialog Design</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#statecharts">State Charts in Dialog Design</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#petri">Classical Petri Nets in Dialog Design</a> <span class="sublabel">HIGH ★★★</span></li>
+      <li><a href="#compare">Formalism Comparison Chart</a> <span class="sublabel">EXAM GOLD</span></li>
+      <li><a href="#qa">RTU Exam Q&amp;A Bank (5-mark &amp; 10-mark)</a> <span class="sublabel">EXAM GOLD</span></li>
+    </ol>
+  </div>
+
+  <!-- ============ 1. HTA ============ -->
+  <div class="unit-title scroll-anchor" id="hta">
+    <span style="color:var(--accent2);">01.</span> Hierarchical Task Analysis (HTA)
+    <span class="imp h">HIGH</span>
+  </div>
+  <div class="unit-sub">Breaking a big goal into small, doable steps — the backbone of task modelling.</div>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>Hierarchical Task Analysis (HTA)</strong> is a technique for analysing a task by decomposing it into a hierarchy of goals, sub-goals, operations and plans — starting from an overall goal at the top and successively breaking it down into smaller, more concrete sub-tasks until each sub-task is simple enough to describe as a single, indivisible <em>operation</em>.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish Explanation</div>
+    HTA ka basic idea simple hai — koi bhi bada task (goal) lo aur usko chhote-chhote sub-tasks mein todte jao, jab tak har sub-task itna simple na ho jaye ki use ek single action/operation ke roop mein describe kiya ja sake. Jaise "chai banana" ek goal hai — isko "paani garam karna", "patti daalna", "doodh milana" jaise sub-goals mein todte hain. Yeh ek <strong>top-down decomposition</strong> approach hai.
+  </div>
+
+  <h3 class="sub">Core Building Blocks of HTA</h3>
+  <table>
+    <tr><th>Element</th><th>Meaning</th></tr>
+    <tr><td class="hi">Goal</td><td>A state of affairs the user wants to achieve (numbered 0 for the top goal, 1, 2, 3… for sub-goals)</td></tr>
+    <tr><td class="hi">Sub-goal</td><td>A goal that is part of a larger goal — can itself be broken down further</td></tr>
+    <tr><td class="hi">Operation</td><td>A basic, indivisible action performed by the user to satisfy a goal (the "leaf" of the tree)</td></tr>
+    <tr><td class="hi">Plan</td><td>Describes the <em>order/condition</em> in which sub-goals must be carried out to satisfy the parent goal (sequence, selection, or iteration)</td></tr>
+  </table>
+
+  <div class="card example">
+    <div class="tag">Plan Notation Examples</div>
+    <p><strong>Plan 0:</strong> Do 1, then 2, then 3 — <em>(sequence)</em><br>
+    <strong>Plan 1:</strong> Do 1.1, then either 1.2 or 1.3 depending on condition — <em>(selection)</em><br>
+    <strong>Plan 2:</strong> Do 2.1 then repeatedly do 2.2 until done — <em>(iteration)</em></p>
+  </div>
+
+  <h3 class="sub">Diagram: HTA Tree for "Make a Cup of Tea"</h3>
+  <div class="svgbox">
+    <svg viewBox="0 0 720 330" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:720px;">
+      <rect x="0" y="0" width="720" height="330" fill="#0d1820"/>
+      <g font-family="Consolas" font-size="12" fill="#d7e1e8" text-anchor="middle">
+        <rect x="280" y="14" width="160" height="42" rx="6" fill="none" stroke="#36e0c4" stroke-width="2"/>
+        <text x="360" y="32">0. Make a cup of tea</text>
+        <text x="360" y="48" fill="#8aa0ad" font-size="10">Plan 0: 1-2-3-4</text>
+
+        <line x1="360" y1="56" x2="90" y2="96" stroke="#8aa0ad"/>
+        <line x1="360" y1="56" x2="270" y2="96" stroke="#8aa0ad"/>
+        <line x1="360" y1="56" x2="450" y2="96" stroke="#8aa0ad"/>
+        <line x1="360" y1="56" x2="630" y2="96" stroke="#8aa0ad"/>
+
+        <rect x="20" y="96" width="140" height="42" rx="6" fill="none" stroke="#ffb454" stroke-width="1.5"/>
+        <text x="90" y="118">1. Boil water</text>
+
+        <rect x="200" y="96" width="140" height="42" rx="6" fill="none" stroke="#ffb454" stroke-width="1.5"/>
+        <text x="270" y="118">2. Prepare cup</text>
+
+        <rect x="380" y="96" width="140" height="42" rx="6" fill="none" stroke="#ffb454" stroke-width="1.5"/>
+        <text x="450" y="118">3. Add tea &amp; milk</text>
+
+        <rect x="560" y="96" width="140" height="42" rx="6" fill="none" stroke="#ffb454" stroke-width="1.5"/>
+        <text x="630" y="118">4. Stir &amp; serve</text>
+
+        <!-- children of 3 -->
+        <line x1="450" y1="138" x2="390" y2="178" stroke="#8aa0ad"/>
+        <line x1="450" y1="138" x2="510" y2="178" stroke="#8aa0ad"/>
+        <rect x="330" y="178" width="120" height="40" rx="6" fill="none" stroke="#5b9bff" stroke-width="1.5"/>
+        <text x="390" y="200" font-size="11">3.1 Add tea leaves</text>
+        <rect x="460" y="178" width="120" height="40" rx="6" fill="none" stroke="#5b9bff" stroke-width="1.5"/>
+        <text x="520" y="200" font-size="11">3.2 Add milk</text>
+        <text x="450" y="232" fill="#8aa0ad" font-size="10">Plan 3: 3.1 then 3.2</text>
+
+        <!-- children of 1 -->
+        <line x1="90" y1="138" x2="60" y2="178" stroke="#8aa0ad"/>
+        <line x1="90" y1="138" x2="150" y2="178" stroke="#8aa0ad"/>
+        <rect x="10" y="178" width="100" height="40" rx="6" fill="none" stroke="#5b9bff" stroke-width="1.5"/>
+        <text x="60" y="200" font-size="11">1.1 Fill kettle</text>
+        <rect x="120" y="178" width="100" height="40" rx="6" fill="none" stroke="#5b9bff" stroke-width="1.5"/>
+        <text x="170" y="200" font-size="11">1.2 Switch on</text>
+        <text x="90" y="232" fill="#8aa0ad" font-size="10">Plan 1: 1.1 then 1.2</text>
+      </g>
+    </svg>
+    <p class="cap">Fig 1: HTA decomposition of goal "Make a cup of tea" into sub-goals, operations and plans (numbered notation)</p>
+  </div>
+
+  <h3 class="sub">Steps to Conduct an HTA</h3>
+  <div class="card steps">
+    <ol style="padding-left:0;list-style:none;counter-reset:step;">
+      <li style="margin:10px 0;"><strong>1.</strong> Identify the overall goal of the task.</li>
+      <li style="margin:10px 0;"><strong>2.</strong> Collect data (interviews, observation, existing documentation) about how the task is performed.</li>
+      <li style="margin:10px 0;"><strong>3.</strong> Decompose the goal into 4–8 sub-goals (the "rule of thumb" range).</li>
+      <li style="margin:10px 0;"><strong>4.</strong> Sequence the sub-goals with a plan describing order/conditions.</li>
+      <li style="margin:10px 0;"><strong>5.</strong> Decide the appropriate stopping point — stop decomposing when a sub-goal is a single, well-understood operation.</li>
+      <li style="margin:10px 0;"><strong>6.</strong> Check the analysis — validate with real users/experts, then redraft if necessary.</li>
+    </ol>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    HTA banate waqt ek golden rule follow hota hai — <strong>"stopping rule"</strong>. Jab analyst ko lagta hai ki further break-down karna zaroorat se zyada detail hoga (jaise "hand ko cup ki taraf move karo" jaisi micro-level cheez), tab wahi decomposition rok di jaati hai. Yeh depend karta hai analysis ke purpose par.
+  </div>
+
+  <table>
+    <tr><th>Advantages of HTA</th><th>Limitations of HTA</th></tr>
+    <tr><td>Simple, systematic, widely used and easy to learn</td><td>Does not capture cognitive processes (thinking, decision making) well</td></tr>
+    <tr><td>Good for identifying training needs &amp; interface requirements</td><td>Can become very large/unwieldy for complex systems</td></tr>
+    <tr><td>Flexible stopping rule adapts to purpose of analysis</td><td>Mainly captures observable actions, not user goals/motivation deeply</td></tr>
+    <tr><td>Provides a clear, hierarchical, graphical representation</td><td>No standard/formal notation for concurrency between tasks</td></tr>
+  </table>
+
+  <div class="card warn">
+    <div class="tag">⚠ Important</div>
+    <p>HTA is the <strong>most frequently asked topic</strong> from this unit — remember the numbering convention (0 for top goal), the 4 core elements (Goal, Sub-goal, Operation, Plan), and be ready to draw a complete tree diagram for a given task (e.g., ATM withdrawal, online shopping, ticket booking).</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- ============ 2. Engineering Task Models ============ -->
+  <h2 class="topic scroll-anchor" id="etm">
+    <span>02.</span> Engineering Task Models
+    <span class="imp m">MEDIUM</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p>An <strong>Engineering Task Model</strong> is a formal, structured, and often notation-based representation of the tasks a user needs to perform with a system, created using systematic engineering methods so that the model can be analysed, validated, reused, and even used to automatically generate or evaluate the user interface — going beyond the informal tree diagrams of basic HTA.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    HTA ek informal/hand-drawn tree hoti hai. Lekin jab hum bade, complex, ya safety-critical systems (jaise aircraft cockpit, medical device) design karte hain, tab humein zyada <strong>rigorous aur formal</strong> task models chahiye hote hain jinko tools se analyse/validate kiya ja sake. Isi formal engineering approach ko "Engineering Task Models" kehte hain — inme task types, temporal relationships, aur constraints sab kuch precisely define kiye jaate hain.
+  </div>
+
+  <h3 class="sub">Why Move from Informal HTA to Engineering Task Models?</h3>
+  <table>
+    <tr><th>Aspect</th><th>Informal HTA</th><th>Engineering Task Model</th></tr>
+    <tr><td>Notation</td><td>Free-hand tree + plain-English plans</td><td>Formal, standardised notation with defined semantics</td></tr>
+    <tr><td>Concurrency</td><td>Not well supported</td><td>Explicit temporal operators (sequence, choice, parallelism, etc.)</td></tr>
+    <tr><td>Tool support</td><td>Mostly manual/drawing tools</td><td>CASE tools (e.g. CTTE for CTT) allow simulation &amp; validation</td></tr>
+    <tr><td>Reusability</td><td>Low — tied to one analyst's interpretation</td><td>High — models can be shared, reused, and linked to UI generation</td></tr>
+  </table>
+
+  <h3 class="sub">Common Purposes of Engineering Task Models</h3>
+  <div class="card">
+    <ul style="padding-left:20px;">
+      <li><strong>Requirements capture</strong> — precisely record what users need to do</li>
+      <li><strong>Design guidance</strong> — drive the structure of menus, dialogs, and screens</li>
+      <li><strong>Usability evaluation</strong> — compare actual usage against the intended model to spot deviations</li>
+      <li><strong>Model-based UI generation</strong> — some tools can auto-generate a prototype interface directly from the task model</li>
+      <li><strong>Documentation</strong> — serve as a communication artefact between designers, developers and stakeholders</li>
+    </ul>
+  </div>
+
+  <div class="card example">
+    <div class="tag">Where This Leads</div>
+    <p>The most widely taught and RTU-relevant engineering/formal task-modelling notation is the <strong>Concur Task Tree (CTT)</strong>, discussed in detail next — it takes the hierarchical spirit of HTA and adds a rigorous notation for describing temporal/concurrency relationships between tasks.</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- ============ 3. CTT ============ -->
+  <h2 class="topic scroll-anchor" id="ctt">
+    <span>03.</span> Concur Task Trees (CTT)
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>ConcurTaskTrees (CTT)</strong>, proposed by Fabio Paternò, is a graphical, hierarchical task-modelling notation that extends classical task trees (like HTA) with a formal set of <em>temporal operators</em> to precisely describe how sibling tasks in the tree relate to each other in time — including sequencing, choice, concurrency (parallelism), and interruption — while also classifying every task by <em>who</em> performs it.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    CTT ek advanced version hai task-tree ka jisme HTA jaisi hierarchy toh hai hi, saath hi har do sibling tasks ke beech <strong>exact temporal relationship</strong> (kaunsa task pehle, kaunsa saath-saath, kaunsa optional) ko special symbols se describe kiya jaata hai. Yeh multi-user ya complex concurrent systems (jaise chat app, jahan "typing" aur "receiving message" saath-saath ho sakte hain) model karne ke liye best hai.
+  </div>
+
+  <h3 class="sub">Task Types in CTT (classified by "who performs it")</h3>
+  <table>
+    <tr><th>Task Type</th><th>Icon/Symbol</th><th>Description</th></tr>
+    <tr><td class="hi">User Task</td><td>Circle</td><td>Purely cognitive/physical action performed by the user without the system (e.g. deciding which option to pick)</td></tr>
+    <tr><td class="hi">Application (System) Task</td><td>Square/Box</td><td>Performed entirely by the system, invisible input from the user (e.g. system validates a password)</td></tr>
+    <tr><td class="hi">Interaction Task</td><td>Triangle/Rounded box</td><td>Performed by the user through the interface — a physical action that has immediate effect on the system (e.g. clicking a button)</td></tr>
+    <tr><td>Abstract Task</td><td>Diamond/Pentagon</td><td>Complex tasks requiring more than one type of activity, or task not yet fully specified — usually decomposed further</td></tr>
+  </table>
+
+  <h3 class="sub">CTT Temporal Operators (Between Sibling Tasks)</h3>
+  <table>
+    <tr><th>Operator</th><th>Symbol</th><th>Meaning</th></tr>
+    <tr><td class="hi">Enabling</td><td>T1 &gt;&gt; T2</td><td>T1 must complete before T2 can start (sequence)</td></tr>
+    <tr><td class="hi">Enabling with info passing</td><td>T1 []&gt;&gt; T2</td><td>T1 finishes and passes data/information to T2</td></tr>
+    <tr><td class="hi">Choice</td><td>T1 [] T2</td><td>Either T1 or T2 occurs, not both — user/system picks one</td></tr>
+    <tr><td class="hi">Concurrency (Interleaving)</td><td>T1 ||| T2</td><td>T1 and T2 can happen in any order/simultaneously, independently</td></tr>
+    <tr><td>Concurrency with sync.</td><td>T1 |[]| T2</td><td>T1 and T2 run concurrently but must synchronise at certain points</td></tr>
+    <tr><td class="hi">Disabling</td><td>T1 [&gt; T2</td><td>T2 permanently interrupts and terminates T1</td></tr>
+    <tr><td>Suspend-Resume</td><td>T1 |&gt; T2</td><td>T2 temporarily interrupts T1; T1 resumes later from where it stopped</td></tr>
+    <tr><td class="hi">Iteration</td><td>T1*</td><td>T1 repeats zero or more times</td></tr>
+    <tr><td>Finite Iteration</td><td>T1(n)</td><td>T1 repeats exactly n times</td></tr>
+    <tr><td class="hi">Optionality</td><td>[T1]</td><td>T1 is optional — may or may not be performed</td></tr>
+    <tr><td>Order Independence</td><td>T1 |=| T2</td><td>Both T1 and T2 must occur, in either order, but not simultaneously</td></tr>
+  </table>
+
+  <h3 class="sub">Diagram: CTT for "Login to a System"</h3>
+  <div class="svgbox">
+    <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:680px;">
+      <rect x="0" y="0" width="680" height="300" fill="#0d1820"/>
+      <g font-family="Consolas" font-size="11" fill="#d7e1e8" text-anchor="middle">
+        <polygon points="340,10 380,30 340,50 300,30" fill="none" stroke="#36e0c4" stroke-width="2"/>
+        <text x="340" y="34">Login</text>
+
+        <line x1="340" y1="50" x2="130" y2="100" stroke="#8aa0ad"/>
+        <text x="230" y="72" fill="#ffb454" font-size="12">&gt;&gt;</text>
+        <line x1="340" y1="50" x2="340" y2="100" stroke="#8aa0ad"/>
+        <text x="352" y="72" fill="#ffb454" font-size="12">&gt;&gt;</text>
+        <line x1="340" y1="50" x2="560" y2="100" stroke="#8aa0ad"/>
+        <text x="470" y="72" fill="#ffb454" font-size="12">[&gt;</text>
+
+        <rect x="70" y="100" width="120" height="40" rx="18" fill="none" stroke="#5b9bff" stroke-width="1.5"/>
+        <text x="130" y="123">Enter Credentials</text>
+
+        <rect x="280" y="100" width="120" height="40" rx="4" fill="none" stroke="#ff6b6b" stroke-width="1.5"/>
+        <text x="340" y="123">Validate (System)</text>
+
+        <circle cx="560" cy="120" r="26" fill="none" stroke="#4ade80" stroke-width="1.5"/>
+        <text x="560" y="123">Cancel</text>
+
+        <line x1="130" y1="140" x2="60" y2="190" stroke="#8aa0ad"/>
+        <text x="65" y="168" fill="#ffb454" font-size="12">|||</text>
+        <line x1="130" y1="140" x2="200" y2="190" stroke="#8aa0ad"/>
+
+        <rect x="10" y="190" width="100" height="38" rx="18" fill="none" stroke="#5b9bff" stroke-width="1.5"/>
+        <text x="60" y="212" font-size="10">Enter Username</text>
+
+        <rect x="150" y="190" width="100" height="38" rx="18" fill="none" stroke="#5b9bff" stroke-width="1.5"/>
+        <text x="200" y="212" font-size="10">Enter Password</text>
+
+        <text x="130" y="255" fill="#8aa0ad" font-size="10">Enter Credentials =</text>
+        <text x="130" y="270" fill="#8aa0ad" font-size="10">Username ||| Password</text>
+      </g>
+    </svg>
+    <p class="cap">Fig 2: CTT model for a Login dialog — circle = interaction task, box = system task, rounded = user sub-tasks; operators shown on connecting edges</p>
+  </div>
+
+  <div class="card example">
+    <div class="tag">Reading the Diagram</div>
+    <p>"Enter Credentials" <strong>&gt;&gt;</strong> (enables) "Validate", which in turn can be <strong>[&gt;</strong> (disabled/interrupted) by "Cancel" at any time. Inside "Enter Credentials", the username and password fields can be filled in <strong>|||</strong> (any order / concurrently) since neither depends on the other.</p>
+  </div>
+
+  <div class="card tip">
+    <div class="tag">HTA vs CTT — Quick Difference</div>
+    <table style="margin:0;">
+      <tr><th>Feature</th><th>HTA</th><th>CTT</th></tr>
+      <tr><td>Formality</td><td>Informal, plain-English plans</td><td>Formal notation with precise temporal operators</td></tr>
+      <tr><td>Task Actor</td><td>Not distinguished</td><td>Explicitly classifies User/System/Interaction/Abstract tasks</td></tr>
+      <tr><td>Concurrency</td><td>Weakly supported</td><td>Strongly supported (|||, |[]|, |=| operators)</td></tr>
+      <tr><td>Tool support</td><td>Manual drawing</td><td>CTTE and other CASE tools available</td></tr>
+    </table>
+  </div>
+
+  <hr class="sep">
+
+  <!-- ============ 4. Formalism in Dialog Design ============ -->
+  <h2 class="topic scroll-anchor" id="formalism">
+    <span>04.</span> Introduction to Formalism in Dialog Design
+    <span class="imp m">MEDIUM</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>Dialog Design</strong> is the process of specifying the structure and sequencing of the conversation (turn-taking) between the user and the system — which inputs are legal at which point, what the system responds with, and how control moves between different states/screens of the interface. A <strong>formalism</strong> in this context is a mathematically precise notation (a set of symbols and rules) used to unambiguously model this dialog structure, so it can be analysed, verified and communicated without ambiguity.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Dialog design basically yeh define karta hai ki user aur system ke beech "conversation" kaise chalegi — user kab kya input de sakta hai, system kaise respond karega, aur ek screen/state se doosri screen/state mein kaise move hoga. Isko sirf words mein likhna ambiguous ho sakta hai, isliye hum <strong>formal notations</strong> (jaise diagrams/mathematical models) use karte hain taaki design bilkul clear aur testable ho — koi confusion na ho.
+  </div>
+
+  <h3 class="sub">Why Do We Need Formal Notations for Dialog Design?</h3>
+  <div class="card">
+    <ul style="padding-left:20px;">
+      <li><strong>Precision</strong> — removes ambiguity present in natural-language descriptions</li>
+      <li><strong>Analysability</strong> — can mathematically check for unreachable states, deadlocks, or missing transitions</li>
+      <li><strong>Communication</strong> — gives designers, developers, and testers a shared, unambiguous reference</li>
+      <li><strong>Simulation</strong> — many formal models can be "executed"/simulated before the real system is built</li>
+      <li><strong>Consistency checking</strong> — ensures every state has a defined response to every possible user action</li>
+    </ul>
+  </div>
+
+  <h3 class="sub">Common Formal Notations Used in Dialog Design</h3>
+  <table>
+    <tr><th>Notation</th><th>Core Idea</th><th>Best Suited For</th></tr>
+    <tr><td class="hi">State Transition Networks / FSM</td><td>Dialog as a set of states with labelled transitions triggered by events</td><td>Simple, mostly-sequential dialogs (e.g. wizards, menus)</td></tr>
+    <tr><td class="hi">State Charts (Statecharts)</td><td>FSM extended with hierarchy (nested states) and concurrency (AND-states)</td><td>Complex dialogs with many modes and overlapping activities</td></tr>
+    <tr><td class="hi">Petri Nets</td><td>Places (conditions) + transitions (events) + tokens (current state markers)</td><td>Dialogs needing explicit modelling of concurrency &amp; synchronisation</td></tr>
+    <tr><td>Grammar-based notations (BNF)</td><td>Dialog described as production rules, similar to programming-language grammars</td><td>Command-line/textual dialog syntax</td></tr>
+    <tr><td>Event-Response / Production Systems</td><td>A flat set of "if event-then action" rules, no explicit state</td><td>Simple reactive systems, small dialog boxes</td></tr>
+  </table>
+
+  <div class="card warn">
+    <div class="tag">⚠ Important — RTU Focus</div>
+    <p>Out of these, RTU syllabus specifically expects deep coverage of the three <strong>state-based/net-based</strong> formalisms: <strong>FSM</strong>, <strong>State Charts</strong>, and <strong>(classical) Petri Nets</strong> — covered in full detail in the next three sections.</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- ============ 5. FSM ============ -->
+  <h2 class="topic scroll-anchor" id="fsm">
+    <span>05.</span> Finite State Machines (FSM) in Dialog Design
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p>A <strong>Finite State Machine (FSM)</strong>, also called a State Transition Diagram/Network, is a formal model consisting of a <em>finite</em> set of states, a set of events/inputs, and a transition function that determines, for each state and each event, which single new state the system moves to — used in dialog design to represent all the possible "modes" of the interface and the legal moves between them.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    FSM ek simple aur bahut popular formalism hai jisme system hamesha kisi ek <strong>"state"</strong> (situation) mein hota hai — jaise "Idle", "Logged In", "Error". Jab koi event hota hai (jaise button click), system ek defined transition follow karke doosri state mein chala jaata hai. Ismein ek waqt mein sirf ek hi state active hoti hai — isliye concurrency (do cheezein saath mein) achhe se model nahi hoti.
+  </div>
+
+  <h3 class="sub">Formal Components of an FSM</h3>
+  <table>
+    <tr><th>Component</th><th>Meaning</th></tr>
+    <tr><td class="hi">States (S)</td><td>Finite set of distinct situations/modes the system can be in</td></tr>
+    <tr><td class="hi">Events/Inputs (E)</td><td>Finite set of triggers (user actions, system signals) that can cause a state change</td></tr>
+    <tr><td class="hi">Transition Function (δ)</td><td>Maps (current state, event) → next state</td></tr>
+    <tr><td>Initial State</td><td>The state the system starts in</td></tr>
+    <tr><td>Final/Accepting State(s)</td><td>State(s) marking successful completion of the dialog (optional)</td></tr>
+  </table>
+
+  <div class="formula">
+    FSM = (S, E, δ, s0, F)<br>
+    where S = set of states, E = set of events, δ: S×E → S, s0 = initial state, F = set of final states
+  </div>
+
+  <h3 class="sub">Diagram: FSM for a Simple Login Dialog</h3>
+  <div class="svgbox">
+    <svg viewBox="0 0 560 260" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:560px;">
+      <rect x="0" y="0" width="560" height="260" fill="#0d1820"/>
+      <defs>
+        <marker id="af1" markerWidth="8" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#fff"/></marker>
+      </defs>
+      <g font-family="Consolas" font-size="11" fill="#d7e1e8" text-anchor="middle">
+        <circle cx="80" cy="60" r="42" fill="none" stroke="#36e0c4" stroke-width="2"/>
+        <text x="80" y="64">Idle</text>
+
+        <circle cx="280" cy="60" r="42" fill="none" stroke="#ffb454" stroke-width="2"/>
+        <text x="280" y="55">Credentials</text>
+        <text x="280" y="70">Entered</text>
+
+        <circle cx="480" cy="60" r="42" fill="none" stroke="#4ade80" stroke-width="2"/>
+        <text x="480" y="64">Authenticated</text>
+
+        <circle cx="280" cy="200" r="42" fill="none" stroke="#ff6b6b" stroke-width="2"/>
+        <text x="280" y="196">Error /</text>
+        <text x="280" y="211">Locked</text>
+
+        <line x1="122" y1="60" x2="234" y2="60" stroke="#fff" stroke-width="1.5" marker-end="url(#af1)"/>
+        <text x="178" y="50" fill="#8aa0ad" font-size="10">enter user/pass</text>
+
+        <line x1="322" y1="60" x2="434" y2="60" stroke="#fff" stroke-width="1.5" marker-end="url(#af1)"/>
+        <text x="378" y="50" fill="#8aa0ad" font-size="10">submit [valid]</text>
+
+        <line x1="292" y1="98" x2="284" y2="158" stroke="#fff" stroke-width="1.5" marker-end="url(#af1)"/>
+        <text x="360" y="130" fill="#8aa0ad" font-size="10">submit [invalid]</text>
+
+        <path d="M 250 230 C 150 260 90 160 60 100" fill="none" stroke="#fff" stroke-width="1.5" marker-end="url(#af1)"/>
+        <text x="120" y="255" fill="#8aa0ad" font-size="10">retry (attempts left)</text>
+
+        <path d="M 462 92 C 400 160 340 190 322 200" fill="none" stroke="#fff" stroke-width="1.5" marker-end="url(#af1)"/>
+        <text x="420" y="175" fill="#8aa0ad" font-size="10">logout</text>
+      </g>
+    </svg>
+    <p class="cap">Fig 3: FSM / State-transition diagram for a login dialog — circles = states, arrows = transitions labelled with event [condition]</p>
+  </div>
+
+  <h3 class="sub">Transition Table for the Above FSM</h3>
+  <table>
+    <tr><th>Current State</th><th>Event</th><th>Next State</th></tr>
+    <tr><td>Idle</td><td>Enter username/password</td><td class="hi">Credentials Entered</td></tr>
+    <tr><td>Credentials Entered</td><td>Submit [valid]</td><td class="hi">Authenticated</td></tr>
+    <tr><td>Credentials Entered</td><td>Submit [invalid]</td><td class="hi">Error/Locked</td></tr>
+    <tr><td>Error/Locked</td><td>Retry [attempts left]</td><td class="hi">Idle</td></tr>
+    <tr><td>Authenticated</td><td>Logout</td><td class="hi">Idle (or Error/Locked path in figure)</td></tr>
+  </table>
+
+  <h3 class="sub">🎮 Interactive Simulation — Try the FSM Yourself</h3>
+  <div class="svgbox" style="text-align:left;">
+    <div id="fsm-sim" style="font-family:Consolas,monospace;">
+      <p style="margin-bottom:10px;color:#d7e1e8;">Current State: <strong id="fsm-state" style="color:#36e0c4;font-size:16px;">Idle</strong></p>
+      <div id="fsm-buttons" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;"></div>
+      <p id="fsm-log" style="color:#8aa0ad;font-size:12px;">Click a valid event button to trigger a transition.</p>
+    </div>
+  </div>
+  <script>
+    (function(){
+      const transitions = {
+        "Idle": {"Enter Credentials": "Credentials Entered"},
+        "Credentials Entered": {"Submit (valid)": "Authenticated", "Submit (invalid)": "Error/Locked"},
+        "Error/Locked": {"Retry": "Idle"},
+        "Authenticated": {"Logout": "Idle"}
+      };
+      let state = "Idle";
+      const stateEl = document.getElementById('fsm-state');
+      const btnWrap = document.getElementById('fsm-buttons');
+      const logEl = document.getElementById('fsm-log');
+      function render(){
+        stateEl.textContent = state;
+        btnWrap.innerHTML = '';
+        const evts = transitions[state] || {};
+        Object.keys(evts).forEach(function(evt){
+          const b = document.createElement('button');
+          b.textContent = evt;
+          b.style.cssText = "background:#fff7ed;border:1.5px solid #fcd34d;color:#7c2d12;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;";
+          b.onclick = function(){
+            const next = evts[evt];
+            logEl.textContent = "Fired: " + evt + "  →  " + state + " changed to " + next;
+            state = next;
+            render();
+          };
+          btnWrap.appendChild(b);
+        });
+        if (Object.keys(evts).length === 0){
+          const p = document.createElement('span');
+          p.style.color = '#8aa0ad';
+          p.textContent = 'No outgoing events defined for this state.';
+          btnWrap.appendChild(p);
+        }
+      }
+      render();
+    })();
+  </script>
+
+  <table>
+    <tr><th>Advantages of FSM</th><th>Limitations of FSM</th></tr>
+    <tr><td>Simple, easy to draw and understand</td><td class="warn2">State-explosion problem — number of states grows exponentially as independent features are added</td></tr>
+    <tr><td>Formal enough to detect unreachable/dead states</td><td class="warn2">Poor at modelling concurrency — only one state active at a time</td></tr>
+    <tr><td>Directly implementable as code (switch/case or table-driven)</td><td class="warn2">No built-in way to express hierarchy/grouping of related states</td></tr>
+    <tr><td>Good for simple, largely sequential dialogs (wizards, menus)</td><td class="warn2">Repeated sub-dialogs (e.g. "confirm" screen reused everywhere) must be duplicated</td></tr>
+  </table>
+
+  <div class="card example">
+    <div class="tag">The State-Explosion Problem — Example</div>
+    <p>Suppose a text editor dialog has 3 independent toggle features: Bold (on/off), Italic (on/off), Underline (on/off). Modelled as flat FSM states, this needs 2×2×2 = <strong>8 separate states</strong> just to represent the combinations — and adding a 4th toggle doubles it again to 16. This explosion is exactly what <strong>State Charts</strong> (next section) were invented to solve.</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- ============ 6. Statecharts ============ -->
+  <h2 class="topic scroll-anchor" id="statecharts">
+    <span>06.</span> State Charts in Dialog Design
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p><strong>State Charts (Statecharts)</strong>, introduced by David Harel, are a visual formalism that extends classical FSMs with three key extra features — <em>hierarchy</em> (states can be nested inside super-states), <em>concurrency</em> (a state can be split into independent parallel/AND regions active at the same time), and <em>broadcast communication</em> (an event in one region can trigger a transition in another) — enabling compact, scalable modelling of complex, multi-mode reactive dialogs.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Statechart, FSM ka hi upgraded/improved version hai jo state-explosion problem solve karta hai. Isme states ko <strong>group/nest</strong> kar sakte hain (super-state ke andar sub-states) aur ek hi time pe <strong>multiple independent regions</strong> parallel chal sakti hain (jaise Bold aur Italic dono independently on/off ho sakte hain bina alag-alag combination states banaye). Isse diagram chhota, clean aur scalable ban jaata hai.
+  </div>
+
+  <h3 class="sub">Key Extensions Over Plain FSM</h3>
+  <table>
+    <tr><th>Feature</th><th>What It Solves</th></tr>
+    <tr><td class="hi">Hierarchy (Super-states)</td><td>Group related sub-states inside one super-state; a transition out of the super-state applies to all sub-states at once — avoids repeating the same transition on every sub-state</td></tr>
+    <tr><td class="hi">Concurrency (AND-states)</td><td>Split a state into 2+ independent parallel regions (orthogonal components), each with its own sub-states — directly fixes the state-explosion problem</td></tr>
+    <tr><td class="hi">History State</td><td>Remembers which sub-state was active before an interruption, so the system can resume exactly where it left off</td></tr>
+    <tr><td>Broadcast Communication</td><td>An event fired in one region can be "heard" and trigger transitions in other concurrent regions</td></tr>
+  </table>
+
+  <h3 class="sub">Diagram: Statechart for the Text-Editor Toggle Example</h3>
+  <div class="svgbox">
+    <svg viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:520px;">
+      <rect x="0" y="0" width="520" height="260" fill="#0d1820"/>
+      <g font-family="Consolas" font-size="11" fill="#d7e1e8">
+        <rect x="20" y="20" width="480" height="220" rx="10" fill="none" stroke="#36e0c4" stroke-width="2" stroke-dasharray="6,3"/>
+        <text x="35" y="40" fill="#36e0c4" font-weight="bold">Text Formatting (AND-state, 3 concurrent regions)</text>
+
+        <line x1="270" y1="55" x2="270" y2="240" stroke="#8aa0ad" stroke-dasharray="3,2"/>
+        <line x1="390" y1="55" x2="390" y2="240" stroke="#8aa0ad" stroke-dasharray="3,2"/>
+
+        <text x="140" y="75" text-anchor="middle" fill="#ffb454">Bold Region</text>
+        <circle cx="90" cy="120" r="30" fill="none" stroke="#5b9bff" stroke-width="1.5"/>
+        <text x="90" y="124" text-anchor="middle">Off</text>
+        <circle cx="200" cy="120" r="30" fill="none" stroke="#5b9bff" stroke-width="1.5"/>
+        <text x="200" y="124" text-anchor="middle">On</text>
+        <path d="M118 110 A 40 20 0 0 1 172 110" fill="none" stroke="#fff" stroke-width="1"/>
+        <path d="M172 132 A 40 20 0 0 1 118 132" fill="none" stroke="#fff" stroke-width="1"/>
+        <text x="145" y="95" font-size="9" fill="#8aa0ad">toggle</text>
+
+        <text x="330" y="75" text-anchor="middle" fill="#ffb454">Italic Region</text>
+        <circle cx="300" cy="120" r="28" fill="none" stroke="#5b9bff" stroke-width="1.5"/>
+        <text x="300" y="124" text-anchor="middle" font-size="10">Off</text>
+        <circle cx="365" cy="120" r="28" fill="none" stroke="#5b9bff" stroke-width="1.5"/>
+        <text x="365" y="124" text-anchor="middle" font-size="10">On</text>
+
+        <text x="450" y="75" text-anchor="middle" fill="#ffb454">Underline Region</text>
+        <circle cx="420" cy="150" r="26" fill="none" stroke="#5b9bff" stroke-width="1.5"/>
+        <text x="420" y="154" text-anchor="middle" font-size="9">Off</text>
+        <circle cx="480" cy="150" r="26" fill="none" stroke="#5b9bff" stroke-width="1.5"/>
+        <text x="480" y="154" text-anchor="middle" font-size="9">On</text>
+      </g>
+    </svg>
+    <p class="cap">Fig 4: Statechart — one AND-state cleanly represents all 8 combinations of Bold/Italic/Underline using only 3 concurrent regions of 2 states each (2+2+2=6 states drawn vs. 8 states in flat FSM), and the saving grows further with more toggles</p>
+  </div>
+
+  <div class="card tip">
+    <div class="tag">FSM vs Statechart — Quick Difference</div>
+    <table style="margin:0;">
+      <tr><th>Feature</th><th>FSM</th><th>Statechart</th></tr>
+      <tr><td>Hierarchy</td><td>Not supported (flat)</td><td>Supported (nested super-states)</td></tr>
+      <tr><td>Concurrency</td><td>Not supported (single active state)</td><td>Supported (AND-states / parallel regions)</td></tr>
+      <tr><td>Scalability</td><td>Suffers state-explosion for independent features</td><td>Scales linearly, not exponentially</td></tr>
+      <tr><td>Memory of past state</td><td>None built in</td><td>History states available</td></tr>
+    </table>
+  </div>
+
+  <div class="card warn">
+    <div class="tag">⚠ Important</div>
+    <p>Statecharts are the notation behind <strong>UML State Machine Diagrams</strong> — remember Harel's name, and be ready to explain the three fixes (hierarchy, concurrency, broadcast) with the state-explosion example above for a 10-mark question.</p>
+  </div>
+
+  <hr class="sep">
+
+  <!-- ============ 7. Petri Nets ============ -->
+  <h2 class="topic scroll-anchor" id="petri">
+    <span>07.</span> Classical Petri Nets in Dialog Design
+    <span class="imp h">HIGH</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Definition</div>
+    <p>A <strong>(Classical) Petri Net</strong> is a formal, graphical and mathematical modelling notation, invented by Carl Adam Petri, consisting of two types of nodes — <em>places</em> (representing conditions/states) and <em>transitions</em> (representing events/actions) — connected by directed arcs, with <em>tokens</em> residing in places to indicate the current condition of the system; a transition "fires" (executes) only when all its input places contain a token, consuming those tokens and producing new tokens in its output places, which makes Petri nets naturally suited to modelling concurrency, synchronisation and resource-sharing in dialogs.</p>
+  </div>
+
+  <div class="hin">
+    <div class="tag">🇮🇳 Hinglish</div>
+    Petri Net mein do tarah ke nodes hote hain — <strong>Places</strong> (circle, condition/state ko represent karta hai) aur <strong>Transitions</strong> (bar/rectangle, event/action ko represent karta hai). Places ke andar <strong>tokens</strong> (dots) hote hain jo batate hain ki system abhi kaunsi condition mein hai. Ek transition tabhi "fire" hoga jab uske saare input places mein token maujood ho — fire hote hi input places ke tokens hat jaate hain aur output places mein naye tokens aa jaate hain. Yeh model <strong>concurrency aur synchronization</strong> (jaise do parallel processes ka ek point pe milna) dikhane ke liye best hai.
+  </div>
+
+  <h3 class="sub">Formal Components of a Petri Net</h3>
+  <table>
+    <tr><th>Component</th><th>Symbol</th><th>Meaning</th></tr>
+    <tr><td class="hi">Place</td><td>Circle</td><td>Represents a condition, state, or resource availability</td></tr>
+    <tr><td class="hi">Transition</td><td>Bar / Rectangle</td><td>Represents an event or action that can occur</td></tr>
+    <tr><td class="hi">Token</td><td>Dot inside a place</td><td>Indicates that the corresponding condition currently holds</td></tr>
+    <tr><td>Arc</td><td>Directed arrow</td><td>Connects places to transitions (input) or transitions to places (output); never place-to-place or transition-to-transition</td></tr>
+  </table>
+
+  <div class="formula">
+    Petri Net = (P, T, F, M0)<br>
+    where P = set of places, T = set of transitions, F = set of directed arcs (flow relation) ⊆ (P×T) ∪ (T×P), M0 = initial marking (token distribution)
+  </div>
+
+  <h3 class="sub">Firing Rule</h3>
+  <div class="card">
+    <p>A transition <strong>t</strong> is <em>enabled</em> if every place connected to it by an incoming arc contains at least one token. When an enabled transition <strong>fires</strong>: one token is removed from each input place, and one token is added to each output place. This single rule is enough to model sequencing, branching, and — most importantly — synchronisation of concurrent activities.</p>
+  </div>
+
+  <h3 class="sub">Diagram: Petri Net for "Send &amp; Print Confirmation" Dialog (Synchronisation Example)</h3>
+  <div class="svgbox">
+    <svg viewBox="0 0 560 260" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:560px;">
+      <rect x="0" y="0" width="560" height="260" fill="#0d1820"/>
+      <defs>
+        <marker id="af2" markerWidth="8" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#fff"/></marker>
+      </defs>
+      <g font-family="Consolas" font-size="10" fill="#d7e1e8" text-anchor="middle">
+        <circle cx="60" cy="60" r="26" fill="none" stroke="#5b9bff" stroke-width="1.5"/>
+        <circle cx="60" cy="60" r="6" fill="#36e0c4"/>
+        <text x="60" y="98">P1: Request Ready</text>
+
+        <rect x="140" y="45" width="14" height="30" fill="#ffb454"/>
+        <text x="147" y="95">T1: Submit</text>
+        <line x1="86" y1="60" x2="140" y2="60" stroke="#fff" stroke-width="1.5" marker-end="url(#af2)"/>
+
+        <circle cx="230" cy="30" r="24" fill="none" stroke="#5b9bff" stroke-width="1.5"/>
+        <text x="230" y="15">P2: Sending</text>
+        <line x1="154" y1="55" x2="215" y2="35" stroke="#fff" stroke-width="1.5" marker-end="url(#af2)"/>
+
+        <circle cx="230" cy="100" r="24" fill="none" stroke="#5b9bff" stroke-width="1.5"/>
+        <text x="230" y="140">P3: Printing</text>
+        <line x1="154" y1="65" x2="215" y2="90" stroke="#fff" stroke-width="1.5" marker-end="url(#af2)"/>
+
+        <rect x="330" y="55" width="14" height="30" fill="#ffb454"/>
+        <text x="337" y="105">T2: Confirm</text>
+        <text x="337" y="118" font-size="9" fill="#ff6b6b">(sync point)</text>
+        <line x1="254" y1="34" x2="330" y2="60" stroke="#fff" stroke-width="1.5" marker-end="url(#af2)"/>
+        <line x1="254" y1="96" x2="330" y2="78" stroke="#fff" stroke-width="1.5" marker-end="url(#af2)"/>
+
+        <circle cx="440" cy="70" r="26" fill="none" stroke="#4ade80" stroke-width="1.5"/>
+        <text x="440" y="108">P4: Both Done</text>
+        <line x1="344" y1="70" x2="414" y2="70" stroke="#fff" stroke-width="1.5" marker-end="url(#af2)"/>
+      </g>
+    </svg>
+    <p class="cap">Fig 5: Petri net showing synchronisation — Transition T2 (Confirm) can only fire once BOTH "Sending" and "Printing" have deposited a token, modelling the dialog waiting for two concurrent activities to finish</p>
+  </div>
+
+  <div class="card example">
+    <div class="tag">Why This Matters for Dialog Design</div>
+    <p>Neither plain FSM nor even a basic statechart can as elegantly express "wait until both concurrent tasks complete" as a Petri net does — the mere geometric requirement that T2 needs tokens from both P2 and P3 captures the synchronisation rule directly and visually.</p>
+  </div>
+
+  <table>
+    <tr><th>Advantages of Petri Nets</th><th>Limitations of Petri Nets</th></tr>
+    <tr><td>Excellent, natural modelling of concurrency and synchronisation</td><td class="warn2">Can become visually complex for large dialogs</td></tr>
+    <tr><td>Strong mathematical foundation — supports formal analysis (reachability, deadlock detection)</td><td class="warn2">Steeper learning curve than simple FSM diagrams</td></tr>
+    <tr><td>Can model resource contention/sharing naturally (tokens = limited resources)</td><td class="warn2">Not as directly/simply implementable in code as an FSM table</td></tr>
+  </table>
+
+  <div class="card tip">
+    <div class="tag">FSM vs Petri Net — Quick Difference</div>
+    <table style="margin:0;">
+      <tr><th>Feature</th><th>FSM</th><th>Petri Net</th></tr>
+      <tr><td>Basic elements</td><td>States + transitions</td><td>Places + transitions + tokens</td></tr>
+      <tr><td>Active "state" representation</td><td>Exactly one state active at a time</td><td>Multiple places can hold tokens simultaneously</td></tr>
+      <tr><td>Concurrency modelling</td><td>Poor</td><td>Natural &amp; explicit (via multiple tokens/places)</td></tr>
+      <tr><td>Synchronisation modelling</td><td>Not directly possible</td><td>Direct — a transition waits for tokens in all input places</td></tr>
+    </table>
+  </div>
+
+  <hr class="sep">
+
+  <!-- ============ 8. Comparison ============ -->
+  <h2 class="topic scroll-anchor" id="compare">
+    <span>08.</span> Formalism Comparison Chart
+    <span class="imp h">EXAM GOLD</span>
+  </h2>
+
+  <div class="card def">
+    <div class="tag">Master Table</div>
+    <p>A single consolidated comparison of all five techniques covered in this unit — extremely useful for revision and for "compare/differentiate" style exam questions.</p>
+  </div>
+
+  <table>
+    <tr><th>Technique</th><th>Category</th><th>Handles Concurrency?</th><th>Best For</th></tr>
+    <tr><td class="hi">HTA</td><td>Informal hierarchical task tree</td><td>Weak</td><td>Quick, human-readable task decomposition</td></tr>
+    <tr><td class="hi">CTT</td><td>Formal hierarchical task tree</td><td>Yes (temporal operators)</td><td>Detailed, tool-supported task modelling with actor classification</td></tr>
+    <tr><td class="hi">FSM</td><td>Dialog/state formalism</td><td>No (single active state)</td><td>Simple, mostly sequential dialogs</td></tr>
+    <tr><td class="hi">Statechart</td><td>Dialog/state formalism</td><td>Yes (AND-states)</td><td>Complex, multi-mode dialogs without state explosion</td></tr>
+    <tr><td class="hi">Petri Net</td><td>Dialog/state formalism (net-based)</td><td>Yes (very naturally)</td><td>Dialogs requiring explicit synchronisation of parallel activities</td></tr>
+  </table>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 640 200" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:640px;">
+      <rect x="0" y="0" width="640" height="200" fill="#0d1820"/>
+      <g font-family="Consolas" font-size="12" fill="#d7e1e8" text-anchor="middle">
+        <text x="320" y="24" fill="#36e0c4" font-weight="bold">Task Modelling / Dialog Design Formalism Family</text>
+        <rect x="40" y="50" width="230" height="50" rx="8" fill="none" stroke="#ffb454" stroke-width="1.5"/>
+        <text x="155" y="72">TASK MODELS</text>
+        <text x="155" y="88" font-size="10" fill="#8aa0ad">HTA (informal) → CTT (formal)</text>
+
+        <rect x="370" y="50" width="230" height="140" rx="8" fill="none" stroke="#5b9bff" stroke-width="1.5"/>
+        <text x="485" y="72">DIALOG STATE MODELS</text>
+        <rect x="395" y="90" width="80" height="36" rx="6" fill="none" stroke="#4ade80"/>
+        <text x="435" y="112" font-size="10">FSM</text>
+        <rect x="490" y="90" width="90" height="36" rx="6" fill="none" stroke="#4ade80"/>
+        <text x="535" y="112" font-size="10">Statechart</text>
+        <rect x="440" y="140" width="90" height="36" rx="6" fill="none" stroke="#ff6b6b"/>
+        <text x="485" y="162" font-size="10">Petri Net</text>
+        <text x="485" y="184" font-size="9" fill="#8aa0ad">increasing concurrency support →</text>
+      </g>
+    </svg>
+    <p class="cap">Fig 6: The two families of Unit 6 — Task Models (HTA→CTT) describe WHAT the user does; Dialog State Models (FSM→Statechart→Petri Net) describe HOW the interface responds, with increasing concurrency support left to right</p>
+  </div>
+
+  <div class="keypoint" style="display:flex;gap:12px;align-items:flex-start;">
+    <span class="icon">💡</span>
+    <p style="color:var(--text2);">Remember the "story" of this unit for long-answer questions: we start with simple, informal <strong>HTA</strong>, formalise it into <strong>CTT</strong> for engineering rigor and concurrency, then shift focus from "task" to "dialog": start with basic <strong>FSM</strong>, discover the state-explosion problem, fix it with <strong>Statecharts</strong> (hierarchy + concurrency), and finally use <strong>Petri Nets</strong> when explicit synchronisation between parallel activities must be modelled.</p>
+  </div>
+
+  <div class="qsection" id="qa">
+    <div class="unit-title" style="border:none;padding:0;margin-bottom:6px;">
+      <span style="color:var(--accent2);">❓</span> RTU Exam Question Bank — Unit 6
+    </div>
+    <div class="unit-sub">Previous-year style questions with full model answers (5-mark &amp; 10-mark)</div>
+
+    <div class="qcard">
+      <div class="qlabel">Q1 · 10 MARKS</div>
+      <span class="marks m10">10 MARKS</span>
+      <div class="q">What is Hierarchical Task Analysis? Explain its components with a suitable example.</div>
+      <div class="a">
+        <p><strong>Hierarchical Task Analysis (HTA)</strong> is a technique that decomposes an overall goal into a hierarchy of sub-goals, operations and plans, starting broad and becoming progressively more detailed until each unit is a simple, indivisible operation.</p>
+        <p><strong>Components:</strong> Goal (numbered 0 for top-level), Sub-goal (numbered 1, 2, 3…), Operation (leaf-level indivisible action), and Plan (describes the order/condition for carrying out sub-goals — sequence, selection, or iteration).</p>
+        <p><strong>Example:</strong> Goal 0 "Withdraw Cash from ATM" → Plan 0: do 1-2-3-4 → 1. Insert card, 2. Enter PIN, 3. Select amount, 4. Collect cash &amp; card. Each of these can be decomposed further (e.g. 2.1 Type digits, 2.2 Press enter).</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q2 · 10 MARKS</div>
+      <span class="marks m10">10 MARKS</span>
+      <div class="q">What is ConcurTaskTree (CTT)? Explain its task types and temporal operators with diagrams.</div>
+      <div class="a">
+        <p><strong>CTT</strong> is a formal, hierarchical task-modelling notation proposed by Fabio Paternò that extends HTA-style trees with precise temporal operators describing how sibling tasks relate in time, and classifies every task by who performs it.</p>
+        <p><strong>Task types:</strong> User task (circle), Application/System task (box), Interaction task (rounded shape), Abstract task (diamond).</p>
+        <p><strong>Key operators:</strong> Enabling (T1 &gt;&gt; T2), Choice (T1 [] T2), Concurrency (T1 ||| T2), Disabling (T1 [&gt; T2), Iteration (T1*), Optionality ([T1]).</p>
+        <p>Example: In a login dialog, "Enter Credentials" &gt;&gt; "Validate" [&gt; "Cancel", where entering username and password within Credentials happens as Username ||| Password.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q3 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">Differentiate between HTA and CTT.</div>
+      <div class="a">
+        <table>
+          <tr><th>Feature</th><th>HTA</th><th>CTT</th></tr>
+          <tr><td>Formality</td><td>Informal</td><td>Formal notation</td></tr>
+          <tr><td>Actor classification</td><td>Not distinguished</td><td>User/System/Interaction/Abstract tasks</td></tr>
+          <tr><td>Concurrency</td><td>Weakly expressed</td><td>Explicit temporal operators</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q4 · 10 MARKS</div>
+      <span class="marks m10">10 MARKS</span>
+      <div class="q">Explain the need for formalism in dialog design. Discuss FSM as a dialog design formalism with its advantages and limitations.</div>
+      <div class="a">
+        <p>Formal notations remove ambiguity from natural-language dialog descriptions, allow mathematical analysis (unreachable states, deadlocks), give a shared reference for designers/developers, and can be simulated/executed before implementation.</p>
+        <p><strong>FSM</strong> models a dialog as a finite set of states with a transition function δ: S×E→S mapping (current state, event) to the next state; formally FSM = (S, E, δ, s0, F).</p>
+        <p><strong>Advantages:</strong> Simple, easy to draw, directly implementable, good for sequential dialogs.</p>
+        <p><strong>Limitations:</strong> State-explosion problem for independent features, poor concurrency support (only one active state at a time), no hierarchy/grouping.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q5 · 10 MARKS</div>
+      <span class="marks m10">10 MARKS</span>
+      <div class="q">What are State Charts? How do they overcome the limitations of FSM? Explain with an example.</div>
+      <div class="a">
+        <p><strong>Statecharts</strong>, introduced by David Harel, extend FSM with hierarchy (nested super-states), concurrency (AND-states/parallel regions), and broadcast communication between regions.</p>
+        <p>They overcome FSM's <strong>state-explosion problem</strong>: a super-state split into N independent concurrent regions of k states each needs only N×k states drawn, instead of k^N states in a flat FSM.</p>
+        <p><strong>Example:</strong> A text-editor's Bold/Italic/Underline toggles need 8 flat FSM states (2³ combinations) but only 3 concurrent regions of 2 states each (6 states total) in a statechart — and the saving grows further as more independent toggles are added.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q6 · 10 MARKS</div>
+      <span class="marks m10">10 MARKS</span>
+      <div class="q">Explain classical Petri Nets. Define its components and firing rule, and describe why it is suitable for dialog design.</div>
+      <div class="a">
+        <p>A <strong>Petri Net</strong> is a formal graphical/mathematical notation with two node types — Places (conditions/states, drawn as circles) and Transitions (events/actions, drawn as bars) — connected by directed arcs, with tokens in places showing the current condition.</p>
+        <p><strong>Formal definition:</strong> Petri Net = (P, T, F, M0), where P=places, T=transitions, F=flow relation (arcs), M0=initial marking.</p>
+        <p><strong>Firing rule:</strong> A transition is enabled only when every input place holds a token; firing removes one token from each input place and adds one to each output place.</p>
+        <p><strong>Suitability for dialog design:</strong> Petri nets naturally model concurrency and synchronisation — a transition can be made to wait for tokens from multiple concurrent activities, directly representing "wait until both parallel tasks finish" style dialog logic that FSM and even statecharts express less directly.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q7 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">Differentiate between FSM and Petri Nets.</div>
+      <div class="a">
+        <table>
+          <tr><th>Feature</th><th>FSM</th><th>Petri Net</th></tr>
+          <tr><td>Elements</td><td>States + transitions</td><td>Places + transitions + tokens</td></tr>
+          <tr><td>Active states</td><td>Exactly one at a time</td><td>Multiple places can hold tokens simultaneously</td></tr>
+          <tr><td>Synchronisation</td><td>Not directly modelled</td><td>Direct via multi-input transitions</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q8 · 5 MARKS — Short Note</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">Write a short note on Engineering Task Models.</div>
+      <div class="a">
+        <p>Engineering Task Models are formal, structured, tool-supportable representations of user tasks (beyond informal HTA trees) used for precise requirements capture, design guidance, usability evaluation, and even model-based automatic generation of user interfaces. CTT is the leading example of an engineering task model taught under this unit, offering formal task-type classification and temporal operators, with CASE tool support (e.g. CTTE) for simulation and validation.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q9 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">List and explain the CTT temporal operators for Enabling, Choice, Concurrency and Iteration.</div>
+      <div class="a">
+        <p><strong>Enabling (T1 &gt;&gt; T2):</strong> T1 must fully complete before T2 can begin.</p>
+        <p><strong>Choice (T1 [] T2):</strong> Either T1 or T2 happens, exclusively — never both.</p>
+        <p><strong>Concurrency (T1 ||| T2):</strong> T1 and T2 can occur in any order or simultaneously, independent of each other.</p>
+        <p><strong>Iteration (T1*):</strong> T1 may repeat zero or more times.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q10 · 5 MARKS</div>
+      <span class="marks m5">5 MARKS</span>
+      <div class="q">What is the "state-explosion problem" in FSM-based dialog design?</div>
+      <div class="a">
+        <p>The state-explosion problem occurs when independent, orthogonal features of a dialog are each modelled as extra states in a flat FSM — the total number of states grows multiplicatively (2^n for n independent binary toggles), quickly making the diagram unmanageably large. For example, 3 independent toggle features require 2³=8 flat FSM states, and a 4th toggle would double this to 16. Statecharts solve this using concurrent (AND) regions.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q11 · 10 MARKS</div>
+      <span class="marks m10">10 MARKS</span>
+      <div class="q">Compare HTA, CTT, FSM, Statecharts and Petri Nets as formalisms for modelling interactive systems.</div>
+      <div class="a">
+        <table>
+          <tr><th>Technique</th><th>Category</th><th>Concurrency</th><th>Best Use Case</th></tr>
+          <tr><td>HTA</td><td>Informal task tree</td><td>Weak</td><td>Quick task decomposition</td></tr>
+          <tr><td>CTT</td><td>Formal task tree</td><td>Strong (operators)</td><td>Rigorous, tool-supported task modelling</td></tr>
+          <tr><td>FSM</td><td>Dialog state model</td><td>None</td><td>Simple sequential dialogs</td></tr>
+          <tr><td>Statechart</td><td>Dialog state model</td><td>Strong (AND-states)</td><td>Complex multi-mode dialogs</td></tr>
+          <tr><td>Petri Net</td><td>Net-based dialog model</td><td>Strong (native)</td><td>Explicit synchronisation of parallel tasks</td></tr>
+        </table>
+      </div>
+    </div>
+
+  </div><div style="margin-top:60px; padding:20px 24px; border:1px dashed var(--border); border-radius:10px; color:var(--muted); font-size:13px;">
+    <div style="color:var(--accent); font-family:'Consolas',monospace; font-weight:700; margin-bottom:6px;">SMART LEARNING+ // HCI_VAULT — UNIT 6 · Task Modelling and Analysis</div>
+    <p>RTU B.Tech CSE 5th Semester · 5CS5-12 Human Computer Interaction · Unit 6 of 6</p>
+    <p style="margin-top:6px;">📌 Focus areas for exam: HTA tree drawing for a given scenario, CTT operators (&gt;&gt;, [], |||, [&gt;, *), state-explosion problem &amp; how statecharts fix it, Petri net firing rule &amp; synchronisation modelling.</p>
+    <p style="margin-top:6px;">Formalisms to memorise: FSM=(S,E,δ,s0,F) &nbsp;|&nbsp; Petri Net=(P,T,F,M0) &nbsp;|&nbsp; CTT ops: &gt;&gt; (enable), [] (choice), ||| (concurrency), [&gt; (disable), * (iterate), [ ] (optional)</p>
+  </div>
+
       </div>
     </div>
     <div style="display:flex;gap:12px;justify-content:center;padding:30px 20px;flex-wrap:wrap;">
-      <a href="index.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">🏠 HCI Hub</a>
       <a href="unit5.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+      <a href="index.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">🏠 HCI Hub</a>
       <a href="unit7.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
     </div>
   </main>
@@ -63,6 +893,5 @@
       el.addEventListener("mouseleave",()=>cursorOutline.classList.remove("cursor-hovering"));
     });
   </script>
-<script src="../splash-cursor.js"></script>
 </body>
 </html>

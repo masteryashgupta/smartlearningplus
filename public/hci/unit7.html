@@ -5,14 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Smart Learning Plus // HCI · Unit 7</title>
 <link rel="stylesheet" href="../style.css">
-<style>
-  .placeholder-vault {
-    text-align: center; padding: 60px 24px;
-  }
-  .placeholder-vault .icon { font-size: 64px; margin-bottom: 20px; opacity: 0.5; }
-  .placeholder-vault h2 { font-size: 22px; font-weight: 800; color: var(--text); margin-bottom: 10px; }
-  .placeholder-vault p { color: var(--muted); font-size: 15px; max-width: 400px; margin: 0 auto 24px; }
-</style>
 </head>
 <body>
   <main class="main-wrapper" style="width:100%;">
@@ -22,29 +14,854 @@
       <div class="nav">
         <a href="index.html">🏠 HCI Hub</a>
         <a href="#content">📖 Content</a>
-        <a href="#qa">❓ Q&A</a>
-        <a href="unit6.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev</a>
+        <a href="#u7-qa">❓ Q&amp;A</a>
+        <a href="unit6.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
       </div>
     </div>
     <div class="wrap">
       <div class="hero">
-        <h1>🧩 Unit 7 — Conceptual Architecture</h1>
-        <p>CA · MHP · OOP Modeling · Hours: 05</p>
+        <h1>🧠 Unit 7 — Cognitive Architecture &amp; Object-Oriented UI Modeling</h1>
+        <p>Introduction to Cognitive Architecture (CA) · Types of CA · Relevance of CA in IS Design · Model Human Processor (MHP) · Introduction to OOP · Object Oriented Modeling (OOM) of User Interface Design | Hours: 05</p>
         <div class="badges" style="margin-top:14px;">
           <a href="index.html" style="text-decoration:none;"><span class="badge b-teal">← Back to HCI Hub</span></a>
-          <span class="badge b-gold">5CS5-12 · HCI · RTU</span>
+          <span class="badge b-gold">5CS5-12 · Human Computer Interaction · RTU</span>
         </div>
       </div>
+      <div id="content">
+<div id="unit7">
+<div class="unit-title">🧠 Unit 7 — Cognitive Architecture &amp; Object-Oriented UI Modeling</div>
+<div class="unit-sub">Introduction to CA &middot; CA Types (Symbolic, Connectionist, Hybrid) &middot; Relevance of CA in Interactive System Design &middot; Model Human Processor (MHP) &middot; Perceptual, Cognitive &amp; Motor Subsystems &middot; MHP Principles &middot; Introduction to OOP &middot; Four Pillars of OOP &middot; Object Oriented Modeling (OOM) of User Interface Design &middot; UML for UI</div>
 
-      <div class="placeholder-vault">
-        <div class="icon">🧩</div>
-        <h2>Unit 7 Content Coming Soon</h2>
-        <p>Content for Unit 7 (Introduction to CA, CA types, relevance of CA in IS design, Model Human Processor (MHP), OOP- Introduction OOM- Object Oriented Modeling of User Interface Design) is being prepared. Check back later for detailed notes and Q&A.</p>
+<div class="badge-row">
+  <span class="badge b-red">🔥 HIGH WEIGHT — Last Unit, Conceptual + Easy Theory Marks</span>
+  <span class="badge b-gold">⚠ 5-Mark: MHP Subsystems, MHP Principles, OOP Pillars, OOM Process</span>
+  <span class="badge b-teal">✅ Unit 7 = 5 Hours (Final Unit of Course)</span>
+</div>
+
+<div class="card" style="margin-bottom:28px;">
+  <div style="color:var(--accent2); font-weight:700; margin-bottom:10px;">📑 Unit 7 Quick Navigation</div>
+  <div class="toc" style="columns:2; column-gap:24px;">
+    <div><a href="#u7-intro-ca">7.1 Introduction to Cognitive Architecture (CA)</a></div>
+    <div><a href="#u7-ca-types">7.2 Types of Cognitive Architecture</a></div>
+    <div><a href="#u7-relevance">7.3 Relevance of CA in IS Design</a></div>
+    <div><a href="#u7-mhp-intro">7.4 Model Human Processor — Structure</a></div>
+    <div><a href="#u7-mhp-processors">7.5 MHP Processors, Memories &amp; Cycle Times</a></div>
+    <div><a href="#u7-mhp-principles">7.6 MHP Principles of Operation</a></div>
+    <div><a href="#u7-mhp-sim">7.7 Simulation: MHP Response-Time Calculator</a></div>
+    <div><a href="#u7-oop-intro">7.8 Introduction to OOP</a></div>
+    <div><a href="#u7-oop-pillars">7.9 Four Pillars of OOP (for UI Design)</a></div>
+    <div><a href="#u7-oom-intro">7.10 Object Oriented Modeling (OOM) of UI</a></div>
+    <div><a href="#u7-oom-uml">7.11 UML Diagrams used in OOM for UI</a></div>
+    <div><a href="#u7-oom-process">7.12 OOM UI Design Process (Flowchart)</a></div>
+    <div><a href="#u7-oop-sim">7.13 Simulation: OOP Concept Flashcards</a></div>
+    <div><a href="#u7-tables">7.14 Comparison Tables</a></div>
+    <div><a href="#u7-qa">7.15 RTU Exam Q&amp;A</a></div>
+  </div>
+</div>
+
+<!-- 7.1 INTRODUCTION TO CA -->
+<h2 class="topic" id="u7-intro-ca">7.1 Introduction to Cognitive Architecture (CA) <span class="imp h">EXAM HOT</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">A <strong>Cognitive Architecture (CA)</strong> is a theoretical framework/blueprint that describes the fixed structures and mechanisms of the human mind — such as memory stores, perception, attention, and reasoning processes — which underlie intelligent behaviour. In HCI, a cognitive architecture is used as a computational or conceptual <em>model of the user</em>, so that a designer can predict, simulate, or explain how a person will perceive, think about, and act upon an interface, without needing an actual human to test every design.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish Explanation</div>
+  <p style="margin-top:6px;">Cognitive Architecture ek tarah ka "blueprint of the mind" hai jo batata hai ki insaan ka brain information ko kaise perceive karta hai, kaise store karta hai (memory), aur kaise decision leke action leta hai. HCI designers isko use karte hain taaki wo bina real users ko baar-baar test kiye, predict kar saken ki new interface use karne mein user ko kitna time lagega, kahan confuse hoga, ya kahan error karega. Ismein human mind ko ek "information processing system" (jaise computer) ki tarah treat kiya jata hai — Input (Perception) → Processing (Cognition) → Output (Motor action).</p>
+</div>
+
+<h3 class="sub">Why Model the Human Mind as an Architecture?</h3>
+<div class="card">
+  <ul>
+    <li><strong>Predictive Power:</strong> Designers can estimate task completion time, error rate, and learnability before building the actual system.</li>
+    <li><strong>Explains Behaviour:</strong> Provides a scientific explanation of *why* a user struggles with a particular design (e.g., too many items overload working memory).</li>
+    <li><strong>Design Guidance:</strong> Suggests concrete constraints — e.g., "don't show more than 7±2 unrelated items at once" comes directly from a cognitive architecture's memory model.</li>
+    <li><strong>Cost Reduction:</strong> Reduces the need for expensive, repeated usability testing with real users at every design iteration.</li>
+  </ul>
+</div>
+
+<div class="svgbox">
+<svg viewBox="0 0 640 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px;">
+  <rect x="20" y="70" width="150" height="70" rx="10" fill="none" stroke="var(--accent)" stroke-width="2"/>
+  <text x="95" y="100" font-size="13" text-anchor="middle" fill="var(--accent)">Environment</text>
+  <text x="95" y="120" font-size="11" text-anchor="middle" fill="var(--muted)">(Interface / Stimuli)</text>
+
+  <path d="M170,105 L235,105" stroke="var(--line)" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="235" y="40" width="170" height="130" rx="10" fill="none" stroke="var(--accent2)" stroke-width="2"/>
+  <text x="320" y="60" font-size="13" text-anchor="middle" fill="var(--accent2)">Cognitive Architecture</text>
+  <text x="320" y="90" font-size="11" text-anchor="middle" fill="var(--muted)">Perception</text>
+  <text x="320" y="112" font-size="11" text-anchor="middle" fill="var(--muted)">Memory + Reasoning</text>
+  <text x="320" y="134" font-size="11" text-anchor="middle" fill="var(--muted)">Decision Making</text>
+  <text x="320" y="156" font-size="11" text-anchor="middle" fill="var(--muted)">Motor Response</text>
+
+  <path d="M405,105 L470,105" stroke="var(--line)" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="470" y="70" width="150" height="70" rx="10" fill="none" stroke="var(--accent)" stroke-width="2"/>
+  <text x="545" y="100" font-size="13" text-anchor="middle" fill="var(--accent)">User Action</text>
+  <text x="545" y="120" font-size="11" text-anchor="middle" fill="var(--muted)">(Response / Behaviour)</text>
+
+  <path d="M545,140 C545,185 95,185 95,140" stroke="var(--muted)" stroke-width="2" fill="none" stroke-dasharray="4,4" marker-end="url(#arrow)"/>
+  <text x="320" y="195" font-size="11" text-anchor="middle" fill="var(--muted)">Feedback loop → shapes next perception</text>
+
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="var(--line)"/>
+    </marker>
+  </defs>
+</svg>
+<div class="cap">A cognitive architecture models the user as an information-processing loop: Environment → Perception → Cognition → Action → back to Environment</div>
+</div>
+
+<div class="card example">
+  <div class="tag">💡 Example</div>
+  <p style="margin-top:8px;">When a user sees an error message pop up (Perception), recalls from memory what caused similar errors before (Cognition), decides to click "Retry" (Decision), and physically clicks the button (Motor action) — this entire chain is exactly what a cognitive architecture like the <strong>Model Human Processor</strong> attempts to formally represent and predict the timing of.</p>
+</div>
+
+<!-- 7.2 TYPES OF CA -->
+<h2 class="topic" id="u7-ca-types">7.2 Types of Cognitive Architecture <span class="imp h">MUST KNOW</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">Cognitive architectures are broadly classified based on <strong>how they represent knowledge and simulate reasoning</strong> — using explicit symbols and rules, using neural/numeric activation patterns, or a mixture of both.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Alag-alag researchers ne mind ko model karne ke alag-alag tareeke banaye hain. Kuch models "rules aur symbols" (jaise IF-THEN logic) use karte hain, kuch "neural network jaisi weighted connections" use karte hain, aur kuch dono ko mix karte hain. HCI mein sabse zyada use hone wala symbolic model hai <strong>MHP</strong> (Model Human Processor), kyunki yeh interface design ke liye simple aur practical hai.</p>
+</div>
+
+<h3 class="sub">Three Broad Categories of Cognitive Architectures</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Type</th><th>How it Represents Knowledge</th><th>Examples</th></tr>
+    <tr><td><strong>Symbolic Architecture</strong></td><td>Uses explicit symbols, rules and production systems (IF condition THEN action) to represent knowledge and reasoning steps</td><td>Model Human Processor (MHP), ACT-R, SOAR, EPIC</td></tr>
+    <tr><td><strong>Connectionist (Sub-symbolic) Architecture</strong></td><td>Uses networks of simple interconnected units (like artificial neurons) with weighted connections; knowledge is distributed across the network rather than stored as discrete symbols</td><td>Parallel Distributed Processing (PDP) models, Neural Network based cognitive models</td></tr>
+    <tr><td><strong>Hybrid Architecture</strong></td><td>Combines symbolic rule-based reasoning with sub-symbolic/connectionist learning to get benefits of both precision and adaptability</td><td>CLARION, SOAR (extended versions), ACT-R (with sub-symbolic activation equations)</td></tr>
+  </table>
+</div>
+
+<div class="svgbox">
+<svg viewBox="0 0 600 190" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:560px;">
+  <rect x="230" y="10" width="140" height="40" rx="8" fill="var(--accent)" opacity="0.15" stroke="var(--accent)" stroke-width="2"/>
+  <text x="300" y="35" font-size="13" text-anchor="middle" fill="var(--accent)">Cognitive Architecture</text>
+
+  <path d="M300,50 L120,90" stroke="var(--line)" stroke-width="2"/>
+  <path d="M300,50 L300,90" stroke="var(--line)" stroke-width="2"/>
+  <path d="M300,50 L480,90" stroke="var(--line)" stroke-width="2"/>
+
+  <rect x="40" y="90" width="160" height="55" rx="8" fill="none" stroke="var(--accent2)" stroke-width="2"/>
+  <text x="120" y="112" font-size="12" text-anchor="middle" fill="var(--accent2)">Symbolic</text>
+  <text x="120" y="130" font-size="10" text-anchor="middle" fill="var(--muted)">Rules / Production Systems</text>
+
+  <rect x="220" y="90" width="160" height="55" rx="8" fill="none" stroke="var(--accent2)" stroke-width="2"/>
+  <text x="300" y="112" font-size="12" text-anchor="middle" fill="var(--accent2)">Connectionist</text>
+  <text x="300" y="130" font-size="10" text-anchor="middle" fill="var(--muted)">Neural / Sub-symbolic</text>
+
+  <rect x="400" y="90" width="160" height="55" rx="8" fill="none" stroke="var(--accent2)" stroke-width="2"/>
+  <text x="480" y="112" font-size="12" text-anchor="middle" fill="var(--accent2)">Hybrid</text>
+  <text x="480" y="130" font-size="10" text-anchor="middle" fill="var(--muted)">Symbolic + Connectionist</text>
+
+  <text x="120" y="170" font-size="10" text-anchor="middle" fill="var(--muted)">e.g. MHP, ACT-R, SOAR</text>
+  <text x="300" y="170" font-size="10" text-anchor="middle" fill="var(--muted)">e.g. PDP models</text>
+  <text x="480" y="170" font-size="10" text-anchor="middle" fill="var(--muted)">e.g. CLARION</text>
+</svg>
+<div class="cap">Three broad families of cognitive architectures used to model human information processing</div>
+</div>
+
+<div class="keypoint">
+  <span class="icon">📌</span>
+  <span>For RTU exam purposes, the <strong>Model Human Processor (MHP)</strong> is the symbolic cognitive architecture you must know in depth — it is the classical, most examined CA in HCI syllabi.</span>
+</div>
+
+<!-- 7.3 RELEVANCE OF CA IN IS DESIGN -->
+<h2 class="topic" id="u7-relevance">7.3 Relevance of CA in Interactive System (IS) Design <span class="imp h">EXAM HOT</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">The <strong>relevance of Cognitive Architecture in Interactive System (IS) design</strong> lies in its ability to give designers a scientific, predictive, and quantifiable understanding of the user's mental processes, so that interface decisions (layout, feedback timing, information density, navigation depth) can be justified and evaluated analytically rather than purely by guesswork or trial-and-error.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">CA humein batata hai ki user ka dimag interface ke saath interact karte waqt kaise kaam karta hai. Isse designer ko pata chalta hai ki menu itna deep nahi hona chahiye (working memory limited hai), response itni jaldi aani chahiye (cognitive processor ka apna ek fixed cycle time hai), aur agar bahut saari choices di gayi to decision lene mein zyada time lagega (Hick-Hyman Law). Yani CA sirf theory nahi — yeh directly practical design rules deta hai.</p>
+</div>
+
+<h3 class="sub">Key Areas Where CA Guides Interactive System Design</h3>
+<div class="card">
+  <ul>
+    <li><strong>1. Predicting Task Execution Time:</strong> Using GOMS/KLM-style analysis (built on MHP timings) to estimate how long an expert user will take to complete a task, without user trials.</li>
+    <li><strong>2. Managing Working-Memory Load:</strong> Since working memory can hold roughly 7±2 chunks, menus, forms, and dashboards are chunked/grouped so users are not overloaded.</li>
+    <li><strong>3. Designing Response &amp; Feedback Timing:</strong> Knowing perceptual/cognitive/motor cycle times helps decide acceptable system response delays (e.g., feedback should appear within ~100 ms to feel "instantaneous").</li>
+    <li><strong>4. Reducing Decision Time:</strong> Hick-Hyman Law (rooted in the cognitive processor) tells designers that fewer, well-organized menu choices reduce user decision time.</li>
+    <li><strong>5. Error Prediction &amp; Diagnosis:</strong> A CA can explain *why* an error occurred — e.g., a "slip" due to motor system automaticity vs. a "mistake" due to a wrong mental model — guiding better error-recovery design.</li>
+    <li><strong>6. Supporting Learnability:</strong> The Power Law of Practice (also a CA principle) predicts how performance speeds up with repeated use, guiding the design of tutorials and shortcuts for experts vs. novices.</li>
+  </ul>
+</div>
+
+<div class="card example">
+  <div class="tag">💡 Example</div>
+  <p style="margin-top:8px;">Before building a new ATM interface, a designer can use the MHP's cycle-time values to analytically calculate that a 4-option menu will require less decision time than an 8-option menu, and can use working-memory limits to decide that a PIN should not be split into more than 2 chunks for the user to remember at once.</p>
+</div>
+
+<!-- 7.4 MHP STRUCTURE -->
+<h2 class="topic" id="u7-mhp-intro">7.4 Model Human Processor (MHP) — Structure <span class="imp h">EXAM HOT</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">The <strong>Model Human Processor (MHP)</strong>, proposed by <strong>Card, Moran and Newell (1983)</strong> in "The Psychology of Human-Computer Interaction," is a simplified, engineering-style cognitive architecture that represents the human information-processing system as <strong>three interacting subsystems</strong> — the <em>Perceptual System</em>, the <em>Cognitive System</em>, and the <em>Motor System</em> — each with its own processor and associated memory store, working together like the CPU, RAM and I/O units of a computer.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">MHP insaan ko ek computer system ki tarah treat karta hai — jaise computer mein input device, processor aur output device hote hain, waise hi humare andar bhi 3 subsystems hain: ek jo dekhta/sunta hai (Perceptual), ek jo sochta hai aur decide karta hai (Cognitive), aur ek jo action perform karta hai (Motor). Har subsystem ka apna ek "processor" (jo kaam karne mein time leta hai) aur "memory" (jahan information store hoti hai) hota hai.</p>
+</div>
+
+<h3 class="sub">The Three Subsystems of MHP</h3>
+<div class="svgbox">
+<svg viewBox="0 0 680 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:640px;">
+  <!-- Perceptual -->
+  <rect x="20" y="30" width="190" height="200" rx="10" fill="none" stroke="var(--accent)" stroke-width="2"/>
+  <text x="115" y="55" font-size="13" text-anchor="middle" fill="var(--accent)" font-weight="bold">Perceptual System</text>
+  <rect x="35" y="70" width="160" height="34" rx="6" fill="var(--accent)" opacity="0.12"/>
+  <text x="115" y="91" font-size="11" text-anchor="middle" fill="var(--muted)">Visual Image Store (VIS)</text>
+  <rect x="35" y="112" width="160" height="34" rx="6" fill="var(--accent)" opacity="0.12"/>
+  <text x="115" y="133" font-size="11" text-anchor="middle" fill="var(--muted)">Auditory Image Store (AIS)</text>
+  <rect x="35" y="160" width="160" height="34" rx="6" fill="var(--accent)" opacity="0.25"/>
+  <text x="115" y="181" font-size="11" text-anchor="middle" fill="var(--accent)">Perceptual Processor (Tp)</text>
+
+  <!-- Cognitive -->
+  <rect x="245" y="30" width="190" height="200" rx="10" fill="none" stroke="var(--accent2)" stroke-width="2"/>
+  <text x="340" y="55" font-size="13" text-anchor="middle" fill="var(--accent2)" font-weight="bold">Cognitive System</text>
+  <rect x="260" y="70" width="160" height="34" rx="6" fill="var(--accent2)" opacity="0.12"/>
+  <text x="340" y="91" font-size="11" text-anchor="middle" fill="var(--muted)">Working Memory (WM)</text>
+  <rect x="260" y="112" width="160" height="34" rx="6" fill="var(--accent2)" opacity="0.12"/>
+  <text x="340" y="133" font-size="11" text-anchor="middle" fill="var(--muted)">Long-Term Memory (LTM)</text>
+  <rect x="260" y="160" width="160" height="34" rx="6" fill="var(--accent2)" opacity="0.25"/>
+  <text x="340" y="181" font-size="11" text-anchor="middle" fill="var(--accent2)">Cognitive Processor (Tc)</text>
+
+  <!-- Motor -->
+  <rect x="470" y="30" width="190" height="200" rx="10" fill="none" stroke="var(--accent)" stroke-width="2"/>
+  <text x="565" y="55" font-size="13" text-anchor="middle" fill="var(--accent)" font-weight="bold">Motor System</text>
+  <rect x="485" y="90" width="160" height="34" rx="6" fill="var(--accent)" opacity="0.12"/>
+  <text x="565" y="111" font-size="11" text-anchor="middle" fill="var(--muted)">Muscles / Effectors</text>
+  <rect x="485" y="160" width="160" height="34" rx="6" fill="var(--accent)" opacity="0.25"/>
+  <text x="565" y="181" font-size="11" text-anchor="middle" fill="var(--accent)">Motor Processor (Tm)</text>
+
+  <path d="M210,130 L245,130" stroke="var(--line)" stroke-width="2" marker-end="url(#arrow2)"/>
+  <path d="M435,130 L470,130" stroke="var(--line)" stroke-width="2" marker-end="url(#arrow2)"/>
+
+  <defs>
+    <marker id="arrow2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="var(--line)"/>
+    </marker>
+  </defs>
+</svg>
+<div class="cap">MHP's three interacting subsystems — Perceptual, Cognitive, and Motor — each with a processor and memory store</div>
+</div>
+
+<div class="card">
+  <ul>
+    <li><strong>Perceptual System:</strong> Receives sensory stimuli (visual, auditory) from the environment and briefly holds them in sensory buffers — the <strong>Visual Image Store (VIS)</strong> and <strong>Auditory Image Store (AIS)</strong> — before passing recognized information to the cognitive system.</li>
+    <li><strong>Cognitive System:</strong> Processes the perceived information using <strong>Working Memory (WM)</strong> (short-term, limited capacity) and <strong>Long-Term Memory (LTM)</strong> (large/unlimited capacity), and decides what response is appropriate.</li>
+    <li><strong>Motor System:</strong> Converts the cognitive system's decision into physical muscle movements (e.g., pressing a key, moving a mouse, speaking).</li>
+  </ul>
+</div>
+
+<!-- 7.5 MHP PROCESSORS, MEMORIES, CYCLE TIMES -->
+<h2 class="topic" id="u7-mhp-processors">7.5 MHP Processors, Memories &amp; Cycle Times <span class="imp m">5-MARK</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">Each of the three MHP subsystems has an associated <strong>processor cycle time</strong> — the time it takes that subsystem to complete one basic processing step — and, where applicable, a <strong>memory store</strong> characterized by its <em>capacity</em> (how much information it can hold) and <em>decay time</em> (how long the information remains before being lost).</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Har processor ka apna ek fixed "cycle time" hota hai — matlab wo ek step complete karne mein kitna time leta hai. Yeh values milliseconds mein hoti hain aur inhe add karke hum poore task ka total response time predict kar sakte hain. Memory ke liye do cheezein important hain: kitna store kar sakte ho (capacity) aur kitni der tak yaad rahega (decay time).</p>
+</div>
+
+<h3 class="sub">MHP Processor Cycle Times</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Processor</th><th>Symbol</th><th>Approx. Cycle Time</th><th>Range</th></tr>
+    <tr><td>Perceptual Processor</td><td>Tp</td><td>~100 ms</td><td>50 – 200 ms</td></tr>
+    <tr><td>Cognitive Processor</td><td>Tc</td><td>~70 ms</td><td>25 – 170 ms</td></tr>
+    <tr><td>Motor Processor</td><td>Tm</td><td>~70 ms</td><td>30 – 100 ms</td></tr>
+  </table>
+  <div class="formula">Total Response Time ≈ Tp + Tc + Tm  (one simple recognize-act cycle)</div>
+</div>
+
+<h3 class="sub">MHP Memory Stores</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Memory Store</th><th>Capacity</th><th>Decay Time</th></tr>
+    <tr><td>Visual Image Store (VIS)</td><td>~17 letters/items</td><td>~200 ms</td></tr>
+    <tr><td>Auditory Image Store (AIS)</td><td>~5 letters/items</td><td>~1500 ms (1.5 s)</td></tr>
+    <tr><td>Working Memory (WM)</td><td>~7 ± 2 chunks (Miller's Law)</td><td>~7 – 226 s (decays fast without rehearsal)</td></tr>
+    <tr><td>Long-Term Memory (LTM)</td><td>Effectively unlimited</td><td>Effectively unlimited (very slow/no decay)</td></tr>
+  </table>
+</div>
+
+<div class="keypoint">
+  <span class="icon">📌</span>
+  <span><strong>Miller's Magic Number 7±2</strong> is the single most exam-favourite MHP fact — Working Memory holds about 7 (5 to 9) meaningful "chunks" of information at once, which is why phone numbers, menu items and password chunks are often grouped in sets of that size.</span>
+</div>
+
+<!-- 7.6 MHP PRINCIPLES -->
+<h2 class="topic" id="u7-mhp-principles">7.6 MHP Principles of Operation <span class="imp h">EXAM HOT</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">Card, Moran and Newell supplemented the MHP structure with a set of <strong>operating principles</strong> — simplified laws that describe *how* the processors and memories behave in practice, allowing designers to make quantitative predictions about human performance.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Sirf structure jaan lena kaafi nahi — MHP ke saath kuch "rules of thumb" bhi diye gaye hain jo batate hain ki yeh processors aur memories asal mein kaise behave karte hain. Yeh principles interface designers ke liye bahut useful hain kyunki inse hum numbers ke saath predictions kar sakte hain.</p>
+</div>
+
+<h3 class="sub">Major MHP Principles</h3>
+<div class="card">
+  <ul>
+    <li><strong>1. Recognize-Act Cycle Principle:</strong> On every cognitive processor cycle, the contents of working memory initiate actions associatively matched to that content (pattern recognition drives action).</li>
+    <li><strong>2. Variable Perceptual Processor Rate Principle:</strong> The perceptual processor cycle time varies inversely with stimulus intensity — brighter/louder stimuli are perceived faster.</li>
+    <li><strong>3. Discrete Perceptual Processor Principle:</strong> Perceptual processing operates as a series of discrete moments/samples rather than a continuous stream (like frames of a movie).</li>
+    <li><strong>4. Fitts' Law Principle:</strong> The time to point at a target of width W at distance D is a function of the index of difficulty log₂(2D/W) — larger, closer targets are acquired faster (covered in detail in Unit 3, reused here as an MHP-derived law).</li>
+    <li><strong>5. Power Law of Practice:</strong> The time to perform a task on the n-th trial decreases as a power function of n — practice makes users progressively (though diminishingly) faster.</li>
+    <li><strong>6. Uncertainty Principle (Hick-Hyman Law):</strong> Decision time increases with the logarithm of the number of equally probable choices: T = a + b·log₂(n).</li>
+    <li><strong>7. Rationality Principle:</strong> A person acts to attain their goals through rational action, given the structure of the task and their available knowledge/inputs.</li>
+    <li><strong>8. Problem Space Principle:</strong> Rational, goal-directed behaviour occurs within a "problem space" — searched through by applying available "operators" (actions) to move from the current state toward the goal state.</li>
+  </ul>
+  <div class="formula">Hick-Hyman Law: T = a + b·log₂(n)   [n = number of equally likely choices]</div>
+</div>
+
+<div class="card example">
+  <div class="tag">💡 Example</div>
+  <p style="margin-top:8px;">A restaurant kiosk with 4 menu categories will let a user decide faster than one with 16 flat menu items, because decision time grows only with the <em>logarithm</em> of the number of choices (Hick-Hyman Law) — this is why well-organized, hierarchical menus feel faster even with the same total number of options.</p>
+</div>
+
+<!-- 7.7 SIMULATION: MHP CALCULATOR -->
+<h2 class="topic" id="u7-mhp-sim">7.7 Simulation: MHP Response-Time Calculator <span class="imp m">TRY IT</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Purpose</div>
+  <p style="margin-top:8px;">This interactive simulation lets you apply the MHP cycle-time values and the Hick-Hyman Law yourself — enter the number of menu choices a user faces, and see the estimated total response time built directly from Tp, Tc, decision time, and Tm.</p>
+</div>
+
+<div class="card" style="background:var(--surface2, #12151b);">
+  <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:end;margin-bottom:16px;">
+    <div>
+      <label style="display:block;font-size:12px;color:var(--muted);margin-bottom:4px;">Number of equally-likely menu choices (n)</label>
+      <input id="mhp-n" type="number" min="1" max="64" value="4" style="width:110px;padding:8px;border-radius:6px;border:1px solid var(--border,#333);background:var(--surface,#0b0d10);color:inherit;">
+    </div>
+    <div>
+      <label style="display:block;font-size:12px;color:var(--muted);margin-bottom:4px;">Stimulus clarity</label>
+      <select id="mhp-clarity" style="padding:8px;border-radius:6px;border:1px solid var(--border,#333);background:var(--surface,#0b0d10);color:inherit;">
+        <option value="100">Normal (Tp = 100 ms)</option>
+        <option value="200">Dim / Faint (Tp = 200 ms)</option>
+        <option value="50">Bright / Loud (Tp = 50 ms)</option>
+      </select>
+    </div>
+    <button onclick="calcMHP()" style="padding:9px 18px;border-radius:6px;border:none;background:var(--accent);color:#000;font-weight:700;cursor:pointer;">Calculate ⚡</button>
+  </div>
+  <div id="mhp-result" style="font-family:'Consolas',monospace;font-size:14px;line-height:1.9;color:var(--muted);"></div>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Upar diye gaye simulator mein number of choices aur stimulus clarity change karke dekho ki total response time kaise badalta/ghatata hai. Yeh formula wahi hai jo exam mein numerical questions ke liye use hota hai: Total Time = Tp + Decision Time (Hick-Hyman) + Tm.</p>
+</div>
+
+<script>
+function calcMHP(){
+  const n = parseFloat(document.getElementById('mhp-n').value) || 1;
+  const Tp = parseFloat(document.getElementById('mhp-clarity').value);
+  const Tc = 70; // cognitive processor cycle
+  const Tm = 70; // motor processor cycle
+  const a = 100, b = 150; // typical Hick-Hyman constants (ms)
+  const decisionTime = n <= 1 ? 0 : (a + b * Math.log2(n));
+  const total = Tp + Tc + decisionTime + Tm;
+  document.getElementById('mhp-result').innerHTML =
+    'Perceptual Processor (Tp) ............ ' + Tp.toFixed(0) + ' ms<br>' +
+    'Cognitive Processor (Tc) ............. ' + Tc.toFixed(0) + ' ms<br>' +
+    'Decision Time [Hick-Hyman, log₂(' + n + ')] ... ' + decisionTime.toFixed(0) + ' ms<br>' +
+    'Motor Processor (Tm) ................. ' + Tm.toFixed(0) + ' ms<br>' +
+    '<span style="color:var(--accent);font-weight:700;">TOTAL ESTIMATED RESPONSE TIME = ' + total.toFixed(0) + ' ms (' + (total/1000).toFixed(2) + ' s)</span>';
+}
+window.addEventListener('DOMContentLoaded', calcMHP);
+</script>
+
+<!-- 7.8 INTRODUCTION TO OOP -->
+<h2 class="topic" id="u7-oop-intro">7.8 Introduction to OOP <span class="imp h">MUST KNOW</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;"><strong>Object-Oriented Programming (OOP)</strong> is a programming paradigm that organizes software design around <strong>objects</strong> — self-contained units that bundle together <em>data (attributes/state)</em> and the <em>behaviour (methods)</em> that operates on that data — rather than around a sequence of procedural instructions. Each object is an instance of a <strong>class</strong>, which acts as a blueprint/template defining what attributes and methods its objects will have.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">OOP ek programming style hai jisme hum poore program ko "objects" ke roop mein sochte hain — jaise real duniya mein "Button", "Car", "Student" alag-alag cheezein hain, waise hi code mein bhi hum inhe objects bana dete hain. Har object ke paas apna data (properties) aur apne functions (methods) hote hain. Class ek "mould/blueprint" hai jisse multiple objects banaye jaa sakte hain — jaise ek "Button class" se hum "OK button", "Cancel button" jaise multiple objects bana sakte hain.</p>
+</div>
+
+<h3 class="sub">Core OOP Terms</h3>
+<div class="card">
+  <ul>
+    <li><strong>Class:</strong> A blueprint/template that defines a set of attributes and methods common to all objects of that type.</li>
+    <li><strong>Object:</strong> A concrete instance of a class, having its own specific values for the attributes defined by the class.</li>
+    <li><strong>Attribute (State):</strong> A data field/property that stores information about an object (e.g., a Button's <code>label</code>, <code>color</code>, <code>isEnabled</code>).</li>
+    <li><strong>Method (Behaviour):</strong> A function defined inside a class that operates on the object's data (e.g., a Button's <code>onClick()</code>).</li>
+  </ul>
+</div>
+
+<div class="svgbox">
+<svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:520px;">
+  <rect x="20" y="20" width="180" height="160" rx="10" fill="none" stroke="var(--accent)" stroke-width="2"/>
+  <text x="110" y="45" font-size="13" text-anchor="middle" fill="var(--accent)" font-weight="bold">Class: Button</text>
+  <line x1="20" y1="55" x2="200" y2="55" stroke="var(--line)"/>
+  <text x="30" y="75" font-size="11" fill="var(--muted)">- label</text>
+  <text x="30" y="93" font-size="11" fill="var(--muted)">- color</text>
+  <text x="30" y="111" font-size="11" fill="var(--muted)">- isEnabled</text>
+  <line x1="20" y1="120" x2="200" y2="120" stroke="var(--line)"/>
+  <text x="30" y="140" font-size="11" fill="var(--muted)">+ onClick()</text>
+  <text x="30" y="158" font-size="11" fill="var(--muted)">+ render()</text>
+
+  <path d="M200,100 L250,60" stroke="var(--line)" stroke-width="2" marker-end="url(#arrow3)"/>
+  <path d="M200,100 L250,100" stroke="var(--line)" stroke-width="2" marker-end="url(#arrow3)"/>
+  <path d="M200,100 L250,140" stroke="var(--line)" stroke-width="2" marker-end="url(#arrow3)"/>
+
+  <rect x="255" y="30" width="130" height="55" rx="8" fill="var(--accent2)" opacity="0.12" stroke="var(--accent2)" stroke-width="1.5"/>
+  <text x="320" y="52" font-size="11" text-anchor="middle" fill="var(--accent2)">Object: okBtn</text>
+  <text x="320" y="70" font-size="10" text-anchor="middle" fill="var(--muted)">label="OK"</text>
+
+  <rect x="255" y="95" width="130" height="45" rx="8" fill="var(--accent2)" opacity="0.12" stroke="var(--accent2)" stroke-width="1.5"/>
+  <text x="320" y="122" font-size="11" text-anchor="middle" fill="var(--accent2)">Object: cancelBtn</text>
+
+  <rect x="255" y="150" width="130" height="45" rx="8" fill="var(--accent2)" opacity="0.12" stroke="var(--accent2)" stroke-width="1.5"/>
+  <text x="320" y="177" font-size="11" text-anchor="middle" fill="var(--accent2)">Object: saveBtn</text>
+
+  <defs>
+    <marker id="arrow3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="var(--line)"/>
+    </marker>
+  </defs>
+</svg>
+<div class="cap">One class (Button) acts as a blueprint from which many independent objects (okBtn, cancelBtn, saveBtn) are instantiated</div>
+</div>
+
+<!-- 7.9 FOUR PILLARS OF OOP -->
+<h2 class="topic" id="u7-oop-pillars">7.9 Four Pillars of OOP (Applied to UI Design) <span class="imp h">EXAM HOT</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">OOP rests on four fundamental principles — <strong>Encapsulation, Abstraction, Inheritance,</strong> and <strong>Polymorphism</strong> — each of which has a direct, natural parallel in how user-interface widgets and controls are designed and reused.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Yeh 4 pillars OOP ki foundation hain. UI design mein bhi yeh directly apply hote hain — jaise ek "Button" object apne andar ka internal drawing-logic chhupata hai (encapsulation), sirf zaruri properties dikhata hai (abstraction), ek "TextBox" ek generic "Control" class se properties inherit kar sakta hai (inheritance), aur ek hi "draw()" method har control type ke liye alag tareeke se kaam kar sakta hai (polymorphism).</p>
+</div>
+
+<div class="compare">
+  <div class="compare-card">
+    <h4 style="color:var(--accent);">1. Encapsulation</h4>
+    <p><strong>Definition:</strong> Bundling data and the methods that operate on it into a single unit (object), while hiding internal implementation details from the outside.</p>
+    <p><strong>UI Example:</strong> A Slider widget hides its internal pixel-to-value conversion logic; other code only calls <code>getValue()</code>/<code>setValue()</code>.</p>
+  </div>
+  <div class="compare-card">
+    <h4 style="color:var(--accent2);">2. Abstraction</h4>
+    <p><strong>Definition:</strong> Exposing only the essential features of an object while hiding unnecessary complexity from the user of that object.</p>
+    <p><strong>UI Example:</strong> A designer drags a "Calendar Picker" onto a form without needing to know how date-parsing or leap-years are handled internally.</p>
+  </div>
+</div>
+<div class="compare">
+  <div class="compare-card">
+    <h4 style="color:var(--accent);">3. Inheritance</h4>
+    <p><strong>Definition:</strong> A new class (subclass) can acquire the attributes and methods of an existing class (superclass), and add or override its own specific behaviour.</p>
+    <p><strong>UI Example:</strong> A generic <code>Control</code> base class defines <code>x, y, width, height, render()</code>; <code>Button</code>, <code>TextBox</code>, and <code>CheckBox</code> all inherit from it and add their own specifics.</p>
+  </div>
+  <div class="compare-card">
+    <h4 style="color:var(--accent2);">4. Polymorphism</h4>
+    <p><strong>Definition:</strong> The same method call behaves differently depending on the actual object type it is invoked on ("many forms").</p>
+    <p><strong>UI Example:</strong> Calling <code>render()</code> on a list of mixed controls draws a Button as a rectangle with text, and a CheckBox as a small tick-box — same method name, different visual behaviour.</p>
+  </div>
+</div>
+
+<div class="svgbox">
+<svg viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:560px;">
+  <rect x="230" y="10" width="140" height="40" rx="8" fill="var(--accent)" opacity="0.18" stroke="var(--accent)" stroke-width="2"/>
+  <text x="300" y="35" font-size="12" text-anchor="middle" fill="var(--accent)">Control (base class)</text>
+
+  <path d="M300,50 L130,100" stroke="var(--line)" stroke-width="2"/>
+  <path d="M300,50 L300,100" stroke="var(--line)" stroke-width="2"/>
+  <path d="M300,50 L470,100" stroke="var(--line)" stroke-width="2"/>
+
+  <rect x="60" y="100" width="140" height="45" rx="8" fill="none" stroke="var(--accent2)" stroke-width="1.5"/>
+  <text x="130" y="127" font-size="11" text-anchor="middle" fill="var(--accent2)">Button</text>
+
+  <rect x="230" y="100" width="140" height="45" rx="8" fill="none" stroke="var(--accent2)" stroke-width="1.5"/>
+  <text x="300" y="127" font-size="11" text-anchor="middle" fill="var(--accent2)">TextBox</text>
+
+  <rect x="400" y="100" width="140" height="45" rx="8" fill="none" stroke="var(--accent2)" stroke-width="1.5"/>
+  <text x="470" y="127" font-size="11" text-anchor="middle" fill="var(--accent2)">CheckBox</text>
+
+  <text x="130" y="170" font-size="10" text-anchor="middle" fill="var(--muted)">render() → box+text</text>
+  <text x="300" y="170" font-size="10" text-anchor="middle" fill="var(--muted)">render() → editable line</text>
+  <text x="470" y="170" font-size="10" text-anchor="middle" fill="var(--muted)">render() → tick box</text>
+  <text x="300" y="200" font-size="11" text-anchor="middle" fill="var(--accent)">Same method render() → different visual output = Polymorphism</text>
+</svg>
+<div class="cap">Inheritance (Control → Button/TextBox/CheckBox) combined with Polymorphism (each overrides render() differently)</div>
+</div>
+
+<!-- 7.10 OOM INTRO -->
+<h2 class="topic" id="u7-oom-intro">7.10 Object Oriented Modeling (OOM) of User Interface Design <span class="imp h">EXAM HOT</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;"><strong>Object Oriented Modeling (OOM)</strong> of user interface design is the approach of applying OOP concepts and UML notations to analyze, design, and document a user interface — treating every screen element (button, form, window, menu) as an <strong>object</strong> belonging to a <strong>class</strong>, and describing the relationships (inheritance, composition, association) and interactions (message passing, event triggering) between these UI objects using standard diagrams.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">OOM ka matlab hai UI design ko bhi OOP ki tarah "objects" ke roop mein sochna aur usko UML diagrams (class diagram, sequence diagram, state diagram) se document karna. Isse UI components reusable, maintainable aur well-structured ban jaate hain — jaise ek "Form" class mein multiple "TextBox" aur "Button" objects composed hote hain.</p>
+</div>
+
+<h3 class="sub">Why Use OOM for UI Design?</h3>
+<div class="card">
+  <ul>
+    <li><strong>Reusability:</strong> A well-designed Button class can be reused across every screen of the application without rewriting code.</li>
+    <li><strong>Maintainability:</strong> Changing the visual style of all buttons only requires editing one class definition.</li>
+    <li><strong>Clear Documentation:</strong> UML diagrams give developers and designers a shared, unambiguous visual language to discuss the UI structure.</li>
+    <li><strong>Consistency:</strong> Since all similar widgets inherit from the same base class, the interface behaves consistently across the application.</li>
+    <li><strong>Easier Testing:</strong> Each UI object can be unit-tested independently because its behaviour is encapsulated.</li>
+  </ul>
+</div>
+
+<div class="card example">
+  <div class="tag">💡 Example</div>
+  <p style="margin-top:8px;">In designing a "Login Screen," OOM identifies the objects: <code>LoginForm</code> (a composite object containing) → <code>UsernameField</code>, <code>PasswordField</code>, <code>LoginButton</code>, and <code>ForgotPasswordLink</code> — each modeled as a class inheriting from a common <code>UIControl</code> base class, with the <code>LoginForm</code> object coordinating messages between them (e.g., clicking <code>LoginButton</code> triggers reading values from the two fields).</p>
+</div>
+
+<!-- 7.11 UML DIAGRAMS FOR OOM -->
+<h2 class="topic" id="u7-oom-uml">7.11 UML Diagrams Used in OOM for UI Design <span class="imp m">5-MARK</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;"><strong>Unified Modeling Language (UML)</strong> provides a standard set of diagram types used to visually document the object-oriented model of a user interface, capturing its static structure and its dynamic (runtime) behaviour.</p>
+</div>
+
+<h3 class="sub">UML Diagrams Commonly Used for UI Modeling</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Diagram</th><th>Purpose</th><th>UI Design Use</th></tr>
+    <tr><td><strong>Class Diagram</strong></td><td>Shows classes, their attributes/methods, and relationships (inheritance, association, composition)</td><td>Models the static structure of UI controls, e.g. Control → Button/TextBox hierarchy</td></tr>
+    <tr><td><strong>Use Case Diagram</strong></td><td>Shows actors and the goals/tasks (use cases) they perform with the system</td><td>Identifies what user tasks the interface must support before objects are designed</td></tr>
+    <tr><td><strong>Sequence Diagram</strong></td><td>Shows the time-ordered sequence of messages exchanged between objects</td><td>Models the flow when a user clicks "Login" — messages between LoginButton, LoginForm and AuthService</td></tr>
+    <tr><td><strong>State (Statechart) Diagram</strong></td><td>Shows the different states an object can be in and the events that trigger transitions between them</td><td>Models a Button's states: Normal → Hover → Pressed → Disabled</td></tr>
+  </table>
+</div>
+
+<h3 class="sub">Example: Class Diagram for a Login UI</h3>
+<div class="svgbox">
+<svg viewBox="0 0 620 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:580px;">
+  <rect x="230" y="10" width="160" height="50" rx="8" fill="var(--accent)" opacity="0.15" stroke="var(--accent)" stroke-width="2"/>
+  <text x="310" y="40" font-size="12" text-anchor="middle" fill="var(--accent)">UIControl</text>
+
+  <path d="M310,60 L120,110" stroke="var(--line)" stroke-width="2"/>
+  <path d="M310,60 L310,110" stroke="var(--line)" stroke-width="2"/>
+  <path d="M310,60 L500,110" stroke="var(--line)" stroke-width="2"/>
+
+  <rect x="50" y="110" width="140" height="45" rx="8" fill="none" stroke="var(--accent2)" stroke-width="1.5"/>
+  <text x="120" y="137" font-size="11" text-anchor="middle" fill="var(--accent2)">TextBox</text>
+
+  <rect x="240" y="110" width="140" height="45" rx="8" fill="none" stroke="var(--accent2)" stroke-width="1.5"/>
+  <text x="310" y="137" font-size="11" text-anchor="middle" fill="var(--accent2)">PasswordBox</text>
+
+  <rect x="430" y="110" width="140" height="45" rx="8" fill="none" stroke="var(--accent2)" stroke-width="1.5"/>
+  <text x="500" y="137" font-size="11" text-anchor="middle" fill="var(--accent2)">Button</text>
+
+  <rect x="180" y="190" width="260" height="55" rx="8" fill="var(--accent)" opacity="0.10" stroke="var(--accent)" stroke-width="2"/>
+  <text x="310" y="212" font-size="12" text-anchor="middle" fill="var(--accent)">LoginForm</text>
+  <text x="310" y="230" font-size="10" text-anchor="middle" fill="var(--muted)">◆ composed of 1 TextBox, 1 PasswordBox, 1 Button</text>
+
+  <path d="M120,155 L250,190" stroke="var(--line)" stroke-width="1.5" stroke-dasharray="3,3"/>
+  <path d="M310,155 L310,190" stroke="var(--line)" stroke-width="1.5" stroke-dasharray="3,3"/>
+  <path d="M500,155 L370,190" stroke="var(--line)" stroke-width="1.5" stroke-dasharray="3,3"/>
+</svg>
+<div class="cap">Class diagram: TextBox, PasswordBox and Button inherit from UIControl; LoginForm is composed of these objects</div>
+</div>
+
+<div class="keypoint">
+  <span class="icon">📌</span>
+  <span>Solid lines with a hollow triangle arrowhead represent <strong>inheritance</strong> ("is-a"); dashed/solid lines with a diamond represent <strong>composition/aggregation</strong> ("has-a") — a frequent 2-mark UML notation question.</span>
+</div>
+
+<!-- 7.12 OOM PROCESS FLOWCHART -->
+<h2 class="topic" id="u7-oom-process">7.12 OOM UI Design Process (Flowchart) <span class="imp m">5-MARK</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Definition</div>
+  <p style="margin-top:8px;">The <strong>OOM UI design process</strong> is a sequence of steps that takes user requirements through object identification, class/relationship design, UML documentation, and iterative usability evaluation, to arrive at a working, well-structured interface.</p>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Yeh process step-by-step batata hai ki requirement gathering se lekar final tested interface tak kaise pahuchte hain — pehle use cases se pata karo user kya karna chahta hai, phir un tasks se "nouns" (objects) nikalo, unke classes aur relationships design karo, UML diagrams banao, prototype implement karo, aur phir usability testing karke iterate karo.</p>
+</div>
+
+<div class="svgbox">
+<svg viewBox="0 0 260 640" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:280px;">
+  <rect x="20" y="10" width="220" height="50" rx="10" fill="var(--accent)" opacity="0.15" stroke="var(--accent)" stroke-width="2"/>
+  <text x="130" y="40" font-size="12" text-anchor="middle" fill="var(--accent)">1. Gather Requirements (Use Cases)</text>
+
+  <path d="M130,60 L130,90" stroke="var(--line)" stroke-width="2" marker-end="url(#arrow4)"/>
+  <rect x="20" y="90" width="220" height="50" rx="10" fill="none" stroke="var(--accent2)" stroke-width="2"/>
+  <text x="130" y="120" font-size="12" text-anchor="middle" fill="var(--accent2)">2. Identify UI Objects (Nouns)</text>
+
+  <path d="M130,140 L130,170" stroke="var(--line)" stroke-width="2" marker-end="url(#arrow4)"/>
+  <rect x="20" y="170" width="220" height="50" rx="10" fill="none" stroke="var(--accent2)" stroke-width="2"/>
+  <text x="130" y="200" font-size="12" text-anchor="middle" fill="var(--accent2)">3. Define Classes &amp; Relationships</text>
+
+  <path d="M130,220 L130,250" stroke="var(--line)" stroke-width="2" marker-end="url(#arrow4)"/>
+  <rect x="20" y="250" width="220" height="50" rx="10" fill="none" stroke="var(--accent2)" stroke-width="2"/>
+  <text x="130" y="272" font-size="12" text-anchor="middle" fill="var(--accent2)">4. Draw UML Diagrams</text>
+  <text x="130" y="290" font-size="10" text-anchor="middle" fill="var(--muted)">(Class / Sequence / State)</text>
+
+  <path d="M130,300 L130,330" stroke="var(--line)" stroke-width="2" marker-end="url(#arrow4)"/>
+  <rect x="20" y="330" width="220" height="50" rx="10" fill="none" stroke="var(--accent2)" stroke-width="2"/>
+  <text x="130" y="360" font-size="12" text-anchor="middle" fill="var(--accent2)">5. Implement / Prototype UI</text>
+
+  <path d="M130,380 L130,410" stroke="var(--line)" stroke-width="2" marker-end="url(#arrow4)"/>
+  <rect x="20" y="410" width="220" height="50" rx="10" fill="none" stroke="var(--accent2)" stroke-width="2"/>
+  <text x="130" y="440" font-size="12" text-anchor="middle" fill="var(--accent2)">6. Usability Test &amp; Evaluate</text>
+
+  <path d="M130,460 L130,490" stroke="var(--line)" stroke-width="2" marker-end="url(#arrow4)"/>
+  <rect x="20" y="490" width="220" height="50" rx="10" fill="var(--accent)" opacity="0.15" stroke="var(--accent)" stroke-width="2"/>
+  <text x="130" y="520" font-size="12" text-anchor="middle" fill="var(--accent)">7. Refine &amp; Iterate</text>
+
+  <path d="M240,515 C260,400 260,150 152,35" stroke="var(--muted)" stroke-width="2" fill="none" stroke-dasharray="4,4" marker-end="url(#arrow4)"/>
+  <text x="180" y="580" font-size="10" text-anchor="middle" fill="var(--muted)">Loop back if usability issues found</text>
+
+  <defs>
+    <marker id="arrow4" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="var(--line)"/>
+    </marker>
+  </defs>
+</svg>
+<div class="cap">The Object-Oriented Modeling (OOM) UI design process — an iterative, object-first workflow</div>
+</div>
+
+<!-- 7.13 SIMULATION: OOP FLASHCARDS -->
+<h2 class="topic" id="u7-oop-sim">7.13 Simulation: OOP Concept Flashcards <span class="imp m">TRY IT</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Purpose</div>
+  <p style="margin-top:8px;">Click any card below to flip it and reveal a quick UI-design example of that OOP concept — a fast way to self-test before the exam.</p>
+</div>
+
+<div id="flashgrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-top:10px;">
+</div>
+
+<script>
+const flashData = [
+  {term:"Class", def:"Blueprint defining shared attributes/methods", ex:"class Button { label; onClick(){} }"},
+  {term:"Object", def:"A concrete instance of a class", ex:"okBtn = new Button('OK')"},
+  {term:"Encapsulation", def:"Hiding internal data/logic behind methods", ex:"slider.getValue() hides pixel math"},
+  {term:"Abstraction", def:"Showing only essential features", ex:"Drag a Calendar widget, ignore date-math"},
+  {term:"Inheritance", def:"Subclass reuses superclass features", ex:"TextBox inherits from Control"},
+  {term:"Polymorphism", def:"Same method, different behaviour per object", ex:"render() draws Button vs CheckBox differently"}
+];
+const grid = document.getElementById('flashgrid');
+flashData.forEach((item, idx) => {
+  const card = document.createElement('div');
+  card.style.cssText = "perspective:800px;height:130px;cursor:pointer;";
+  card.innerHTML = `
+    <div id="flip-${idx}" style="position:relative;width:100%;height:100%;transition:transform 0.5s;transform-style:preserve-3d;">
+      <div style="position:absolute;inset:0;backface-visibility:hidden;border:2px solid var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center;background:var(--surface2,#12151b);">
+        <strong style="color:var(--accent);font-size:15px;">${item.term}</strong>
+      </div>
+      <div style="position:absolute;inset:0;backface-visibility:hidden;transform:rotateY(180deg);border:2px solid var(--accent2);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8px;background:var(--surface2,#12151b);">
+        <span style="font-size:11px;color:var(--muted);margin-bottom:6px;">${item.def}</span>
+        <code style="font-size:10px;color:var(--accent2);">${item.ex}</code>
+      </div>
+    </div>`;
+  card.addEventListener('click', () => {
+    const inner = document.getElementById('flip-' + idx);
+    inner.style.transform = inner.style.transform === 'rotateY(180deg)' ? 'rotateY(0deg)' : 'rotateY(180deg)';
+  });
+  grid.appendChild(card);
+});
+</script>
+
+<!-- 7.14 COMPARISON TABLES -->
+<h2 class="topic" id="u7-tables">7.14 Comparison Tables <span class="imp h">EXAM HOT</span></h2>
+
+<h3 class="sub">Symbolic vs. Connectionist vs. Hybrid Cognitive Architecture</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Aspect</th><th>Symbolic</th><th>Connectionist</th><th>Hybrid</th></tr>
+    <tr><td>Knowledge Representation</td><td>Explicit rules/symbols</td><td>Distributed numeric weights</td><td>Both combined</td></tr>
+    <tr><td>Transparency</td><td>Easy to interpret/explain</td><td>"Black box," hard to interpret</td><td>Partially interpretable</td></tr>
+    <tr><td>Learning</td><td>Rule-based, less adaptive</td><td>Learns from data/examples</td><td>Learns + reasons</td></tr>
+    <tr><td>Example</td><td>MHP, SOAR, ACT-R</td><td>PDP neural models</td><td>CLARION</td></tr>
+  </table>
+</div>
+
+<h3 class="sub">MHP Subsystem vs. Computer System Analogy</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>MHP Subsystem</th><th>Computer Analogy</th></tr>
+    <tr><td>Perceptual System (VIS/AIS)</td><td>Input devices &amp; input buffer</td></tr>
+    <tr><td>Cognitive System (WM/LTM)</td><td>CPU (registers) + RAM (WM) + Hard Disk (LTM)</td></tr>
+    <tr><td>Motor System</td><td>Output devices (display, printer, speakers)</td></tr>
+  </table>
+</div>
+
+<h3 class="sub">OOP vs. Procedural Programming</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Aspect</th><th>Procedural Programming</th><th>Object-Oriented Programming</th></tr>
+    <tr><td>Organizing Unit</td><td>Functions/procedures acting on shared data</td><td>Objects bundling data + behaviour together</td></tr>
+    <tr><td>Data Security</td><td>Data is often globally accessible</td><td>Data is encapsulated/protected inside objects</td></tr>
+    <tr><td>Reusability</td><td>Limited; functions copy-pasted or duplicated</td><td>High; via inheritance and composition</td></tr>
+    <tr><td>Real-World Mapping</td><td>Less natural, task/step-oriented</td><td>Natural — models real entities directly</td></tr>
+    <tr><td>UI Suitability</td><td>Harder to model diverse UI widgets cleanly</td><td>Very well-suited (Button/TextBox as classes)</td></tr>
+  </table>
+</div>
+
+<h3 class="sub">Class Diagram vs. Sequence Diagram vs. State Diagram</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Diagram</th><th>Shows</th><th>Nature</th></tr>
+    <tr><td>Class Diagram</td><td>Structure — classes, attributes, methods, relationships</td><td>Static</td></tr>
+    <tr><td>Sequence Diagram</td><td>Order of messages exchanged between objects over time</td><td>Dynamic (behavioural)</td></tr>
+    <tr><td>State Diagram</td><td>States of a single object and transitions between them</td><td>Dynamic (behavioural)</td></tr>
+  </table>
+</div>
+
+<!-- 7.15 QA -->
+<h2 class="topic" id="u7-qa" style="margin-top:10px;">7.15 RTU Exam Q&amp;A <span class="imp h">PYQ STYLE</span></h2>
+
+<div class="qsection">
+
+  <div class="qcard">
+    <div class="qlabel">Q1</div>
+    <div class="q">What is a Cognitive Architecture? Explain its relevance in Interactive System design. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>A Cognitive Architecture (CA) is a theoretical/computational framework describing the fixed mental structures (perception, memory, reasoning) underlying human information processing, used to model and predict user behaviour. Its relevance in Interactive System (IS) design lies in predicting task-execution times, managing working-memory load through chunking, guiding acceptable feedback/response timing, reducing decision time via principles like the Hick-Hyman Law, explaining/diagnosing user errors, and supporting learnability predictions through the Power Law of Practice — all of which allow analytical, evidence-based design decisions rather than pure trial and error.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q2</div>
+    <div class="q">List and briefly explain the types of Cognitive Architecture. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>Cognitive architectures are of three broad types: Symbolic architectures, which represent knowledge with explicit rules and production systems (e.g., MHP, ACT-R, SOAR); Connectionist (sub-symbolic) architectures, which use networks of simple interconnected units with weighted, distributed knowledge representation (e.g., Parallel Distributed Processing models); and Hybrid architectures, which combine symbolic reasoning with connectionist learning to gain the benefits of both (e.g., CLARION).</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q3</div>
+    <div class="q">Explain the Model Human Processor (MHP) with its structure, processors, and memories. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>The Model Human Processor, proposed by Card, Moran and Newell, models human information processing as three interacting subsystems: the Perceptual System (with Visual and Auditory Image Stores and a Perceptual Processor, Tp ≈ 100 ms), the Cognitive System (with Working Memory and Long-Term Memory and a Cognitive Processor, Tc ≈ 70 ms), and the Motor System (with a Motor Processor, Tm ≈ 70 ms, that executes physical responses). Working Memory holds about 7±2 chunks with fast decay, while Long-Term Memory has effectively unlimited capacity and duration. Total simple response time is approximated as Tp + Tc + Tm.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q4</div>
+    <div class="q">State and explain any four principles of MHP operation. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>Four key MHP principles are: (1) Recognize-Act Cycle Principle — on each cognitive cycle, working memory content associatively triggers matching actions; (2) Variable Perceptual Processor Rate Principle — perceptual cycle time varies inversely with stimulus intensity; (3) Uncertainty Principle (Hick-Hyman Law) — decision time increases with log₂ of the number of equally likely choices, T = a + b·log₂(n); and (4) Power Law of Practice — task-completion time decreases as a power function of the number of practice trials, meaning users get progressively faster with repetition.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q5</div>
+    <div class="q">What is OOP? Explain its four fundamental pillars with UI design examples. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>Object-Oriented Programming (OOP) organizes software around objects that bundle data (attributes) and behaviour (methods) together, instances of classes acting as blueprints. Its four pillars are: Encapsulation — hiding internal implementation (e.g., a Slider widget hides its pixel-to-value logic); Abstraction — exposing only essential features (e.g., dragging a Calendar Picker without knowing date-parsing internals); Inheritance — subclasses reuse a superclass's features (e.g., Button and TextBox inheriting common properties from a Control base class); and Polymorphism — the same method call behaves differently per object type (e.g., calling render() draws a Button and a CheckBox differently).</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q6</div>
+    <div class="q">Explain Object Oriented Modeling (OOM) of User Interface design with its process. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>Object Oriented Modeling (OOM) of UI design applies OOP concepts and UML notations to treat every interface element as an object belonging to a class, describing relationships (inheritance, composition) and interactions between them. The process involves: gathering requirements via use cases, identifying UI objects (nouns) from those use cases, defining classes and their relationships, documenting the design using UML diagrams (class, sequence, state), implementing/prototyping the interface, and iteratively usability-testing and refining the design. This approach improves reusability, maintainability, consistency, and documentation clarity of the interface.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q7</div>
+    <div class="q">Differentiate between a Class Diagram, Sequence Diagram, and State Diagram in UML. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>A Class Diagram is a static diagram showing classes, their attributes, methods, and relationships such as inheritance and composition. A Sequence Diagram is a dynamic/behavioural diagram showing the time-ordered sequence of messages exchanged between objects, such as the flow when a Login button is clicked. A State Diagram is also dynamic/behavioural but focuses on a single object, showing its possible states (e.g., Normal, Hover, Pressed, Disabled for a Button) and the events that trigger transitions between them.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q8</div>
+    <div class="q">Explain Miller's Magic Number 7±2 and its significance in interface design. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>Miller's Magic Number states that human Working Memory can hold approximately 7 (ranging from 5 to 9) meaningful "chunks" of information at a time, as part of the MHP's Cognitive System. This is significant for interface design because it justifies grouping/chunking information — such as splitting long numbers, limiting the number of simultaneous menu options, or grouping form fields — so that users are not cognitively overloaded and can process and recall interface information effectively.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q9</div>
+    <div class="q">Explain the relevance of Encapsulation and Inheritance in designing reusable UI components. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>Encapsulation lets a UI widget (like a Slider or DatePicker) hide its internal logic and expose only a clean interface (e.g., getValue()/setValue()), preventing other parts of the application from depending on or breaking its internals. Inheritance lets common properties (position, size, visibility, event-handling) be defined once in a base Control class and reused across all specific widgets like Button, TextBox, and CheckBox, avoiding duplicated code and ensuring consistent behaviour across the entire interface, while still allowing each widget to add its own specialized features.</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q10</div>
+    <div class="q">Write short notes on: (a) Working Memory vs Long-Term Memory (b) Hick-Hyman Law. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>(a) Working Memory (WM) is a small-capacity (~7±2 chunks), fast-decaying store used for active, temporary processing of information, whereas Long-Term Memory (LTM) has effectively unlimited capacity and duration, storing permanent knowledge and skills. (b) The Hick-Hyman Law states that decision time increases logarithmically with the number of equally probable choices available, expressed as T = a + b·log₂(n), which explains why fewer, well-organized menu options let users decide and respond faster than many flat, unorganized options.</p>
+    </div>
+  </div>
+
+</div><!-- end qsection -->
+
+<!-- CHEAT SHEET -->
+<div class="card" style="margin-top:40px; background:linear-gradient(135deg,#0a1525,#0b0d10); border:2px solid var(--accent);">
+  <div style="color:var(--accent); font-family:'Consolas',monospace; font-weight:700; font-size:15px; margin-bottom:14px;">📌 UNIT 7 — MASTER FORMULA &amp; CONCEPT CHEAT SHEET</div>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+    <div class="formula" style="margin:3px 0; font-size:12px;">MHP Total Time ≈ Tp + Tc + Tm</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Tp ≈ 100 ms · Tc ≈ 70 ms · Tm ≈ 70 ms</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Working Memory: 7 ± 2 chunks (Miller's Law)</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Hick-Hyman Law: T = a + b·log₂(n)</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">CA types: Symbolic · Connectionist · Hybrid</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">MHP subsystems: Perceptual · Cognitive · Motor</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">OOP pillars: Encapsulation, Abstraction, Inheritance, Polymorphism</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Class = Blueprint · Object = Instance</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">OOM UML: Class → Sequence → State diagrams</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">OOM process: Requirements → Objects → Classes → UML → Prototype → Test → Iterate</div>
+  </div>
+</div>
+
+<!-- Unit 7 Footer -->
+<div style="margin-top:50px; padding:20px 24px; border:1px dashed var(--line); border-radius:10px; color:var(--muted); font-size:13px;">
+  <div style="color:var(--accent); font-family:'Consolas',monospace; font-weight:700; margin-bottom:6px;">ZYREX // HCI_VAULT — UNIT 7 · Cognitive Architecture &amp; Object-Oriented UI Modeling</div>
+  <p>RTU B.Tech CSE 5th Semester · 5CS5-12 Human Computer Interaction · Unit 7 of 7 (Final Unit)</p>
+  <p style="margin-top:6px;">📌 Key concepts: Cognitive Architecture &amp; its types · Relevance of CA in IS design · Model Human Processor (Perceptual/Cognitive/Motor) · MHP Principles · Introduction to OOP · Four Pillars of OOP · Object Oriented Modeling (OOM) of UI Design · UML for UI</p>
+  <p style="margin-top:6px;">🎉 This completes the full RTU syllabus for Human Computer Interaction (5CS5-12) — Units 1 through 7.</p>
+</div>
+
+</div><!-- end unit7 -->
+
+<hr class="sep">
       </div>
     </div>
     <div style="display:flex;gap:12px;justify-content:center;padding:30px 20px;flex-wrap:wrap;">
-      <a href="index.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">🏠 HCI Hub</a>
       <a href="unit6.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+      <a href="index.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">🏠 HCI Hub</a>
     </div>
   </main>
   <div class="cursor-dot" data-cursor-dot></div>
