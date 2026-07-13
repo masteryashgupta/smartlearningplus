@@ -6,12 +6,41 @@
 <title>Smart Learning Plus // HCI · Unit 2</title>
 <link rel="stylesheet" href="../style.css">
 <style>
-  .placeholder-vault {
-    text-align: center; padding: 60px 24px;
-  }
-  .placeholder-vault .icon { font-size: 64px; margin-bottom: 20px; opacity: 0.5; }
-  .placeholder-vault h2 { font-size: 22px; font-weight: 800; color: var(--text); margin-bottom: 10px; }
-  .placeholder-vault p { color: var(--muted); font-size: 15px; max-width: 400px; margin: 0 auto 24px; }
+  /* extra styles scoped to this page only — additive, does not touch style.css */
+  .toc-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:20px 24px;margin:20px 0;box-shadow:var(--shadow-sm);}
+  .toc-title{color:var(--accent2);font-weight:700;margin-bottom:12px;font-size:13px;text-transform:uppercase;letter-spacing:1px;}
+  .toc-grid{columns:2;column-gap:24px;font-size:14px;}
+  .toc-grid a{color:var(--text2);text-decoration:none;display:block;padding:4px 0;}
+  .toc-grid a:hover{color:var(--accent);}
+  h3.sub{font-size:16px;font-weight:700;color:var(--text);margin:22px 0 10px;padding-left:10px;border-left:3px solid var(--accent2);}
+  .keypoint{display:flex;gap:12px;align-items:flex-start;background:#f0f9ff;border:1.5px solid #7dd3fc;border-radius:var(--radius-sm);padding:14px 16px;margin:14px 0;font-size:13px;color:#0c4a6e;}
+  .keypoint .icon{font-size:18px;flex-shrink:0;}
+  .simbox{background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:22px;margin:20px 0;}
+  .simbox .simtitle{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--purple);font-weight:700;margin-bottom:14px;}
+  .sim-row{display:flex;gap:20px;flex-wrap:wrap;}
+  .sim-col{flex:1;min-width:230px;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:18px;text-align:center;}
+  .sim-col h4{font-size:13px;margin-bottom:12px;}
+  .sim-verdict{font-size:11px;font-weight:700;margin-top:10px;padding:4px 10px;border-radius:20px;display:inline-block;}
+  .verdict-bad{background:var(--red-light);color:var(--red);}
+  .verdict-good{background:var(--green-light);color:var(--green);}
+  .bad-btn{background:#e5e7eb;color:#9ca3af;border:1px solid #d1d5db;padding:6px 10px;font-size:11px;border-radius:2px;cursor:not-allowed;margin:3px;}
+  .bad-input{width:90%;padding:4px;font-size:11px;border:1px solid #d1d5db;margin:6px 0;background:#f3f4f6;color:#6b7280;}
+  .good-btn{background:var(--accent);color:#fff;border:none;padding:10px 18px;font-size:14px;border-radius:8px;cursor:pointer;box-shadow:0 4px 14px rgba(37,99,235,0.3);font-weight:600;margin:4px;transition:.2s;}
+  .good-btn:hover{background:var(--accent-hover);transform:translateY(-2px);}
+  .good-input{width:88%;padding:10px 12px;font-size:13px;border:1.5px solid var(--border2);margin:8px 0;border-radius:8px;outline:none;}
+  .note{background:#f0f9ff;border-left:3px solid var(--accent2);border-radius:var(--radius-sm);padding:14px 16px;margin:14px 0;font-size:13px;color:#0369a1;}
+  .note b{color:#0c4a6e;}
+  .field-pill{display:inline-block;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;margin:4px;border:1.5px solid var(--border);}
+  .spectrum-wrap{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:24px 0;flex-wrap:wrap;}
+  .spectrum-step{flex:1;min-width:130px;text-align:center;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:16px 10px;position:relative;}
+  .spectrum-step .num{width:28px;height:28px;border-radius:50%;background:var(--accent-light);color:var(--accent);font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-size:13px;}
+  .spectrum-step h5{font-size:13px;margin-bottom:4px;}
+  .spectrum-step p{font-size:11px;color:var(--muted);}
+  .arrow-sep{font-size:20px;color:var(--border2);}
+  .cheat{margin-top:40px;background:linear-gradient(135deg,#eef2ff,#f0f9ff);border:2px solid var(--accent);border-radius:var(--radius);padding:22px;}
+  .cheat-title{color:var(--accent);font-weight:800;font-size:14px;margin-bottom:14px;}
+  .cheat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  @media(max-width:640px){.cheat-grid{grid-template-columns:1fr;} .toc-grid{columns:1;} .sim-row{flex-direction:column;}}
 </style>
 </head>
 <body>
@@ -22,30 +51,605 @@
       <div class="nav">
         <a href="index.html">🏠 HCI Hub</a>
         <a href="#content">📖 Content</a>
-        <a href="#qa">❓ Q&A</a>
-        <a href="unit1.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev</a>
+        <a href="#qa">❓ Q&amp;A</a>
+        <a href="unit1.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
         <a href="unit3.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
       </div>
     </div>
     <div class="wrap">
       <div class="hero">
-        <h1>📗 Unit 2 — GOMS & KLM Models</h1>
-        <p>Model-based design and evaluation · Hours: 06</p>
+        <h1>🎨 Unit 2 — Interactive Systems, Usability &amp; GUI Design</h1>
+        <p>Historical Evolution · Interactive System Design · Usability · HCI &amp; Software Engineering · GUI Design &amp; Aesthetics · Prototyping Techniques | Hours: 02</p>
         <div class="badges" style="margin-top:14px;">
           <a href="index.html" style="text-decoration:none;"><span class="badge b-teal">← Back to HCI Hub</span></a>
           <span class="badge b-gold">5CS5-12 · HCI · RTU</span>
         </div>
       </div>
 
-      <div class="placeholder-vault">
-        <div class="icon">📗</div>
-        <h2>Unit 2 Content Coming Soon</h2>
-        <p>Content for Unit 2 (GOMS Model, KLM, CMN-GOMS, Fitts' Law, Hick-Hyman Law) is being prepared. Check back later for detailed notes and Q&A.</p>
+      <div id="content">
+        <h1 class="unit-title" id="unit2">🎨 UNIT 2 — Interactive Systems, Usability &amp; GUI Design</h1>
+        <p class="unit-sub">Historical Evolution of the Field · Interactive System Design · Concept of Usability · HCI and Software Engineering · GUI Design and Aesthetics · Prototyping Techniques &nbsp;|&nbsp; Hours: 02</p>
+
+        <div class="toc-card">
+          <div class="toc-title">📑 Quick Navigation</div>
+          <div class="toc-grid">
+            <a href="#u2-history">2.1 Historical Evolution of the Field</a>
+            <a href="#u2-interactive">2.2 Interactive System Design</a>
+            <a href="#u2-usability">2.3 Concept of Usability</a>
+            <a href="#u2-se">2.4 HCI and Software Engineering</a>
+            <a href="#u2-gui">2.5 GUI Design and Aesthetics</a>
+            <a href="#u2-proto">2.6 Prototyping Techniques</a>
+            <a href="#qa">2.7 RTU Exam Q&amp;A</a>
+          </div>
+        </div>
+
+        <!-- ============ 2.1 HISTORICAL EVOLUTION ============ -->
+        <h2 class="topic" id="u2-history">2.1 Historical Evolution of the Field <span class="imp h">High</span></h2>
+
+        <div class="card def">
+          <span class="tag">English</span>
+          <p>The <b>historical evolution of HCI</b> traces how the mode of interaction between humans and computers has shifted — from expert-only, hardware-level control in the 1950s to today's natural, touch- and voice-based interaction accessible to virtually anyone — driven by advances in hardware, changes in who uses computers, and growing understanding of human cognition.</p>
+        </div>
+        <div class="hin">
+          <span class="tag">Hinglish</span>
+          <p>Pehle computers sirf scientists/engineers use karte the, switches aur punch cards ke through. Aaj ek 5 saal ka bachcha bhi tablet use kar leta hai bina padhe. Yeh jump kaise hua — yehi is topic mein padhenge: CLI se GUI, GUI se touch, touch se voice/gesture tak.</p>
+        </div>
+
+        <h3 class="sub">Era-wise Evolution</h3>
+        <div class="card">
+          <table>
+            <tr><th>Era</th><th>Interaction Style</th><th>Key Development</th><th>Example</th></tr>
+            <tr><td>1940s–50s</td><td>Batch Processing</td><td>No direct interaction; jobs submitted via punch cards, results printed later</td><td>ENIAC, early mainframes</td></tr>
+            <tr><td>1960s</td><td>Time-sharing &amp; Direct Manipulation begins</td><td>Ivan Sutherland's <b>Sketchpad (1963)</b> — first interactive graphical program using a light pen</td><td>Sketchpad</td></tr>
+            <tr><td>1970s</td><td>Command Line Interface (CLI)</td><td>Text commands typed at a prompt; Xerox PARC invents mouse, windows, icons (Alto, 1973)</td><td>UNIX shell, Xerox Alto</td></tr>
+            <tr><td>1980s</td><td>Graphical User Interface (GUI) / WIMP</td><td><b>WIMP</b> (Windows, Icons, Menus, Pointer) paradigm popularized commercially</td><td>Apple Lisa (1983), Macintosh (1984), Windows 1.0</td></tr>
+            <tr><td>1990s</td><td>Web &amp; Multimedia Interaction</td><td>Hyperlinks, browsers, multimedia content bring computing to mass audiences</td><td>Netscape Navigator, Windows 95</td></tr>
+            <tr><td>2000s</td><td>Ubiquitous &amp; Mobile Computing</td><td>Small-screen, always-on devices change interaction constraints</td><td>PDAs, early smartphones (BlackBerry)</td></tr>
+            <tr><td>2007–2010s</td><td>Touch &amp; Multi-touch</td><td>Direct-touch gestures replace pointer-based interaction on mobile</td><td>iPhone (2007), iPad (2010)</td></tr>
+            <tr><td>2010s–present</td><td>Natural &amp; Voice Interaction</td><td>Speech recognition and conversational agents become mainstream</td><td>Siri, Alexa, Google Assistant</td></tr>
+            <tr><td>Present–future</td><td>Immersive &amp; Gesture Interaction</td><td>Spatial computing, head/hand tracking, brain-computer interfaces (research stage)</td><td>Oculus/Meta Quest, AR glasses</td></tr>
+          </table>
+        </div>
+
+        <div class="svgbox">
+          <svg viewBox="0 0 780 200" xmlns="http://www.w3.org/2000/svg">
+            <line x1="40" y1="100" x2="740" y2="100" stroke="#cbd5e1" stroke-width="3"/>
+            <!-- nodes -->
+            <g font-family="Inter,sans-serif">
+              <circle cx="80" cy="100" r="9" fill="#2563eb"/>
+              <text x="80" y="80" text-anchor="middle" font-size="11" font-weight="700" fill="#1d4ed8">1950s</text>
+              <text x="80" y="122" text-anchor="middle" font-size="10" fill="#334155">Batch</text>
+
+              <circle cx="220" cy="100" r="9" fill="#06b6d4"/>
+              <text x="220" y="80" text-anchor="middle" font-size="11" font-weight="700" fill="#0369a1">1970s</text>
+              <text x="220" y="122" text-anchor="middle" font-size="10" fill="#334155">CLI</text>
+
+              <circle cx="360" cy="100" r="9" fill="#f59e0b"/>
+              <text x="360" y="80" text-anchor="middle" font-size="11" font-weight="700" fill="#b45309">1984</text>
+              <text x="360" y="122" text-anchor="middle" font-size="10" fill="#334155">GUI / WIMP</text>
+
+              <circle cx="480" cy="100" r="9" fill="#10b981"/>
+              <text x="480" y="80" text-anchor="middle" font-size="11" font-weight="700" fill="#065f46">1995</text>
+              <text x="480" y="122" text-anchor="middle" font-size="10" fill="#334155">Web</text>
+
+              <circle cx="600" cy="100" r="9" fill="#8b5cf6"/>
+              <text x="600" y="80" text-anchor="middle" font-size="11" font-weight="700" fill="#6d28d9">2007</text>
+              <text x="600" y="122" text-anchor="middle" font-size="10" fill="#334155">Touch</text>
+
+              <circle cx="710" cy="100" r="9" fill="#ef4444"/>
+              <text x="710" y="80" text-anchor="middle" font-size="11" font-weight="700" fill="#b91c1c">Now</text>
+              <text x="710" y="122" text-anchor="middle" font-size="10" fill="#334155">Voice / AR-VR</text>
+            </g>
+          </svg>
+          <p class="cap">Fig 2.1 — Timeline of HCI's Evolution: Batch → CLI → GUI/WIMP → Web → Touch → Voice/Immersive</p>
+        </div>
+
+        <div class="card example">
+          <span class="tag">Milestones Worth Remembering</span>
+          <ul>
+            <li><b>1963:</b> Ivan Sutherland's Sketchpad — the first program with a graphical, interactive interface.</li>
+            <li><b>1968:</b> Douglas Engelbart's "Mother of All Demos" — introduced the mouse, hypertext, and windows.</li>
+            <li><b>1973:</b> Xerox Alto at Xerox PARC — first computer built around a GUI with WIMP elements.</li>
+            <li><b>1984:</b> Apple Macintosh — first commercially successful mass-market GUI computer.</li>
+            <li><b>2007:</b> Apple iPhone — mainstreamed multi-touch gesture interaction.</li>
+          </ul>
+        </div>
+
+        <!-- ============ 2.2 INTERACTIVE SYSTEM DESIGN ============ -->
+        <h2 class="topic" id="u2-interactive">2.2 Interactive System Design <span class="imp h">High</span></h2>
+
+        <div class="card def">
+          <span class="tag">English</span>
+          <p>An <b>interactive system</b> is a computer-based system that engages in an ongoing dialogue with a user — accepting input, processing it, and producing output that the user can perceive and respond to in real time. <b>Interactive system design</b> is the process of designing this dialogue so that it matches the user's tasks, expectations, and cognitive abilities.</p>
+        </div>
+        <div class="hin">
+          <span class="tag">Hinglish</span>
+          <p>Interactive system woh hai jisme "conversation" chalti hai — tum kuch karte ho (click/type), system react karta hai, tum uska response dekh kar next action lete ho. Interactive system design ka matlab hai is poore "dialogue" ko itna smooth banana ki user ko soch-soch kar kaam na karna pade.</p>
+        </div>
+
+        <h3 class="sub">Components of an Interactive System</h3>
+        <div class="card">
+          <ul>
+            <li><b>User:</b> The human with a goal, prior knowledge, and expectations.</li>
+            <li><b>Input Devices:</b> Keyboard, mouse, touchscreen, microphone, sensors — channels through which the user acts.</li>
+            <li><b>Dialogue / System Core:</b> The logic that interprets input, updates internal state, and decides what to present back.</li>
+            <li><b>Output Devices:</b> Screen, speaker, haptic feedback — channels through which the system communicates back.</li>
+            <li><b>Feedback Loop:</b> The continuous cycle connecting user action to system response and back.</li>
+          </ul>
+        </div>
+
+        <div class="svgbox">
+          <svg viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <marker id="ar2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0L6,3L0,6Z" fill="#2563eb"/>
+              </marker>
+            </defs>
+            <circle cx="80" cy="110" r="42" fill="#eef2ff" stroke="#2563eb" stroke-width="1.5"/>
+            <text x="80" y="107" text-anchor="middle" font-size="12" font-weight="700" fill="#1d4ed8" font-family="Inter,sans-serif">User</text>
+            <text x="80" y="121" text-anchor="middle" font-size="10" fill="#1d4ed8" font-family="Inter,sans-serif">(Goal)</text>
+
+            <path d="M122,95 Q210,55 300,90" fill="none" stroke="#2563eb" stroke-width="1.5" marker-end="url(#ar2)"/>
+            <text x="210" y="55" text-anchor="middle" font-size="10" fill="#334155" font-family="Inter,sans-serif">Input Device</text>
+
+            <rect x="300" y="70" width="130" height="80" rx="10" fill="#ecfeff" stroke="#06b6d4" stroke-width="1.5"/>
+            <text x="365" y="105" text-anchor="middle" font-size="12" font-weight="700" fill="#0369a1" font-family="Inter,sans-serif">Dialogue /</text>
+            <text x="365" y="120" text-anchor="middle" font-size="12" font-weight="700" fill="#0369a1" font-family="Inter,sans-serif">System Core</text>
+
+            <path d="M430,130 Q520,170 585,125" fill="none" stroke="#06b6d4" stroke-width="1.5" marker-end="url(#ar2)"/>
+            <text x="520" y="172" text-anchor="middle" font-size="10" fill="#334155" font-family="Inter,sans-serif">Output Device</text>
+
+            <circle cx="620" cy="110" r="42" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+            <text x="620" y="107" text-anchor="middle" font-size="12" font-weight="700" fill="#065f46" font-family="Inter,sans-serif">Feedback</text>
+            <text x="620" y="121" text-anchor="middle" font-size="10" fill="#065f46" font-family="Inter,sans-serif">(Screen)</text>
+
+            <path d="M600,150 Q400,210 122,128" fill="none" stroke="#10b981" stroke-width="1.5" marker-end="url(#ar2)"/>
+            <text x="360" y="205" text-anchor="middle" font-size="10" fill="#334155" font-family="Inter,sans-serif">User perceives feedback → forms next action</text>
+          </svg>
+          <p class="cap">Fig 2.2 — Structure of an Interactive System: User → Input Device → Dialogue/System Core → Output Device → back to User</p>
+        </div>
+
+        <h3 class="sub">Interaction Styles</h3>
+        <div class="card">
+          <table>
+            <tr><th>Style</th><th>Description</th><th>Example</th></tr>
+            <tr><td>Command Line</td><td>User types text commands with specific syntax</td><td>UNIX/Linux terminal, DOS</td></tr>
+            <tr><td>Menu Selection</td><td>User picks an option from a displayed list</td><td>Right-click context menu</td></tr>
+            <tr><td>Form Fill-in</td><td>User enters data into labelled fields</td><td>Registration form, KYC form</td></tr>
+            <tr><td>Direct Manipulation</td><td>User acts directly on visible objects (drag, resize, click)</td><td>Dragging a file to a folder, resizing a window</td></tr>
+            <tr><td>WIMP</td><td>Windows, Icons, Menus, Pointer combined</td><td>Windows/macOS desktop</td></tr>
+            <tr><td>Natural Language</td><td>User speaks or types in everyday language</td><td>Siri, ChatGPT, Alexa</td></tr>
+            <tr><td>Gesture-based</td><td>User interacts via touch or body movement</td><td>Swipe on phone, VR hand tracking</td></tr>
+          </table>
+        </div>
+        <div class="hin">
+          <span class="tag">Hinglish</span>
+          <p>Har interaction style ka apna use-case hai — power users (developers) CLI prefer karte hain kyunki fast hai, lekin naye users ke liye GUI/menu better hai kyunki options dikhte hain, guess nahi karna padta. Isliye ek achha designer apne <b>target users</b> ke hisaab se style choose karta hai.</p>
+        </div>
+
+        <div class="keypoint">
+          <span class="icon">📌</span>
+          <span><b>Design Tip:</b> There is no single "best" interaction style — the right choice depends on the user's expertise, the task's frequency, and the need for speed vs. discoverability. Expert-repetitive tasks favour command-based styles; infrequent or novice tasks favour menus and direct manipulation.</span>
+        </div>
+
+        <!-- ============ 2.3 USABILITY ============ -->
+        <h2 class="topic" id="u2-usability">2.3 Concept of Usability — Definition and Elaboration <span class="imp h">High</span></h2>
+
+        <div class="card def">
+          <span class="tag">English (ISO 9241-11 Definition)</span>
+          <p><b>Usability</b> is defined as "the extent to which a product can be used by specified users to achieve specified goals with <b>effectiveness</b>, <b>efficiency</b>, and <b>satisfaction</b> in a specified context of use." It is not an inherent, fixed property of a system — it depends on who is using it, for what task, and under what conditions.</p>
+        </div>
+        <div class="hin">
+          <span class="tag">Hinglish</span>
+          <p>Usability ka matlab sirf "easy to use" nahi hai — ISO definition ke hisaab se 3 cheezein matter karti hain: (1) kaam ho raha hai ya nahi (<b>effectiveness</b>), (2) kitni jaldi/kam effort mein ho raha hai (<b>efficiency</b>), (3) user ko use karke kaisa lag raha hai (<b>satisfaction</b>). Ek app expert ke liye usable ho sakti hai lekin beginner ke liye nahi — isliye "context of use" bhi important hai.</p>
+        </div>
+
+        <h3 class="sub">Nielsen's Five Usability Attributes</h3>
+        <div class="card">
+          <table>
+            <tr><th>Attribute</th><th>Meaning</th><th>Example / How to Measure</th></tr>
+            <tr><td><b>Learnability</b></td><td>How easily first-time users accomplish basic tasks</td><td>Time taken by a new user to complete their first transfer in a banking app</td></tr>
+            <tr><td><b>Efficiency</b></td><td>How quickly experienced users perform tasks once learned</td><td>Number of clicks/seconds an expert trader takes to place an order</td></tr>
+            <tr><td><b>Memorability</b></td><td>How easily users re-establish proficiency after a period of not using the system</td><td>Can a user who hasn't opened the app in a month still navigate it?</td></tr>
+            <tr><td><b>Errors</b></td><td>How many errors users make, how severe they are, and how easily they recover</td><td>Rate of "wrong order type selected" mistakes and undo availability</td></tr>
+            <tr><td><b>Satisfaction</b></td><td>How pleasant the system is to use, subjectively</td><td>Post-task survey rating (e.g., System Usability Scale — SUS)</td></tr>
+          </table>
+        </div>
+
+        <div class="svgbox">
+          <svg viewBox="0 0 420 380" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="210,30 370,140 310,320 110,320 50,140" fill="rgba(37,99,235,0.08)" stroke="#2563eb" stroke-width="1.5"/>
+            <circle cx="210" cy="30" r="6" fill="#2563eb"/>
+            <text x="210" y="15" text-anchor="middle" font-size="13" font-weight="700" fill="#1d4ed8" font-family="Inter,sans-serif">Learnability</text>
+
+            <circle cx="370" cy="140" r="6" fill="#06b6d4"/>
+            <text x="390" y="130" text-anchor="start" font-size="13" font-weight="700" fill="#0369a1" font-family="Inter,sans-serif">Efficiency</text>
+
+            <circle cx="310" cy="320" r="6" fill="#10b981"/>
+            <text x="310" y="350" text-anchor="middle" font-size="13" font-weight="700" fill="#065f46" font-family="Inter,sans-serif">Memorability</text>
+
+            <circle cx="110" cy="320" r="6" fill="#f59e0b"/>
+            <text x="110" y="350" text-anchor="middle" font-size="13" font-weight="700" fill="#b45309" font-family="Inter,sans-serif">Errors</text>
+
+            <circle cx="50" cy="140" r="6" fill="#8b5cf6"/>
+            <text x="30" y="130" text-anchor="end" font-size="13" font-weight="700" fill="#6d28d9" font-family="Inter,sans-serif">Satisfaction</text>
+
+            <text x="210" y="185" text-anchor="middle" font-size="14" font-weight="800" fill="#0f172a" font-family="Inter,sans-serif">Usability</text>
+          </svg>
+          <p class="cap">Fig 2.3 — Nielsen's Five Usability Attributes forming the pillars of overall Usability</p>
+        </div>
+
+        <h3 class="sub">Usability vs User Experience (UX)</h3>
+        <div class="card">
+          <table>
+            <tr><th>Aspect</th><th>Usability</th><th>User Experience (UX)</th></tr>
+            <tr><td>Focus</td><td>Can the user complete the task efficiently and without error?</td><td>How does the user feel about the entire journey — emotion, delight, trust?</td></tr>
+            <tr><td>Scope</td><td>Narrower — the interface/interaction itself</td><td>Broader — includes branding, support, onboarding, emotional response</td></tr>
+            <tr><td>Measured by</td><td>Task success rate, time-on-task, error count</td><td>Satisfaction surveys, Net Promoter Score, emotional response</td></tr>
+            <tr><td>Relationship</td><td colspan="2">Usability is a <b>necessary subset</b> of UX — a system can be usable but still have a poor overall experience (e.g., usable but ugly or untrustworthy).</td></tr>
+          </table>
+        </div>
+
+        <div class="simbox">
+          <div class="simtitle">Interactive Demo — Usability in Action</div>
+          <div class="sim-row">
+            <div class="sim-col">
+              <h4 style="color:var(--red);">❌ Low Usability</h4>
+              <p style="font-size:12px;color:var(--muted);margin-bottom:8px;">No label, ambiguous action, no error feedback</p>
+              <input class="bad-input" placeholder="">
+              <br>
+              <button class="bad-btn">OK</button>
+              <button class="bad-btn">Go</button>
+              <div class="sim-verdict verdict-bad">Fails Effectiveness — user unsure what will happen</div>
+            </div>
+            <div class="sim-col">
+              <h4 style="color:var(--green);">✅ High Usability</h4>
+              <p style="font-size:12px;color:var(--muted);margin-bottom:8px;">Clear label, single obvious action, instant validation</p>
+              <label style="font-size:12px;font-weight:600;display:block;text-align:left;margin-bottom:4px;">Stop-Loss Price (₹)</label>
+              <input class="good-input" placeholder="e.g. 2410.50">
+              <br>
+              <button class="good-btn">Set Stop-Loss →</button>
+              <div class="sim-verdict verdict-good">Passes Effectiveness + Efficiency</div>
+            </div>
+          </div>
+          <p style="font-size:13px;color:var(--muted);margin-top:16px;">In a fast-moving market, a trader has seconds to set a stop-loss. Ambiguous controls directly cost effectiveness (wrong action) and efficiency (wasted time) — this is usability measured in a real, high-stakes scenario.</p>
+        </div>
+
+        <!-- ============ 2.4 HCI AND SOFTWARE ENGINEERING ============ -->
+        <h2 class="topic" id="u2-se">2.4 HCI and Software Engineering <span class="imp m">Medium</span></h2>
+
+        <div class="card def">
+          <span class="tag">English</span>
+          <p>Traditional Software Engineering (SE) follows a largely linear, specification-driven process (e.g., the Waterfall model), whereas HCI requires an <b>iterative, user-centered</b> process because user needs and usability problems are often only discovered once people actually interact with the system. Integrating HCI into SE means embedding user research, prototyping, and usability evaluation as first-class activities in the development lifecycle, not as an afterthought.</p>
+        </div>
+        <div class="hin">
+          <span class="tag">Hinglish</span>
+          <p>Normal software engineering mein hum requirements likhte hain, design karte hain, code karte hain, test karte hain — ek seedhi line mein. Lekin usability ka pata tabhi chalta hai jab real user use karta hai. Isliye HCI process mein baar-baar <b>design → test with users → redesign</b> ka loop chalta hai, jab tak interface acha na ho jaye.</p>
+        </div>
+
+        <h3 class="sub">The Star Life Cycle Model (Hartson &amp; Hix)</h3>
+        <div class="card">
+          <p>Unlike the Waterfall model's fixed sequence, the <b>Star Life Cycle</b> model for HCI design allows movement between <i>any two adjacent activities</i>, with <b>Evaluation at the centre</b> — every activity's output is evaluated (often with users) before moving to the next, and designers can jump back to any prior activity based on evaluation results.</p>
+        </div>
+
+        <div class="svgbox">
+          <svg viewBox="0 0 480 420" xmlns="http://www.w3.org/2000/svg">
+            <!-- outer nodes positioned in a star/pentagon around center Evaluation -->
+            <circle cx="240" cy="210" r="55" fill="#fef2f2" stroke="#ef4444" stroke-width="2"/>
+            <text x="240" y="206" text-anchor="middle" font-size="13" font-weight="800" fill="#b91c1c" font-family="Inter,sans-serif">Evaluation</text>
+            <text x="240" y="222" text-anchor="middle" font-size="10" fill="#b91c1c" font-family="Inter,sans-serif">(Central Hub)</text>
+
+            <!-- 5 outer activities -->
+            <g font-family="Inter,sans-serif" font-size="11" font-weight="700">
+              <circle cx="240" cy="40" r="42" fill="#eef2ff" stroke="#2563eb" stroke-width="1.5"/>
+              <text x="240" y="36" text-anchor="middle" fill="#1d4ed8">Task/Functional</text>
+              <text x="240" y="50" text-anchor="middle" fill="#1d4ed8">Analysis</text>
+
+              <circle cx="420" cy="150" r="42" fill="#ecfeff" stroke="#06b6d4" stroke-width="1.5"/>
+              <text x="420" y="146" text-anchor="middle" fill="#0369a1">Requirements</text>
+              <text x="420" y="160" text-anchor="middle" fill="#0369a1">Specification</text>
+
+              <circle cx="360" cy="360" r="42" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="1.5"/>
+              <text x="360" y="356" text-anchor="middle" fill="#6d28d9">Conceptual /</text>
+              <text x="360" y="370" text-anchor="middle" fill="#6d28d9">Design</text>
+
+              <circle cx="120" cy="360" r="42" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+              <text x="120" y="356" text-anchor="middle" fill="#065f46">Prototyping</text>
+
+              <circle cx="60" cy="150" r="42" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5"/>
+              <text x="60" y="146" text-anchor="middle" fill="#b45309">Implementation</text>
+            </g>
+
+            <!-- spokes connecting each outer node to central Evaluation -->
+            <g stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,3">
+              <line x1="240" y1="82" x2="240" y2="155"/>
+              <line x1="384" y1="165" x2="285" y2="195"/>
+              <line x1="330" y1="330" x2="265" y2="250"/>
+              <line x1="150" y1="330" x2="215" y2="250"/>
+              <line x1="95" y1="165" x2="195" y2="195"/>
+            </g>
+          </svg>
+          <p class="cap">Fig 2.4 — Star Life Cycle Model: Evaluation sits at the centre and connects to every activity, allowing iterative movement instead of a fixed linear sequence</p>
+        </div>
+
+        <h3 class="sub">Waterfall (Traditional SE) vs User-Centered Design (HCI)</h3>
+        <div class="card">
+          <table>
+            <tr><th>Aspect</th><th>Waterfall Model</th><th>User-Centered Design (UCD)</th></tr>
+            <tr><td>Flow</td><td>Strictly sequential: Requirements → Design → Code → Test → Maintain</td><td>Iterative loop: Analyze → Design → Prototype → Evaluate → repeat</td></tr>
+            <tr><td>User involvement</td><td>Mainly at requirements stage only</td><td>Continuous — users are tested at every iteration</td></tr>
+            <tr><td>Change cost</td><td>Expensive late-stage changes (after coding)</td><td>Cheap early-stage changes (caught during prototype testing)</td></tr>
+            <tr><td>Best suited for</td><td>Well-understood, stable requirements (e.g., backend/API systems)</td><td>User-facing systems where needs emerge through testing (dashboards, apps)</td></tr>
+          </table>
+        </div>
+
+        <div class="keypoint">
+          <span class="icon">📌</span>
+          <span><b>Exam Tip:</b> A common exam question asks you to explain why HCI cannot simply "plug into" the Waterfall model. The core reason: usability problems are usually invisible until real users interact with a working (or prototyped) system — so HCI needs early, cheap, repeatable evaluation cycles that Waterfall's late-stage testing does not provide.</span>
+        </div>
+
+        <!-- ============ 2.5 GUI DESIGN AND AESTHETICS ============ -->
+        <h2 class="topic" id="u2-gui">2.5 GUI Design and Aesthetics <span class="imp h">High</span></h2>
+
+        <div class="card def">
+          <span class="tag">English</span>
+          <p>A <b>Graphical User Interface (GUI)</b> is an interface that lets users interact with a system through visual elements — windows, icons, menus, and a pointer (the <b>WIMP</b> paradigm) — instead of typed text commands. <b>Aesthetics</b> in GUI design refers to the visual quality of the interface (layout, color, typography, spacing) and its influence on perceived usability — commonly summarized as the <b>"aesthetic-usability effect"</b>, where users perceive visually pleasing designs as easier to use, even if actual usability is unchanged.</p>
+        </div>
+        <div class="hin">
+          <span class="tag">Hinglish</span>
+          <p>GUI ka matlab hai visual elements se interact karna — buttons, icons, menus — bajaye commands type karne ke. Aesthetics ka matlab hai interface "dekhne mein" kaisa lagta hai — colors, spacing, fonts sahi hain ya nahi. Research batati hai ki agar design achha dikhta hai, toh users usko "easy to use" bhi maan lete hain — chahe functionally kuch change na hua ho. Isliye visual design bhi utna hi important hai jitna functionality.</p>
+        </div>
+
+        <h3 class="sub">Core GUI Components (WIMP)</h3>
+        <div class="card">
+          <table>
+            <tr><th>Element</th><th>Purpose</th><th>Example</th></tr>
+            <tr><td><b>W</b>indows</td><td>Bounded, movable/resizable regions containing content</td><td>App window, dialog box</td></tr>
+            <tr><td><b>I</b>cons</td><td>Small graphical symbols representing objects/actions</td><td>Folder icon, trash icon, buy/sell icon</td></tr>
+            <tr><td><b>M</b>enus</td><td>Lists of selectable commands/options</td><td>File menu, right-click context menu</td></tr>
+            <tr><td><b>P</b>ointer</td><td>On-screen indicator controlled by mouse/touch for selection</td><td>Cursor, finger tap point</td></tr>
+          </table>
+          <p style="margin-top:10px;font-size:13px;color:var(--muted);">Beyond WIMP, modern GUIs also use widgets like buttons, checkboxes, radio buttons, dropdowns, sliders, tabs, and toast notifications.</p>
+        </div>
+
+        <h3 class="sub">Principles of Visual Aesthetics (CRAP / CARP Principles)</h3>
+        <div class="card">
+          <ul>
+            <li><b>Contrast:</b> Differentiate important elements (primary buttons, alerts) using color/size/weight so they stand out.</li>
+            <li><b>Repetition:</b> Reuse consistent visual patterns (same button style, same spacing) across the interface for predictability.</li>
+            <li><b>Alignment:</b> Every element should line up with something else — creates a clean, organized, scannable layout.</li>
+            <li><b>Proximity:</b> Group related items close together and separate unrelated ones — reduces cognitive load in parsing the screen.</li>
+          </ul>
+        </div>
+
+        <div class="svgbox">
+          <svg viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="20" width="600" height="260" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+            <rect x="20" y="20" width="600" height="40" rx="8" fill="#eef2ff" stroke="#2563eb" stroke-width="1.2"/>
+            <text x="40" y="45" font-size="12" font-weight="700" fill="#1d4ed8" font-family="Inter,sans-serif">Header / Navigation</text>
+
+            <rect x="20" y="60" width="140" height="220" fill="#ecfeff" stroke="#06b6d4" stroke-width="1.2"/>
+            <text x="90" y="170" text-anchor="middle" font-size="12" font-weight="700" fill="#0369a1" font-family="Inter,sans-serif">Sidebar</text>
+
+            <rect x="160" y="60" width="330" height="220" fill="#ffffff" stroke="#94a3b8" stroke-width="1"/>
+            <text x="325" y="90" text-anchor="middle" font-size="12" font-weight="700" fill="#334155" font-family="Inter,sans-serif">Main Content Area</text>
+            <rect x="180" y="105" width="130" height="60" rx="6" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="1"/>
+            <rect x="320" y="105" width="150" height="60" rx="6" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="1"/>
+            <rect x="180" y="180" width="290" height="80" rx="6" fill="#ecfdf5" stroke="#10b981" stroke-width="1"/>
+
+            <rect x="500" y="60" width="120" height="220" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.2"/>
+            <text x="560" y="170" text-anchor="middle" font-size="12" font-weight="700" fill="#b45309" font-family="Inter,sans-serif">Widgets /</text>
+            <text x="560" y="184" text-anchor="middle" font-size="12" font-weight="700" fill="#b45309" font-family="Inter,sans-serif">Alerts</text>
+          </svg>
+          <p class="cap">Fig 2.5 — A well-aligned GUI layout: Header, Sidebar, Main Content (grouped by proximity), and a Widgets panel — every block aligns to a shared grid</p>
+        </div>
+
+        <div class="simbox">
+          <div class="simtitle">Interactive Demo — Alignment &amp; Contrast</div>
+          <div class="sim-row">
+            <div class="sim-col" style="text-align:left;">
+              <h4 style="color:var(--red);text-align:center;">❌ Poor Aesthetics</h4>
+              <div style="font-size:11px;color:#9ca3af;margin:4px 0 2px 10px;">Price</div>
+              <div style="font-size:11px;color:#9ca3af;margin:2px 0 2px 40px;">Qty</div>
+              <div style="font-size:11px;color:#9ca3af;margin:2px 0 10px 25px;">Total</div>
+              <button class="bad-btn">buy now</button>
+              <div class="sim-verdict verdict-bad" style="display:block;text-align:center;">Misaligned, low contrast, no grouping</div>
+            </div>
+            <div class="sim-col" style="text-align:left;">
+              <h4 style="color:var(--green);text-align:center;">✅ Good Aesthetics</h4>
+              <div style="font-size:12px;font-weight:600;color:var(--text2);">Price: <span style="color:var(--text);">₹2,415.30</span></div>
+              <div style="font-size:12px;font-weight:600;color:var(--text2);">Qty: <span style="color:var(--text);">2 Lots</span></div>
+              <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:10px;">Total: <span style="color:var(--accent);font-weight:800;">₹4,830.60</span></div>
+              <button class="good-btn" style="background:var(--green);">Buy Now →</button>
+              <div class="sim-verdict verdict-good" style="display:block;text-align:center;">Aligned grid, clear hierarchy, high contrast CTA</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ 2.6 PROTOTYPING ============ -->
+        <h2 class="topic" id="u2-proto">2.6 Prototyping Techniques <span class="imp h">High</span></h2>
+
+        <div class="card def">
+          <span class="tag">English</span>
+          <p>A <b>prototype</b> is an early, simplified representation of a system built to explore design ideas, test usability, and gather user feedback before investing in full-scale implementation. <b>Prototyping</b> is the practice of building and iterating on such representations throughout the design process.</p>
+        </div>
+        <div class="hin">
+          <span class="tag">Hinglish</span>
+          <p>Prototype ek "rough model" hota hai — poora system bina bnaye pehle uska ek chhota, simple version bana lete hain taaki user se early feedback mil jaye. Isse costly mistakes early stage mein hi pakdi ja sakti hain, poore code likhne ke baad nahi.</p>
+        </div>
+
+        <h3 class="sub">Prototyping Fidelity Spectrum</h3>
+        <div class="spectrum-wrap">
+          <div class="spectrum-step">
+            <div class="num">1</div>
+            <h5>Paper Sketch</h5>
+            <p>Hand-drawn boxes/arrows on paper — fastest, cheapest, discussed in minutes</p>
+          </div>
+          <div class="arrow-sep">→</div>
+          <div class="spectrum-step">
+            <div class="num">2</div>
+            <h5>Wireframe</h5>
+            <p>Digital greyscale layout showing structure without final visuals</p>
+          </div>
+          <div class="arrow-sep">→</div>
+          <div class="spectrum-step">
+            <div class="num">3</div>
+            <h5>Clickable Mockup</h5>
+            <p>Interactive prototype (e.g., Figma) simulating flow without real backend logic</p>
+          </div>
+          <div class="arrow-sep">→</div>
+          <div class="spectrum-step">
+            <div class="num">4</div>
+            <h5>Coded Prototype</h5>
+            <p>Working front-end code, sometimes with partial real functionality</p>
+          </div>
+        </div>
+
+        <div class="svgbox">
+          <svg viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="20" width="340" height="220" rx="6" fill="#ffffff" stroke="#334155" stroke-width="2" stroke-dasharray="5,3"/>
+            <rect x="40" y="40" width="300" height="24" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+            <line x1="50" y1="52" x2="150" y2="52" stroke="#94a3b8" stroke-width="2"/>
+            <circle cx="320" cy="52" r="8" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+
+            <rect x="40" y="80" width="140" height="90" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+            <line x1="40" y1="80" x2="180" y2="170" stroke="#cbd5e1" stroke-width="1"/>
+            <line x1="180" y1="80" x2="40" y2="170" stroke="#cbd5e1" stroke-width="1"/>
+
+            <line x1="200" y1="90" x2="340" y2="90" stroke="#94a3b8" stroke-width="2"/>
+            <line x1="200" y1="105" x2="340" y2="105" stroke="#cbd5e1" stroke-width="2"/>
+            <line x1="200" y1="120" x2="300" y2="120" stroke="#cbd5e1" stroke-width="2"/>
+
+            <rect x="200" y="145" width="140" height="26" rx="4" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.5"/>
+            <line x1="220" y1="158" x2="320" y2="158" stroke="#94a3b8" stroke-width="2"/>
+
+            <rect x="40" y="190" width="300" height="30" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="3,3"/>
+            <text x="190" y="209" text-anchor="middle" font-size="11" fill="#64748b" font-family="Inter,sans-serif">footer / actions</text>
+          </svg>
+          <p class="cap">Fig 2.6 — A typical low-fidelity wireframe: greyscale boxes and lines represent structure/layout only, not final visuals</p>
+        </div>
+
+        <h3 class="sub">Low-Fidelity vs High-Fidelity Prototypes</h3>
+        <div class="card">
+          <table>
+            <tr><th>Aspect</th><th>Low-Fidelity (Lo-Fi)</th><th>High-Fidelity (Hi-Fi)</th></tr>
+            <tr><td>Detail level</td><td>Rough sketches/wireframes, no colors or real content</td><td>Near-final visuals, real colors, fonts, sometimes real data</td></tr>
+            <tr><td>Speed to create</td><td>Very fast (minutes to hours)</td><td>Slower (hours to days)</td></tr>
+            <tr><td>Cost of change</td><td>Very cheap — just redraw</td><td>Expensive — rebuild interactive elements</td></tr>
+            <tr><td>Best used for</td><td>Early idea exploration, quick stakeholder discussion</td><td>Usability testing close to final experience, stakeholder sign-off</td></tr>
+            <tr><td>Tools/Method</td><td>Paper &amp; pen, whiteboard, basic wireframe tools</td><td>Figma, Adobe XD, coded HTML/CSS prototypes</td></tr>
+          </table>
+        </div>
+
+        <h3 class="sub">Prototyping Approaches</h3>
+        <div class="card">
+          <table>
+            <tr><th>Approach</th><th>Description</th><th>When to Use</th></tr>
+            <tr><td><b>Throwaway (Rapid) Prototyping</b></td><td>Built quickly to test an idea, then discarded — not reused in the final product</td><td>Early-stage concept validation, unclear requirements</td></tr>
+            <tr><td><b>Evolutionary Prototyping</b></td><td>Prototype is incrementally refined and becomes part of (or evolves into) the final system</td><td>Requirements fairly well understood, want continuous delivery</td></tr>
+            <tr><td><b>Vertical Prototyping</b></td><td>Implements one feature/flow fully (all layers), leaving others unbuilt</td><td>Testing feasibility or usability of one critical, complex feature</td></tr>
+            <tr><td><b>Horizontal Prototyping</b></td><td>Implements the surface/UI layer of all features, but without real backend logic</td><td>Testing overall navigation and information architecture</td></tr>
+          </table>
+        </div>
+
+        <div class="card example">
+          <span class="tag">Example — Applied to a Trading Dashboard</span>
+          <p>Before building a real-time price alert panel, a designer might first sketch it on paper (Lo-Fi, throwaway) to decide layout, then build a clickable Figma mockup (Hi-Fi, horizontal — just the UI, no real Socket.IO feed) to test with a few traders, and only after positive feedback start coding the actual React component connected to the live feed (evolutionary/vertical prototype that becomes the real feature).</p>
+        </div>
+
+        <div class="note">
+          <b>Key takeaway for Unit 2:</b> HCI evolved from rigid, expert-only command interfaces to natural, universally accessible interaction — and this evolution is driven by continuously applying usability principles, iterative (not linear) design processes borrowed into Software Engineering, careful GUI/aesthetic design, and low-cost prototyping to catch usability problems before expensive development begins.
+        </div>
+      </div>
+
+      <div class="qsection" id="qa">
+        <h1 class="unit-title">❓ Unit 2 — Q&amp;A (RTU Exam Pattern)</h1>
+
+        <div class="qcard">
+          <div class="qlabel">Unit 2 · Theory</div>
+          <div class="q">Q1. Explain the historical evolution of Human-Computer Interaction with major milestones. <span class="imp h">★★★ 10 Marks</span></div>
+          <span class="marks m10">10 Marks</span>
+          <div class="a">
+            <p>HCI evolved through distinct eras: batch processing in the 1950s with no direct interaction, followed by time-sharing systems and Ivan Sutherland's Sketchpad (1963) — the first interactive graphical program. Command Line Interfaces dominated the 1970s alongside Xerox PARC's invention of the mouse and windows at the Alto (1973).</p>
+            <p>The 1980s introduced the GUI/WIMP paradigm commercially via the Apple Macintosh (1984). The 1990s brought web and multimedia interaction, the 2000s ubiquitous/mobile computing, and 2007 onward multi-touch gesture interaction via the iPhone. The present era is defined by natural voice interaction (Siri, Alexa) and emerging immersive/gesture interfaces (AR/VR).</p>
+          </div>
+        </div>
+
+        <div class="qcard">
+          <div class="qlabel">Unit 2 · Theory</div>
+          <div class="q">Q2. What is an interactive system? Explain its components and common interaction styles. <span class="imp h">★★★ 5 Marks</span></div>
+          <span class="marks m5">5 Marks</span>
+          <div class="a">
+            <p>An interactive system engages in ongoing dialogue with a user, accepting input and producing perceivable output in real time. Its core components are the User, Input Devices, the Dialogue/System Core, Output Devices, and the Feedback Loop connecting them.</p>
+            <p>Common interaction styles include command line, menu selection, form fill-in, direct manipulation, WIMP, natural language, and gesture-based interaction — each suited to different user expertise levels and task frequencies.</p>
+          </div>
+        </div>
+
+        <div class="qcard">
+          <div class="qlabel">Unit 2 · Theory</div>
+          <div class="q">Q3. Define usability as per ISO 9241-11. Explain Nielsen's five usability attributes. <span class="imp h">★★★ 10 Marks</span></div>
+          <span class="marks m10">10 Marks</span>
+          <div class="a">
+            <p>ISO 9241-11 defines usability as the extent to which specified users can achieve specified goals with effectiveness, efficiency, and satisfaction in a specified context of use — meaning usability is context-dependent, not an absolute property of a system.</p>
+            <p>Nielsen's five attributes elaborate this: Learnability (ease for first-time users), Efficiency (speed for experienced users), Memorability (ease of regaining proficiency after a break), Errors (frequency, severity, and recoverability of mistakes), and Satisfaction (subjective pleasantness of use).</p>
+          </div>
+        </div>
+
+        <div class="qcard">
+          <div class="qlabel">Unit 2 · Conceptual</div>
+          <div class="q">Q4. Differentiate between Usability and User Experience (UX). <span class="imp m">★★ 3 Marks</span></div>
+          <span class="marks m5">3 Marks</span>
+          <div class="a">
+            <p>Usability focuses narrowly on whether a user can complete tasks effectively, efficiently, and without error, measured through task success rate, time-on-task, and error count. UX is broader, covering the user's overall emotional journey — including branding, trust, and delight — measured through satisfaction surveys and metrics like Net Promoter Score. Usability is a necessary subset of good UX.</p>
+          </div>
+        </div>
+
+        <div class="qcard">
+          <div class="qlabel">Unit 2 · Theory</div>
+          <div class="q">Q5. Explain the relationship between HCI and Software Engineering. Describe the Star Life Cycle model. <span class="imp h">★★★ 10 Marks</span></div>
+          <span class="marks m10">10 Marks</span>
+          <div class="a">
+            <p>Traditional Software Engineering follows a largely linear process (e.g., Waterfall), while HCI requires iterative, user-centered development because usability issues typically surface only once real users interact with the system. Integrating HCI into SE means embedding user research, prototyping, and evaluation throughout the lifecycle rather than only at the end.</p>
+            <p>Hartson and Hix's Star Life Cycle model places Evaluation at the centre, connected to every other activity (task/functional analysis, requirements specification, conceptual/design, prototyping, implementation) — allowing designers to move between any two adjacent activities based on evaluation results, rather than following one fixed sequence.</p>
+          </div>
+        </div>
+
+        <div class="qcard">
+          <div class="qlabel">Unit 2 · Theory</div>
+          <div class="q">Q6. What is GUI? Explain the WIMP paradigm and the key principles of visual aesthetics. <span class="imp h">★★★ 5 Marks</span></div>
+          <span class="marks m5">5 Marks</span>
+          <div class="a">
+            <p>A Graphical User Interface (GUI) lets users interact through visual elements rather than typed commands, built around the WIMP paradigm — Windows, Icons, Menus, and Pointer.</p>
+            <p>Key aesthetic principles (CRAP/CARP) are Contrast (making important elements stand out), Repetition (consistent visual patterns for predictability), Alignment (elements lining up for a clean layout), and Proximity (grouping related items together) — together reducing cognitive load and improving perceived usability via the aesthetic-usability effect.</p>
+          </div>
+        </div>
+
+        <div class="qcard">
+          <div class="qlabel">Unit 2 · Theory</div>
+          <div class="q">Q7. What is prototyping? Differentiate between low-fidelity and high-fidelity prototypes. <span class="imp m">★★ 5 Marks</span></div>
+          <span class="marks m5">5 Marks</span>
+          <div class="a">
+            <p>A prototype is an early, simplified representation of a system built to explore design ideas and gather feedback before full implementation. Low-fidelity prototypes (paper sketches, wireframes) are fast and cheap to change, ideal for early idea exploration, while high-fidelity prototypes (Figma mockups, coded prototypes) closely resemble the final product and are used for usability testing close to the real experience, though they cost more to modify.</p>
+          </div>
+        </div>
+
+        <div class="qcard">
+          <div class="qlabel">Unit 2 · Conceptual</div>
+          <div class="q">Q8. Differentiate between throwaway and evolutionary prototyping, and between vertical and horizontal prototyping. <span class="imp m">★★ 5 Marks</span></div>
+          <span class="marks m5">5 Marks</span>
+          <div class="a">
+            <p>Throwaway (rapid) prototyping is built quickly to validate an idea and then discarded, suited to unclear early requirements, while evolutionary prototyping is incrementally refined and becomes part of the final system, suited to well-understood requirements.</p>
+            <p>Vertical prototyping fully implements one feature across all layers to test feasibility, whereas horizontal prototyping implements the UI layer across all features without real backend logic, used to test overall navigation and information architecture.</p>
+          </div>
+        </div>
+
+      </div>
+
       </div>
     </div>
     <div style="display:flex;gap:12px;justify-content:center;padding:30px 20px;flex-wrap:wrap;">
-      <a href="index.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">🏠 HCI Hub</a>
       <a href="unit1.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
+      <a href="index.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">🏠 HCI Hub</a>
       <a href="unit3.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
     </div>
   </main>
