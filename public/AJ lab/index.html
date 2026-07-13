@@ -85,8 +85,7 @@
   .sl-section-title { font-size:26px; font-weight:800; color: var(--text); letter-spacing:-0.02em; margin-bottom:26px; }
 
   /* ── RESOURCE CARDS ── */
-  .sl-res-grid { display:grid; grid-template-columns: repeat(2,1fr); gap:16px; }
-  @media (max-width:620px){ .sl-res-grid{ grid-template-columns:1fr; } }
+  .sl-res-grid { display:grid; grid-template-columns: 1fr; gap:16px; }
   .sl-res-card {
     display:flex; align-items:center; gap:16px; background: var(--surface); border:1px solid var(--border);
     border-radius:16px; padding:20px; text-decoration:none; transition:.25s;
@@ -130,21 +129,17 @@
         <p class="sl-msub">RTU V Semester · Practical &amp; Laboratory Work</p>
         <p class="sl-mmeta">Java Swing, AWT, Event Handling &amp; Layout Managers</p>
 
-        <div class="sl-stats">
-          <div class="sl-stat">
-            <div class="sl-stat-num">01</div>
-            <div class="sl-stat-label">Programs</div>
-          </div>
-          <div class="sl-stat">
-            <div class="sl-stat-num">01</div>
-            <div class="sl-stat-label">Lab Manual</div>
-          </div>
-        </div>
+         <div class="sl-stats">
+           <div class="sl-stat">
+             <div class="sl-stat-num">01</div>
+             <div class="sl-stat-label">Programs</div>
+           </div>
+         </div>
       </div>
 
       <section class="sl-section">
         <div class="sl-eyebrow-sm">Laboratory Resources</div>
-        <h2 class="sl-section-title">Manual &amp; Code Downloads</h2>
+        <h2 class="sl-section-title">Code Downloads</h2>
 
         <div class="sl-res-grid">
           <a class="sl-res-card" href="CourseCheckbox.java" download>
@@ -154,15 +149,6 @@
               <div class="sl-res-desc">Swing/AWT event handling check box example</div>
             </div>
             <span class="sl-res-status">Java File</span>
-          </a>
-
-          <a class="sl-res-card" href="Advanced Java Lab Manual Anisha mam.docx" download>
-            <div class="sl-res-icon">📝</div>
-            <div class="sl-res-details">
-              <div class="sl-res-title">Advanced Java Lab Manual</div>
-              <div class="sl-res-desc">Official lab syllabus, programs, and questions</div>
-            </div>
-            <span class="sl-res-status">Word Doc</span>
           </a>
         </div>
       </section>
