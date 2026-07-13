@@ -36,17 +36,19 @@ export default function Home() {
   const [showMobileWelcome, setShowMobileWelcome] = useState(false);
   const [showMobileAttendance, setShowMobileAttendance] = useState(false);
 
-  // Contribution Form States
-  const [contribTab, setContribTab] = useState("upload");
-  const [contribTitle, setContribTitle] = useState("");
-  const [contribSubjectId, setContribSubjectId] = useState("");
-  const [contribSection, setContribSection] = useState("");
-  const [contribContentType, setContribContentType] = useState("pdf");
-  const [contribFile, setContribFile] = useState(null);
-  const [contribTextContent, setContribTextContent] = useState("");
-  const [contribPreviewTab, setContribPreviewTab] = useState("write");
-  const [contribLoading, setContribLoading] = useState(false);
-  const [contribMessage, setContribMessage] = useState(null);
+// Contribution Form States
+const [contribTab, setContribTab] = useState("upload");
+const [contribTitle, setContribTitle] = useState("");
+const [contribSubjectId, setContribSubjectId] = useState("");
+const [contribSection, setContribSection] = useState("");
+const [contribContentType, setContribContentType] = useState("pdf");
+const [contribFile, setContribFile] = useState(null);
+const [contribTextContent, setContribTextContent] = useState("");
+const [contribPreviewTab, setContribPreviewTab] = useState("write");
+const [contribLoading, setContribLoading] = useState(false);
+const [contribMessage, setContribMessage] = useState(null);
+const [contribCopyrightChecked, setContribCopyrightChecked] = useState(false);
+const [contactTakedownMode, setContactTakedownMode] = useState(false);
 
   const handleUserClick = (userId) => {
     if (!session) return;
@@ -80,7 +82,7 @@ export default function Home() {
     }
   };
 
-  const handleContribSubmit = async (e) => {
+const handleContribSubmit = async (e) => {
     e.preventDefault();
     if (!contribTitle.trim()) return setContribMessage({ type: "error", text: "Title is required" });
     if (!contribSubjectId) return setContribMessage({ type: "error", text: "Subject is required" });
@@ -92,6 +94,7 @@ export default function Home() {
     if (["text", "html"].includes(contribContentType) && !contribTextContent.trim()) {
       return setContribMessage({ type: "error", text: "Content text is required" });
     }
+    if (!contribCopyrightChecked) return setContribMessage({ type: "error", text: "Please confirm copyright statement before submitting" });
 
     setContribLoading(true);
     setContribMessage(null);
@@ -1373,6 +1376,21 @@ export default function Home() {
                       </div>
                     )}
 
+                    {/* Copyright Confirmation Checkbox */}
+                    <div className="flex items-start gap-2 p-3 border border-amber-200 bg-amber-50/30 rounded-xl">
+                      <input
+                        type="checkbox"
+                        id="contrib-copyright"
+                        checked={contribCopyrightChecked}
+                        onChange={(e) => setContribCopyrightChecked(e.target.checked)}
+                        required
+                        className="mt-0.5 w-4 h-4 text-indigo-600 border-amber-300 rounded focus:ring-indigo-500"
+                      />
+                      <label htmlFor="contrib-copyright" className="text-[10px] text-amber-800 leading-relaxed cursor-pointer">
+                        I confirm this content is my own work or I have the right to share it, and it does not infringe anyone else's <Link to="/disclaimer" target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline font-semibold">copyright</Link>.
+                      </label>
+                    </div>
+
                     <button
                       type="submit"
                       disabled={contribLoading}
@@ -1621,8 +1639,29 @@ export default function Home() {
         </section>
 
         <footer className="mt-12 py-6 border-t border-line/60 text-center">
-          <p className="text-xs text-muted font-medium">
-            © {new Date().getFullYear()} Smart Learning Plus &nbsp;·&nbsp; V Semester
+          <p className="text-xs text-muted font-medium" style={{ marginBottom: "8px" }}>
+            © {new Date().getFullYear()} Smart Learning Plus
+          </p>
+          <p className="text-xs text-muted" style={{ marginBottom: "12px" }}>
+            Smart Learning Plus is an independent, non-commercial student resource. Not affiliated with or endorsed by RTU Kota.
+          </p>
+          <p className="text-xs" style={{ color: "#64748b" }}>
+            <Link to="/disclaimer" className="sl-footer-link" style={{ color: "#2563eb", textDecoration: "none" }}>Disclaimer</Link> |{" "}
+            <Link to="/terms" className="sl-footer-link" style={{ color: "#2563eb", textDecoration: "none" }}>Terms of Use</Link> |{" "}
+            <Link to="/privacy" className="sl-footer-link" style={{ color: "#2563eb", textDecoration: "none" }}>Privacy Note</Link> |{" "}
+            <a 
+              href="#contact" 
+              onClick={(e) => {
+                e.preventDefault();
+                setShowContactModal(true);
+                setContactTakedownMode(false);
+                setContactForm({ name: "", email: "", message: "" });
+              }} 
+              className="sl-footer-link" 
+              style={{ color: "#2563eb", textDecoration: "none", cursor: "pointer" }}
+            >
+              Contact Admin
+            </a>
           </p>
         </footer>
         
@@ -1762,10 +1801,10 @@ export default function Home() {
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                   <div>
                     <div style={{ color: "#fff", fontSize: "18px", fontWeight: 800, letterSpacing: "-0.4px" }}>
-                      &#9993;&#65039; Contact Admin
+                      &#9993;&#65039; {contactTakedownMode ? "Report Copyright Concern" : "Contact Admin"}
                     </div>
                     <div style={{ color: "rgba(255,255,255,0.8)", fontSize: "12px", marginTop: "3px" }}>
-                      Smart Learning+ · We respond on email
+                      {contactTakedownMode ? "Takedown Request · Priority Review" : "Smart Learning+ · We respond on email"}
                     </div>
                   </div>
                   <button
@@ -1798,7 +1837,11 @@ export default function Home() {
                       setContactLoading(true);
                       setContactResult(null);
                       try {
-                        await api.post("/auth/contact", contactForm);
+                        // Add [TAKEDOWN] prefix to message if in takedown mode
+                        const messageToSend = contactTakedownMode 
+                          ? `[TAKEDOWN REQUEST] ${contactForm.message}` 
+                          : contactForm.message;
+                        await api.post("/auth/contact", { ...contactForm, message: messageToSend });
                         setContactResult({ ok: true });
                       } catch (err) {
                         setContactResult({ ok: false, text: err.response?.data?.error || "Failed to send. Please try again." });
@@ -1808,8 +1851,10 @@ export default function Home() {
                     }}
                     style={{ display: "flex", flexDirection: "column", gap: "14px" }}
                   >
-                    <div style={{ color: "#64748b", fontSize: "12.5px", lineHeight: 1.55, background: "#f0f9ff", border: "1px solid #bae6fd", borderRadius: "10px", padding: "10px 14px" }}>
-                      &#8505;&#65039; Fill in your details below. The admin will reply to your email address.
+                    <div style={{ color: "#64748b", fontSize: "12.5px", lineHeight: 1.55, background: contactTakedownMode ? "#fef2f2" : "#f0f9ff", border: contactTakedownMode ? "1px solid #fca5a5" : "1px solid #bae6fd", borderRadius: "10px", padding: "10px 14px" }}>
+                      {contactTakedownMode 
+                        ? "&#9888; This is a copyright takedown request. Please describe the content in question and we will review it promptly for removal."
+                        : "&#8505;&#65039; Fill in your details below. The admin will reply to your email address."}
                     </div>
 
                     <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
@@ -1835,7 +1880,7 @@ export default function Home() {
                     <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
                       <label style={{ fontSize: "11px", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>Your Message *</label>
                       <textarea
-                        required placeholder="Describe your question or issue..."
+                        required placeholder={contactTakedownMode ? "Describe the content to be removed (e.g., file name, URL, or description)..." : "Describe your question or issue..."}
                         rows={4}
                         value={contactForm.message}
                         onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
@@ -1861,7 +1906,7 @@ export default function Home() {
                       {contactLoading ? (
                         <><div style={{ width: "14px", height: "14px", border: "2px solid rgba(255,255,255,0.3)", borderTop: "2px solid #fff", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} /><span>Sending...</span></>
                       ) : (
-                        <span>&#128640; Send Message</span>
+                        <span>&#128640; {contactTakedownMode ? "Send Takedown Request" : "Send Message"}</span>
                       )}
                     </button>
                   </form>

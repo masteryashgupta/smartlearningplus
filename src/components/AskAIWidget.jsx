@@ -241,30 +241,37 @@ export default function AskAIWidget() {
             </div>
           )}
 
-          {/* Input Box */}
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSend();
-            }}
-            className="p-3 bg-surface border-t border-line flex gap-2 shrink-0"
-          >
-            <input
-              type="text"
-              placeholder="Ask me how to use the website..."
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              disabled={loading}
-              className="flex-1 bg-paper border border-line rounded-xl px-3 py-2 text-xs text-ink placeholder-muted focus:outline-none focus:border-primary/50"
-            />
-            <button
-              type="submit"
-              disabled={loading || !input.trim()}
-              className="bg-primary hover:bg-primary-dark text-white rounded-xl px-3.5 py-2 text-xs font-bold transition-all disabled:opacity-50 cursor-pointer"
-            >
-              Send
-            </button>
-          </form>
+           {/* AI Disclaimer */}
+           <div className="px-3 py-1.5 bg-amber-50/50 border-t border-amber-200 text-center">
+             <span className="text-[9px] text-amber-700 font-medium">
+               AI answers may be inaccurate — please verify with official sources.
+             </span>
+           </div>
+
+           {/* Input Box */}
+           <form
+             onSubmit={(e) => {
+               e.preventDefault();
+               handleSend();
+             }}
+             className="p-3 bg-surface border-t border-line flex gap-2 shrink-0"
+           >
+             <input
+               type="text"
+               placeholder="Ask me how to use the website..."
+               value={input}
+               onChange={(e) => setInput(e.target.value)}
+               disabled={loading}
+               className="flex-1 bg-paper border border-line rounded-xl px-3 py-2 text-xs text-ink placeholder-muted focus:outline-none focus:border-primary/50"
+             />
+             <button
+               type="submit"
+               disabled={loading || !input.trim()}
+               className="bg-primary hover:bg-primary-dark text-white rounded-xl px-3.5 py-2 text-xs font-bold transition-all disabled:opacity-50 cursor-pointer"
+             >
+               Send
+             </button>
+           </form>
 
         </div>
       )}
