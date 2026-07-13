@@ -14,7 +14,7 @@
       <div class="nav">
         <a href="index.html">🏠 AOA Hub</a>
         <a href="#content">📖 Content</a>
-        <a href="#qa">❓ Q&amp;A</a>
+        <a href="#u2-qa">❓ Q&amp;A</a>
         <a href="unit1.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
         <a href="unit3.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
       </div>
@@ -22,7 +22,7 @@
     <div class="wrap">
       <div class="hero">
         <h1>🧮 Unit 2 — Background &amp; Divide and Conquer</h1>
-        <p>Review of Algorithm · Complexity &amp; Order (Asymptotic) Notations · Binary Search · Merge Sort · Quick Sort · Strassen's Matrix Multiplication | Hours: 06</p>
+        <p>Review of Algorithm · Complexity &amp; Order (Asymptotic) Notations · Master Theorem · Binary Search · Merge Sort · Quick Sort · Strassen's Matrix Multiplication | Hours: 06</p>
         <div class="badges" style="margin-top:14px;">
           <a href="index.html" style="text-decoration:none;"><span class="badge b-teal">← Back to AOA Hub</span></a>
           <span class="badge b-gold">5CS4-05 · Analysis of Algorithms · RTU</span>
@@ -31,11 +31,11 @@
       <div id="content">
 <div id="unit2">
 <div class="unit-title">🧮 Unit 2 — Background &amp; Divide and Conquer Method</div>
-<div class="unit-sub">Review of Algorithm &middot; Complexity &amp; Asymptotic (Order) Notations &middot; Calculating Time Complexity &middot; Divide and Conquer Strategy &middot; Binary Search &middot; Merge Sort &middot; Quick Sort &middot; Strassen's Matrix Multiplication</div>
+<div class="unit-sub">Review of Algorithm &middot; Complexity &amp; Asymptotic (Order) Notations &middot; Calculating Time/Space Complexity &middot; Master Theorem &amp; Recursion Trees &middot; Divide and Conquer Strategy &middot; Binary Search &middot; Merge Sort &middot; Quick Sort &middot; Strassen's Matrix Multiplication &middot; Interactive Simulations</div>
 
 <div class="badge-row">
   <span class="badge b-red">🔥 HIGH WEIGHT — Numerical + Theory Both Asked</span>
-  <span class="badge b-gold">⚠ 5-Mark: Recurrence Solving, Quick Sort Dry-Run</span>
+  <span class="badge b-gold">⚠ 5/10-Mark: Recurrence Solving, Master Theorem, Quick/Merge Sort Dry-Run</span>
   <span class="badge b-teal">✅ Complexity Calculation is Asked Almost Every Year</span>
 </div>
 
@@ -45,13 +45,16 @@
     <div><a href="#u2-algo">2.1 Review of Algorithm</a></div>
     <div><a href="#u2-complexity">2.2 Complexity &amp; Calculating Complexity</a></div>
     <div><a href="#u2-notations">2.3 Asymptotic (Order) Notations</a></div>
-    <div><a href="#u2-dac">2.4 Divide and Conquer Method</a></div>
-    <div><a href="#u2-binsearch">2.5 Binary Search</a></div>
-    <div><a href="#u2-mergesort">2.6 Merge Sort</a></div>
-    <div><a href="#u2-quicksort">2.7 Quick Sort</a></div>
-    <div><a href="#u2-strassen">2.8 Strassen's Matrix Multiplication</a></div>
-    <div><a href="#u2-tables">2.9 Comparison Tables</a></div>
-    <div><a href="#u2-qa">2.10 RTU Exam Q&amp;A</a></div>
+    <div><a href="#u2-growthsim">2.4 Simulation: Growth-Rate Visualizer</a></div>
+    <div><a href="#u2-dac">2.5 Divide &amp; Conquer + Master Theorem</a></div>
+    <div><a href="#u2-binsearch">2.6 Binary Search</a></div>
+    <div><a href="#u2-binsim">2.7 Simulation: Binary Search Stepper</a></div>
+    <div><a href="#u2-mergesort">2.8 Merge Sort</a></div>
+    <div><a href="#u2-quicksort">2.9 Quick Sort</a></div>
+    <div><a href="#u2-sortsim">2.10 Simulation: Sorting Visualizer</a></div>
+    <div><a href="#u2-strassen">2.11 Strassen's Matrix Multiplication</a></div>
+    <div><a href="#u2-tables">2.12 Comparison Tables</a></div>
+    <div><a href="#u2-qa">2.13 RTU Exam Q&amp;A</a></div>
   </div>
 </div>
 
@@ -60,28 +63,73 @@
 
 <div class="card def">
   <div class="tag">📖 Definition</div>
-  <p style="margin-top:8px;">An <strong>algorithm</strong> is a finite, well-defined sequence of unambiguous instructions that takes some input, processes it through a series of well-defined steps, and produces an output in a finite amount of time, used to solve a specific computational problem.</p>
+  <p style="margin-top:8px;">An <strong>algorithm</strong> is a finite, well-defined sequence of unambiguous instructions that takes some input, processes it through a series of well-defined steps, and produces an output in a finite amount of time, used to solve a specific computational problem. It is a purely conceptual, language-independent description of a solution.</p>
 </div>
 
 <div class="hin">
   <div class="tag">🗣️ Hinglish Explanation</div>
-  <p style="margin-top:6px;">Algorithm ek step-by-step recipe hai kisi problem ko solve karne ke liye — jaise khana banane ki recipe mein steps fixed hote hain. Har algorithm ka ek input hota hai, kuch defined steps (jo clear aur unambiguous hone chahiye), aur ek output. Algorithm hamesha <strong>finite</strong> steps mein khatam hona chahiye — infinite loop nahi chal sakta.</p>
+  <p style="margin-top:6px;">Algorithm ek step-by-step recipe hai kisi problem ko solve karne ke liye — jaise khana banane ki recipe mein steps fixed hote hain. Har algorithm ka ek input hota hai, kuch defined steps (jo clear aur unambiguous hone chahiye), aur ek output. Algorithm hamesha <strong>finite</strong> steps mein khatam hona chahiye — infinite loop nahi chal sakta. Yeh sirf ek "idea" hai, kisi bhi language mein likhi ja sakti hai (C, Java, Python) — isliye algorithm khud koi programming language nahi hai.</p>
 </div>
 
 <h3 class="sub">Properties (Characteristics) of an Algorithm</h3>
 <div class="card">
   <ul>
-    <li>🎯 <strong>Input:</strong> Zero or more well-defined inputs.</li>
+    <li>🎯 <strong>Input:</strong> Zero or more well-defined inputs, supplied externally.</li>
     <li>📤 <strong>Output:</strong> At least one well-defined output, related to the input.</li>
-    <li>🔢 <strong>Finiteness:</strong> Must terminate after a finite number of steps.</li>
-    <li>✅ <strong>Definiteness:</strong> Every step must be precisely and unambiguously defined.</li>
-    <li>⚙️ <strong>Effectiveness:</strong> Every step must be basic enough to be carried out, in principle, by a person using pen and paper.</li>
+    <li>🔢 <strong>Finiteness:</strong> Must terminate after a finite number of steps — no algorithm may run forever.</li>
+    <li>✅ <strong>Definiteness:</strong> Every step must be precisely and unambiguously defined — no room for interpretation.</li>
+    <li>⚙️ <strong>Effectiveness:</strong> Every step must be basic enough to be carried out, in principle, by a person using pen and paper (i.e., feasible/executable).</li>
+    <li>🌍 <strong>Generality (Language Independence):</strong> The same algorithm should be applicable to a class of similar problems, not just one specific instance, and should not depend on any particular programming language.</li>
   </ul>
+</div>
+
+<h3 class="sub">Algorithm Design Tools — Pseudocode &amp; Flowchart</h3>
+<div class="card">
+  <p>Before an algorithm is coded in an actual programming language, it is usually expressed using one of two tools:</p>
+  <ul>
+    <li><strong>Pseudocode:</strong> An informal, English-like structured notation (using keywords like <code>if</code>, <code>while</code>, <code>for</code>, <code>return</code>) that describes the logic of the algorithm without worrying about exact language syntax.</li>
+    <li><strong>Flowchart:</strong> A graphical/diagrammatic representation of the algorithm's logic using standard symbols — oval (start/end), rectangle (process), diamond (decision), parallelogram (input/output), and arrows (flow of control).</li>
+  </ul>
+</div>
+
+<div class="svgbox">
+<svg viewBox="0 0 320 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:280px;">
+  <ellipse cx="160" cy="25" rx="60" ry="20" fill="none" stroke="var(--accent)" stroke-width="2"/>
+  <text x="160" y="30" font-size="12" text-anchor="middle">Start</text>
+  <line x1="160" y1="45" x2="160" y2="70" stroke="var(--line)" stroke-width="2"/>
+  <rect x="90" y="70" width="140" height="35" fill="none" stroke="var(--accent2)" stroke-width="2"/>
+  <text x="160" y="92" font-size="11" text-anchor="middle">Read n, array A</text>
+  <line x1="160" y1="105" x2="160" y2="130" stroke="var(--line)" stroke-width="2"/>
+  <polygon points="160,130 220,165 160,200 100,165" fill="none" stroke="var(--accent)" stroke-width="2"/>
+  <text x="160" y="169" font-size="10" text-anchor="middle">i &lt; n ?</text>
+  <line x1="220" y1="165" x2="260" y2="165" stroke="var(--line)" stroke-width="2"/>
+  <text x="240" y="158" font-size="10" fill="var(--muted)">No</text>
+  <line x1="160" y1="200" x2="160" y2="225" stroke="var(--line)" stroke-width="2"/>
+  <text x="175" y="215" font-size="10" fill="var(--muted)">Yes</text>
+  <rect x="90" y="225" width="140" height="35" fill="none" stroke="var(--accent2)" stroke-width="2"/>
+  <text x="160" y="247" font-size="11" text-anchor="middle">Process A[i], i++</text>
+  <path d="M90,242 C40,242 40,165 100,165" fill="none" stroke="var(--line)" stroke-width="2"/>
+  <ellipse cx="260" cy="165" rx="45" ry="18" fill="none" stroke="var(--accent)" stroke-width="2"/>
+  <text x="260" y="169" font-size="11" text-anchor="middle">Stop</text>
+</svg>
+<div class="cap">A simple flowchart representing a loop that processes each array element — the graphical counterpart of pseudocode</div>
+</div>
+
+<h3 class="sub">A Priori vs A Posteriori Analysis</h3>
+<div class="compare">
+  <div class="compare-card">
+    <h4 style="color:var(--accent);">A Priori Analysis</h4>
+    <p>Analyzing an algorithm's efficiency <strong>before</strong> it is implemented/run on any machine, by mathematically counting the number of basic operations as a function of input size n. This gives a machine-independent measure and is what "asymptotic complexity" refers to.</p>
+  </div>
+  <div class="compare-card">
+    <h4 style="color:var(--accent2);">A Posteriori Analysis (Profiling)</h4>
+    <p>Measuring an algorithm's actual running time and memory usage <strong>after</strong> implementing and executing it on a real machine, typically using timers/profilers. This is machine and implementation dependent (affected by compiler, hardware, OS load).</p>
+  </div>
 </div>
 
 <div class="keypoint">
   <span class="icon">📌</span>
-  <span><strong>Algorithm vs Program:</strong> An algorithm is a language-independent, conceptual solution (pseudocode/flowchart), whereas a program is its concrete implementation in a specific programming language.</span>
+  <span><strong>Algorithm vs Program:</strong> An algorithm is a language-independent, conceptual solution (pseudocode/flowchart), whereas a program is its concrete implementation in a specific programming language. RTU exams frequently ask this exact 2–3 mark distinction.</span>
 </div>
 
 <!-- 2.2 COMPLEXITY -->
@@ -102,7 +150,7 @@
   <ul>
     <li>1️⃣ Identify the <strong>basic operation</strong> (comparison, assignment, arithmetic op) that is executed most frequently.</li>
     <li>2️⃣ Count how many times this operation executes as a function of input size n.</li>
-    <li>3️⃣ A single loop running n times → O(n); nested loop (n × n) → O(n²); loop that halves each time → O(log n); two separate loops → added (not multiplied) → O(n) overall.</li>
+    <li>3️⃣ A single loop running n times → O(n); nested loop (n × n) → O(n²); loop that halves each time → O(log n); two separate (sequential) loops → added (not multiplied) → still O(n) overall (dominant term kept).</li>
     <li>4️⃣ Keep only the highest-order (dominant) term and drop constants — this gives the asymptotic complexity.</li>
   </ul>
 </div>
@@ -110,6 +158,30 @@
 <div class="card example">
   <div class="tag">💡 Example</div>
   <p style="margin-top:8px;">For nested loops <code>for(i=0;i&lt;n;i++) for(j=0;j&lt;n;j++) sum++;</code> the inner statement executes n×n = n² times → Time Complexity = O(n²). For a loop where i doubles each time (<code>i=i*2</code>) until i&lt;n, it runs log₂n times → O(log n).</p>
+</div>
+
+<h3 class="sub">More Loop Patterns You Must Recognize <span class="imp m">5-MARK</span></h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Code Pattern</th><th>How Many Times Inner Statement Runs</th><th>Complexity</th></tr>
+    <tr><td><code>for(i=0;i&lt;n;i++) stmt;</code></td><td>n</td><td>O(n)</td></tr>
+    <tr><td><code>for(i=0;i&lt;n;i++) for(j=0;j&lt;n;j++) stmt;</code></td><td>n × n</td><td>O(n²)</td></tr>
+    <tr><td><code>for(i=0;i&lt;n;i++) for(j=0;j&lt;i;j++) stmt;</code> (dependent/triangular loop)</td><td>1+2+3+...+n = n(n+1)/2</td><td>O(n²)</td></tr>
+    <tr><td><code>for(i=1;i&lt;n;i=i*2) stmt;</code> (i doubles)</td><td>log₂n</td><td>O(log n)</td></tr>
+    <tr><td><code>for(i=n;i&gt;1;i=i/2) stmt;</code> (i halves)</td><td>log₂n</td><td>O(log n)</td></tr>
+    <tr><td>Two independent, sequential loops of n each</td><td>n + n = 2n</td><td>O(n) (constants dropped)</td></tr>
+    <tr><td>Recursive call T(n)=T(n−1)+O(1)</td><td>n recursive calls</td><td>O(n)</td></tr>
+    <tr><td>Recursive call T(n)=T(n/2)+O(1)</td><td>log₂n recursive calls</td><td>O(log n)</td></tr>
+  </table>
+</div>
+
+<h3 class="sub">Space Complexity</h3>
+<div class="card">
+  <p><strong>Space Complexity</strong> is the total amount of memory an algorithm needs, made up of two parts:</p>
+  <div class="formula">S(n) = Fixed Part + Variable Part
+Fixed Part  → space for constants, simple variables, program code (independent of n)
+Variable Part → space for dynamically allocated structures, recursion stack, input-dependent arrays (depends on n)</div>
+  <p style="margin-top:8px;">For example, an <strong>iterative</strong> factorial function uses only O(1) extra space, while a <strong>recursive</strong> factorial function uses O(n) extra space due to n stacked function-call frames on the call stack.</p>
 </div>
 
 <h3 class="sub">Best, Worst &amp; Average Case</h3>
@@ -127,7 +199,7 @@
 
 <div class="card def">
   <div class="tag">📖 Definition</div>
-  <p style="margin-top:8px;"><strong>Asymptotic notations</strong> are mathematical tools (Big-O, Big-Omega, Big-Theta) used to describe the growth rate of an algorithm's running time as the input size n approaches infinity, allowing comparison of algorithms independent of hardware or constant factors.</p>
+  <p style="margin-top:8px;"><strong>Asymptotic notations</strong> are mathematical tools (Big-O, Big-Omega, Big-Theta, and their strict counterparts small-o and small-omega) used to describe the growth rate of an algorithm's running time as the input size n approaches infinity, allowing comparison of algorithms independent of hardware or constant factors.</p>
 </div>
 
 <div class="hin">
@@ -135,14 +207,17 @@
   <p style="margin-top:6px;">Asymptotic notations ek tarah se "upper bound", "lower bound" aur "tight bound" batate hain algorithm ki growth rate ki — bina exact constant factors ki chinta kiye. Yeh humein bade n (input size) ke liye algorithm ka behavior samajhne mein madad karte hain.</p>
 </div>
 
-<h3 class="sub">Three Main Notations</h3>
+<h3 class="sub">Five Asymptotic Notations</h3>
 <div class="card">
   <table style="margin-top:10px;">
     <tr><th>Notation</th><th>Bound Type</th><th>Mathematical Definition</th><th>Meaning</th></tr>
-    <tr><td><strong>O (Big-Oh)</strong></td><td>Upper bound</td><td>f(n) ≤ c·g(n) for n≥n₀</td><td>Worst-case growth rate (most commonly used)</td></tr>
-    <tr><td><strong>Ω (Omega)</strong></td><td>Lower bound</td><td>f(n) ≥ c·g(n) for n≥n₀</td><td>Best-case growth rate</td></tr>
-    <tr><td><strong>Θ (Theta)</strong></td><td>Tight bound</td><td>c₁·g(n) ≤ f(n) ≤ c₂·g(n)</td><td>Exact (average) growth rate, both bounds match</td></tr>
+    <tr><td><strong>O (Big-Oh)</strong></td><td>Upper bound (≤)</td><td>f(n) ≤ c·g(n) for n≥n₀</td><td>Worst-case growth rate (most commonly used)</td></tr>
+    <tr><td><strong>Ω (Omega)</strong></td><td>Lower bound (≥)</td><td>f(n) ≥ c·g(n) for n≥n₀</td><td>Best-case growth rate</td></tr>
+    <tr><td><strong>Θ (Theta)</strong></td><td>Tight bound (=)</td><td>c₁·g(n) ≤ f(n) ≤ c₂·g(n)</td><td>Exact (average) growth rate, both bounds match</td></tr>
+    <tr><td><strong>o (small-oh)</strong></td><td>Strict upper bound (&lt;)</td><td>f(n) &lt; c·g(n) for all c&gt;0</td><td>f(n) grows strictly slower than g(n)</td></tr>
+    <tr><td><strong>ω (small-omega)</strong></td><td>Strict lower bound (&gt;)</td><td>f(n) &gt; c·g(n) for all c&gt;0</td><td>f(n) grows strictly faster than g(n)</td></tr>
   </table>
+  <p style="margin-top:8px;">Big-O/Ω allow the case where f(n) and g(n) grow at exactly the same rate (non-strict, "≤"/"≥"); small-o/ω are strict versions ("&lt;"/"&gt;") that exclude equality of growth rate — a subtle but favorite viva/theory question.</p>
 </div>
 
 <div class="svgbox">
@@ -163,10 +238,92 @@
 <h3 class="sub">Common Growth Rates (Increasing Order)</h3>
 <div class="card">
   <div class="formula">O(1) < O(log n) < O(n) < O(n log n) < O(n&sup2;) < O(n&sup3;) < O(2&#x207F;) < O(n!)</div>
+  <table style="margin-top:12px;">
+    <tr><th>Growth Class</th><th>Name</th><th>Typical Algorithm</th></tr>
+    <tr><td>O(1)</td><td>Constant</td><td>Array index access, hash-table lookup</td></tr>
+    <tr><td>O(log n)</td><td>Logarithmic</td><td>Binary Search</td></tr>
+    <tr><td>O(n)</td><td>Linear</td><td>Linear Search, single loop</td></tr>
+    <tr><td>O(n log n)</td><td>Linearithmic</td><td>Merge Sort, Heap Sort, average Quick Sort</td></tr>
+    <tr><td>O(n&sup2;)</td><td>Quadratic</td><td>Bubble Sort, Insertion Sort, worst Quick Sort</td></tr>
+    <tr><td>O(n&sup3;)</td><td>Cubic</td><td>Conventional matrix multiplication</td></tr>
+    <tr><td>O(2&#x207F;)</td><td>Exponential</td><td>Brute-force subset generation, naive Fibonacci recursion</td></tr>
+  </table>
 </div>
 
-<!-- 2.4 DIVIDE AND CONQUER -->
-<h2 class="topic" id="u2-dac">2.4 Divide and Conquer Method <span class="imp h">EXAM HOT</span></h2>
+<!-- 2.4 GROWTH RATE SIMULATOR -->
+<h2 class="topic" id="u2-growthsim">2.4 Simulation: Growth-Rate Visualizer <span class="imp m">TRY IT</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Purpose</div>
+  <p style="margin-top:8px;">Drag the slider to change the input size <strong>n</strong> and instantly see how the operation counts of O(1), O(log n), O(n), O(n log n), and O(n²) diverge from each other — this is the single best way to *feel* why algorithmic complexity matters more than raw hardware speed as n grows.</p>
+</div>
+
+<div class="card" style="background:var(--surface2,#12151b);">
+  <div style="margin-bottom:10px;">
+    <label style="font-size:12px;color:var(--muted);">Input size n = <span id="gs-nval" style="color:var(--accent);font-weight:700;">20</span></label><br>
+    <input id="gs-slider" type="range" min="2" max="100" value="20" style="width:100%;">
+  </div>
+  <svg id="gs-svg" viewBox="0 0 600 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px;">
+    <line x1="45" y1="200" x2="580" y2="200" stroke="var(--muted)" stroke-width="1"/>
+    <line x1="45" y1="200" x2="45" y2="10" stroke="var(--muted)" stroke-width="1"/>
+    <path id="gs-log" fill="none" stroke="#22d3ee" stroke-width="2"/>
+    <path id="gs-n" fill="none" stroke="#4ade80" stroke-width="2"/>
+    <path id="gs-nlogn" fill="none" stroke="#facc15" stroke-width="2"/>
+    <path id="gs-n2" fill="none" stroke="#f87171" stroke-width="2"/>
+  </svg>
+  <div style="display:flex;flex-wrap:wrap;gap:14px;font-family:'Consolas',monospace;font-size:12px;margin-top:8px;">
+    <span style="color:#22d3ee;">■ O(log n) = <b id="gs-vlog"></b></span>
+    <span style="color:#4ade80;">■ O(n) = <b id="gs-vn"></b></span>
+    <span style="color:#facc15;">■ O(n log n) = <b id="gs-vnlogn"></b></span>
+    <span style="color:#f87171;">■ O(n²) = <b id="gs-vn2"></b></span>
+  </div>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Slider ko move karke dekho — chhote n par sab curves paas-paas hain, lekin n=100 tak jaate jaate O(n²) wali red curve baaki sabse kaafi upar nikal jaati hai. Yahi wajah hai ki O(n²) wale algorithms (jaise Bubble Sort) bade inputs ke liye impractical ho jaate hain, jabki O(n log n) wale (Merge/Quick Sort) scale kar paate hain.</p>
+</div>
+
+<script>
+(function(){
+  const slider = document.getElementById('gs-slider');
+  const nval = document.getElementById('gs-nval');
+  const maxN = 100;
+  const W = 535, H = 190, X0 = 45, Y0 = 200;
+  function pathFor(fn, capN){
+    let d = '';
+    for(let i=1;i<=capN;i++){
+      const x = X0 + (i/maxN)*W;
+      const val = fn(i);
+      const maxVal = fn(maxN);
+      const y = Y0 - (val/maxVal)*H;
+      d += (i===1? 'M':'L') + x.toFixed(1) + ',' + y.toFixed(1) + ' ';
+    }
+    return d;
+  }
+  function render(){
+    const n = parseInt(slider.value);
+    nval.textContent = n;
+    const fLog = x => Math.log2(x);
+    const fN = x => x;
+    const fNLogN = x => x*Math.log2(x||1);
+    const fN2 = x => x*x;
+    document.getElementById('gs-log').setAttribute('d', pathFor(fLog, maxN));
+    document.getElementById('gs-n').setAttribute('d', pathFor(fN, maxN));
+    document.getElementById('gs-nlogn').setAttribute('d', pathFor(fNLogN, maxN));
+    document.getElementById('gs-n2').setAttribute('d', pathFor(fN2, maxN));
+    document.getElementById('gs-vlog').textContent = fLog(n).toFixed(1);
+    document.getElementById('gs-vn').textContent = fN(n).toFixed(0);
+    document.getElementById('gs-vnlogn').textContent = fNLogN(n).toFixed(1);
+    document.getElementById('gs-vn2').textContent = fN2(n).toFixed(0);
+  }
+  slider.addEventListener('input', render);
+  render();
+})();
+</script>
+
+<!-- 2.5 DIVIDE AND CONQUER + MASTER THEOREM -->
+<h2 class="topic" id="u2-dac">2.5 Divide and Conquer Method + Master Theorem <span class="imp h">EXAM HOT</span></h2>
 
 <div class="card def">
   <div class="tag">📖 Definition</div>
@@ -194,8 +351,61 @@ where a = number of sub-problems, n/b = size of each sub-problem, f(n) = cost of
   <p>Solved using the <strong>Master Theorem</strong>, recursion tree method, or substitution method to get the closed-form time complexity.</p>
 </div>
 
-<!-- 2.5 BINARY SEARCH -->
-<h2 class="topic" id="u2-binsearch">2.5 Binary Search <span class="imp h">EXAM HOT — NUMERICAL</span></h2>
+<h3 class="sub">The Master Theorem — All 3 Cases <span class="imp h">EXAM HOT — MOST ASKED</span></h3>
+<div class="card">
+  <p>For a recurrence of the form <strong>T(n) = a·T(n/b) + f(n)</strong>, where a≥1, b&gt;1, compare f(n) with n<sup>log<sub>b</sub>a</sup>:</p>
+  <table style="margin-top:10px;">
+    <tr><th>Case</th><th>Condition</th><th>Result</th></tr>
+    <tr><td><strong>Case 1</strong></td><td>f(n) = O(n<sup>log<sub>b</sub>a &minus; ε</sup>) for some ε&gt;0 (f(n) grows polynomially slower)</td><td>T(n) = Θ(n<sup>log<sub>b</sub>a</sup>)</td></tr>
+    <tr><td><strong>Case 2</strong></td><td>f(n) = Θ(n<sup>log<sub>b</sub>a</sup>) (f(n) grows at the same rate)</td><td>T(n) = Θ(n<sup>log<sub>b</sub>a</sup> · log n)</td></tr>
+    <tr><td><strong>Case 3</strong></td><td>f(n) = Ω(n<sup>log<sub>b</sub>a + ε</sup>) for some ε&gt;0, and a·f(n/b) ≤ c·f(n) (regularity condition), (f(n) grows polynomially faster)</td><td>T(n) = Θ(f(n))</td></tr>
+  </table>
+</div>
+
+<div class="card example">
+  <div class="tag">💡 Worked Examples — One Per Case</div>
+  <p style="margin-top:6px;"><strong>Case 1:</strong> T(n) = 8T(n/2) + n² → a=8, b=2, n<sup>log₂8</sup>=n³. Since f(n)=n² grows slower than n³ → <strong>T(n) = Θ(n³)</strong>.</p>
+  <p style="margin-top:6px;"><strong>Case 2:</strong> T(n) = 2T(n/2) + n → a=2, b=2, n<sup>log₂2</sup>=n. Since f(n)=n matches n exactly → <strong>T(n) = Θ(n log n)</strong> (this is exactly Merge Sort's recurrence!).</p>
+  <p style="margin-top:6px;"><strong>Case 3:</strong> T(n) = 3T(n/4) + n² → a=3, b=4, n<sup>log₄3</sup> ≈ n<sup>0.79</sup>. Since f(n)=n² grows faster → <strong>T(n) = Θ(n²)</strong>.</p>
+</div>
+
+<h3 class="sub">Recursion Tree Method (Alternative to Master Theorem)</h3>
+<div class="card">
+  <p>The recursion tree method solves a recurrence by drawing out each level of recursive calls, computing the total work done at each level, then summing across all levels.</p>
+</div>
+
+<div class="svgbox">
+<svg viewBox="0 0 560 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:540px;">
+  <rect x="240" y="10" width="80" height="30" fill="none" stroke="var(--accent)" stroke-width="2"/>
+  <text x="280" y="30" font-size="11" text-anchor="middle">n</text>
+  <line x1="280" y1="40" x2="160" y2="75" stroke="var(--line)"/>
+  <line x1="280" y1="40" x2="400" y2="75" stroke="var(--line)"/>
+  <rect x="120" y="75" width="80" height="30" fill="none" stroke="var(--accent2)" stroke-width="2"/>
+  <text x="160" y="95" font-size="11" text-anchor="middle">n/2</text>
+  <rect x="360" y="75" width="80" height="30" fill="none" stroke="var(--accent2)" stroke-width="2"/>
+  <text x="400" y="95" font-size="11" text-anchor="middle">n/2</text>
+  <text x="470" y="95" font-size="11" fill="var(--muted)">Level 1: 2×(n/2)=n</text>
+  <line x1="160" y1="105" x2="90" y2="140" stroke="var(--line)"/>
+  <line x1="160" y1="105" x2="230" y2="140" stroke="var(--line)"/>
+  <line x1="400" y1="105" x2="330" y2="140" stroke="var(--line)"/>
+  <line x1="400" y1="105" x2="470" y2="140" stroke="var(--line)"/>
+  <rect x="55" y="140" width="70" height="26" fill="none" stroke="var(--muted)" stroke-width="1.5"/>
+  <text x="90" y="158" font-size="10" text-anchor="middle">n/4</text>
+  <rect x="195" y="140" width="70" height="26" fill="none" stroke="var(--muted)" stroke-width="1.5"/>
+  <text x="230" y="158" font-size="10" text-anchor="middle">n/4</text>
+  <rect x="295" y="140" width="70" height="26" fill="none" stroke="var(--muted)" stroke-width="1.5"/>
+  <text x="330" y="158" font-size="10" text-anchor="middle">n/4</text>
+  <rect x="435" y="140" width="70" height="26" fill="none" stroke="var(--muted)" stroke-width="1.5"/>
+  <text x="470" y="158" font-size="10" text-anchor="middle">n/4</text>
+  <text x="490" y="158" font-size="11" fill="var(--muted)">Level 2: 4×(n/4)=n</text>
+  <text x="250" y="200" font-size="11" fill="var(--muted)">... continues for log₂n levels, each level costing n ...</text>
+  <text x="200" y="230" font-size="13" fill="var(--accent)" font-weight="bold">Total = n × log₂n = Θ(n log n)</text>
+</svg>
+<div class="cap">Recursion tree for T(n)=2T(n/2)+n (Merge Sort): every level costs n, and there are log₂n levels</div>
+</div>
+
+<!-- 2.6 BINARY SEARCH -->
+<h2 class="topic" id="u2-binsearch">2.6 Binary Search <span class="imp h">EXAM HOT — NUMERICAL</span></h2>
 
 <div class="card def">
   <div class="tag">📖 Definition</div>
@@ -207,7 +417,7 @@ where a = number of sub-problems, n/b = size of each sub-problem, f(n) = cost of
   <p style="margin-top:6px;">Binary search sirf sorted array par kaam karta hai. Hum middle element check karte hain — agar target usse chhota hai toh left half mein search karo, bada hai toh right half mein, equal hai toh mil gaya. Har step par array aadha ho jaata hai, isliye yeh bahut fast hai.</p>
 </div>
 
-<h3 class="sub">Algorithm</h3>
+<h3 class="sub">Algorithm — Iterative</h3>
 <div class="card">
   <div class="formula">BinarySearch(A, low, high, key):
   while low <= high:
@@ -218,14 +428,25 @@ where a = number of sub-problems, n/b = size of each sub-problem, f(n) = cost of
   return -1   (not found)</div>
 </div>
 
+<h3 class="sub">Algorithm — Recursive</h3>
+<div class="card">
+  <div class="formula">BinarySearchRec(A, low, high, key):
+  if low > high: return -1
+  mid = (low + high) / 2
+  if A[mid] == key: return mid
+  else if A[mid] < key: return BinarySearchRec(A, mid+1, high, key)
+  else: return BinarySearchRec(A, low, mid-1, key)</div>
+</div>
+
 <h3 class="sub">Recurrence &amp; Complexity</h3>
 <div class="card">
-  <div class="formula">T(n) = T(n/2) + O(1)  →  T(n) = O(log n)</div>
+  <div class="formula">T(n) = T(n/2) + O(1)  →  T(n) = O(log n)   [Master Theorem: a=1, b=2, f(n)=O(1)=n⁰, log₂1=0, Case 2]</div>
   <table style="margin-top:10px;">
     <tr><th>Case</th><th>Complexity</th></tr>
     <tr><td>Best Case</td><td>O(1) (found at first middle)</td></tr>
     <tr><td>Worst/Average Case</td><td>O(log n)</td></tr>
     <tr><td>Space Complexity</td><td>O(1) iterative / O(log n) recursive (call stack)</td></tr>
+    <tr><td>Precondition</td><td>Array MUST already be sorted</td></tr>
   </table>
 </div>
 
@@ -234,8 +455,94 @@ where a = number of sub-problems, n/b = size of each sub-problem, f(n) = cost of
   <p style="margin-top:8px;">Search key=23 in sorted array [4,8,15,16,23,42,56]: low=0,high=6,mid=3→A[3]=16&lt;23→low=4; mid=5→A[5]=42&gt;23→high=4; mid=4→A[4]=23 → Found at index 4 in just 3 comparisons (vs up to 7 for linear search).</p>
 </div>
 
-<!-- 2.6 MERGE SORT -->
-<h2 class="topic" id="u2-mergesort">2.6 Merge Sort <span class="imp h">MUST KNOW — 10 MARK</span></h2>
+<!-- 2.7 BINARY SEARCH SIMULATOR -->
+<h2 class="topic" id="u2-binsim">2.7 Simulation: Binary Search Stepper <span class="imp m">TRY IT</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Purpose</div>
+  <p style="margin-top:8px;">Enter a sorted array and a target value, then click "Next Step" repeatedly to watch low/mid/high pointers move exactly the way an examiner expects you to show them in a dry-run answer.</p>
+</div>
+
+<div class="card" style="background:var(--surface2,#12151b);">
+  <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:end;margin-bottom:14px;">
+    <div>
+      <label style="display:block;font-size:12px;color:var(--muted);margin-bottom:4px;">Sorted array (comma separated)</label>
+      <input id="bs-arr" type="text" value="4,8,15,16,23,42,56,68,71" style="width:260px;padding:8px;border-radius:6px;border:1px solid var(--border,#333);background:var(--surface,#0b0d10);color:inherit;">
+    </div>
+    <div>
+      <label style="display:block;font-size:12px;color:var(--muted);margin-bottom:4px;">Target key</label>
+      <input id="bs-key" type="number" value="42" style="width:100px;padding:8px;border-radius:6px;border:1px solid var(--border,#333);background:var(--surface,#0b0d10);color:inherit;">
+    </div>
+    <button onclick="bsStart()" style="padding:9px 16px;border-radius:6px;border:none;background:var(--accent2);color:#000;font-weight:700;cursor:pointer;">Start / Reset ↺</button>
+    <button onclick="bsNext()" style="padding:9px 16px;border-radius:6px;border:none;background:var(--accent);color:#000;font-weight:700;cursor:pointer;">Next Step ▶</button>
+  </div>
+  <div id="bs-boxes" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;"></div>
+  <div id="bs-log" style="font-family:'Consolas',monospace;font-size:13px;line-height:1.8;color:var(--muted);white-space:pre-wrap;"></div>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">Apna khud ka sorted array aur target daal ke "Next Step" click karte jao — box ke rang se pata chalega konsa element ab low/mid/high hai, aur neeche log mein har comparison ka reasoning bhi likha milega, bilkul jaise exam mein dry-run dikhate hain.</p>
+</div>
+
+<script>
+let bsState = null;
+function bsRender(){
+  const arr = bsState.arr;
+  const boxes = document.getElementById('bs-boxes');
+  boxes.innerHTML = '';
+  arr.forEach((v,i)=>{
+    let bg = 'transparent', bd = 'var(--border,#333)', col='inherit';
+    if(bsState.finished && i===bsState.foundIdx){ bd='var(--accent2)'; bg='rgba(74,222,128,0.25)'; }
+    else if(i===bsState.mid && !bsState.finished){ bd='var(--accent)'; bg='rgba(34,211,238,0.25)'; }
+    else if(i===bsState.low || i===bsState.high){ bd='var(--accent2)'; }
+    else if(i<bsState.low || i>bsState.high){ col='var(--muted)'; bg='rgba(255,255,255,0.03)'; }
+    const div = document.createElement('div');
+    div.style.cssText = `min-width:42px;padding:8px 4px;text-align:center;border:2px solid ${bd};background:${bg};color:${col};border-radius:6px;font-family:'Consolas',monospace;font-size:12px;`;
+    div.innerHTML = v + '<br><span style="font-size:9px;color:var(--muted);">'+i+'</span>';
+    boxes.appendChild(div);
+  });
+}
+function bsStart(){
+  const arr = document.getElementById('bs-arr').value.split(',').map(x=>parseInt(x.trim())).filter(x=>!isNaN(x)).sort((a,b)=>a-b);
+  const key = parseInt(document.getElementById('bs-key').value);
+  bsState = {arr, key, low:0, high:arr.length-1, mid:Math.floor((arr.length-1)/2), finished:false, foundIdx:-1, step:0};
+  bsState.mid = Math.floor((bsState.low+bsState.high)/2);
+  document.getElementById('bs-log').textContent = `Array sorted: [${arr.join(', ')}]\nSearching for key = ${key}\nClick "Next Step" to begin.`;
+  bsRender();
+}
+function bsNext(){
+  if(!bsState){ bsStart(); return; }
+  if(bsState.finished){ return; }
+  const {arr, key} = bsState;
+  if(bsState.low > bsState.high){
+    bsState.finished = true;
+    document.getElementById('bs-log').textContent += `\nStep ${++bsState.step}: low(${bsState.low}) > high(${bsState.high}) → key NOT FOUND in array.`;
+    bsRender();
+    return;
+  }
+  const mid = Math.floor((bsState.low+bsState.high)/2);
+  bsState.mid = mid;
+  let line = `Step ${++bsState.step}: low=${bsState.low}, high=${bsState.high}, mid=${mid} → A[mid]=${arr[mid]}. `;
+  if(arr[mid] === key){
+    line += `A[mid] == key → FOUND at index ${mid}!`;
+    bsState.finished = true;
+    bsState.foundIdx = mid;
+  } else if(arr[mid] < key){
+    line += `A[mid] < key → search RIGHT half → low = ${mid+1}`;
+    bsState.low = mid+1;
+  } else {
+    line += `A[mid] > key → search LEFT half → high = ${mid-1}`;
+    bsState.high = mid-1;
+  }
+  document.getElementById('bs-log').textContent += '\n' + line;
+  bsRender();
+}
+window.addEventListener('DOMContentLoaded', bsStart);
+</script>
+
+<!-- 2.8 MERGE SORT -->
+<h2 class="topic" id="u2-mergesort">2.8 Merge Sort <span class="imp h">MUST KNOW — 10 MARK</span></h2>
 
 <div class="card def">
   <div class="tag">📖 Definition</div>
@@ -264,7 +571,7 @@ Merge(A, low, mid, high):
 
 <h3 class="sub">Recurrence &amp; Complexity</h3>
 <div class="card">
-  <div class="formula">T(n) = 2T(n/2) + O(n)   →   T(n) = O(n log n)   (by Master Theorem)</div>
+  <div class="formula">T(n) = 2T(n/2) + O(n)   →   T(n) = O(n log n)   (by Master Theorem, Case 2)</div>
   <table style="margin-top:10px;">
     <tr><th>Case</th><th>Time Complexity</th></tr>
     <tr><td>Best / Average / Worst</td><td>O(n log n) — same in all cases</td></tr>
@@ -292,8 +599,19 @@ Merge(A, low, mid, high):
 <div class="cap">Merge sort: split into halves recursively, then merge sorted halves back together</div>
 </div>
 
-<!-- 2.7 QUICK SORT -->
-<h2 class="topic" id="u2-quicksort">2.7 Quick Sort <span class="imp h">EXAM HOT — NUMERICAL</span></h2>
+<div class="card example">
+  <div class="tag">💡 Full Dry-Run: Sort [38,27,43,3,9,82,10]</div>
+  <p style="margin-top:6px;">Splitting continues until single elements: [38],[27],[43],[3],[9],[82],[10]. Merging bottom-up:</p>
+  <div class="formula">Merge [38] & [27] → [27,38]
+Merge [43] & [3]  → [3,43]
+Merge [27,38] & [3,43] → [3,27,38,43]
+Merge [9] & [82]  → [9,82]
+Merge [9,82] & [10] → [9,10,82]
+Merge [3,27,38,43] & [9,10,82] → [3,9,10,27,38,43,82]  (final sorted array)</div>
+</div>
+
+<!-- 2.9 QUICK SORT -->
+<h2 class="topic" id="u2-quicksort">2.9 Quick Sort <span class="imp h">EXAM HOT — NUMERICAL</span></h2>
 
 <div class="card def">
   <div class="tag">📖 Definition</div>
@@ -323,6 +641,28 @@ Partition(A, low, high):
   return i+1</div>
 </div>
 
+<h3 class="sub">Hoare Partition Scheme (Alternative)</h3>
+<div class="card">
+  <p>The original scheme proposed by Tony Hoare uses two pointers moving toward each other from both ends, swapping out-of-place pairs, and is generally more efficient (fewer swaps) than Lomuto's scheme, though slightly trickier to implement correctly.</p>
+  <div class="formula">HoarePartition(A, low, high):
+  pivot = A[low]
+  i = low - 1; j = high + 1
+  loop:
+      do i++ while A[i] < pivot
+      do j-- while A[j] > pivot
+      if i >= j: return j
+      swap(A[i], A[j])</div>
+</div>
+
+<h3 class="sub">Pivot Selection Strategies</h3>
+<div class="card">
+  <ul>
+    <li><strong>First/Last Element:</strong> Simplest, but gives O(n²) worst case on already-sorted or reverse-sorted input.</li>
+    <li><strong>Random Pivot:</strong> Picking a random index as pivot makes worst-case behaviour extremely unlikely in practice, giving expected O(n log n).</li>
+    <li><strong>Median-of-Three:</strong> Choosing the median of the first, middle, and last elements as the pivot — avoids the worst case for sorted/nearly-sorted inputs, commonly used in production sort libraries.</li>
+  </ul>
+</div>
+
 <h3 class="sub">Complexity Analysis</h3>
 <div class="card">
   <table style="margin-top:10px;">
@@ -346,8 +686,141 @@ j=5: 50<70 → i=3, swap(A[3],A[5]) → [10,30,40,50,80,90,70]
 Final: swap(A[4],A[6]) → [10,30,40,50,70,90,80]; pivot 70 placed at index 4</div>
 </div>
 
-<!-- 2.8 STRASSEN -->
-<h2 class="topic" id="u2-strassen">2.8 Strassen's Matrix Multiplication <span class="imp h">EXAM HOT — 10 MARK</span></h2>
+<!-- 2.10 SORTING VISUALIZER -->
+<h2 class="topic" id="u2-sortsim">2.10 Simulation: Sorting Visualizer (Merge vs Quick Sort) <span class="imp m">TRY IT</span></h2>
+
+<div class="card def">
+  <div class="tag">📖 Purpose</div>
+  <p style="margin-top:8px;">Watch Merge Sort and Quick Sort operate on the same random array, bar-by-bar, step-by-step — with a live description of exactly what comparison/swap/merge is happening at each moment.</p>
+</div>
+
+<div class="card" style="background:var(--surface2,#12151b);">
+  <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+    <button onclick="svNewArray()" style="padding:9px 14px;border-radius:6px;border:none;background:var(--surface,#0b0d10);border:1px solid var(--border,#333);color:inherit;cursor:pointer;">🎲 New Random Array</button>
+    <button onclick="svRun('merge')" style="padding:9px 14px;border-radius:6px;border:none;background:var(--accent);color:#000;font-weight:700;cursor:pointer;">▶ Run Merge Sort</button>
+    <button onclick="svRun('quick')" style="padding:9px 14px;border-radius:6px;border:none;background:var(--accent2);color:#000;font-weight:700;cursor:pointer;">▶ Run Quick Sort</button>
+    <button onclick="svPause()" style="padding:9px 14px;border-radius:6px;border:1px solid var(--border,#333);background:transparent;color:inherit;cursor:pointer;">⏸ Pause/Resume</button>
+  </div>
+  <div id="sv-bars" style="display:flex;align-items:flex-end;gap:5px;height:180px;border-bottom:2px solid var(--line);padding:0 4px;"></div>
+  <div id="sv-note" style="font-family:'Consolas',monospace;font-size:12px;color:var(--muted);margin-top:10px;min-height:20px;"></div>
+</div>
+
+<div class="hin">
+  <div class="tag">🗣️ Hinglish</div>
+  <p style="margin-top:6px;">"New Random Array" se ek naya array banega, phir "Run Merge Sort" ya "Run Quick Sort" click karke dekho ki har algorithm alag tareeke se bars ko kaise sort karta hai — highlighted bars wahi elements hain jo us step mein compare/swap ho rahe hain. Neeche description line mein exact operation likha rehta hai.</p>
+</div>
+
+<script>
+let svArray = [];
+let svTimer = null;
+let svPaused = false;
+let svSteps = [];
+let svIdx = 0;
+
+function svGenArray(){
+  svArray = [];
+  for(let i=0;i<12;i++) svArray.push(Math.floor(Math.random()*85)+10);
+}
+
+function svRenderBars(arr, highlight, note){
+  const container = document.getElementById('sv-bars');
+  container.innerHTML = '';
+  const maxV = Math.max(...arr, 10);
+  arr.forEach((v,i)=>{
+    const bar = document.createElement('div');
+    const isHi = highlight && highlight.includes(i);
+    bar.style.cssText = `width:${100/arr.length}%;max-width:40px;height:${(v/maxV)*150}px;background:${isHi?'var(--accent)':'var(--accent2)'};opacity:${isHi?1:0.55};border-radius:4px 4px 0 0;display:flex;align-items:flex-start;justify-content:center;transition:height 0.25s;`;
+    bar.innerHTML = `<span style="font-size:10px;color:#000;background:${isHi?'var(--accent)':'transparent'};padding:1px 3px;border-radius:3px;margin-top:-16px;">${v}</span>`;
+    container.appendChild(bar);
+  });
+  document.getElementById('sv-note').textContent = note || '';
+}
+
+function svNewArray(){
+  clearInterval(svTimer); svTimer=null; svPaused=false; svSteps=[]; svIdx=0;
+  svGenArray();
+  svRenderBars(svArray, [], 'New array generated. Choose an algorithm to run.');
+}
+
+function mergeSortRecord(inputArr){
+  let steps = [];
+  let a = inputArr.slice();
+  function merge(a,l,m,r){
+    let left = a.slice(l,m+1), right = a.slice(m+1,r+1);
+    let i=0,j=0,k=l;
+    while(i<left.length && j<right.length){
+      if(left[i]<=right[j]){ a[k]=left[i]; i++; } else { a[k]=right[j]; j++; }
+      steps.push({array:a.slice(), highlight:[k], note:`Merging range [${l}..${r}]: placing ${a[k]} at index ${k}`});
+      k++;
+    }
+    while(i<left.length){ a[k]=left[i]; steps.push({array:a.slice(), highlight:[k], note:`Copy remaining left element ${a[k]} to index ${k}`}); i++;k++; }
+    while(j<right.length){ a[k]=right[j]; steps.push({array:a.slice(), highlight:[k], note:`Copy remaining right element ${a[k]} to index ${k}`}); j++;k++; }
+  }
+  function ms(a,l,r){
+    if(l>=r) return;
+    let m = Math.floor((l+r)/2);
+    ms(a,l,m); ms(a,m+1,r); merge(a,l,m,r);
+  }
+  ms(a,0,a.length-1);
+  return steps;
+}
+
+function quickSortRecord(inputArr){
+  let steps = [];
+  let a = inputArr.slice();
+  function partition(a,low,high){
+    let pivot = a[high];
+    let i = low-1;
+    for(let j=low;j<high;j++){
+      steps.push({array:a.slice(), highlight:[j,high], note:`Compare A[${j}]=${a[j]} with pivot ${pivot} (at index ${high})`});
+      if(a[j] < pivot){
+        i++;
+        [a[i],a[j]] = [a[j],a[i]];
+        steps.push({array:a.slice(), highlight:[i,j], note:`${a[j]} < pivot → swap into position (index ${i})`});
+      }
+    }
+    [a[i+1],a[high]] = [a[high],a[i+1]];
+    steps.push({array:a.slice(), highlight:[i+1], note:`Place pivot ${pivot} at its final sorted index ${i+1}`});
+    return i+1;
+  }
+  function qs(a,low,high){
+    if(low<high){
+      let pi = partition(a,low,high);
+      qs(a,low,pi-1); qs(a,pi+1,high);
+    }
+  }
+  qs(a,0,a.length-1);
+  return steps;
+}
+
+function svRun(kind){
+  clearInterval(svTimer); svTimer=null; svPaused=false;
+  svSteps = kind==='merge' ? mergeSortRecord(svArray) : quickSortRecord(svArray);
+  svIdx = 0;
+  document.getElementById('sv-note').textContent = `Running ${kind==='merge'?'Merge':'Quick'} Sort...`;
+  svTimer = setInterval(()=>{
+    if(svPaused) return;
+    if(svIdx >= svSteps.length){
+      clearInterval(svTimer); svTimer=null;
+      svRenderBars(svArray.slice().sort((x,y)=>x-y), [], '✅ Sorted! Array is now in ascending order.');
+      return;
+    }
+    const step = svSteps[svIdx];
+    svRenderBars(step.array, step.highlight, `Step ${svIdx+1}/${svSteps.length}: ${step.note}`);
+    svIdx++;
+  }, 450);
+}
+
+function svPause(){
+  if(!svTimer) return;
+  svPaused = !svPaused;
+}
+
+window.addEventListener('DOMContentLoaded', svNewArray);
+</script>
+
+<!-- 2.11 STRASSEN -->
+<h2 class="topic" id="u2-strassen">2.11 Strassen's Matrix Multiplication <span class="imp h">EXAM HOT — 10 MARK</span></h2>
 
 <div class="card def">
   <div class="tag">📖 Definition</div>
@@ -357,6 +830,13 @@ Final: swap(A[4],A[6]) → [10,30,40,50,70,90,80]; pivot 70 placed at index 4</d
 <div class="hin">
   <div class="tag">🗣️ Hinglish</div>
   <p style="margin-top:6px;">Normal matrix multiplication mein har 2×2 block-multiplication ke liye 8 multiplications lagti hain, jisse O(n&sup3;) complexity aati hai. Strassen ne ek clever trick nikala jisse sirf 7 multiplications (aur extra additions/subtractions) se kaam ho jaata hai. Multiplication, addition se zyada costly operation maana jaata hai, isliye multiplications kam karne se overall complexity improve ho jaati hai → O(n^2.81).</p>
+</div>
+
+<h3 class="sub">Conventional Method (Recap)</h3>
+<div class="card">
+  <p>For two n×n matrices, the conventional definition-based method computes each output element as a dot product of a row and a column, requiring n multiplications per element across n² elements:</p>
+  <div class="formula">C[i][j] = Σ (A[i][k] × B[k][j]) for k=1 to n
+Total operations = n × n × n = n&sup3;  →  O(n&sup3;)</div>
 </div>
 
 <h3 class="sub">Strassen's 7 Multiplications</h3>
@@ -376,20 +856,40 @@ C21 = M2+M4
 C22 = M1&#x2212;M2+M3+M6</div>
 </div>
 
-<h3 class="sub">Recurrence &amp; Complexity</h3>
-<div class="card">
-  <div class="formula">T(n) = 7T(n/2) + O(n&sup2;)   →   T(n) = O(n^log&#x2082;7) &#x2248; O(n^2.81)</div>
-  <p>This is asymptotically faster than the conventional method's O(n&sup3;), especially noticeable for very large matrices.</p>
+<div class="card example">
+  <div class="tag">💡 Fully Worked Numeric Example</div>
+  <p style="margin-top:6px;">Multiply A = [[1,2],[3,4]] and B = [[5,6],[7,8]] using Strassen's method. Here A11=1, A12=2, A21=3, A22=4, B11=5, B12=6, B21=7, B22=8.</p>
+  <div class="formula">M1 = (1+4)(5+8) = 5×13 = 65
+M2 = (3+4)×5   = 7×5  = 35
+M3 = 1×(6&#x2212;8)  = 1×(&minus;2) = &minus;2
+M4 = 4×(7&#x2212;5)  = 4×2  = 8
+M5 = (1+2)×8   = 3×8  = 24
+M6 = (3&#x2212;1)(5+6) = 2×11 = 22
+M7 = (2&#x2212;4)(7+8) = (&minus;2)×15 = &minus;30
+
+C11 = M1+M4&#x2212;M5+M7 = 65+8&#x2212;24&#x2212;30 = 19
+C12 = M3+M5           = &minus;2+24        = 22
+C21 = M2+M4           = 35+8          = 43
+C22 = M1&#x2212;M2+M3+M6   = 65&#x2212;35&minus;2+22  = 50
+
+Result C = [[19,22],[43,50]]  (matches conventional multiplication ✓)</div>
 </div>
 
-<!-- 2.9 TABLES -->
-<h2 class="topic" id="u2-tables">2.9 Important Comparison Tables <span class="imp h">RAPID REVISION</span></h2>
+<h3 class="sub">Recurrence &amp; Complexity</h3>
+<div class="card">
+  <div class="formula">T(n) = 7T(n/2) + O(n&sup2;)   →   T(n) = O(n^log&#x2082;7) &#x2248; O(n^2.81)   [Master Theorem Case 1: n^log₂7 ≈ n^2.81 &gt; n²]</div>
+  <p>This is asymptotically faster than the conventional method's O(n&sup3;), especially noticeable for very large matrices — although the larger constant factor and additional additions make it beneficial mainly for large n in practice.</p>
+</div>
+
+<!-- 2.12 TABLES -->
+<h2 class="topic" id="u2-tables">2.12 Important Comparison Tables <span class="imp h">RAPID REVISION</span></h2>
 
 <h3 class="sub">Merge Sort vs Quick Sort</h3>
 <div class="card">
   <table style="margin-top:10px;">
     <tr><th>Basis</th><th>Merge Sort</th><th>Quick Sort</th></tr>
     <tr><td>Worst-case Time</td><td>O(n log n)</td><td>O(n&sup2;)</td></tr>
+    <tr><td>Best/Average Time</td><td>O(n log n)</td><td>O(n log n)</td></tr>
     <tr><td>Space</td><td>O(n) (extra array needed)</td><td>O(log n) (in-place)</td></tr>
     <tr><td>Stability</td><td>Stable</td><td>Not stable</td></tr>
     <tr><td>Approach</td><td>Divide equally, then merge (work in combine step)</td><td>Partition around pivot, then recurse (work in divide step)</td></tr>
@@ -407,15 +907,35 @@ C22 = M1&#x2212;M2+M3+M6</div>
   </table>
 </div>
 
-<!-- 2.10 Q&A -->
-<h2 class="topic" id="u2-qa">2.10 RTU Exam Questions &amp; Answers (Importance-Wise)</h2>
+<h3 class="sub">Binary Search vs Linear Search</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Basis</th><th>Linear Search</th><th>Binary Search</th></tr>
+    <tr><td>Precondition</td><td>None — works on unsorted data</td><td>Array must be sorted</td></tr>
+    <tr><td>Time Complexity</td><td>O(n)</td><td>O(log n)</td></tr>
+    <tr><td>Approach</td><td>Sequential Access</td><td>Divide and Conquer</td></tr>
+  </table>
+</div>
+
+<h3 class="sub">Master Theorem Cases — Quick Reference</h3>
+<div class="card">
+  <table style="margin-top:10px;">
+    <tr><th>Case</th><th>Rule of Thumb</th><th>Result</th></tr>
+    <tr><td>1</td><td>Combine cost f(n) is smaller than n<sup>log_b a</sup></td><td>Θ(n<sup>log_b a</sup>)</td></tr>
+    <tr><td>2</td><td>Combine cost f(n) equals n<sup>log_b a</sup></td><td>Θ(n<sup>log_b a</sup> log n)</td></tr>
+    <tr><td>3</td><td>Combine cost f(n) is larger than n<sup>log_b a</sup></td><td>Θ(f(n))</td></tr>
+  </table>
+</div>
+
+<!-- 2.13 Q&A -->
+<h2 class="topic" id="u2-qa">2.13 RTU Exam Questions &amp; Answers (Importance-Wise)</h2>
 <div id="qsection">
 
   <div class="qcard">
     <div class="qlabel">Q1</div>
     <div class="q">Define algorithm and explain its characteristics. How is complexity of an algorithm calculated? <span class="marks m10">10 Marks</span></div>
     <div class="a">
-      <p>An algorithm is a finite sequence of unambiguous, well-defined steps that transforms given input into the desired output. Its key characteristics are input, output, finiteness, definiteness, and effectiveness. Complexity is calculated by identifying the basic operation in the algorithm, counting its frequency as a function of input size n (e.g., a single loop gives O(n), nested loops give O(n&sup2;), a halving loop gives O(log n)), and then retaining only the dominant term while ignoring constants, to express time complexity asymptotically.</p>
+      <p>An algorithm is a finite sequence of unambiguous, well-defined steps that transforms given input into the desired output. Its key characteristics are input, output, finiteness, definiteness, effectiveness, and generality. Complexity is calculated by identifying the basic operation in the algorithm, counting its frequency as a function of input size n (e.g., a single loop gives O(n), nested loops give O(n&sup2;), a halving loop gives O(log n)), and then retaining only the dominant term while ignoring constants, to express time complexity asymptotically.</p>
     </div>
   </div>
 
@@ -431,7 +951,7 @@ C22 = M1&#x2212;M2+M3+M6</div>
     <div class="qlabel">Q3</div>
     <div class="q">Explain Merge Sort algorithm with example and derive its time complexity. <span class="marks m10">10 Marks</span></div>
     <div class="a">
-      <p>Merge Sort recursively divides the array into two halves until single-element sub-arrays remain, then repeatedly merges adjacent sorted sub-arrays by comparing their front elements until the entire array is sorted, as illustrated by sorting [38,27,43,3,9,82,10] down to single elements and merging back up. Its recurrence is T(n) = 2T(n/2) + O(n), which by the Master Theorem resolves to T(n) = O(n log n) in all cases (best, worst, and average), with O(n) additional space required for merging.</p>
+      <p>Merge Sort recursively divides the array into two halves until single-element sub-arrays remain, then repeatedly merges adjacent sorted sub-arrays by comparing their front elements until the entire array is sorted, as illustrated by sorting [38,27,43,3,9,82,10] down to single elements and merging back up. Its recurrence is T(n) = 2T(n/2) + O(n), which by the Master Theorem (Case 2) resolves to T(n) = O(n log n) in all cases (best, worst, and average), with O(n) additional space required for merging.</p>
     </div>
   </div>
 
@@ -491,6 +1011,22 @@ C22 = M1&#x2212;M2+M3+M6</div>
     </div>
   </div>
 
+  <div class="qcard">
+    <div class="qlabel">Q11</div>
+    <div class="q">State the Master Theorem with all three cases and solve T(n) = 2T(n/2) + n log n. <span class="marks m10">10 Marks</span></div>
+    <div class="a">
+      <p>For T(n) = aT(n/b) + f(n): Case 1 applies when f(n) = O(n^(log_b a &minus; ε)), giving T(n) = Θ(n^log_b a); Case 2 applies when f(n) = Θ(n^log_b a), giving T(n) = Θ(n^log_b a · log n); and Case 3 applies when f(n) = Ω(n^(log_b a + ε)) with a regularity condition, giving T(n) = Θ(f(n)). For T(n) = 2T(n/2) + n log n: a=2, b=2, so n^log_b a = n. Since f(n) = n log n grows faster than n by more than a polynomial factor of log n (technically a boundary case between Case 2 and 3, solved via the extended/Akra-Bazzi form), the result is T(n) = Θ(n log&sup2;n).</p>
+    </div>
+  </div>
+
+  <div class="qcard">
+    <div class="qlabel">Q12</div>
+    <div class="q">Explain space complexity with an example comparing iterative and recursive implementations. <span class="marks m5">5 Marks</span></div>
+    <div class="a">
+      <p>Space complexity is the total memory an algorithm needs, consisting of a fixed part (constants, simple variables, code) and a variable part (dynamic allocations, recursion stack, input-dependent structures) that grows with input size n. An iterative factorial function uses only a constant number of variables regardless of n, giving O(1) space, whereas a recursive factorial function creates a new stack frame for each recursive call down to the base case, requiring O(n) space on the call stack.</p>
+    </div>
+  </div>
+
 </div><!-- end qsection -->
 
 <!-- CHEAT SHEET -->
@@ -500,6 +1036,9 @@ C22 = M1&#x2212;M2+M3+M6</div>
     <div class="formula" style="margin:3px 0; font-size:12px;">O = upper bound, Ω = lower bound, Θ = tight bound</div>
     <div class="formula" style="margin:3px 0; font-size:12px;">Growth: O(1)<O(log n)<O(n)<O(n log n)<O(n&sup2;)<O(2&#x207F;)</div>
     <div class="formula" style="margin:3px 0; font-size:12px;">D&amp;C recurrence: T(n) = aT(n/b) + f(n)</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Master Case 1: f(n)&lt;n^log_b(a) → Θ(n^log_b(a))</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Master Case 2: f(n)=n^log_b(a) → Θ(n^log_b(a) log n)</div>
+    <div class="formula" style="margin:3px 0; font-size:12px;">Master Case 3: f(n)&gt;n^log_b(a) → Θ(f(n))</div>
     <div class="formula" style="margin:3px 0; font-size:12px;">Binary Search: T(n)=T(n/2)+O(1) → O(log n)</div>
     <div class="formula" style="margin:3px 0; font-size:12px;">Merge Sort: T(n)=2T(n/2)+O(n) → O(n log n)</div>
     <div class="formula" style="margin:3px 0; font-size:12px;">Quick Sort best/avg: O(n log n); worst: O(n&sup2;)</div>
@@ -514,7 +1053,7 @@ C22 = M1&#x2212;M2+M3+M6</div>
 <div style="margin-top:50px; padding:20px 24px; border:1px dashed var(--line); border-radius:10px; color:var(--muted); font-size:13px;">
   <div style="color:var(--accent); font-family:'Consolas',monospace; font-weight:700; margin-bottom:6px;">ZYREX // AOA_VAULT — UNIT 2 · Background &amp; Divide and Conquer</div>
   <p>RTU B.Tech CSE 5th Semester · 5CS4-05 Analysis of Algorithms · Unit 2 of 6</p>
-  <p style="margin-top:6px;">📌 Key formulas: Asymptotic notations · D&amp;C recurrence T(n)=aT(n/b)+f(n) · Merge/Quick Sort complexities · Strassen's 7-multiplication trick</p>
+  <p style="margin-top:6px;">📌 Key formulas: Asymptotic notations · Master Theorem (3 cases) · D&amp;C recurrence T(n)=aT(n/b)+f(n) · Merge/Quick Sort complexities · Strassen's 7-multiplication trick</p>
   <p style="margin-top:6px;">⚡ Unit 3 — Greedy Method &amp; Dynamic Programming can be appended directly below this section.</p>
 </div>
 
@@ -543,5 +1082,6 @@ C22 = M1&#x2212;M2+M3+M6</div>
       el.addEventListener("mouseleave",()=>cursorOutline.classList.remove("cursor-hovering"));
     });
   </script>
-<script src="../splash-cursor.js"></script>\n</body>
+<script src="../splash-cursor.js"></script>
+</body>
 </html>
