@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Learning Plus // HCI · Unit 1</title>
+<link rel="stylesheet" href="../style.css">
+<style>
+  /* extra styles scoped to this page only — additive, does not touch style.css */
+  .simbox{background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:22px;margin:20px 0;}
+  .simbox .simtitle{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--purple);font-weight:700;margin-bottom:14px;}
+  .sim-row{display:flex;gap:20px;flex-wrap:wrap;}
+  .sim-col{flex:1;min-width:230px;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:18px;text-align:center;}
+  .sim-col h4{font-size:13px;margin-bottom:12px;}
+  .bad-btn{background:#e5e7eb;color:#9ca3af;border:1px solid #d1d5db;padding:6px 10px;font-size:11px;border-radius:2px;cursor:not-allowed;margin:4px;}
+  .bad-input{width:90%;padding:4px;font-size:11px;border:1px solid #d1d5db;margin:6px 0;background:#f3f4f6;color:#6b7280;}
+  .good-btn{background:var(--accent);color:#fff;border:none;padding:10px 18px;font-size:14px;border-radius:8px;cursor:pointer;box-shadow:0 4px 14px rgba(37,99,235,0.3);font-weight:600;margin:4px;transition:.2s;}
+  .good-btn:hover{background:var(--accent-hover);transform:translateY(-2px);}
+  .good-input{width:88%;padding:10px 12px;font-size:13px;border:1.5px solid var(--border2);margin:8px 0;border-radius:8px;outline:none;}
+  .good-input:focus{border-color:var(--accent);}
+  .sim-verdict{font-size:11px;font-weight:700;margin-top:10px;padding:4px 10px;border-radius:20px;display:inline-block;}
+  .verdict-bad{background:var(--red-light);color:var(--red);}
+  .verdict-good{background:var(--green-light);color:var(--green);}
+  .field-pill{display:inline-block;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;margin:4px;border:1.5px solid var(--border);}
+  .note{background:#f0f9ff;border-left:3px solid var(--accent2);border-radius:var(--radius-sm);padding:14px 16px;margin:14px 0;font-size:13px;color:#0369a1;}
+  .note b{color:#0c4a6e;}
+</style>
+</head>
+<body>
+  <main class="main-wrapper" style="width:100%;">
+    <div class="topbar">
+      <a href="index.html" class="back-btn">⬅ HCI Hub</a>
+      <div class="brand">Smart<span>Learning</span>+ <span style="color:var(--muted);font-weight:400;font-size:14px;">// HCI · Unit 1</span></div>
+      <div class="nav">
+        <a href="index.html">🏠 HCI Hub</a>
+        <a href="#content">📖 Content</a>
+        <a href="#qa">❓ Q&A</a>
+        <a href="unit2.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="hero">
+        <h1>🖥️ Unit 1 — Introduction</h1>
+        <p>Objective, Scope and Outcome of the Course | Hours: 01</p>
+        <div class="badges" style="margin-top:14px;">
+          <a href="index.html" style="text-decoration:none;"><span class="badge b-teal">← Back to HCI Hub</span></a>
+          <span class="badge b-gold">5CS5-12 · HCI · RTU</span>
+        </div>
+      </div>
+
+      <div id="content">
+        <h1 class="unit-title" id="unit1">🖥️ UNIT 1 — Introduction</h1>
+        <p class="unit-sub">Objective, Scope and Outcome of the Course &nbsp;|&nbsp; Hours: 01</p>
+
+        <div class="card def">
+          <span class="tag">English</span>
+          <p><b>Human-Computer Interaction (HCI)</b> is the multidisciplinary field of study concerned with the design, evaluation, and implementation of interactive computing systems for human use, and with the study of the major phenomena surrounding them. It focuses on making the interaction between a human user and a computer system <b>effective, efficient, safe, and satisfying</b>.</p>
+        </div>
+        <div class="hin">
+          <span class="tag">Hinglish</span>
+          <p>HCI ka simple matlab hai — <b>insaan aur computer ke beech ka interaction kaise better banaya jaye</b>. Jab tum kisi app ya website ko use karte ho aur woh "easy to use" lagti hai, toh uske peeche HCI ki research hoti hai. Agar koi app confusing hai, buttons samajh nahi aate, error aata hai bina reason ke — yeh sab HCI ki problems hain jo yeh subject solve karna sikhata hai.</p>
+        </div>
+
+        <h2 class="topic">Why HCI Matters <span class="imp m">Medium</span></h2>
+        <div class="card">
+          <p>Every piece of software — a banking app, a trading terminal, a college ERP portal, a car's dashboard — is eventually operated by a human. No matter how powerful the backend logic is, if the <b>interface</b> is confusing, users make mistakes, get frustrated, or abandon the product entirely. HCI exists to prevent exactly this by applying scientific principles of psychology, design, and engineering to interface design.</p>
+        </div>
+        <div class="hin">
+          <span class="tag">Hinglish</span>
+          <p>Tum khud ek trading bot/dashboard bana rahe ho — agar uska UI confusing hai (buttons kahan hain, alert kaise dikhega), toh chahe backend kitna bhi accurate ho, user use hi nahi kar payega. Isliye HCI sirf "design" nahi, balki <b>engineering + psychology</b> ka mix hai.</p>
+        </div>
+
+        <h2 class="topic">Objective of the Course <span class="imp h">High</span></h2>
+        <div class="card">
+          <ul>
+            <li>To understand the <b>foundations of HCI</b> — what interaction means, and the historical evolution of the field from command-line to GUI to natural/touch interfaces.</li>
+            <li>To study <b>interactive system design</b> concepts, usability principles, and how HCI relates to Software Engineering.</li>
+            <li>To learn <b>GUI design and Aesthetics</b>, along with prototyping techniques used before building the final system.</li>
+            <li>To study <b>model-based design and evaluation</b> approaches (GOMS, KLM, CMN-GOMS, Fitts' Law, Hick-Hyman Law).</li>
+            <li>To understand established <b>guidelines and heuristics</b> (Shneiderman's Eight Golden Rules, Norman's principles, Nielsen's heuristics) for evaluating interfaces.</li>
+            <li>To learn <b>empirical research methods</b> — how to design experiments and analyze usability data scientifically.</li>
+            <li>To study <b>task modelling</b> (HTA, CTT, FSM, Petri Nets) used to formally represent how users perform tasks.</li>
+            <li>To introduce <b>Conceptual Architecture (CA)</b> and Object-Oriented Modeling of user interface design.</li>
+          </ul>
+        </div>
+        <div class="hin">
+          <span class="tag">Hinglish</span>
+          <p>Iss course ka goal hai tumhe sikhana ki ek acha interface <b>kaise design karein aur kaise test/evaluate karein</b>. Sirf "design achha lage" wali baat nahi — balki scientific laws (Fitts' Law, Hick's Law) aur heuristics use karke <b>measure</b> karna ki interface actually usable hai ya nahi.</p>
+        </div>
+
+        <div class="svgbox">
+          <svg viewBox="0 0 620 360" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="230" cy="150" r="95" fill="rgba(37,99,235,0.12)" stroke="#2563eb" stroke-width="1.5"/>
+            <circle cx="390" cy="150" r="95" fill="rgba(6,182,212,0.12)" stroke="#06b6d4" stroke-width="1.5"/>
+            <circle cx="310" cy="270" r="95" fill="rgba(139,92,246,0.12)" stroke="#8b5cf6" stroke-width="1.5"/>
+            <text x="180" y="110" font-size="13" font-family="Inter,sans-serif" font-weight="700" fill="#1d4ed8">Computer</text>
+            <text x="175" y="128" font-size="13" font-family="Inter,sans-serif" font-weight="700" fill="#1d4ed8">Science</text>
+            <text x="420" y="110" font-size="13" font-family="Inter,sans-serif" font-weight="700" fill="#0369a1">Cognitive</text>
+            <text x="425" y="128" font-size="13" font-family="Inter,sans-serif" font-weight="700" fill="#0369a1">Psychology</text>
+            <text x="270" y="320" font-size="13" font-family="Inter,sans-serif" font-weight="700" fill="#6d28d9">Design &</text>
+            <text x="265" y="338" font-size="13" font-family="Inter,sans-serif" font-weight="700" fill="#6d28d9">Ergonomics</text>
+            <text x="285" y="185" font-size="16" font-family="Inter,sans-serif" font-weight="800" fill="#0f172a">HCI</text>
+          </svg>
+          <p class="cap">Fig 1.1 — HCI as the intersection of Computer Science, Cognitive Psychology, and Design/Ergonomics (with contributions from Sociology, Linguistics, and Ergonomics)</p>
+        </div>
+
+        <h2 class="topic">The Interaction Loop <span class="imp l">Low</span></h2>
+        <div class="card">
+          <p>At its core, every human-computer interaction follows a repeating cycle: the user forms a <b>goal</b>, translates it into an <b>action</b> on the interface, the system <b>executes and responds</b>, and the user <b>perceives and interprets</b> the feedback to decide the next action. This loop is the basis of Donald Norman's "Gulf of Execution" and "Gulf of Evaluation" — covered in later units.</p>
+        </div>
+
+        <div class="svgbox">
+          <svg viewBox="0 0 760 220" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <marker id="ar1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0L6,3L0,6Z" fill="#2563eb"/>
+              </marker>
+            </defs>
+            <circle cx="120" cy="60" r="45" fill="#eef2ff" stroke="#2563eb" stroke-width="1.5"/>
+            <text x="120" y="56" text-anchor="middle" font-size="12" font-family="Inter,sans-serif" font-weight="700" fill="#1d4ed8">User</text>
+            <text x="120" y="70" text-anchor="middle" font-size="11" font-family="Inter,sans-serif" fill="#1d4ed8">(Goal)</text>
+
+            <path d="M165,60 Q 320,10 460,55" fill="none" stroke="#2563eb" stroke-width="1.5" marker-end="url(#ar1)"/>
+            <text x="290" y="25" text-anchor="middle" font-size="11" font-family="Inter,sans-serif" fill="#334155">Action / Input</text>
+
+            <circle cx="510" cy="60" r="45" fill="#ecfeff" stroke="#06b6d4" stroke-width="1.5"/>
+            <text x="510" y="56" text-anchor="middle" font-size="12" font-family="Inter,sans-serif" font-weight="700" fill="#0369a1">Interface</text>
+            <text x="510" y="70" text-anchor="middle" font-size="11" font-family="Inter,sans-serif" fill="#0369a1">(System)</text>
+
+            <path d="M540,100 Q 560,150 400,175" fill="none" stroke="#06b6d4" stroke-width="1.5" marker-end="url(#ar1)"/>
+            <text x="510" y="150" text-anchor="middle" font-size="11" font-family="Inter,sans-serif" fill="#334155">Response / Output</text>
+
+            <circle cx="330" cy="175" r="45" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
+            <text x="330" y="171" text-anchor="middle" font-size="12" font-family="Inter,sans-serif" font-weight="700" fill="#065f46">Feedback</text>
+            <text x="330" y="185" text-anchor="middle" font-size="11" font-family="Inter,sans-serif" fill="#065f46">(Perceive)</text>
+
+            <path d="M290,150 Q 200,100 155,80" fill="none" stroke="#10b981" stroke-width="1.5" marker-end="url(#ar1)"/>
+            <text x="200" y="130" text-anchor="middle" font-size="11" font-family="Inter,sans-serif" fill="#334155">Interpret & Next Goal</text>
+          </svg>
+          <p class="cap">Fig 1.2 — The Human-Computer Interaction Loop: Goal → Action → System Response → Feedback → back to User</p>
+        </div>
+
+        <h2 class="topic">Historical Evolution — A Quick Preview <span class="imp l">Low</span></h2>
+        <div class="card">
+          <table>
+            <tr><th>Era</th><th>Interaction Style</th><th>Example</th></tr>
+            <tr><td>1950s–60s</td><td>Batch processing, punch cards</td><td>No real-time interaction</td></tr>
+            <tr><td>1970s</td><td>Command Line Interface (CLI)</td><td>MS-DOS, UNIX shell</td></tr>
+            <tr><td>1980s</td><td>Graphical User Interface (GUI)</td><td>Apple Macintosh, Windows</td></tr>
+            <tr><td>1990s–2000s</td><td>Web & Multimedia Interfaces</td><td>Browsers, hyperlinks</td></tr>
+            <tr><td>2007–present</td><td>Touch & Mobile Interaction</td><td>iPhone, Android apps</td></tr>
+            <tr><td>Present–future</td><td>Natural & Immersive Interaction</td><td>Voice assistants, AR/VR, gestures</td></tr>
+          </table>
+          <p style="font-size:13px;color:var(--muted);margin-top:6px;">Note: Full historical evolution is covered in detail in Unit 1's Topic 2 (Historical evolution of the field) — this table is a quick preview relevant to understanding scope.</p>
+        </div>
+
+        <h2 class="topic">Scope in Industry — Where HCI is Applied <span class="imp m">Medium</span></h2>
+        <div class="card example">
+          <span class="tag">Real-World Examples</span>
+          <ul>
+            <li><b>Banking Apps:</b> Simplifying multi-step fund transfers using clear visual hierarchy and confirmation feedback.</li>
+            <li><b>Trading Platforms:</b> Real-time price alerts and order panels designed so a trader can act in seconds without misclicking (directly relevant to dashboards like a Traders Panel).</li>
+            <li><b>E-commerce:</b> Reducing "cart abandonment" by simplifying checkout flow (fewer clicks = better usability).</li>
+            <li><b>Healthcare Systems:</b> Medical device interfaces designed to prevent life-critical errors (e.g., infusion pump dosage screens).</li>
+            <li><b>Automotive:</b> Dashboard and infotainment systems designed to minimize driver distraction.</li>
+          </ul>
+        </div>
+
+        <h2 class="topic">Outcome of the Course <span class="imp h">High</span></h2>
+        <div class="card">
+          <p>After completing this course, the student will be able to:</p>
+          <ul>
+            <li><b>CO1:</b> Explain the objective, scope, and historical evolution of HCI, and describe usability concepts.</li>
+            <li><b>CO2:</b> Apply model-based design techniques (GOMS, KLM, Fitts' Law, Hick-Hyman Law) to evaluate interface efficiency.</li>
+            <li><b>CO3:</b> Apply established guidelines and heuristics (Shneiderman, Norman, Nielsen) to evaluate and improve interface designs.</li>
+            <li><b>CO4:</b> Design and conduct empirical usability research including experiment design and statistical analysis (ANOVA).</li>
+            <li><b>CO5:</b> Model user tasks formally using HTA, CTT, FSM, and Petri Nets.</li>
+            <li><b>CO6:</b> Understand Conceptual Architecture and apply Object-Oriented Modeling to user interface design.</li>
+          </ul>
+        </div>
+
+        <h2 class="topic">Difference: Traditional Software Engineering vs HCI-Focused Design <span class="imp l">Low</span></h2>
+        <div class="card">
+          <table>
+            <tr><th>Aspect</th><th>Traditional Software Engineering</th><th>HCI-Focused Design</th></tr>
+            <tr><td>Primary focus</td><td>Correctness, performance, architecture</td><td>Usability, learnability, user satisfaction</td></tr>
+            <tr><td>Success measured by</td><td>Passing test cases, meeting specs</td><td>Task completion time, error rate, user satisfaction score</td></tr>
+            <tr><td>Design process</td><td>Requirements → Design → Code → Test</td><td>User research → Prototyping → Usability testing → Iterate</td></tr>
+            <tr><td>Key people involved</td><td>Developers, architects, testers</td><td>UX researchers, interaction designers, developers</td></tr>
+            <tr><td>Failure example</td><td>App crashes / wrong output</td><td>App works correctly but user can't figure out how to use it</td></tr>
+          </table>
+        </div>
+
+        <h2 class="topic">Simulation — Bad UI vs Good UI <span class="imp m">Medium</span></h2>
+        <div class="simbox">
+          <div class="simtitle">Interactive Demo</div>
+          <div class="sim-row">
+            <div class="sim-col">
+              <h4 style="color:var(--red);">❌ Poor Usability</h4>
+              <p style="font-size:12px;color:var(--muted);margin-bottom:8px;">No labels, low contrast, unclear action</p>
+              <input class="bad-input" placeholder="">
+              <br>
+              <button class="bad-btn">OK</button>
+              <button class="bad-btn">Submit</button>
+              <div class="sim-verdict verdict-bad">Confusing — which button does what?</div>
+            </div>
+            <div class="sim-col">
+              <h4 style="color:var(--green);">✅ Good Usability</h4>
+              <p style="font-size:12px;color:var(--muted);margin-bottom:8px;">Clear label, sufficient contrast, obvious primary action</p>
+              <label style="font-size:12px;font-weight:600;display:block;text-align:left;margin-bottom:4px;">Enter Amount (₹)</label>
+              <input class="good-input" placeholder="e.g. 5000">
+              <br>
+              <button class="good-btn">Place Order →</button>
+              <div class="sim-verdict verdict-good">Clear label + single clear action</div>
+            </div>
+          </div>
+          <p style="font-size:13px;color:var(--muted);margin-top:16px;">This mirrors real interface decisions — e.g. in a trading dashboard, an unlabeled amount field with two ambiguous grey buttons risks a trader misclicking during a fast market move, while a labelled field with one clear, high-contrast action button reduces that risk. This is HCI applied practically.</p>
+        </div>
+
+        <div class="note">
+          <b>Key takeaway:</b> HCI is not just "making things pretty." It is a rigorous, evidence-based discipline that combines psychology, design, and engineering to reduce user error and increase efficiency — and it will be evaluated throughout this course using formal models (Fitts' Law, GOMS) and heuristics (Nielsen, Shneiderman), not just subjective opinion.
+        </div>
+      </div>
+
+      <div class="qsection" id="qa">
+        <h1 class="unit-title">❓ Unit 1 — Q&A (RTU Exam Pattern)</h1>
+
+        <div class="qcard">
+          <div class="qlabel">Unit 1 · Theory</div>
+          <div class="q">Q1. Define Human-Computer Interaction. Explain the objective and scope of the course. <span class="imp h">★★★ 5 Marks</span></div>
+          <span class="marks m5">5 Marks</span>
+          <div class="a">
+            <p>Human-Computer Interaction (HCI) is the multidisciplinary study concerned with the design, evaluation, and implementation of interactive computing systems for human use, aiming to make interaction effective, efficient, safe, and satisfying.</p>
+            <p><strong>Objective:</strong> To study interactive system design, GUI/aesthetics, model-based design and evaluation (GOMS, Fitts' Law), guidelines/heuristics, empirical research methods, task modelling, and conceptual architecture with OOP-based UI modeling.</p>
+            <p><strong>Scope:</strong> Computer Science, Cognitive Psychology, Design/Ergonomics, Sociology, and every industry with a user-facing interface — banking, trading platforms, e-commerce, healthcare, and automotive systems.</p>
+          </div>
+        </div>
+
+        <div class="qcard">
+          <div class="qlabel">Unit 1 · Theory</div>
+          <div class="q">Q2. List the course outcomes (COs) of Human Computer Interaction (5CS5-12). <span class="imp m">★★ 3 Marks</span></div>
+          <span class="marks m5">3 Marks</span>
+          <div class="a">
+            <p>CO1: Explain HCI objective, scope, and historical evolution. CO2: Apply model-based design techniques (GOMS, Fitts' Law, Hick-Hyman Law). CO3: Apply guidelines/heuristics (Shneiderman, Norman, Nielsen). CO4: Design empirical usability research with statistical analysis. CO5: Model tasks using HTA, CTT, FSM, Petri Nets. CO6: Apply Conceptual Architecture and OOP-based UI modeling.</p>
+          </div>
+        </div>
+
+        <div class="qcard">
+          <div class="qlabel">Unit 1 · Conceptual</div>
+          <div class="q">Q3. Why is HCI important in modern software development? Explain with an example. <span class="imp h">★★★ 5 Marks</span></div>
+          <span class="marks m5">5 Marks</span>
+          <div class="a">
+            <p>A system can be technically correct — fast, bug-free, well-architected — and still fail if users cannot understand how to operate it. HCI ensures the human side of a system is designed with the same rigor as the backend: clear feedback, minimal cognitive load, and error prevention.</p>
+            <p><strong>Example:</strong> A medical infusion pump with a confusing dosage screen can lead to a fatal overdose even though the underlying software logic is correct — this is a classic HCI failure case cited in usability literature, showing why interaction design is treated as a core engineering concern, not an afterthought.</p>
+          </div>
+        </div>
+
+        <div class="qcard">
+          <div class="qlabel">Unit 1 · Conceptual</div>
+          <div class="q">Q4. Differentiate between traditional Software Engineering and HCI-focused design. <span class="imp m">★★ 3 Marks</span></div>
+          <span class="marks m5">3 Marks</span>
+          <div class="a">
+            <p>Traditional Software Engineering focuses on correctness, performance, and architecture, measured by test cases and specification compliance. HCI-focused design focuses on usability, learnability, and satisfaction, measured by task completion time, error rate, and user satisfaction — following a cycle of user research, prototyping, and usability testing rather than a purely linear requirements-to-code process.</p>
+          </div>
+        </div>
+      </div>
+
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:center;padding:30px 20px;flex-wrap:wrap;">
+      <a href="index.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">🏠 HCI Hub</a>
+      <a href="unit2.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
+    </div>
+  </main>
+  <div class="cursor-dot" data-cursor-dot></div>
+  <div class="cursor-outline" data-cursor-outline></div>
+  <script>
+    const cursorDot = document.querySelector("[data-cursor-dot]");
+    const cursorOutline = document.querySelector("[data-cursor-outline]");
+    window.addEventListener("mousemove", function(e){
+      cursorDot.style.left=e.clientX+"px"; cursorDot.style.top=e.clientY+"px";
+      cursorOutline.animate({left:e.clientX+"px",top:e.clientY+"px"},{duration:400,fill:"forwards"});
+    });
+    document.querySelectorAll("a,button").forEach(el=>{
+      el.addEventListener("mouseenter",()=>cursorOutline.classList.add("cursor-hovering"));
+      el.addEventListener("mouseleave",()=>cursorOutline.classList.remove("cursor-hovering"));
+    });
+  </script>
+<script src="../splash-cursor.js"></script>
+</body>
+</html>

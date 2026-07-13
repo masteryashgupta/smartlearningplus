@@ -1527,12 +1527,12 @@ const handleContribSubmit = async (e) => {
               <div className="subject-row-arrow">➔</div>
             </a>
 
-            <a href="#" className="subject-row-card sl-c-hci">
+            <a href="/hci/index.html" className="subject-row-card sl-c-hci">
               <div className="subject-row-left">
                 <div className="subject-row-icon">🖥️</div>
                 <div className="subject-row-details">
                   <div className="subject-row-title">Human-Computer Interaction</div>
-                  <div className="subject-row-code">5CS5-12 &nbsp;·&nbsp; 2L &nbsp;·&nbsp; Pending</div>
+                  <div className="subject-row-code">5CS5-12 &nbsp;·&nbsp; 2L &nbsp;·&nbsp; Active Module</div>
                 </div>
               </div>
               <div className="subject-row-arrow">➔</div>
