@@ -819,12 +819,10 @@ const handleContribSubmit = async (e) => {
         .attendance-preview-fab:hover {
           transform: scale(1.05);
         }
-        /* Hide all other FABs on mobile when AI chat is open */
-        @media (max-width: 640px) {
-          body.ai-chat-open .attendance-preview-fab,
-          body.ai-chat-open .contact-admin-fab {
-            display: none !important;
-          }
+        /* Hide all other FABs when AI chat is open */
+        body.ai-chat-open .attendance-preview-fab,
+        body.ai-chat-open .contact-admin-fab {
+          display: none !important;
         }
       `}</style>
 
