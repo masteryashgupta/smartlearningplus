@@ -593,126 +593,284 @@ I(X;Y) = H(X) − H(X|Y)
 
   <hr class="sep">
 
+  <style>
+    #qa2 .qa {
+      background: var(--surface, #fff);
+      border: 1px solid var(--border, #e2e8f0);
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin-bottom: 22px;
+    }
+    #qa2 .qa:hover { border-color: var(--accent2, #06b6d4); }
+    #qa2 .q {
+      font-weight: 700;
+      font-size: 16px;
+      line-height: 1.6;
+      padding-bottom: 12px;
+      margin-bottom: 12px;
+      border-bottom: 1px dashed var(--border2, #cbd5e1);
+    }
+    #qa2 .a { line-height: 1.85; }
+    #qa2 .a p { margin: 0 0 10px 0; }
+    #qa2 .a p:last-child { margin-bottom: 0; }
+    #qa2 .a ul, #qa2 .a ol { margin: 6px 0 10px 22px; }
+    #qa2 .a li { margin-bottom: 6px; }
+  </style>
+
   <div class="qsection" id="qa2">
     <h1 class="unit-title">❓ Unit 2 — Q&amp;A (RTU Exam Pattern)</h1>
 
     <div class="qa">
       <div class="q">Q1. Define entropy. State and explain its properties. <span class="imp h">★★★★★ Very Important, 5-7 Marks</span></div>
-      <div class="a">Entropy H(X) = −ΣP(xᵢ)log₂P(xᵢ), average info/symbol. Properties: 0≤H(X)≤log₂n, =0 for certain event, max when equiprobable. (Asked almost every year)</div>
+      <div class="a">
+        <p><b>Definition:</b> Entropy H(X) is the average (expected) amount of information produced per symbol by a discrete memoryless source. It is given by H(X) = −Σ P(xᵢ)·log₂P(xᵢ) bits/symbol, where the sum runs over all n symbols of the source alphabet.</p>
+        <p><b>Properties:</b></p>
+        <ol>
+          <li>0 ≤ H(X) ≤ log₂n — entropy is always bounded between zero and log₂n.</li>
+          <li>H(X) = 0 only when one symbol has probability 1 (source is fully predictable, no uncertainty).</li>
+          <li>H(X) is maximum (= log₂n) when all n symbols are equiprobable (P=1/n each) — this is the state of maximum uncertainty/randomness.</li>
+          <li>Entropy is a concave function of the probability distribution.</li>
+        </ol>
+        <p>This topic is asked almost every year, usually paired with a numerical (see Q5) or the maximum-entropy proof (see Q10).</p>
+      </div>
     </div>
 
     <div class="qa">
       <div class="q">Q2. State and prove the Source Coding Theorem (Shannon's First Theorem). <span class="imp h">★★★★ 7 Marks</span></div>
-      <div class="a">H(X) ≤ L<sub>avg</sub> &lt; H(X)+1. Explain that entropy is the lower bound for lossless average code length; discuss efficiency η = H(X)/L<sub>avg</sub> and redundancy.</div>
+      <div class="a">
+        <p><b>Statement:</b> For a discrete memoryless source with entropy H(X), it is always possible to construct a uniquely decodable (prefix) code with average codeword length L<sub>avg</sub> satisfying H(X) ≤ L<sub>avg</sub> &lt; H(X)+1.</p>
+        <p><b>Proof (two parts):</b> The lower bound L<sub>avg</sub> ≥ H(X) follows from Gibbs' inequality applied with Qᵢ=2⁻ˡⁱ/Σ2⁻ˡʲ together with Kraft's inequality. The upper bound follows by choosing lᵢ = ⌈log₂(1/Pᵢ)⌉, which satisfies Kraft's inequality and gives log₂(1/Pᵢ) ≤ lᵢ &lt; log₂(1/Pᵢ)+1; averaging over all symbols yields H(X) ≤ L<sub>avg</sub> &lt; H(X)+1. (Full step-by-step derivation is in the "Proof Sketch of Source Coding Theorem" section above.)</p>
+        <p><b>Efficiency &amp; redundancy:</b> η = H(X)/L<sub>avg</sub> (closer to 1 = better compression); Redundancy = 1−η. The theorem essentially says entropy is the fundamental limit of lossless compression — you can never compress below it on average.</p>
+      </div>
     </div>
 
     <div class="qa">
       <div class="q">Q3. Differentiate between Mutual Information and Conditional Entropy. <span class="imp h">★★★ 5 Marks</span></div>
-      <div class="a">Mutual Info I(X;Y) = info gained about X via Y (common info, ≥0, symmetric). Conditional Entropy H(X|Y) = uncertainty remaining about X after knowing Y (info lost/equivocation). I(X;Y)=H(X)−H(X|Y).</div>
+      <div class="a">
+        <p><b>Mutual Information I(X;Y):</b> the amount of information one variable contains about another — i.e. how much the uncertainty about X reduces after observing Y. It is always ≥0, symmetric (I(X;Y)=I(Y;X)), and equals 0 only when X and Y are statistically independent. Formula: I(X;Y) = H(X) − H(X|Y) = H(Y) − H(Y|X) = H(X)+H(Y)−H(X,Y).</p>
+        <p><b>Conditional Entropy H(X|Y):</b> the average uncertainty that remains about X even after Y is known — also called "equivocation," since it represents information lost due to channel noise. Formula: H(X|Y) = −ΣΣP(xᵢ,yⱼ)log₂P(xᵢ|yⱼ) = H(X,Y)−H(Y).</p>
+        <p><b>Key relation linking both:</b> I(X;Y) = H(X) − H(X|Y). So mutual information is literally "what you gain," and conditional entropy is "what's still missing" — together they add up to H(X), the total original uncertainty.</p>
+      </div>
     </div>
 
     <div class="qa">
       <div class="q">Q4. What is a Discrete Memoryless Channel? Explain Binary Symmetric Channel (BSC) with diagram. <span class="imp h">★★★★ 5-7 Marks</span></div>
-      <div class="a">DMC: output depends only on present input, finite alphabets, no memory. BSC: 2-input 2-output channel with crossover probability p (Fig 2.2). Transition matrix: [[1−p, p],[p, 1−p]].</div>
+      <div class="a">
+        <p><b>DMC:</b> A Discrete Memoryless Channel is a channel model where the output at any instant depends only on the input at that same instant (no dependence on past inputs/outputs), and both input X and output Y take values from finite discrete alphabets. It is fully characterized by its transition probability matrix P(yⱼ|xᵢ), where each row sums to 1.</p>
+        <p><b>Binary Symmetric Channel (BSC):</b> the simplest and most commonly examined DMC — 2 inputs {0,1}, 2 outputs {0,1}, and a single crossover (error) probability p that applies symmetrically in both directions (see Fig 2.2). Its channel matrix is [[1−p, p],[p, 1−p]] — each input is correctly received with probability (1−p) and flipped with probability p.</p>
+        <p>BSC is the standard model for a noisy binary transmission link and forms the basis for almost every channel-capacity numerical in this unit (see Q17, Q18).</p>
+      </div>
     </div>
 
     <div class="qa">
       <div class="q">Q5. Numerical: A source has 4 symbols with probabilities 0.5, 0.25, 0.125, 0.125. Find entropy. <span class="imp h">★★★★★ Almost guaranteed numerical</span></div>
-      <div class="a">H(X) = 1.75 bits/symbol (full solution above in Example, Section 2). This exact-style numerical (powers of 2 probabilities) is the most repeated RTU question pattern.</div>
+      <div class="a">
+        <p><b>Solution:</b><br>
+        H(X) = −[0.5log₂0.5 + 0.25log₂0.25 + 0.125log₂0.125 + 0.125log₂0.125]<br>
+        = −[0.5(−1) + 0.25(−2) + 0.125(−3) + 0.125(−3)]<br>
+        = 0.5 + 0.5 + 0.375 + 0.375 = <b>1.75 bits/symbol</b></p>
+        <p>This exact style of numerical — probabilities that are clean negative powers of 2 (½, ¼, ⅛, ⅛) — is the single most-repeated RTU question pattern for entropy, because the log₂ values come out as whole numbers, making it fast to solve without a calculator. The same 4 probabilities are reused later for the Huffman coding numerical (Q22), where you'll see L<sub>avg</sub> comes out exactly equal to this entropy value.</p>
+      </div>
     </div>
 
     <div class="qa">
       <div class="q">Q6. Explain differential entropy for continuous random variables. Derive it for Gaussian distribution. <span class="imp m">★★★ 5 Marks</span></div>
-      <div class="a">h(X) = −∫f(x)log₂f(x)dx. For Gaussian: h(X) = ½log₂(2πeσ²). Mention it can be negative, unlike discrete entropy.</div>
+      <div class="a">
+        <p><b>Definition:</b> For a continuous random variable X with probability density function f(x), differential entropy is h(X) = −∫f(x)·log₂f(x)dx, over the entire support of X. It is the continuous-variable analogue of discrete entropy, with the sum replaced by an integral and the pmf replaced by a pdf.</p>
+        <p><b>Gaussian derivation:</b> for X ~ N(μ,σ²), substituting the Gaussian pdf into the differential entropy integral and simplifying (using E[(X−μ)²]=σ²) gives h(X) = ½log₂(2πeσ²). This is a standard result worth memorizing directly.</p>
+        <p><b>Important distinction:</b> unlike discrete entropy, h(X) can be <b>negative</b> (e.g. for a uniform distribution narrower than 1 unit — see Q23), because it is not a true "information" measure in absolute terms, only a relative one. The Gaussian distribution has the special property of having the maximum differential entropy among all continuous distributions with a fixed variance σ².</p>
+      </div>
     </div>
 
     <div class="qa">
       <div class="q">Q7. Derive the relation I(X;Y) = H(X) − H(X|Y) = H(Y) − H(Y|X). <span class="imp h">★★★ 5 Marks</span></div>
-      <div class="a">Start from H(X,Y)=H(X)+H(Y|X)=H(Y)+H(X|Y); rearrange and substitute into I(X;Y)=H(X)+H(Y)−H(X,Y) to get both forms. Use the Venn diagram (Fig 2.3) for visual proof.</div>
+      <div class="a">
+        <p><b>Derivation:</b> Start from the two equivalent expansions of joint entropy: H(X,Y) = H(X) + H(Y|X) and H(X,Y) = H(Y) + H(X|Y). Also recall the definition I(X;Y) = H(X) + H(Y) − H(X,Y) (from the Venn-diagram relation in Fig 2.3).</p>
+        <p>Substituting H(X,Y) = H(X)+H(Y|X) into the mutual-information definition: I(X;Y) = H(X)+H(Y)−[H(X)+H(Y|X)] = H(Y)−H(Y|X).<br>
+        Similarly substituting H(X,Y) = H(Y)+H(X|Y): I(X;Y) = H(X)+H(Y)−[H(Y)+H(X|Y)] = H(X)−H(X|Y).</p>
+        <p>Both forms are proven identical, confirming mutual information's symmetry. Draw the Venn diagram (Fig 2.3) as visual support — the overlapping region between the H(X) and H(Y) circles is exactly I(X;Y), and each circle minus the overlap gives the corresponding conditional entropy.</p>
+      </div>
     </div>
 
     <div class="qa">
       <div class="q">Q8. Explain coding efficiency and redundancy with a numerical example. <span class="imp m">★★ 3-5 Marks</span></div>
-      <div class="a">η = H(X)/L<sub>avg</sub>, Redundancy = 1−η. Numerical example given above (η=93.3%, redundancy=6.7%).</div>
+      <div class="a">
+        <p><b>Definitions:</b> Coding efficiency η = H(X)/L<sub>avg</sub> measures how close an actual code's average length is to the theoretical entropy limit (η ≤ 1 always, by the Source Coding Theorem). Redundancy = 1−η measures the "wasted" bits per symbol beyond what's theoretically necessary.</p>
+        <p><b>Numerical:</b> A source has H(X) = 1.75 bits/symbol and a code is designed with L<sub>avg</sub> = 1.875 bits/symbol.<br>
+        η = 1.75/1.875 = 0.933 = <b>93.3%</b><br>
+        Redundancy = 1 − 0.933 = <b>0.067 (6.7%)</b></p>
+        <p>Higher efficiency (closer to 100%) means the code design is close to optimal — a perfectly-designed Huffman code on powers-of-2 probabilities can even reach η=100% (see Q22).</p>
+      </div>
     </div>
+
     <div class="qa">
       <div class="q">Q9. Why is the logarithmic function used to measure information? State the postulates. <span class="imp m">★★★ 5 Marks</span></div>
-      <div class="a">State 4 postulates (zero info for certain event, non-negativity, monotonic decrease with P, additivity for independent events) and explain that log is the unique function satisfying all four — see "Postulates for a Measure of Information" section above.</div>
+      <div class="a">
+        <p>Shannon required any sensible information measure I(P) to satisfy four postulates simultaneously:</p>
+        <ol>
+          <li><b>Postulate 1:</b> I(P) = 0 when P = 1 (a certain event carries zero information).</li>
+          <li><b>Postulate 2:</b> I(P) ≥ 0 for 0 ≤ P ≤ 1 (information is never negative).</li>
+          <li><b>Postulate 3:</b> I(P₁) &gt; I(P₂) if P₁ &lt; P₂ (monotonically decreasing — rarer events carry more information).</li>
+          <li><b>Postulate 4 (Additivity):</b> I(P₁·P₂) = I(P₁) + I(P₂) for independent events — the joint information of two independent events equals the sum of their individual information.</li>
+        </ol>
+        <p>The <b>only</b> function satisfying all four conditions at once is the logarithmic function, I(x) = log(1/P(x)) — because log(a·b) = log(a)+log(b) is precisely what makes additivity work for independent events, while no other elementary function has this property alongside the other three postulates. This is why entropy and information are always defined using logarithms.</p>
+      </div>
     </div>
 
     <div class="qa">
       <div class="q">Q10. Prove that entropy is maximum when all symbols are equiprobable. <span class="imp h">★★★★ 7 Marks — Lagrange multiplier proof</span></div>
-      <div class="a">Use Lagrange multiplier method on L=−ΣPᵢlog₂Pᵢ+λ(ΣPᵢ−1); differentiate and set to zero to show Pᵢ=1/n for all i, giving H<sub>max</sub>=log₂n. Full derivation in "Proof: H(X) is Maximum..." section above.</div>
+      <div class="a">
+        <p><b>Setup:</b> Maximize H(X) = −ΣPᵢlog₂Pᵢ subject to the constraint ΣPᵢ = 1, using Lagrange multipliers.</p>
+        <p><b>Derivation:</b> Form L = −ΣPᵢlog₂Pᵢ + λ(ΣPᵢ − 1). Differentiating with respect to each Pᵢ and setting to zero: ∂L/∂Pᵢ = −log₂Pᵢ − log₂e + λ = 0, which gives the same value of Pᵢ for every i — i.e. Pᵢ = constant = 1/n for all i = 1...n.</p>
+        <p><b>Conclusion:</b> Substituting Pᵢ=1/n back into H(X) gives H<sub>max</sub>(X) = log₂n. Hence entropy reaches its maximum value exactly when the probability distribution is uniform (equiprobable) — this is the point of maximum uncertainty, since no symbol is favored over another.</p>
+      </div>
     </div>
 
     <div class="qa">
       <div class="q">Q11. Define Joint Entropy and Marginal Entropy. State the relation between them. <span class="imp m">★★ 3-5 Marks</span></div>
-      <div class="a">H(X,Y)=−ΣΣP(xᵢ,yⱼ)log₂P(xᵢ,yⱼ); marginal H(X)/H(Y) from row/column sums. Relation: H(X,Y)=H(X)+H(Y|X)=H(Y)+H(X|Y).</div>
+      <div class="a">
+        <p><b>Joint Entropy H(X,Y):</b> the average uncertainty associated with a pair of random variables (X,Y) taken together, considering their joint probability distribution: H(X,Y) = −ΣᵢΣⱼP(xᵢ,yⱼ)log₂P(xᵢ,yⱼ).</p>
+        <p><b>Marginal Entropy:</b> simply H(X) or H(Y) computed individually, using the marginal probability distributions obtained by summing the joint matrix along rows (P(xᵢ)=ΣⱼP(xᵢ,yⱼ)) or columns (P(yⱼ)=ΣᵢP(xᵢ,yⱼ)).</p>
+        <p><b>Relation:</b> H(X,Y) = H(X) + H(Y|X) = H(Y) + H(X|Y) — the joint uncertainty of both variables equals the uncertainty of one plus the remaining (conditional) uncertainty of the other given the first is known.</p>
+      </div>
     </div>
 
     <div class="qa">
       <div class="q">Q12. What is rate of information transmission? Give its formula. <span class="imp l">★★ 2-3 Marks</span></div>
-      <div class="a">R = r·H(X) bits/sec, where r = symbols emitted per second by the source, H(X) = entropy per symbol.</div>
+      <div class="a">
+        <p>If a discrete source emits r symbols per second, and each symbol carries an average of H(X) bits of information, then the rate of information transmission R (in bits/second) is: <b>R = r · H(X)</b>.</p>
+        <p>This simply scales the "per-symbol" entropy up to a "per-second" rate, using the source's symbol-emission speed r. It becomes important later when comparing a source's actual information rate against a channel's capacity C, to check whether reliable transmission (R ≤ C) is achievable.</p>
+      </div>
     </div>
 
     <div class="qa">
       <div class="q">Q13. List and explain the properties of differential entropy. How does it differ from discrete entropy? <span class="imp m">★★★ 5 Marks</span></div>
-      <div class="a">h(X) can be negative; invariant to translation h(X+c)=h(X); h(aX)=h(X)+log₂|a|; Gaussian maximizes h(X) for given variance. Difference table given above (summation vs integration, sign, units).</div>
+      <div class="a">
+        <p><b>Properties of differential entropy h(X):</b></p>
+        <ol>
+          <li>h(X) can be negative, zero, or positive — unlike discrete entropy which is always ≥ 0.</li>
+          <li>h(X+c) = h(X) for any constant c — shifting/translating the distribution does not change its differential entropy.</li>
+          <li>h(aX) = h(X) + log₂|a| — scaling the variable by a changes h(X) by log₂|a|.</li>
+          <li>Among all continuous distributions with a fixed variance σ², the Gaussian distribution has the maximum differential entropy.</li>
+        </ol>
+        <p><b>Difference from discrete entropy:</b> discrete entropy uses a pmf and summation and is always non-negative with units of bits/symbol; differential entropy uses a pdf and integration, can be negative, and its value depends on the units/scale of X (not an absolute measure of information in the same sense as discrete entropy).</p>
+      </div>
     </div>
 
     <div class="qa">
       <div class="q">Q14. Define instantaneous (prefix) code and state Kraft's inequality. <span class="imp m">★★★ 5 Marks</span></div>
-      <div class="a">Prefix code: no codeword is a prefix of another, decodable symbol-by-symbol. Kraft inequality: Σ2<sup>−lᵢ</sup>≤1 is necessary &amp; sufficient condition for existence of such a code with lengths lᵢ.</div>
+      <div class="a">
+        <p><b>Instantaneous (prefix) code:</b> a variable-length code in which no codeword is a prefix of any other codeword. This property allows the receiver to decode symbol-by-symbol as bits arrive, without needing to look ahead or wait for a separator.</p>
+        <p><b>Kraft's Inequality:</b> a prefix code with codeword lengths l₁, l₂, ..., lₙ exists if and only if Σᵢ2⁻ˡⁱ ≤ 1. This is both a necessary and sufficient condition — given any set of lengths satisfying this inequality, a valid instantaneous code can always be constructed (and conversely, any instantaneous code's lengths must satisfy it).</p>
+        <p>When Σᵢ2⁻ˡⁱ = 1 exactly, the code uses all available code-space with no waste, which corresponds to 100% coding efficiency (see the Huffman example in Q22, where 2⁻¹+2⁻²+2⁻³+2⁻³ = 1).</p>
+      </div>
     </div>
 
     <div class="qa">
       <div class="q">Q15. Prove Shannon's Source Coding Theorem: H(X) ≤ L<sub>avg</sub> &lt; H(X)+1. <span class="imp h">★★★★★ 10 Marks — long derivation, very important</span></div>
-      <div class="a">Two-part proof using Gibbs' inequality (lower bound) and choosing lᵢ=⌈log₂(1/Pᵢ)⌉ (upper bound) — full step-by-step derivation in "Proof Sketch of Source Coding Theorem" section above.</div>
+      <div class="a">
+        <p><b>Part 1 — Lower bound (L<sub>avg</sub> ≥ H(X)):</b> By Gibbs' inequality, for any two probability distributions P and Q: −ΣPᵢlog₂Pᵢ ≤ −ΣPᵢlog₂Qᵢ. Choosing Qᵢ = 2⁻ˡⁱ/Σ2⁻ˡʲ and applying Kraft's inequality (Σ2⁻ˡⁱ≤1), algebraic simplification shows L<sub>avg</sub> = ΣPᵢlᵢ ≥ H(X).</p>
+        <p><b>Part 2 — Upper bound (L<sub>avg</sub> &lt; H(X)+1):</b> Choose codeword length lᵢ = ⌈log₂(1/Pᵢ)⌉ (the smallest integer ≥ log₂(1/Pᵢ)). This choice always satisfies Kraft's inequality (so a valid prefix code exists for these lengths), and by definition of the ceiling function: log₂(1/Pᵢ) ≤ lᵢ &lt; log₂(1/Pᵢ)+1. Taking the expectation (weighted average) over all symbols gives H(X) ≤ L<sub>avg</sub> &lt; H(X)+1.</p>
+        <p><b>Conclusion:</b> Combining both bounds proves the theorem — entropy is the achievable lower limit of average code length, and it can always be approached within 1 bit per symbol using simple symbol-by-symbol coding, and exactly achieved (in the limit) using block/extension coding as block length → ∞.</p>
+      </div>
     </div>
 
     <div class="qa">
       <div class="q">Q16. Explain the different types of discrete channels (lossless, deterministic, noiseless) with their channel matrices. <span class="imp m">★★★ 5 Marks</span></div>
-      <div class="a">Lossless: one non-zero entry per column, H(X|Y)=0. Deterministic: one non-zero entry (=1) per row, H(Y|X)=0. Noiseless: both combined, identity matrix, I(X;Y)=H(X)=H(Y). Full table above.</div>
+      <div class="a">
+        <p><b>Lossless Channel:</b> no information about the input is lost, so H(X|Y)=0 (the input can always be perfectly reconstructed from the output). Its channel matrix has exactly one non-zero entry per column.</p>
+        <p><b>Deterministic Channel:</b> each input maps to exactly one specific output with certainty, so H(Y|X)=0 (no randomness on the output side). Its channel matrix has exactly one non-zero entry (equal to 1) per row.</p>
+        <p><b>Noiseless Channel:</b> satisfies both properties simultaneously — it is both lossless and deterministic, giving I(X;Y)=H(X)=H(Y). Its channel matrix is a square identity matrix (1s on the diagonal, 0s elsewhere) — the "ideal" channel with zero information loss in either direction.</p>
+        <p>The BSC (Q4) is a special symmetric case that is generally <i>neither</i> lossless nor deterministic (unless p=0 or p=1), which is why it's the standard example for studying real, noisy channels.</p>
+      </div>
     </div>
 
     <div class="qa">
       <div class="q">Q17. Define channel capacity. Derive the channel capacity of a Binary Symmetric Channel. <span class="imp h">★★★★★ 7-10 Marks — very important, numerical + theory combined</span></div>
-      <div class="a">C = max<sub>P(x)</sub> I(X;Y). For BSC, max occurs at P(0)=P(1)=0.5, giving C=1−H(p) where H(p)=−plog₂p−(1−p)log₂(1−p). Graph (Fig 2.4) shows C=1 at p=0/1, C=0 at p=0.5.</div>
+      <div class="a">
+        <p><b>Definition:</b> Channel capacity C is the maximum possible rate of reliable information transmission over a channel, defined as the maximum of mutual information I(X;Y) over all possible input probability distributions P(x): C = max<sub>P(x)</sub> I(X;Y), measured in bits/symbol (or bits/channel use).</p>
+        <p><b>Derivation for BSC:</b> For a BSC with crossover probability p, mutual information I(X;Y) = H(Y)−H(Y|X). Since H(Y|X)=H(p) regardless of the input distribution (a fixed property of the channel), maximizing I(X;Y) means maximizing H(Y), which is largest (=1 bit) precisely when the output is equiprobable — which happens when the input is equiprobable, P(0)=P(1)=0.5. This gives:</p>
+        <p>C<sub>BSC</sub> = 1 − H(p), where H(p) = −p·log₂p − (1−p)·log₂(1−p).</p>
+        <p>As shown in Fig 2.4: C=1 bit/symbol at p=0 or p=1 (channel is perfectly reliable, either straight-through or fully inverted), and C=0 at p=0.5 (channel output carries zero information about the input — completely useless). Try the interactive BSC Capacity Explorer simulation above to see this relationship live.</p>
+      </div>
     </div>
 
     <div class="qa">
       <div class="q">Q18. Numerical: For a BSC with p=0.2, find the channel capacity. <span class="imp h">★★★★ 5 Marks numerical</span></div>
-      <div class="a">H(0.2) = −0.2log₂0.2 −0.8log₂0.8 = 0.464+0.257 = 0.722 bits. C = 1−0.722 = <b>0.278 bits/symbol</b>.</div>
+      <div class="a">
+        <p><b>Solution:</b><br>
+        H(0.2) = −0.2log₂0.2 − 0.8log₂0.8 = 0.2(2.322) + 0.8(0.322) = 0.464 + 0.257 = <b>0.722 bits</b><br>
+        C = 1 − H(0.2) = 1 − 0.722 = <b>0.278 bits/symbol</b></p>
+        <p>This means that despite 20% of bits being flipped by the channel, up to 0.278 bits of reliable information can still theoretically be transmitted per channel use, using an appropriately designed error-correcting code (Shannon's Channel Coding Theorem guarantees this is achievable, though it doesn't specify the exact code to use).</p>
+      </div>
     </div>
 
     <div class="qa">
       <div class="q">Q19. Prove that mutual information I(X;Y) is always non-negative. <span class="imp m">★★★ 5 Marks proof</span></div>
-      <div class="a">Apply Jensen's/Gibbs' inequality on −I(X;Y); since log is concave, −I(X;Y)≤log₂[ΣΣP(xᵢ)P(yⱼ)]=log₂1=0, hence I(X;Y)≥0. Full proof above.</div>
+      <div class="a">
+        <p><b>Proof:</b> Starting from I(X;Y) = ΣΣP(xᵢ,yⱼ)log₂[P(xᵢ,yⱼ)/(P(xᵢ)P(yⱼ))], consider −I(X;Y) and apply Jensen's inequality (log is a concave function), treating P(xᵢ)P(yⱼ) as an alternate distribution over the same support as P(xᵢ,yⱼ):</p>
+        <p>−I(X;Y) = ΣΣP(xᵢ,yⱼ)log₂[P(xᵢ)P(yⱼ)/P(xᵢ,yⱼ)] ≤ log₂[ΣΣP(xᵢ)P(yⱼ)] = log₂[1] = 0</p>
+        <p>Therefore I(X;Y) ≥ 0, with equality holding if and only if X and Y are statistically independent (i.e. P(xᵢ,yⱼ)=P(xᵢ)P(yⱼ) for all i,j, making the log term zero everywhere). This confirms that observing one variable can never give "negative" information about another — at worst it gives zero (no help at all).</p>
+      </div>
     </div>
 
     <div class="qa">
       <div class="q">Q20. Show that H(X|Y) ≤ H(X). What does this imply physically? <span class="imp m">★★★ 5 Marks</span></div>
-      <div class="a">Since I(X;Y)=H(X)−H(X|Y)≥0 (proved above), H(X|Y)≤H(X). Physical meaning: observing Y can never increase average uncertainty about X — side information never hurts.</div>
+      <div class="a">
+        <p><b>Proof:</b> Since I(X;Y) = H(X) − H(X|Y), rearranging gives H(X|Y) = H(X) − I(X;Y). Because I(X;Y) ≥ 0 was already proven (Q19), it directly follows that H(X|Y) ≤ H(X).</p>
+        <p><b>Physical meaning:</b> observing the channel output Y can never, on average, increase your uncertainty about the input X. At worst (when X and Y are independent, i.e. Y tells you nothing about X), H(X|Y)=H(X) — no help, but also no harm. In every other case, knowing Y strictly reduces your uncertainty about X. This is sometimes summarized as "side information never hurts."</p>
+      </div>
     </div>
 
     <div class="qa">
       <div class="q">Q21. Numerical (10 Marks — most important pattern): Given a joint probability matrix P(X,Y), compute H(X), H(Y), H(X,Y), H(X|Y), H(Y|X) and I(X;Y). <span class="imp h">★★★★★ Guaranteed-type question</span></div>
-      <div class="a">Full worked solution with a sample 2×2 joint matrix given above in "Full Worked Numerical" section — follow the exact same 6-step order (H(X,Y) first, then derive rest) for any matrix given in the exam.</div>
+      <div class="a">
+        <p><b>Sample matrix:</b> x₁ row: P(x₁,y₁)=0.25, P(x₁,y₂)=0.25 (row sum P(x₁)=0.50); x₂ row: P(x₂,y₁)=0.125, P(x₂,y₂)=0.375 (row sum P(x₂)=0.50); column sums P(y₁)=0.375, P(y₂)=0.625.</p>
+        <p><b>Step-by-step solution (always follow this exact order):</b></p>
+        <ol>
+          <li>H(X) = −(0.5log₂0.5+0.5log₂0.5) = <b>1 bit</b> (from row/marginal sums)</li>
+          <li>H(Y) = −(0.375log₂0.375+0.625log₂0.625) = 0.530+0.424 = <b>0.954 bits</b></li>
+          <li>H(X,Y) = −[0.25log₂0.25+0.25log₂0.25+0.125log₂0.125+0.375log₂0.375] = 0.5+0.5+0.375+0.531 = <b>1.906 bits</b> (compute this directly from all four joint entries first)</li>
+          <li>H(X|Y) = H(X,Y) − H(Y) = 1.906 − 0.954 = <b>0.952 bits</b></li>
+          <li>H(Y|X) = H(X,Y) − H(X) = 1.906 − 1 = <b>0.906 bits</b></li>
+          <li>I(X;Y) = H(X) − H(X|Y) = 1 − 0.952 = <b>0.048 bits</b> (cross-check: H(X)+H(Y)−H(X,Y) = 1+0.954−1.906 = 0.048 ✓)</li>
+        </ol>
+        <p class="note">💡 Exam tip: always compute H(X,Y) directly from the joint matrix <i>first</i> — every other quantity follows from it using the standard relations, which is the fastest, most error-free order to solve this type of numerical for any matrix given in the exam.</p>
+      </div>
     </div>
 
     <div class="qa">
       <div class="q">Q22. Construct a Huffman code for a source with 4 symbols of probabilities 0.5, 0.25, 0.125, 0.125. Find L<sub>avg</sub> and efficiency. <span class="imp h">★★★★ 7 Marks — construction-based</span></div>
-      <div class="a">Combine two lowest probabilities repeatedly to build the tree; resulting codewords {0, 10, 110, 111} give L<sub>avg</sub>=1.75 bits = H(X), so η=100%. Full tree construction in "Huffman Coding" section above.</div>
+      <div class="a">
+        <p><b>Tree construction:</b> Combine the two lowest-probability symbols repeatedly: Step 1 — combine x₃(0.125) &amp; x₄(0.125) → node A(0.25). Step 2 — combine A(0.25) &amp; x₂(0.25) → node B(0.5). Step 3 — combine B(0.5) &amp; x₁(0.5) → root(1.0).</p>
+        <p><b>Resulting codewords:</b> x₁="0" (length 1), x₂="10" (length 2), x₃="110" (length 3), x₄="111" (length 3).</p>
+        <p><b>L<sub>avg</sub></b> = ΣPᵢlᵢ = 0.5(1)+0.25(2)+0.125(3)+0.125(3) = 0.5+0.5+0.375+0.375 = <b>1.75 bits/symbol</b>, which equals H(X) exactly — so <b>efficiency η = 100%</b>. This happens because every probability here is an exact negative power of 2 (0.5=2⁻¹, 0.25=2⁻², 0.125=2⁻³), which is the ideal case for Huffman coding.</p>
+        <p>Verify: prefix property holds ({0,10,110,111} — no codeword is a prefix of another), and Kraft's inequality gives 2⁻¹+2⁻²+2⁻³+2⁻³ = 1 ≤ 1 (equality ⟹ no wasted code-space).</p>
+      </div>
     </div>
 
     <div class="qa">
       <div class="q">Q23. Find the differential entropy of a random variable uniformly distributed over [0, 8]. <span class="imp m">★★★ 5 Marks numerical</span></div>
-      <div class="a">For uniform X on [a,b]: h(X) = log₂(b−a). Here h(X) = log₂8 = <b>3 bits</b>. See "Example — Uniform Distribution" above for the full integral derivation.</div>
+      <div class="a">
+        <p><b>Solution:</b> For a uniform distribution over [a,b], f(x)=1/(b−a), so h(X) = −∫<sub>a</sub><sup>b</sup>(1/(b−a))·log₂(1/(b−a))dx = log₂(b−a). Here (b−a)=8, so h(X) = log₂8 = <b>3 bits</b>.</p>
+        <p><b>General shortcut:</b> for uniform X on [a,b], h(X) = log₂(b−a) directly — no need to redo the integral each time. Note that if (b−a) &lt; 1, h(X) becomes <b>negative</b>, which is a perfectly valid result for differential entropy (unlike discrete entropy, which is never negative — see Q13).</p>
+      </div>
     </div>
 
     <div class="qa">
       <div class="q">Q24. Numerical: Given P(x₁)=0.6, P(x₂)=0.4 and channel matrix [[0.9,0.1],[0.2,0.8]], find P(Y), H(Y), H(Y|X) and I(X;Y). <span class="imp h">★★★★★ 10 Marks — asymmetric/non-BSC channel pattern</span></div>
-      <div class="a">P(y₁)=0.62, P(y₂)=0.38 via [P(X)]×[Channel Matrix]; H(Y)=0.958 bits; H(Y|X)=0.570 bits (weighted average of row entropies); I(X;Y)=0.388 bits. Full step-by-step working in the two channel-matrix examples above (Sections 5 and 6).</div>
+      <div class="a">
+        <p><b>Step 1 — Output probabilities</b> using P(yⱼ)=ΣᵢP(xᵢ)P(yⱼ|xᵢ), or equivalently [P(X)]×[Channel Matrix]:<br>
+        P(y₁) = 0.6(0.9)+0.4(0.2) = 0.54+0.08 = <b>0.62</b><br>
+        P(y₂) = 0.6(0.1)+0.4(0.8) = 0.06+0.32 = <b>0.38</b> (check: 0.62+0.38=1 ✓)</p>
+        <p><b>Step 2 — H(Y)</b> = −[0.62log₂0.62+0.38log₂0.38] = 0.428+0.530 = <b>0.958 bits</b></p>
+        <p><b>Step 3 — H(Y|X)</b>, the weighted average of each row's entropy:<br>
+        H(Y|x₁) = −[0.9log₂0.9+0.1log₂0.1] = 0.137+0.332 = 0.469 bits<br>
+        H(Y|x₂) = −[0.2log₂0.2+0.8log₂0.8] = 0.464+0.257 = 0.722 bits<br>
+        H(Y|X) = 0.6(0.469)+0.4(0.722) = 0.281+0.289 = <b>0.570 bits</b></p>
+        <p><b>Step 4 — I(X;Y)</b> = H(Y) − H(Y|X) = 0.958 − 0.570 = <b>0.388 bits</b></p>
+        <p class="note">💡 Exam shortcut: H(Y|X) is always a probability-weighted average of the row entropies of the channel matrix — this works for <i>any</i> DMC, symmetric or not, so it's more general than memorizing the BSC-only H(p) shortcut.</p>
+      </div>
     </div>
   </div>
 
