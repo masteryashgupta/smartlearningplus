@@ -194,11 +194,10 @@
     position: relative;
   }
 
-  /* ── COPY BUTTON ── */
-  .copy-btn {
+  /* ── CODE ACTION BUTTONS (Copy / Download) ── */
+  .copy-btn, .download-btn {
     position: absolute;
     top: 12px;
-    right: 12px;
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
     color: #e2e8f0;
@@ -209,18 +208,33 @@
     cursor: pointer;
     transition: all 0.2s ease;
     backdrop-filter: blur(4px);
+    white-space: nowrap;
   }
 
-  .copy-btn:hover {
+  .copy-btn:hover, .download-btn:hover {
     background: rgba(255, 255, 255, 0.2);
     color: #fff;
     border-color: rgba(255, 255, 255, 0.4);
   }
 
-  .copy-btn.copied {
+  .copy-btn.copied, .download-btn.downloaded {
     background: #10b981;
     border-color: #10b981;
     color: #fff;
+  }
+
+  .copy-btn { right: 220px; }
+  .download-txt-btn { right: 110px; }
+  .download-c-btn { right: 12px; }
+
+  @media (max-width: 640px) {
+    .copy-btn, .download-btn {
+      position: static;
+      display: inline-block;
+      margin: 0 6px 10px 0;
+    }
+    .code-container { display: flex; flex-direction: column; }
+    .code-container .code-block { order: 2; }
   }
 
   .toast-copy {
@@ -337,6 +351,8 @@
             <div id="content-code" class="tab-pane" style="display:none;">
               <div class="code-container">
                 <button class="copy-btn" onclick="copyCode()">Copy Code</button>
+                <button class="download-btn download-txt-btn" onclick="downloadCode('txt')">Download .txt</button>
+                <button class="download-btn download-c-btn" onclick="downloadCode('c')">Download .c</button>
                 <pre class="code-block" id="code-text">Loading Code...</pre>
               </div>
             </div>
@@ -610,6 +626,37 @@
       } catch (err) {
         console.error("Copy failed:", err);
       }
+    }
+
+    function downloadCode(ext) {
+      const codeText = expData[activeExperiment].code;
+      if (!codeText) return;
+
+      const blob = new Blob([codeText], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${activeExperiment}.${ext}`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      const btn = document.querySelector(`.download-${ext}-btn`);
+      const originalLabel = ext === 'c' ? 'Download .c' : 'Download .txt';
+      btn.textContent = 'Downloaded!';
+      btn.classList.add('downloaded');
+
+      const toast = document.getElementById('toast-copy');
+      toast.textContent = `✓ Code downloaded as ${activeExperiment}.${ext}`;
+      toast.style.display = 'block';
+
+      setTimeout(() => {
+        btn.textContent = originalLabel;
+        btn.classList.remove('downloaded');
+        toast.style.display = 'none';
+        toast.textContent = '✓ Code copied to clipboard!';
+      }, 2000);
     }
 
     // Initialize loader for first experiment
