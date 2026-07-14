@@ -1,8 +1,8 @@
 OUTPUT:
 
 Terminal:
-PS C:\Users\mukul\Downloads\AOA> javac CourseCheckbox.java
-PS C:\Users\mukul\Downloads\AOA> java CourseCheckbox
+PS C:\Users\User\Downloads\AOA> javac CourseCheckbox.java
+PS C:\Users\User\Downloads\AOA> java CourseCheckbox
 
 A window titled "University Courses" opens, containing four checkboxes
 labeled B.Tech, BCA, MCA, and MBA, arranged in a row, followed by a label

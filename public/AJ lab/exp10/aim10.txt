@@ -1,0 +1,2 @@
+To write a JSP program to display the grade of a student by accepting
+the marks of five subjects.

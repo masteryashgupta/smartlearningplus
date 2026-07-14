@@ -1,0 +1,19 @@
+OUTPUT:
+
+Browser URL:
+http://localhost:8080/ProjectName/register.html
+
+A registration form appears with fields "Name" and "Email" and a
+"Register" button.
+
+After entering details (e.g. Name: Riya Singh, Email: riya@mail.com)
+and clicking Register, the page redirects to the Welcome page showing:
+
+Registration Successful
+Name: Riya Singh
+Email: riya@mail.com
+
+Result:
+The servlet program successfully accepts user registration details and
+transfers control to a second page displaying the registered
+information.

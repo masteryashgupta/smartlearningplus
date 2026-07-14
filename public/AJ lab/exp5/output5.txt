@@ -1,0 +1,23 @@
+OUTPUT:
+
+Server Terminal:
+PS C:\Users\User\Downloads\AOA> javac Server.java
+PS C:\Users\User\Downloads\AOA> java Server
+Server started, waiting for client...
+Client connected
+Client: Hello Server
+Server: Hi Client, how are you?
+Client: I am fine
+Server: bye
+
+Client Terminal:
+PS C:\Users\User\Downloads\AOA> javac Client.java
+PS C:\Users\User\Downloads\AOA> java Client
+Client: Hello Server
+Server: Hi Client, how are you?
+Client: I am fine
+Server: bye
+
+Result:
+The client and server successfully communicate with each other using
+Socket and ServerSocket classes over TCP.

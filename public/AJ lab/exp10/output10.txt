@@ -1,0 +1,23 @@
+OUTPUT:
+
+Browser URL:
+http://localhost:8080/ProjectName/marks.html
+
+A form appears with five input fields: Subject 1 to Subject 5.
+
+Sample Input:
+Subject 1: 85
+Subject 2: 78
+Subject 3: 92
+Subject 4: 65
+Subject 5: 88
+
+After clicking "Get Grade", the result page displays:
+
+Total Marks: 408
+Percentage: 81.6%
+Grade: A
+
+Result:
+The JSP program successfully accepts marks of five subjects, calculates
+the total and percentage, and displays the corresponding grade.

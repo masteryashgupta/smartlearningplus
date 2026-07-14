@@ -1,0 +1,2 @@
+To write a servlet program for user registration and then control will
+be transferred into second page.

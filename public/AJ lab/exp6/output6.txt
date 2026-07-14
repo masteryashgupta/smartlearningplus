@@ -1,0 +1,17 @@
+OUTPUT:
+
+Server Terminal:
+PS C:\Users\User\Downloads\AOA> javac CalcInterface.java CalcImpl.java CalcServer.java CalcClient.java
+PS C:\Users\User\Downloads\AOA> java CalcServer
+Calculator Server is ready
+
+Client Terminal:
+PS C:\Users\User\Downloads\AOA> java CalcClient
+Enter first number: 15
+Enter operator (+,-,*,/): *
+Enter second number: 4
+Result: 60.0
+
+Result:
+The RMI application successfully computes the result on the server side
+and returns it to the client, working like a distributed calculator.

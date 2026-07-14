@@ -1,0 +1,3 @@
+To develop an RMI application in which client sends operator and
+operands for computation and server sends back the result. It behaves
+just like a distributed calculator app.

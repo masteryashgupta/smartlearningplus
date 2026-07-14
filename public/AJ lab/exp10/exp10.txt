@@ -1,0 +1,53 @@
+EXPERIMENT NO. 10
+
+Write a JSP program to display the grade of a student by accepting the
+marks of five subjects.
+
+PROGRAM (marks.html):
+
+<html>
+<body>
+<form action="grade.jsp" method="post">
+Subject 1: <input type="text" name="m1"><br>
+Subject 2: <input type="text" name="m2"><br>
+Subject 3: <input type="text" name="m3"><br>
+Subject 4: <input type="text" name="m4"><br>
+Subject 5: <input type="text" name="m5"><br>
+<input type="submit" value="Get Grade">
+</form>
+</body>
+</html>
+
+PROGRAM (grade.jsp):
+
+<html>
+<body>
+<%
+    int m1 = Integer.parseInt(request.getParameter("m1"));
+    int m2 = Integer.parseInt(request.getParameter("m2"));
+    int m3 = Integer.parseInt(request.getParameter("m3"));
+    int m4 = Integer.parseInt(request.getParameter("m4"));
+    int m5 = Integer.parseInt(request.getParameter("m5"));
+
+    int total = m1 + m2 + m3 + m4 + m5;
+    double percentage = total / 5.0;
+    String grade;
+
+    if (percentage >= 90)
+        grade = "A+";
+    else if (percentage >= 80)
+        grade = "A";
+    else if (percentage >= 70)
+        grade = "B";
+    else if (percentage >= 60)
+        grade = "C";
+    else if (percentage >= 40)
+        grade = "D";
+    else
+        grade = "Fail";
+%>
+    <h2>Total Marks: <%= total %></h2>
+    <h2>Percentage: <%= percentage %>%</h2>
+    <h2>Grade: <%= grade %></h2>
+</body>
+</html>

@@ -1,0 +1,91 @@
+EXPERIMENT NO. 4
+
+Develop a JDBC application to perform the database driven operation like
+insert, delete, update and selection using statement, prepared statement
+and result set.
+
+PROGRAM:
+
+import java.sql.*;
+import java.util.Scanner;
+
+public class JdbcDemo {
+    public static void main(String[] args) {
+        String url = "jdbc:mysql://localhost:3306/college";
+        String user = "root";
+        String password = "root";
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection(url, user, password);
+            Scanner sc = new Scanner(System.in);
+            int choice;
+
+            do {
+                System.out.println("\n1.Insert 2.Update 3.Delete 4.Select 5.Exit");
+                System.out.print("Enter choice: ");
+                choice = sc.nextInt();
+
+                switch (choice) {
+                    case 1:
+                        System.out.print("Enter Roll No: ");
+                        int roll = sc.nextInt();
+                        sc.nextLine();
+                        System.out.print("Enter Name: ");
+                        String name = sc.nextLine();
+                        PreparedStatement ps1 = con.prepareStatement(
+                            "INSERT INTO student(roll,name) VALUES(?,?)");
+                        ps1.setInt(1, roll);
+                        ps1.setString(2, name);
+                        ps1.executeUpdate();
+                        System.out.println("Record Inserted");
+                        break;
+
+                    case 2:
+                        System.out.print("Enter Roll No to Update: ");
+                        int r2 = sc.nextInt();
+                        sc.nextLine();
+                        System.out.print("Enter New Name: ");
+                        String newName = sc.nextLine();
+                        PreparedStatement ps2 = con.prepareStatement(
+                            "UPDATE student SET name=? WHERE roll=?");
+                        ps2.setString(1, newName);
+                        ps2.setInt(2, r2);
+                        ps2.executeUpdate();
+                        System.out.println("Record Updated");
+                        break;
+
+                    case 3:
+                        System.out.print("Enter Roll No to Delete: ");
+                        int r3 = sc.nextInt();
+                        Statement st = con.createStatement();
+                        st.executeUpdate("DELETE FROM student WHERE roll=" + r3);
+                        System.out.println("Record Deleted");
+                        break;
+
+                    case 4:
+                        Statement st2 = con.createStatement();
+                        ResultSet rs = st2.executeQuery("SELECT * FROM student");
+                        System.out.println("Roll\tName");
+                        while (rs.next()) {
+                            System.out.println(rs.getInt("roll") + "\t" + rs.getString("name"));
+                        }
+                        break;
+                }
+            } while (choice != 5);
+
+            con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+TABLE USED (MySQL):
+
+CREATE TABLE student(roll INT PRIMARY KEY, name VARCHAR(50));
+
+COMMANDS TO COMPILE AND RUN:
+
+javac JdbcDemo.java
+java JdbcDemo

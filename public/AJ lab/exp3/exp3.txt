@@ -1,0 +1,80 @@
+EXPERIMENT NO. 3
+
+Write a swing program to create components like text fields, buttons,
+toggle buttons, checkboxes, and radio buttons.
+
+PROGRAM:
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class SwingComponents extends JFrame implements ActionListener, ItemListener {
+    JTextField tf;
+    JButton btn;
+    JToggleButton tbtn;
+    JCheckBox cb1, cb2;
+    JRadioButton rb1, rb2;
+    ButtonGroup bg;
+    JLabel status;
+
+    SwingComponents() {
+        setTitle("Swing Components Demo");
+        setLayout(new FlowLayout());
+
+        tf = new JTextField(15);
+        btn = new JButton("Submit");
+        tbtn = new JToggleButton("Toggle");
+        cb1 = new JCheckBox("Java");
+        cb2 = new JCheckBox("Python");
+        rb1 = new JRadioButton("Male");
+        rb2 = new JRadioButton("Female");
+        bg = new ButtonGroup();
+        bg.add(rb1);
+        bg.add(rb2);
+        status = new JLabel("Status: Ready");
+
+        btn.addActionListener(this);
+        tbtn.addItemListener(this);
+        cb1.addItemListener(this);
+        cb2.addItemListener(this);
+        rb1.addItemListener(this);
+        rb2.addItemListener(this);
+
+        add(tf);
+        add(btn);
+        add(tbtn);
+        add(cb1);
+        add(cb2);
+        add(rb1);
+        add(rb2);
+        add(status);
+
+        setSize(400, 250);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        status.setText("Text Entered: " + tf.getText());
+    }
+
+    public void itemStateChanged(ItemEvent e) {
+        Object src = e.getSource();
+        if (src == tbtn)
+            status.setText("Toggle Button: " + (tbtn.isSelected() ? "ON" : "OFF"));
+        else if (src == cb1 || src == cb2)
+            status.setText((cb1.isSelected() ? "Java " : "") + (cb2.isSelected() ? "Python" : ""));
+        else if (src == rb1 || src == rb2)
+            status.setText("Gender: " + (rb1.isSelected() ? "Male" : "Female"));
+    }
+
+    public static void main(String[] args) {
+        new SwingComponents();
+    }
+}
+
+COMMANDS TO COMPILE AND RUN:
+
+javac SwingComponents.java
+java SwingComponents

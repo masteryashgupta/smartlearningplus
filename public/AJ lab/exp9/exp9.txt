@@ -1,0 +1,66 @@
+EXPERIMENT NO. 9
+
+Write a JSP program for user login form with static and dynamic
+database.
+
+PROGRAM (login.html):
+
+<html>
+<body>
+<form action="login.jsp" method="post">
+Username: <input type="text" name="username"><br>
+Password: <input type="password" name="password"><br>
+<input type="submit" value="Login">
+</form>
+</body>
+</html>
+
+PROGRAM (login.jsp):
+
+<%@ page import="java.sql.*" %>
+<html>
+<body>
+<%
+    String username = request.getParameter("username");
+    String password = request.getParameter("password");
+    boolean valid = false;
+
+    // Static Check
+    if (username.equals("admin") && password.equals("admin123")) {
+        valid = true;
+    } else {
+        // Dynamic Check using Database
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/college", "root", "root");
+            PreparedStatement ps = con.prepareStatement(
+                "SELECT * FROM users WHERE username=? AND password=?");
+            ps.setString(1, username);
+            ps.setString(2, password);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                valid = true;
+            }
+            con.close();
+        } catch (Exception e) {
+            out.println(e);
+        }
+    }
+
+    if (valid) {
+%>
+        <h2>Login Successful. Welcome <%= username %></h2>
+<%
+    } else {
+%>
+        <h2>Invalid Username or Password</h2>
+<%
+    }
+%>
+</body>
+</html>
+
+TABLE USED (MySQL):
+
+CREATE TABLE users(username VARCHAR(50), password VARCHAR(50));
