@@ -177,8 +177,8 @@ body { overflow-x: hidden; }
   color: #fff;
 }
 
-.copy-btn { right: 220px; }
-.download-txt-btn { right: 110px; }
+.copy-btn { right: 270px; }
+.download-txt-btn { right: 140px; }
 .download-java-btn { right: 12px; }
 
 .toast-copy {
