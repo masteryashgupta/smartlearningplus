@@ -148,34 +148,45 @@
     margin: 0;
   }
 
-  /* ── COPY BUTTON ── */
-  .copy-btn {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #e2e8f0;
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-size: 11.5px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    backdrop-filter: blur(4px);
-  }
+/* ── ACTION BUTTONS ── */
+   .action-btn {
+     position: absolute;
+     top: 12px;
+     background: rgba(255, 255, 255, 0.1);
+     border: 1px solid rgba(255, 255, 255, 0.2);
+     color: #e2e8f0;
+     padding: 6px 12px;
+     border-radius: 6px;
+     font-size: 11.5px;
+     font-weight: 700;
+     cursor: pointer;
+     transition: all 0.2s ease;
+     backdrop-filter: blur(4px);
+   }
 
-  .copy-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-    color: #fff;
-    border-color: rgba(255, 255, 255, 0.4);
-  }
+   .action-btn:hover {
+     background: rgba(255, 255, 255, 0.2);
+     color: #fff;
+     border-color: rgba(255, 255, 255, 0.4);
+   }
 
-  .copy-btn.copied {
-    background: #10b981;
-    border-color: #10b981;
-    color: #fff;
-  }
+   .action-btn.copied, .action-btn.downloaded {
+     background: #10b981;
+     border-color: #10b981;
+     color: #fff;
+   }
+
+   .copy-btn {
+     right: 220px;
+   }
+
+   .download-txt-btn {
+     right: 110px;
+   }
+
+   .download-c-btn {
+     right: 12px;
+   }
 
   .toast-copy {
     position: fixed;
@@ -233,7 +244,9 @@
           <!-- CODE TAB -->
           <div id="content-code" class="tab-pane" style="display:none;">
             <div class="code-container">
-              <button class="copy-btn" onclick="copyCode()">Copy Code</button>
+              <button class="action-btn copy-btn" onclick="copyCode()">Copy Code</button>
+              <button class="action-btn download-txt-btn" onclick="downloadCode('txt')">Download .txt</button>
+              <button class="action-btn download-c-btn" onclick="downloadCode('c')">Download .c</button>
               <pre class="code-block" id="code-text">Loading Code...</pre>
             </div>
           </div>
@@ -300,6 +313,32 @@
       } catch (err) {
         console.error("Copy failed:", err);
       }
+    }
+
+    function downloadCode(ext) {
+      const blob = new Blob([expCodeText], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `exp5.${ext}`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      const btn = document.querySelector(`.download-${ext}-btn`);
+      btn.textContent = 'Downloaded!';
+      btn.classList.add('downloaded');
+
+      const toast = document.getElementById('toast-copy');
+      toast.textContent = `✓ Code downloaded as exp5.${ext}`;
+      toast.style.display = 'block';
+
+      setTimeout(() => {
+        btn.textContent = ext === 'c' ? 'Download .c' : 'Download .txt';
+        btn.classList.remove('downloaded');
+        toast.style.display = 'none';
+      }, 2000);
     }
 
     loadData();

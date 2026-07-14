@@ -234,7 +234,11 @@
           <!-- CODE TAB -->
           <div id="content-code" class="tab-pane" style="display:none;">
             <div class="code-container">
-              <button class="copy-btn" onclick="copyCode()">Copy Code</button>
+              <div style="position: absolute; top: 12px; right: 12px; display: flex; gap: 8px;">
+                <button class="copy-btn" onclick="copyCode()">Copy Code</button>
+                <button class="copy-btn" onclick="downloadCode('txt')">Download .txt</button>
+                <button class="copy-btn" onclick="downloadCode('c')">Download .c</button>
+              </div>
               <pre class="code-block" id="code-text">Loading Code...</pre>
             </div>
           </div>
@@ -312,6 +316,34 @@
       }
     }
 
+    async function downloadCode(extension) {
+      try {
+        const filename = `exp1.${extension}`;
+        const blob = new Blob([expCodeText], { type: (extension === 'c' ? 'text/x-c' : 'text/plain') });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        const btn = Array.from(document.querySelectorAll('.copy-btn')).find(b => b.textContent.includes(`Download .${extension}`));
+        if (btn) {
+          const originalText = btn.textContent;
+          btn.textContent = 'Downloaded!';
+          btn.classList.add('copied');
+          setTimeout(() => {
+            btn.textContent = originalText;
+            btn.classList.remove('copied');
+          }, 2000);
+        }
+
+      } catch (err) {
+        console.error("Download failed:", err);
+      }
+    }
 
     loadData();
   </script>
