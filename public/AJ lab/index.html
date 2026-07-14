@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Smart Learning Plus // Advanced Java Lab</title>
+<title>Smart Learning Plus // AJ Lab</title>
 <link rel="stylesheet" href="../style.css">
 <style>
   :root {
-    --mc: #7c3aed;
-    --mc-light: rgba(124, 58, 237, 0.08);
+    --mc: #0284c7;
+    --mc-light: rgba(2, 132, 199, 0.08);
   }
 
   body { overflow-x: hidden; }
@@ -26,7 +26,7 @@
   }
   .sl-grid-overlay {
     position: fixed; inset: 0; z-index: -1; pointer-events: none;
-    background-image: linear-gradient(rgba(79,70,229,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(79,70,229,0.03) 1px, transparent 1px);
+    background-image: linear-gradient(rgba(2,132,199,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(2,132,199,0.03) 1px, transparent 1px);
     background-size: 56px 56px;
     mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, black 35%, transparent 90%);
   }
@@ -46,12 +46,6 @@
   .sl-back:hover { background: var(--mc); color:#fff; border-color: var(--mc); }
   .sl-topbar-brand { font-weight:800; font-size:15px; color: var(--text); display:flex; align-items:center; gap:6px; }
   .sl-topbar-brand .sub { color: var(--muted); font-weight:500; font-size:13px; }
-  .sl-topbar-nav { display:flex; gap:6px; flex-wrap:wrap; margin-left:auto; font-size:13px; }
-  .sl-topbar-nav a {
-    color: var(--text2); text-decoration:none; font-weight:600; padding:7px 13px; border-radius:999px;
-    border:1px solid transparent; transition:.2s; background: transparent;
-  }
-  .sl-topbar-nav a:hover { background: var(--mc-light); color: var(--mc); }
 
   /* ── HERO ── */
   .sl-mhero { padding: 56px 0 40px; text-align:center; }
@@ -84,8 +78,184 @@
   .sl-eyebrow-sm { font-size:12px; font-weight:800; letter-spacing:1.4px; text-transform:uppercase; color: var(--mc); margin-bottom:8px; }
   .sl-section-title { font-size:26px; font-weight:800; color: var(--text); letter-spacing:-0.02em; margin-bottom:26px; }
 
+  /* ── EXPERIMENTS TABS VIEW ── */
+  .exp-container {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 30px;
+    animation: sl-pop .7s cubic-bezier(.2,.8,.2,1) both;
+    animation-delay: .2s;
+  }
+
+  .exp-nav {
+    display: flex;
+    gap: 10px;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+    overflow-x: auto;
+  }
+
+  .exp-tab-btn {
+    padding: 8px 16px;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--muted);
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .exp-tab-btn:hover {
+    color: var(--mc);
+    background: var(--mc-light);
+  }
+
+  .exp-tab-btn.active {
+    color: #fff;
+    background: var(--mc);
+  }
+
+  .sub-tab-nav {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .sub-tab-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .sub-tab-btn:hover {
+    border-color: var(--mc);
+    color: var(--mc);
+  }
+
+  .sub-tab-btn.active {
+    background: var(--mc-light);
+    border-color: var(--mc);
+    color: var(--mc);
+  }
+
+  .exp-content {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    min-height: 150px;
+  }
+
+  .exp-aim-text {
+    font-size: 14px;
+    color: var(--text2);
+    line-height: 1.6;
+  }
+
+  .code-block {
+    background: #0f172a !important;
+    color: #f8fafc !important;
+    padding: 16px;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.5;
+    overflow-x: auto;
+    white-space: pre;
+    margin: 0;
+  }
+
+  .output-block {
+    background: #1e293b;
+    color: #38bdf8;
+    padding: 16px;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.5;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    margin: 0;
+  }
+
+  .code-container {
+    position: relative;
+  }
+
+  /* ── CODE ACTION BUTTONS (Copy / Download) ── */
+  .copy-btn, .download-btn {
+    position: absolute;
+    top: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e2e8f0;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 11.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(4px);
+    white-space: nowrap;
+  }
+
+  .copy-btn:hover, .download-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+
+  .copy-btn.copied, .download-btn.downloaded {
+    background: #10b981;
+    border-color: #10b981;
+    color: #fff;
+  }
+
+  .copy-btn { right: 220px; }
+  .download-txt-btn { right: 110px; }
+  .download-java-btn { right: 12px; }
+
+  @media (max-width: 640px) {
+    .copy-btn, .download-btn {
+      position: static;
+      display: inline-block;
+      margin: 0 6px 10px 0;
+    }
+    .code-container { display: flex; flex-direction: column; }
+    .code-container .code-block { order: 2; }
+  }
+
+  .toast-copy {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #10b981;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 1000;
+    display: none;
+  }
+
   /* ── RESOURCE CARDS ── */
-  .sl-res-grid { display:grid; grid-template-columns: 1fr; gap:16px; }
+  .sl-res-grid { display:grid; grid-template-columns: repeat(2,1fr); gap:16px; }
+  @media (max-width:620px){ .sl-res-grid{ grid-template-columns:1fr; } }
   .sl-res-card {
     display:flex; align-items:center; gap:16px; background: var(--surface); border:1px solid var(--border);
     border-radius:16px; padding:20px; text-decoration:none; transition:.25s;
@@ -124,42 +294,339 @@
 
     <main class="sl-shell">
       <div class="sl-mhero">
-        <div class="sl-meyebrow">☕ PRACTICAL PORTAL</div>
-        <h1 class="sl-mtitle">Advanced <span class="grad">Java Lab</span></h1>
+        <div class="sl-meyebrow">🔬 PRACTICAL PORTAL</div>
+        <h1 class="sl-mtitle">AJ <span class="grad">Lab</span></h1>
         <p class="sl-msub">RTU V Semester · Practical &amp; Laboratory Work</p>
-        <p class="sl-mmeta">Java Swing, AWT, Event Handling &amp; Layout Managers</p>
+        <p class="sl-mmeta">Practical Programs &amp; Laboratory Implementation</p>
 
-         <div class="sl-stats">
-           <div class="sl-stat">
-             <div class="sl-stat-num">01</div>
-             <div class="sl-stat-label">Programs</div>
-           </div>
-         </div>
+        <div class="exp-stats">
+          <div class="sl-stat">
+            <div class="sl-stat-num">10</div>
+            <div class="sl-stat-label">Programs</div>
+          </div>
+          <div class="sl-stat">
+            <div class="sl-stat-num">Working</div>
+            <div class="sl-stat-label">Status</div>
+          </div>
+        </div>
       </div>
 
+      <!-- EXPERIMENTS TABS MODULE -->
       <section class="sl-section">
-        <div class="sl-eyebrow-sm">Laboratory Resources</div>
-        <h2 class="sl-section-title">Code Downloads</h2>
+        <div class="sl-eyebrow-sm">Interactive Lab Manual</div>
+        <h2 class="sl-section-title">Lab Experiments &amp; Tasks</h2>
 
-        <div class="sl-res-grid">
-          <a class="sl-res-card" href="CourseCheckbox.java" download>
-            <div class="sl-res-icon">☕</div>
-            <div class="sl-res-details">
-              <div class="sl-res-title">CourseCheckbox.java</div>
-              <div class="sl-res-desc">Swing/AWT event handling check box example</div>
+        <div class="exp-container">
+          <div class="exp-nav">
+            <button class="exp-tab-btn active" onclick="switchExperiment('exp1', this)">Experiment 1</button>
+            <button class="exp-tab-btn" onclick="switchExperiment('exp2', this)">Experiment 2</button>
+            <button class="exp-tab-btn" onclick="switchExperiment('exp3', this)">Experiment 3</button>
+            <button class="exp-tab-btn" onclick="switchExperiment('exp4', this)">Experiment 4</button>
+            <button class="exp-tab-btn" onclick="switchExperiment('exp5', this)">Experiment 5</button>
+            <button class="exp-tab-btn" onclick="switchExperiment('exp6', this)">Experiment 6</button>
+            <button class="exp-tab-btn" onclick="switchExperiment('exp7', this)">Experiment 7</button>
+            <button class="exp-tab-btn" onclick="switchExperiment('exp8', this)">Experiment 8</button>
+            <button class="exp-tab-btn" onclick="switchExperiment('exp9', this)">Experiment 9</button>
+            <button class="exp-tab-btn" onclick="switchExperiment('exp10', this)">Experiment 10</button>
+          </div>
+
+          <div class="sub-tab-nav">
+            <button class="sub-tab-btn active" id="btn-aim" onclick="switchSubTab('aim')">Aim</button>
+            <button class="sub-tab-btn" id="btn-code" onclick="switchSubTab('code')">Code</button>
+            <button class="sub-tab-btn" id="btn-output" onclick="switchSubTab('output')">Output</button>
+            <button class="sub-tab-btn" id="btn-explanation" onclick="switchSubTab('explanation')" style="display:none;">💡 Explanation</button>
+          </div>
+
+          <div class="exp-content">
+            <!-- AIM TAB -->
+            <div id="content-aim" class="tab-pane">
+              <p class="exp-aim-text" id="aim-text">Loading Aim...</p>
             </div>
-            <span class="sl-res-status">Java File</span>
-          </a>
+            
+            <!-- CODE TAB -->
+            <div id="content-code" class="tab-pane" style="display:none;">
+              <div class="code-container">
+                <button class="copy-btn" onclick="copyCode()">Copy Code</button>
+                <button class="download-btn download-txt-btn" onclick="downloadCode('txt')">Download .txt</button>
+                <button class="download-btn download-java-btn" onclick="downloadCode('java')">Download .java</button>
+                <pre class="code-block" id="code-text">Loading Code...</pre>
+              </div>
+            </div>
+
+            <!-- OUTPUT TAB -->
+            <div id="content-output" class="tab-pane" style="display:none;">
+              <pre class="output-block" id="output-text">Loading Output...</pre>
+            </div>
+
+            <!-- EXPLANATION TAB (exp1 only) -->
+            <div id="content-explanation" class="tab-pane" style="display:none;">
+              <pre class="output-block" id="explanation-text">Loading Explanation...</pre>
+            </div>
+          </div>
         </div>
       </section>
 
+      <section class="sl-section">
+        <div class="sl-eyebrow-sm">Laboratory Resources</div>
+        <h2 class="sl-section-title">Materials &amp; Downloads</h2>
+        <p style="color:var(--muted); font-size:13.5px; margin-bottom:24px;">
+          Resources will appear here once uploaded and approved. Students can contribute notes using the <a href="../index.html#dashboard" style="color:var(--mc); font-weight:700;">Share Study Material</a> feature on the dashboard.
+        </p>
+        <div class="sl-res-grid" id="community-materials-grid"></div>
+      </section>
+
       <footer class="sl-mfooter">
-        <p>☕ Advanced Java Lab · Smart Learning Plus · <a href="../index.html">← Back to Main Hub</a></p>
+        <p>🔬 AJ Lab · Smart Learning Plus · <a href="../index.html">← Back to Main Hub</a></p>
       </footer>
     </main>
   </div>
 
+  <div class="toast-copy" id="toast-copy">✓ Code copied to clipboard!</div>
+
   <script>
+    // Tab switching state
+    let activeExperiment = 'exp1';
+    let activeSubTab = 'aim';
+
+    // File Content Vault
+        const expData = {
+      exp1: {
+        aimFile: 'exp1/aim1.txt',
+        codeFile: 'exp1/exp1.txt',
+        outputFile: 'exp1/output1.txt',
+        explainFile: '',
+        aim: '',
+        code: '',
+        output: '',
+        explanation: ''
+      },
+      exp2: {
+        aimFile: 'exp2/aim2.txt',
+        codeFile: 'exp2/exp2.txt',
+        outputFile: 'exp2/output2.txt',
+        explainFile: '',
+        aim: '',
+        code: '',
+        output: '',
+        explanation: ''
+      },
+      exp3: {
+        aimFile: 'exp3/aim3.txt',
+        codeFile: 'exp3/exp3.txt',
+        outputFile: 'exp3/output3.txt',
+        explainFile: '',
+        aim: '',
+        code: '',
+        output: '',
+        explanation: ''
+      },
+      exp4: {
+        aimFile: 'exp4/aim4.txt',
+        codeFile: 'exp4/exp4.txt',
+        outputFile: 'exp4/output4.txt',
+        explainFile: '',
+        aim: '',
+        code: '',
+        output: '',
+        explanation: ''
+      },
+      exp5: {
+        aimFile: 'exp5/aim5.txt',
+        codeFile: 'exp5/exp5.txt',
+        outputFile: 'exp5/output5.txt',
+        explainFile: '',
+        aim: '',
+        code: '',
+        output: '',
+        explanation: ''
+      },
+      exp6: {
+        aimFile: 'exp6/aim6.txt',
+        codeFile: 'exp6/exp6.txt',
+        outputFile: 'exp6/output6.txt',
+        explainFile: '',
+        aim: '',
+        code: '',
+        output: '',
+        explanation: ''
+      },
+      exp7: {
+        aimFile: 'exp7/aim7.txt',
+        codeFile: 'exp7/exp7.txt',
+        outputFile: 'exp7/output7.txt',
+        explainFile: '',
+        aim: '',
+        code: '',
+        output: '',
+        explanation: ''
+      },
+      exp8: {
+        aimFile: 'exp8/aim8.txt',
+        codeFile: 'exp8/exp8.txt',
+        outputFile: 'exp8/output8.txt',
+        explainFile: '',
+        aim: '',
+        code: '',
+        output: '',
+        explanation: ''
+      },
+      exp9: {
+        aimFile: 'exp9/aim9.txt',
+        codeFile: 'exp9/exp9.txt',
+        outputFile: 'exp9/output9.txt',
+        explainFile: '',
+        aim: '',
+        code: '',
+        output: '',
+        explanation: ''
+      },
+      exp10: {
+        aimFile: 'exp10/aim10.txt',
+        codeFile: 'exp10/exp10.txt',
+        outputFile: 'exp10/output10.txt',
+        explainFile: '',
+        aim: '',
+        code: '',
+        output: '',
+        explanation: ''
+      }
+    };
+
+    // Load file contents for a single experiment on demand
+    async function loadExpFiles(expId) {
+      const data = expData[expId];
+      if (data.aim && data.code && data.output) {
+        return; // Already fetched
+      }
+      try {
+        const aimRes = await fetch(data.aimFile);
+        data.aim = await aimRes.text();
+        
+        const codeRes = await fetch(data.codeFile);
+        data.code = await codeRes.text();
+
+        const outputRes = await fetch(data.outputFile);
+        data.output = await outputRes.text();
+
+        // Load explanation file if this experiment has one
+        if (data.explainFile && !data.explanation) {
+          const explainRes = await fetch(data.explainFile);
+          data.explanation = await explainRes.text();
+        }
+      } catch (err) {
+        console.error(`Error fetching files for ${expId}:`, err);
+      }
+    }
+
+    async function switchExperiment(expId, btn) {
+      document.querySelectorAll('.exp-tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeExperiment = expId;
+      
+      // Show loading state while retrieving
+      document.getElementById('aim-text').textContent = 'Loading Aim...';
+      document.getElementById('code-text').textContent = 'Loading Code...';
+      document.getElementById('output-text').textContent = 'Loading Output...';
+
+      // Show Explanation tab only for experiments that have an explanation file
+      const explainBtn = document.getElementById('btn-explanation');
+      if (expData[expId].explainFile) {
+        explainBtn.style.display = '';
+      } else {
+        explainBtn.style.display = 'none';
+        if (activeSubTab === 'explanation') {
+          switchSubTab('aim');
+        }
+      }
+
+      await loadExpFiles(expId);
+      renderActiveTab();
+    }
+
+    function switchSubTab(subTabId) {
+      document.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(`btn-${subTabId}`).classList.add('active');
+      
+      document.querySelectorAll('.tab-pane').forEach(p => p.style.display = 'none');
+      document.getElementById(`content-${subTabId}`).style.display = 'block';
+      activeSubTab = subTabId;
+    }
+
+    function renderActiveTab() {
+      const data = expData[activeExperiment];
+      document.getElementById('aim-text').textContent = data.aim || 'Aim text not loaded.';
+      document.getElementById('code-text').textContent = data.code || 'Code text not loaded.';
+      document.getElementById('output-text').textContent = data.output || 'Output text not loaded.';
+      if (document.getElementById('explanation-text')) {
+        document.getElementById('explanation-text').textContent = data.explanation || '';
+      }
+    }
+
+    async function copyCode() {
+      try {
+        const codeText = expData[activeExperiment].code;
+        if (!codeText) return;
+        await navigator.clipboard.writeText(codeText);
+        const btn = document.querySelector('.copy-btn');
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+
+        const toast = document.getElementById('toast-copy');
+        toast.style.display = 'block';
+
+        setTimeout(() => {
+          btn.textContent = 'Copy Code';
+          btn.classList.remove('copied');
+          toast.style.display = 'none';
+        }, 2000);
+      } catch (err) {
+        console.error("Copy failed:", err);
+      }
+    }
+
+    function downloadCode(ext) {
+      const codeText = expData[activeExperiment].code;
+      if (!codeText) return;
+
+      const blob = new Blob([codeText], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${activeExperiment}.${ext}`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      const btn = document.querySelector(`.download-${ext}-btn`);
+      const originalLabel = ext === 'java' ? 'Download .java' : 'Download .txt';
+      btn.textContent = 'Downloaded!';
+      btn.classList.add('downloaded');
+
+      const toast = document.getElementById('toast-copy');
+      toast.textContent = `✓ Code downloaded as ${activeExperiment}.${ext}`;
+      toast.style.display = 'block';
+
+      setTimeout(() => {
+        btn.textContent = originalLabel;
+        btn.classList.remove('downloaded');
+        toast.style.display = 'none';
+        toast.textContent = '✓ Code copied to clipboard!';
+      }, 2000);
+    }
+
+    // Initialize loader for first experiment
+    async function init() {
+      await loadExpFiles(activeExperiment);
+      renderActiveTab();
+      // Show explanation tab only if the active experiment actually has one
+      document.getElementById('btn-explanation').style.display =
+        expData[activeExperiment].explainFile ? '' : 'none';
+    }
+    init();
+
+
+    // Scroll animation observer
     const io = new IntersectionObserver((entries) => {
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('sl-in'); });
     }, { threshold: 0.12 });

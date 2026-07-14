@@ -1,0 +1,21 @@
+OUTPUT:
+
+Terminal:
+PS C:\Users\mukul\Downloads\AOA> javac CourseCheckbox.java
+PS C:\Users\mukul\Downloads\AOA> java CourseCheckbox
+
+A window titled "University Courses" opens, containing four checkboxes
+labeled B.Tech, BCA, MCA, and MBA, arranged in a row, followed by a label
+below them.
+
+Initially the label displays:
+Selected Courses: None
+
+When one or more checkboxes are selected/deselected, the label updates
+dynamically to show the names of the currently selected courses,
+for example:
+Selected Courses: B.Tech MCA
+
+Result:
+The AWT program using Checkbox and ItemListener successfully displays
+the courses selected by the user.

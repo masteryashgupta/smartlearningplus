@@ -1,3 +1,10 @@
+EXPERIMENT NO. 1
+
+Write an AWT program to create check boxes for different courses of a
+university such that the courses selected will be displayed.
+
+PROGRAM:
+
 import java.awt.*;
 import java.awt.event.*;
 
