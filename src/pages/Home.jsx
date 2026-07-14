@@ -901,7 +901,16 @@ const handleContribSubmit = async (e) => {
           </div>
         </nav>
 
+        {/* AI DISCLAIMER PILL */}
+        <div className="flex justify-center mt-2 mb-4">
+          <div className="flex items-center gap-2 px-4 py-1.5 rounded-full text-xs" style={{ color: "var(--muted)", backgroundColor: "var(--surface2)", border: "1px solid var(--border)" }}>
+            <span>🤖</span>
+            <span className="text-center">This platform's study material and lab experiments are AI-assisted for learning support and may not exactly match official faculty content — please verify before submission.</span>
+          </div>
+        </div>
+
         {/* DASHBOARD HEADER & WELCOME CARD */}
+        
         {session && session.role === "student" && (
           <>
             {/* Desktop View */}
