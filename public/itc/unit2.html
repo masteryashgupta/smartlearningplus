@@ -146,6 +146,37 @@ L = −Σ Pᵢ log₂Pᵢ + λ(Σ Pᵢ − 1)
     <p>Substituting P<sub>i</sub> = 1/n back gives <b>H<sub>max</sub>(X) = log₂n</b>. Hence entropy is maximum exactly when all symbols are equally likely — this is the equiprobable / uniform distribution case.</p>
   </div>
 
+  <div class="card example">
+    <span class="tag">Example (non power-of-2 probabilities)</span>
+    <p>A discrete memoryless source emits 3 symbols with P(x₁)=0.6, P(x₂)=0.3, P(x₃)=0.1. Find H(X) and compare with the maximum possible entropy for a 3-symbol source.</p>
+    <p><b>Solution:</b><br>
+    Since these are not clean powers of ½, use log₂x = ln x / ln 2 (or log₁₀x / log₁₀2):<br>
+    log₂0.6 = −0.737, &nbsp; log₂0.3 = −1.737, &nbsp; log₂0.1 = −3.322<br>
+    H(X) = −[0.6(−0.737) + 0.3(−1.737) + 0.1(−3.322)]<br>
+    = 0.442 + 0.521 + 0.332 = <b>1.295 bits/symbol</b><br>
+    H<sub>max</sub> = log₂3 = <b>1.585 bits/symbol</b> (equiprobable case, each P=1/3)</p>
+    <p class="note">💡 Since H(X) = 1.295 &lt; H<sub>max</sub> = 1.585, this confirms the source is not "maximally random" — it carries some redundancy because the symbols are not equiprobable (x₁ is much more likely than x₃).</p>
+  </div>
+
+  <div class="card" id="entropy-sim" style="border:1px solid var(--border2, #2a3540);">
+    <h3 class="sub" style="margin-top:0;">🧪 Interactive Simulation — Binary Source Entropy Calculator <span class="imp l">Try it</span></h3>
+    <p style="margin-bottom:14px;">Drag the slider to change P(0) for a binary source (P(1) auto-adjusts to 1−P(0)) and watch H(X) update live — this is exactly Fig 2.1's curve, but computed for the value you pick.</p>
+    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+      <input type="range" id="entP0" min="1" max="99" value="50" style="flex:1;min-width:200px;accent-color:var(--accent2, #06b6d4);">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:14px;min-width:210px;">P(0) = <b id="entP0val">0.50</b> &nbsp;|&nbsp; P(1) = <b id="entP1val">0.50</b></span>
+    </div>
+    <div style="margin-top:16px;display:flex;gap:24px;flex-wrap:wrap;align-items:flex-end;">
+      <div style="flex:1;min-width:220px;">
+        <div style="height:18px;border-radius:10px;overflow:hidden;display:flex;border:1px solid rgba(128,128,128,0.3);">
+          <div id="entBar0" style="background:var(--accent2,#06b6d4);height:100%;width:50%;transition:width .15s;"></div>
+          <div id="entBar1" style="background:#ffb454;height:100%;width:50%;transition:width .15s;"></div>
+        </div>
+      </div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:800;">H(X) = <span id="entH" style="color:var(--accent2,#06b6d4);">1.000</span> bits/symbol</div>
+    </div>
+    <p class="note" id="entNote" style="margin-top:12px;">💡 At P(0)=0.5 entropy is at its peak (=1 bit) — try dragging to the edges to see H(X)→0 as the source becomes predictable.</p>
+  </div>
+
   <h3 class="sub">Joint Entropy &amp; Marginal Entropy <span class="imp m">Medium ⭐⭐⭐</span></h3>
   <div class="card def">
     <span class="tag">English</span>
@@ -186,6 +217,16 @@ L = −Σ Pᵢ log₂Pᵢ + λ(Σ Pᵢ − 1)
     <p>For X ~ N(μ, σ²):</p>
     <div class="formula">h(X) = ½ log₂(2πeσ²)</div>
     <p>This is the <b>maximum differential entropy</b> among all continuous distributions with the same variance σ² — i.e., for a fixed power/variance constraint, the Gaussian source is the "most random" (max entropy) source.</p>
+  </div>
+
+  <div class="card example">
+    <span class="tag">Example — Uniform Distribution</span>
+    <p>A continuous random variable X is uniformly distributed over the interval [0, 8], i.e. f(x) = 1/8 for 0≤x≤8. Find its differential entropy h(X).</p>
+    <p><b>Solution:</b><br>
+    For a uniform distribution over [a,b], f(x) = 1/(b−a), so:<br>
+    h(X) = −∫<sub>a</sub><sup>b</sup> (1/(b−a))·log₂(1/(b−a)) dx = log₂(b−a)<br>
+    Here (b−a) = 8, so h(X) = log₂8 = <b>3 bits</b></p>
+    <p class="note">💡 General shortcut: for uniform X on [a,b], h(X) = log₂(b−a). If (b−a) &lt; 1, h(X) becomes <b>negative</b> — a perfectly valid result for differential entropy (unlike discrete entropy, which can never be negative).</p>
   </div>
 
   <table>
@@ -264,6 +305,41 @@ Mutual Information (continuous): I(X;Y) = h(X) − h(X|Y)
     <p>Kraft inequality batati hai ki given lengths ke saath ek valid "instantaneous/prefix code" possible hai ya nahi — agar sab 2<sup>−lᵢ</sup> ka sum ≤1 hai, to aisa code ban sakta hai jisme koi codeword kisi doosre ka prefix na ho (taaki decode karte waqt confusion na ho).</p>
   </div>
 
+  <h3 class="sub">Huffman Coding — Constructing an Optimal Instantaneous Code <span class="imp h">High ⭐⭐⭐⭐ — practical construction, frequently asked</span></h3>
+  <div class="card def">
+    <span class="tag">English</span>
+    <p><b>Huffman coding</b> is a greedy algorithm that constructs an optimal (minimum L<sub>avg</sub>) prefix code for a given set of symbol probabilities:</p>
+    <ol>
+      <li>List all symbols in decreasing order of probability.</li>
+      <li>Combine the two <b>lowest</b>-probability symbols into a single node (sum of probabilities); assign one branch '0' and the other '1'.</li>
+      <li>Repeat step 2 with the new reduced list until only one node (probability 1) remains.</li>
+      <li>Read each symbol's codeword by tracing the tree from root to leaf.</li>
+    </ol>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Huffman coding ka simple logic: jo symbol <b>sabse kam probable</b> hai, use <b>sabse lambi codeword</b> milegi, aur jo <b>sabse zyada probable</b> hai use <b>sabse chhoti codeword</b>. Har step pe do sabse chhoti probabilities ko "merge" karte jao jab tak sirf ek bache — yehi tree banata hai jisse codewords milte hain.</p>
+  </div>
+
+  <div class="card example">
+    <span class="tag">Example (continuing the same 4-symbol source)</span>
+    <p>For the source with P(x₁)=0.5, P(x₂)=0.25, P(x₃)=0.125, P(x₄)=0.125 (H(X)=1.75 bits/symbol, from Section 2), construct a Huffman code and verify its efficiency.</p>
+    <p><b>Solution — building the tree:</b><br>
+    Step 1: Combine x₃(0.125) &amp; x₄(0.125) → node A (0.25)<br>
+    Step 2: Combine A(0.25) &amp; x₂(0.25) → node B (0.5)<br>
+    Step 3: Combine B(0.5) &amp; x₁(0.5) → root (1.0)</p>
+    <table>
+      <tr><th>Symbol</th><th>Probability</th><th>Codeword</th><th>Length lᵢ</th></tr>
+      <tr><td>x₁</td><td>0.5</td><td>0</td><td>1</td></tr>
+      <tr><td>x₂</td><td>0.25</td><td>10</td><td>2</td></tr>
+      <tr><td>x₃</td><td>0.125</td><td>110</td><td>3</td></tr>
+      <tr><td>x₄</td><td>0.125</td><td>111</td><td>3</td></tr>
+    </table>
+    <p><b>L<sub>avg</sub></b> = Σ Pᵢlᵢ = 0.5(1)+0.25(2)+0.125(3)+0.125(3) = 0.5+0.5+0.375+0.375 = <b>1.75 bits/symbol</b><br>
+    Since L<sub>avg</sub> = H(X) exactly, <b>efficiency η = 100%</b> — this happens because all probabilities are exact negative powers of 2 (0.5=2⁻¹, 0.25=2⁻², 0.125=2⁻³), which is the ideal case for Huffman/Shannon-Fano coding.</p>
+    <p class="note">💡 Check the prefix property: {0, 10, 110, 111} — no codeword is a prefix of another, so it is instantaneously (uniquely) decodable. Also verify Kraft's inequality: 2⁻¹+2⁻²+2⁻³+2⁻³ = 0.5+0.25+0.125+0.125 = 1 ≤ 1 ✓ (equality means the code is 100% efficient, no wasted code-space).</p>
+  </div>
+
   <h3 class="sub">Proof Sketch of Source Coding Theorem <span class="imp h">High ⭐⭐⭐ — 10-mark derivation</span></h3>
   <div class="card">
     <p><b>Lower bound (L<sub>avg</sub> ≥ H(X)):</b> By Gibbs' inequality, for any two probability distributions P and Q: −ΣPᵢlog₂Pᵢ ≤ −ΣPᵢlog₂Qᵢ. Choosing Qᵢ = 2<sup>−lᵢ</sup>/Σ2<sup>−lⱼ</sup> and using the Kraft inequality (Σ2<sup>−lᵢ</sup>≤1), it follows algebraically that:</p>
@@ -331,6 +407,18 @@ Mutual Information (continuous): I(X;Y) = h(X) − h(X|Y)
     <p><b>Lossless</b> = output se input bilkul reverse-trace ho sakta hai (no info kho rahi). <b>Deterministic</b> = ek fixed input se hamesha same output aata hai (no randomness output side pe). <b>Noiseless</b> = best case, dono properties saath — channel perfectly clean hai.</p>
   </div>
 
+  <div class="card example">
+    <span class="tag">Example — Finding P(Y) and H(Y) from a Channel Matrix</span>
+    <p>A DMC has input probabilities P(x₁)=0.6, P(x₂)=0.4 and channel matrix [P(Y|X)] = [[0.9, 0.1],[0.2, 0.8]] (row = input, column = output). Find P(y₁), P(y₂) and H(Y).</p>
+    <p><b>Solution:</b><br>
+    Output probabilities are found using total probability: P(yⱼ) = Σᵢ P(xᵢ)·P(yⱼ|xᵢ)<br>
+    P(y₁) = P(x₁)P(y₁|x₁) + P(x₂)P(y₁|x₂) = 0.6(0.9) + 0.4(0.2) = 0.54 + 0.08 = <b>0.62</b><br>
+    P(y₂) = P(x₁)P(y₂|x₁) + P(x₂)P(y₂|x₂) = 0.6(0.1) + 0.4(0.8) = 0.06 + 0.32 = <b>0.38</b><br>
+    Check: P(y₁)+P(y₂) = 0.62+0.38 = 1 ✓<br>
+    H(Y) = −[0.62log₂0.62 + 0.38log₂0.38] = −[0.62(−0.690)+0.38(−1.396)] = 0.428+0.530 = <b>0.958 bits</b></p>
+    <p class="note">💡 Exam tip: write P(Y) as a row vector = [P(X)] × [Channel Matrix] (matrix multiplication) — this is the fastest way to get output probabilities for any DMC, not just a BSC.</p>
+  </div>
+
   <h3 class="sub">Channel Capacity <span class="imp h">High ⭐⭐⭐⭐ — frequently asked with BSC numerical</span></h3>
   <div class="card def">
     <span class="tag">English</span>
@@ -359,6 +447,23 @@ Mutual Information (continuous): I(X;Y) = h(X) − h(X|Y)
       <text x="245" y="205" fill="#ff6b6b" font-size="10" text-anchor="middle">C=0 (worst, p=0.5)</text>
     </svg>
     <p class="cap">Fig 2.4 — BSC Capacity vs crossover probability p. C=1 at p=0 or p=1 (no ambiguity), C=0 at p=0.5 (max confusion)</p>
+  </div>
+
+  <div class="card" id="bsc-sim" style="border:1px solid var(--border2, #2a3540);">
+    <h3 class="sub" style="margin-top:0;">🧪 Interactive Simulation — BSC Capacity Explorer <span class="imp l">Try it</span></h3>
+    <p style="margin-bottom:14px;">Drag the slider to change crossover probability p and watch H(p) and channel capacity C = 1−H(p) recompute instantly.</p>
+    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+      <input type="range" id="bscP" min="0" max="100" value="10" style="flex:1;min-width:200px;accent-color:#ffb454;">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:14px;min-width:120px;">p = <b id="bscPval">0.10</b></span>
+    </div>
+    <div style="margin-top:16px;display:flex;gap:30px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;">
+      <div style="font-size:16px;">H(p) = <b id="bscH" style="color:#ffb454;">0.469</b> bits</div>
+      <div style="font-size:22px;font-weight:800;">C = <span id="bscC" style="color:var(--accent2,#06b6d4);">0.531</span> bits/use</div>
+    </div>
+    <div style="height:18px;border-radius:10px;overflow:hidden;margin-top:12px;border:1px solid rgba(128,128,128,0.3);">
+      <div id="bscBar" style="background:var(--accent2,#06b6d4);height:100%;width:53%;transition:width .15s;"></div>
+    </div>
+    <p class="note" id="bscNote" style="margin-top:12px;">💡 A good, mostly-reliable channel — try dragging to p=0.5 to see the channel become completely useless (C=0).</p>
   </div>
 
   <h2 class="topic">6. Mutual Information <span class="imp h">High ⭐⭐⭐⭐</span></h2>
@@ -395,6 +500,18 @@ I(X;Y) = H(X) − H(X|Y)
         = log₂[1] = 0
 ⟹ I(X;Y) ≥ 0  (equality holds iff X,Y are independent)
     </div>
+  </div>
+
+  <div class="card example">
+    <span class="tag">Example — Mutual Information for an Asymmetric Channel</span>
+    <p>Using the same channel from the earlier example — P(x₁)=0.6, P(x₂)=0.4, matrix [[0.9,0.1],[0.2,0.8]], with P(y₁)=0.62, P(y₂)=0.38, H(Y)=0.958 bits — find H(Y|X) and I(X;Y).</p>
+    <p><b>Solution:</b><br>
+    H(Y|X) = Σᵢ P(xᵢ)·H(Y|X=xᵢ), where H(Y|X=xᵢ) is the entropy of row i of the channel matrix:<br>
+    H(Y|x₁) = −[0.9log₂0.9+0.1log₂0.1] = 0.137+0.332 = 0.469 bits<br>
+    H(Y|x₂) = −[0.2log₂0.2+0.8log₂0.8] = 0.464+0.257 = 0.722 bits<br>
+    H(Y|X) = 0.6(0.469) + 0.4(0.722) = 0.281 + 0.289 = <b>0.570 bits</b><br>
+    I(X;Y) = H(Y) − H(Y|X) = 0.958 − 0.570 = <b>0.388 bits</b></p>
+    <p class="note">💡 Exam shortcut: H(Y|X) is a <b>weighted average of the row entropies</b> of the channel matrix, weighted by the input probabilities P(xᵢ) — this works for any DMC, not just symmetric ones like BSC.</p>
   </div>
 
   <h2 class="topic">7. Conditional Entropy <span class="imp h">High ⭐⭐⭐</span></h2>
@@ -437,9 +554,12 @@ I(X;Y) = H(X) − H(X|Y)
     <p>For a BSC with P(0)=P(1)=0.5 and crossover probability p=0.1, find H(X), H(Y|X), and I(X;Y).</p>
     <p><b>Solution:</b><br>
     H(X) = −(0.5log₂0.5+0.5log₂0.5) = <b>1 bit</b><br>
-    H(p) = −p log₂p −(1−p)log₂(1−p) = −0.1log₂0.1 −0.9log₂0.9 = <b>0.469 bits</b><br>
-    Since channel is symmetric, H(Y|X) = H(p) = 0.469 bits<br>
-    I(X;Y) = H(X) − H(Y|X)... <i>(using H(Y)=H(X)=1 by symmetry, and H(Y|X)=H(p))</i><br>
+    H(p) = −p log₂p −(1−p)log₂(1−p) = −0.1log₂0.1 −0.9log₂0.9 = 0.1(3.32)+0.9(0.152) = <b>0.469 bits</b><br>
+    Since the channel is symmetric and the input is equiprobable, the output is also equiprobable ⟹ H(Y) = 1 bit, and H(Y|X) = H(p) = <b>0.469 bits</b><br>
+    I(X;Y) = H(Y) − H(Y|X) = 1 − 0.469 = <b>0.531 bits</b> &nbsp;(≈53% of the source information survives transmission through this noisy channel per symbol)</p>
+    <p class="note">💡 This equals the channel capacity C = 1−H(0.1) computed earlier for the same p — that's because equiprobable input is exactly the capacity-achieving distribution for a BSC, so at P(0)=P(1)=0.5 the mutual information already equals C.</p>
+  </div>
+
   <h3 class="sub">Proof: H(X|Y) ≤ H(X) <span class="imp m">Medium ⭐⭐ — proof question</span></h3>
   <div class="card">
     <p>Since I(X;Y) = H(X) − H(X|Y) and we proved I(X;Y) ≥ 0 above, it directly follows that:</p>
@@ -579,6 +699,21 @@ I(X;Y) = H(X) − H(X|Y)
       <div class="q">Q21. Numerical (10 Marks — most important pattern): Given a joint probability matrix P(X,Y), compute H(X), H(Y), H(X,Y), H(X|Y), H(Y|X) and I(X;Y). <span class="imp h">★★★★★ Guaranteed-type question</span></div>
       <div class="a">Full worked solution with a sample 2×2 joint matrix given above in "Full Worked Numerical" section — follow the exact same 6-step order (H(X,Y) first, then derive rest) for any matrix given in the exam.</div>
     </div>
+
+    <div class="qa">
+      <div class="q">Q22. Construct a Huffman code for a source with 4 symbols of probabilities 0.5, 0.25, 0.125, 0.125. Find L<sub>avg</sub> and efficiency. <span class="imp h">★★★★ 7 Marks — construction-based</span></div>
+      <div class="a">Combine two lowest probabilities repeatedly to build the tree; resulting codewords {0, 10, 110, 111} give L<sub>avg</sub>=1.75 bits = H(X), so η=100%. Full tree construction in "Huffman Coding" section above.</div>
+    </div>
+
+    <div class="qa">
+      <div class="q">Q23. Find the differential entropy of a random variable uniformly distributed over [0, 8]. <span class="imp m">★★★ 5 Marks numerical</span></div>
+      <div class="a">For uniform X on [a,b]: h(X) = log₂(b−a). Here h(X) = log₂8 = <b>3 bits</b>. See "Example — Uniform Distribution" above for the full integral derivation.</div>
+    </div>
+
+    <div class="qa">
+      <div class="q">Q24. Numerical: Given P(x₁)=0.6, P(x₂)=0.4 and channel matrix [[0.9,0.1],[0.2,0.8]], find P(Y), H(Y), H(Y|X) and I(X;Y). <span class="imp h">★★★★★ 10 Marks — asymmetric/non-BSC channel pattern</span></div>
+      <div class="a">P(y₁)=0.62, P(y₂)=0.38 via [P(X)]×[Channel Matrix]; H(Y)=0.958 bits; H(Y|X)=0.570 bits (weighted average of row entropies); I(X;Y)=0.388 bits. Full step-by-step working in the two channel-matrix examples above (Sections 5 and 6).</div>
+    </div>
   </div>
 
       </div>
@@ -602,6 +737,69 @@ I(X;Y) = H(X) − H(X|Y)
       el.addEventListener("mouseenter",()=>cursorOutline.classList.add("cursor-hovering"));
       el.addEventListener("mouseleave",()=>cursorOutline.classList.remove("cursor-hovering"));
     });
+  </script>
+  <script>
+    // ---- Simulation 1: Binary Source Entropy Calculator ----
+    (function(){
+      const slider = document.getElementById('entP0');
+      const p0val = document.getElementById('entP0val');
+      const p1val = document.getElementById('entP1val');
+      const bar0 = document.getElementById('entBar0');
+      const bar1 = document.getElementById('entBar1');
+      const hOut = document.getElementById('entH');
+      const note = document.getElementById('entNote');
+      if(slider){
+        function update(){
+          const p0 = parseInt(slider.value,10)/100;
+          const p1 = 1-p0;
+          const h = (p0===0||p0===1) ? 0 : -(p0*Math.log2(p0) + p1*Math.log2(p1));
+          p0val.textContent = p0.toFixed(2);
+          p1val.textContent = p1.toFixed(2);
+          bar0.style.width = (p0*100)+'%';
+          bar1.style.width = (p1*100)+'%';
+          hOut.textContent = h.toFixed(3);
+          if(Math.abs(p0-0.5) < 0.02){
+            note.textContent = '💡 Right at the peak — P(0)≈P(1)≈0.5 gives maximum uncertainty, H(X)=1 bit (max possible for a binary source).';
+          } else if(p0 < 0.15 || p0 > 0.85){
+            note.textContent = '💡 Source is now highly predictable (one symbol dominates) — entropy is close to 0, very little "new" information per symbol.';
+          } else {
+            note.textContent = '💡 Entropy drops as the distribution becomes more skewed away from 0.5 — less uncertainty, less information per symbol on average.';
+          }
+        }
+        slider.addEventListener('input', update);
+        update();
+      }
+    })();
+
+    // ---- Simulation 2: BSC Capacity Explorer ----
+    (function(){
+      const slider = document.getElementById('bscP');
+      const pval = document.getElementById('bscPval');
+      const hOut = document.getElementById('bscH');
+      const cOut = document.getElementById('bscC');
+      const bar = document.getElementById('bscBar');
+      const note = document.getElementById('bscNote');
+      if(slider){
+        function update(){
+          const p = parseInt(slider.value,10)/100;
+          const hp = (p===0||p===1) ? 0 : -(p*Math.log2(p) + (1-p)*Math.log2(1-p));
+          const c = 1-hp;
+          pval.textContent = p.toFixed(2);
+          hOut.textContent = hp.toFixed(3);
+          cOut.textContent = c.toFixed(3);
+          bar.style.width = (c*100)+'%';
+          if(Math.abs(p-0.5) < 0.02){
+            note.textContent = '💡 Worst case: p=0.5 means each output bit is equally likely to be right or wrong — no information gets through, C=0.';
+          } else if(p < 0.05 || p > 0.95){
+            note.textContent = '💡 Near-perfect channel — very few errors, so almost the full 1 bit/symbol gets through reliably.';
+          } else {
+            note.textContent = '💡 A moderately noisy channel — some information is lost to errors, but reliable communication below rate C is still possible (Shannon\'s channel coding theorem).';
+          }
+        }
+        slider.addEventListener('input', update);
+        update();
+      }
+    })();
   </script>
 <script src="../splash-cursor.js"></script>\n</body>
 </html>
