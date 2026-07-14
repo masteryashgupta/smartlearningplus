@@ -1,9 +1,4 @@
-EXPERIMENT NO. 10
-
-Write a JSP program to display the grade of a student by accepting the
-marks of five subjects.
-
-PROGRAM (marks.html):
+// marks.html
 
 <html>
 <body>
@@ -18,7 +13,8 @@ Subject 5: <input type="text" name="m5"><br>
 </body>
 </html>
 
-PROGRAM (grade.jsp):
+
+// grade.jsp
 
 <html>
 <body>

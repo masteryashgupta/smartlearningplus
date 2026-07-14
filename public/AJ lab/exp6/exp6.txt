@@ -1,10 +1,4 @@
-EXPERIMENT NO. 6
-
-Develop RMI application in which client sends operator and operands for
-computation and server sends back the result. It behaves just like a
-distributed calculator app.
-
-PROGRAM (CalcInterface.java):
+// CalcInterface.java
 
 import java.rmi.*;
 
@@ -12,7 +6,8 @@ public interface CalcInterface extends Remote {
     double calculate(double n1, double n2, String operator) throws RemoteException;
 }
 
-PROGRAM (CalcImpl.java):
+
+// CalcImpl.java
 
 import java.rmi.*;
 import java.rmi.server.*;
@@ -34,7 +29,8 @@ public class CalcImpl extends UnicastRemoteObject implements CalcInterface {
     }
 }
 
-PROGRAM (CalcServer.java):
+
+// CalcServer.java
 
 import java.rmi.*;
 import java.rmi.registry.*;
@@ -52,7 +48,8 @@ public class CalcServer {
     }
 }
 
-PROGRAM (CalcClient.java):
+
+// CalcClient.java
 
 import java.rmi.*;
 import java.util.Scanner;
@@ -77,9 +74,3 @@ public class CalcClient {
         }
     }
 }
-
-COMMANDS TO COMPILE AND RUN:
-
-javac CalcInterface.java CalcImpl.java CalcServer.java CalcClient.java
-java CalcServer      (run first, in one terminal)
-java CalcClient       (run second, in another terminal)

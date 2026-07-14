@@ -1,9 +1,4 @@
-EXPERIMENT NO. 9
-
-Write a JSP program for user login form with static and dynamic
-database.
-
-PROGRAM (login.html):
+// login.html
 
 <html>
 <body>
@@ -15,7 +10,8 @@ Password: <input type="password" name="password"><br>
 </body>
 </html>
 
-PROGRAM (login.jsp):
+
+// login.jsp
 
 <%@ page import="java.sql.*" %>
 <html>
@@ -60,7 +56,3 @@ PROGRAM (login.jsp):
 %>
 </body>
 </html>
-
-TABLE USED (MySQL):
-
-CREATE TABLE users(username VARCHAR(50), password VARCHAR(50));

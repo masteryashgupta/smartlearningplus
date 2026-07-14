@@ -1,9 +1,4 @@
-EXPERIMENT NO. 5
-
-Write a socket program in java to implement client server communication
-using socket and server socket class.
-
-PROGRAM (Server.java):
+// Server.java
 
 import java.net.*;
 import java.io.*;
@@ -41,7 +36,8 @@ public class Server {
     }
 }
 
-PROGRAM (Client.java):
+
+// Client.java
 
 import java.net.*;
 import java.io.*;
@@ -73,10 +69,3 @@ public class Client {
         }
     }
 }
-
-COMMANDS TO COMPILE AND RUN:
-
-javac Server.java
-javac Client.java
-java Server        (run first, in one terminal)
-java Client         (run second, in another terminal)

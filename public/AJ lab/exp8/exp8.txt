@@ -1,9 +1,4 @@
-EXPERIMENT NO. 8
-
-Write a servlet program for user registration & then control will be
-transfer into second page.
-
-PROGRAM (register.html):
+// register.html
 
 <html>
 <body>
@@ -15,7 +10,8 @@ Email: <input type="text" name="email"><br>
 </body>
 </html>
 
-PROGRAM (RegisterServlet.java):
+
+// RegisterServlet.java
 
 import java.io.*;
 import javax.servlet.*;
@@ -35,7 +31,8 @@ public class RegisterServlet extends HttpServlet {
     }
 }
 
-PROGRAM (WelcomeServlet.java):
+
+// WelcomeServlet.java
 
 import java.io.*;
 import javax.servlet.*;
@@ -58,7 +55,8 @@ public class WelcomeServlet extends HttpServlet {
     }
 }
 
-DEPLOYMENT DESCRIPTOR (web.xml):
+
+// web.xml
 
 <web-app>
     <servlet>

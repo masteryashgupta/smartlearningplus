@@ -1,11 +1,3 @@
-EXPERIMENT NO. 4
-
-Develop a JDBC application to perform the database driven operation like
-insert, delete, update and selection using statement, prepared statement
-and result set.
-
-PROGRAM:
-
 import java.sql.*;
 import java.util.Scanner;
 
@@ -80,12 +72,3 @@ public class JdbcDemo {
         }
     }
 }
-
-TABLE USED (MySQL):
-
-CREATE TABLE student(roll INT PRIMARY KEY, name VARCHAR(50));
-
-COMMANDS TO COMPILE AND RUN:
-
-javac JdbcDemo.java
-java JdbcDemo

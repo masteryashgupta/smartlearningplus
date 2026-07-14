@@ -1,8 +1,4 @@
-EXPERIMENT NO. 7
-
-Write a servlet program to display "Hello World" on browser.
-
-PROGRAM (HelloWorld.java):
+// HelloWorld.java
 
 import java.io.*;
 import javax.servlet.*;
@@ -19,7 +15,8 @@ public class HelloWorld extends HttpServlet {
     }
 }
 
-DEPLOYMENT DESCRIPTOR (web.xml):
+
+// web.xml
 
 <web-app>
     <servlet>
@@ -31,11 +28,3 @@ DEPLOYMENT DESCRIPTOR (web.xml):
         <url-pattern>/hello</url-pattern>
     </servlet-mapping>
 </web-app>
-
-STEPS TO RUN:
-
-1. Place HelloWorld.java in WEB-INF/classes and compile it there.
-2. Place web.xml in the WEB-INF folder.
-3. Deploy the project on Apache Tomcat server.
-4. Start Tomcat and open browser at:
-   http://localhost:8080/ProjectName/hello

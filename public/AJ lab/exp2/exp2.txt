@@ -1,11 +1,3 @@
-EXPERIMENT NO. 2
-
-Write an applet to create a list of departments of a college such that
-if one of the departments is clicked, then it will be displayed on the
-text field.
-
-PROGRAM:
-
 import java.applet.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -50,17 +42,3 @@ public class DeptList extends Applet implements ItemListener {
         tf.setText(list.getSelectedItem());
     }
 }
-
-HTML FILE (DeptList.html) TO RUN THE APPLET:
-
-<html>
-<body>
-<applet code="DeptList.class" width="350" height="200">
-</applet>
-</body>
-</html>
-
-COMMANDS TO COMPILE AND RUN:
-
-javac DeptList.java
-appletviewer DeptList.html
