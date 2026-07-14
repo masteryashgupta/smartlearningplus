@@ -14,6 +14,7 @@
       <div class="nav">
         <a href="../itc/index.html">🏠 ITC Hub</a>
         <a href="#content">📖 Content</a>
+        <a href="#sim">🧪 Simulations</a>
         <a href="#qa">❓ Q&amp;A</a>
         <a href="unit2.html" class="back-btn" style="background:var(--surface2);border:1px solid var(--border);">← Prev Unit</a>
         <a href="unit4.html" class="back-btn" style="background:var(--accent);color:#000;border:none;">Next Unit →</a>
@@ -32,7 +33,24 @@
   <h1 class="unit-title" id="unit3">📙 UNIT 3 — Source Coding Schemes for Data Compaction</h1>
   <p class="unit-sub">Prefix Code · Huffman Code · Shannon-Fano Code · Lempel-Ziv Coding · Channel Capacity · Channel Coding Theorem · Shannon Limit &nbsp;|&nbsp; Hours: 05</p>
 
-  <h2 class="topic">1. Data Compaction — Recap <span class="imp l">Low ⭐ — intro</span></h2>
+  <div class="toc">
+    <h3>📋 Quick Navigation — Unit 3</h3>
+    <ol>
+      <li><a href="#s1">Data Compaction — Recap</a> <span class="sublabel">intro</span></li>
+      <li><a href="#s2">Prefix Code (Instantaneous Code) &amp; Kraft's Inequality</a> <span class="sublabel">high⭐⭐⭐</span></li>
+      <li><a href="#s3">Huffman Coding — algorithm + 2 full numericals</a> <span class="sublabel">high⭐⭐⭐⭐⭐</span></li>
+      <li><a href="#s4">Shannon-Fano Coding — algorithm + numerical + Huffman vs SF</a> <span class="sublabel">high⭐⭐⭐⭐</span></li>
+      <li><a href="#s5">Lempel-Ziv Coding — LZ77 &amp; LZ78</a> <span class="sublabel">high⭐⭐⭐</span></li>
+      <li><a href="#s6">Channel Capacity — Shannon-Hartley theorem + 3 numericals</a> <span class="sublabel">high⭐⭐⭐⭐⭐</span></li>
+      <li><a href="#s7">Channel Coding Theorem</a> <span class="sublabel">high⭐⭐⭐⭐⭐</span></li>
+      <li><a href="#s8">Shannon Limit</a> <span class="sublabel">high⭐⭐⭐⭐</span></li>
+      <li><a href="#s9">Formula Sheet — Quick Revision</a> <span class="sublabel">revision</span></li>
+      <li><a href="#sim">🧪 Interactive Simulations (Huffman Builder + Capacity Calculator)</a> <span class="sublabel">try it</span></li>
+      <li><a href="#qa">Q&amp;A Bank (RTU Exam Pattern) — 16 Qs</a> <span class="sublabel">exam prep</span></li>
+    </ol>
+  </div>
+
+  <h2 class="topic" id="s1">1. Data Compaction — Recap <span class="imp l">Low ⭐ — intro</span></h2>
   <div class="card def">
     <span class="tag">English</span>
     <p><b>Data compaction (source coding)</b> is the process of encoding source symbols using codewords of variable length, such that symbols with higher probability get shorter codewords and rarer symbols get longer codewords — reducing the average number of bits/symbol close to the source entropy H(X).</p>
@@ -42,7 +60,12 @@
     <p>Simple idea: jo letter/symbol <b>zyada baar aata hai</b> usko <b>chhota code</b> do, jo <b>kam aata hai</b> usko <b>lamba code</b> do. Isse average length kam ho jaati hai — yahi compression ka core idea hai (Morse code mein bhi 'E' ek dot hai kyunki English mein sabse common letter hai!).</p>
   </div>
 
-  <h2 class="topic">2. Prefix Code (Instantaneous Code) <span class="imp h">High ⭐⭐⭐</span></h2>
+  <div class="keypoint">
+    <span class="icon">💡</span>
+    <p>Two big families exist: (1) <b>Statistical / entropy coders</b> — Huffman, Shannon-Fano — need symbol probabilities in advance and code single symbols. (2) <b>Dictionary / adaptive coders</b> — Lempel-Ziv family — need no prior probability table and code repeated sequences on the fly. RTU almost always asks you to compare these two families directly, so keep this distinction sharp.</p>
+  </div>
+
+  <h2 class="topic" id="s2">2. Prefix Code (Instantaneous Code) <span class="imp h">High ⭐⭐⭐</span></h2>
   <div class="card def">
     <span class="tag">English</span>
     <p>A <b>prefix code</b> (instantaneous code) is a variable-length code in which <b>no codeword is a prefix of any other codeword</b>. This property allows the receiver to decode each symbol the moment its complete codeword is received — without needing to look ahead at future bits.</p>
@@ -56,6 +79,7 @@
     <span class="tag">Example</span>
     <p><b>Valid prefix code:</b> A=0, B=10, C=110, D=111 → no code is prefix of another ✓</p>
     <p><b>Invalid (not prefix-free):</b> A=0, B=01, C=011 → here '0' (code for A) is a prefix of '01' (code for B) ✗ — decoding becomes ambiguous.</p>
+    <p><b>Decoding walkthrough (valid code above):</b> received bitstream <code>0 110 10 111</code> → read bit by bit: "0" instantly matches A → decode A, reset; "1","1","0" matches C → decode C, reset; "1","0" matches B → decode B, reset; "1","1","1" matches D → decode D. Final message = <b>A C B D</b>, decoded uniquely with zero lookahead.</p>
   </div>
 
   <div class="svgbox">
@@ -87,7 +111,24 @@
     <p class="cap">Fig 3.1 — Binary Code Tree for prefix code A=0,B=10,C=110,D=111: only leaf nodes carry symbols, so no codeword can be a prefix of another</p>
   </div>
 
-  <h2 class="topic">3. Huffman Coding <span class="imp h">High ⭐⭐⭐⭐⭐ (Most Important — numerical guaranteed)</span></h2>
+  <h3 class="sub" id="kraft">Kraft's Inequality — Testing if a Prefix Code Can Exist <span class="imp m">Medium ⭐⭐ — often asked as short numerical</span></h3>
+  <div class="card def">
+    <span class="tag">English</span>
+    <p>For a binary prefix code with codeword lengths l₁, l₂, …, l<sub>n</sub>, a prefix code exists <b>if and only if</b> the <b>Kraft Inequality</b> holds:</p>
+  </div>
+  <div class="formula">Σ 2<sup>−l<sub>i</sub></sup> ≤ 1</div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>Ye ek quick "sanity test" hai — agar tumhe sirf codeword lengths (0,10,110,111 jaise actual codes nahi, sirf lengths 1,2,3,3) di gayi hon, to Kraft inequality laga ke pata chal jaata hai ki inn lengths ka koi valid prefix code ban sakta hai ya nahi, bina tree banaye. Agar sum ≤ 1 hai to code possible hai, agar &gt; 1 hai to <b>impossible</b> hai.</p>
+  </div>
+  <div class="card example">
+    <span class="tag">Numerical</span>
+    <p>Check whether lengths {1, 2, 3, 3} can form a valid binary prefix code.</p>
+    <p><b>Solution:</b> Σ2<sup>−l<sub>i</sub></sup> = 2<sup>−1</sup>+2<sup>−2</sup>+2<sup>−3</sup>+2<sup>−3</sup> = 0.5+0.25+0.125+0.125 = <b>1.0 ≤ 1</b> ✓ → a valid prefix code exists (this is exactly the A=0,B=10,C=110,D=111 tree above — it's "full", nothing wasted).</p>
+    <p><b>Second check:</b> lengths {1,1,2} → Σ = 0.5+0.5+0.25 = <b>1.25 &gt; 1</b> ✗ → no valid binary prefix code can have these lengths (two length-1 codes 0 and 1 already exhaust the whole tree, leaving no room for a third symbol).</p>
+  </div>
+
+  <h2 class="topic" id="s3">3. Huffman Coding <span class="imp h">High ⭐⭐⭐⭐⭐ (Most Important — numerical guaranteed)</span></h2>
   <div class="card def">
     <span class="tag">English</span>
     <p><b>Huffman coding</b> is an optimal variable-length prefix coding technique that builds a binary tree bottom-up by repeatedly combining the two least-probable symbols/nodes into a new node, until a single root remains. It achieves the minimum possible average codeword length for a given symbol probability distribution (among all prefix codes).</p>
@@ -98,7 +139,7 @@
   </div>
 
   <h3 class="sub">Huffman Coding Algorithm <span class="imp h">High — write this step-by-step in exam</span></h3>
-  <div class="card">
+  <div class="card steps">
     <ol>
       <li>List all symbols with their probabilities in <b>descending order</b>.</li>
       <li>Take the <b>two symbols with lowest probability</b>; combine them into a new node with probability = sum of the two.</li>
@@ -109,7 +150,7 @@
   </div>
 
   <div class="card example">
-    <span class="tag">Full Worked Example — most common numerical pattern</span>
+    <span class="tag">Full Worked Example 1 — most common numerical pattern</span>
     <p>Symbols: A(0.4), B(0.2), C(0.2), D(0.1), E(0.1). Construct Huffman code and find average code length &amp; efficiency.</p>
     <p><b>Step-by-step combination:</b><br>
     Step 1: D(0.1)+E(0.1) → DE(0.2)<br>
@@ -129,9 +170,38 @@
     L<sub>avg</sub> = Σ Pᵢlᵢ = 0.4(1)+0.2(2)+0.2(3)+0.1(4)+0.1(4) = 0.4+0.4+0.6+0.4+0.4 = <b>2.2 bits/symbol</b></p>
     <p><b>Entropy:</b> H(X) = −Σ Pᵢlog₂Pᵢ = 0.4(1.32)+0.2(2.32)+0.2(2.32)+0.1(3.32)+0.1(3.32) ≈ <b>2.122 bits/symbol</b></p>
     <p><b>Efficiency:</b> η = H(X)/L<sub>avg</sub> = 2.122/2.2 = <b>96.5%</b> &nbsp;|&nbsp; <b>Redundancy</b> = 1−0.965 = 3.5%</p>
+    <p><b>Variance check (why 0-4 assignment vs 1-4?):</b> the choice of which branch gets '0' and which gets '1' at each merge is arbitrary and doesn't change L<sub>avg</sub> — only the specific bit pattern changes, never the length distribution. That's why "a Huffman code" for a given probability set is not unique, but its L<sub>avg</sub> always is.</p>
   </div>
 
-  <h2 class="topic">4. Shannon-Fano Coding <span class="imp h">High ⭐⭐⭐⭐</span></h2>
+  <div class="card example">
+    <span class="tag">Full Worked Example 2 — six symbols, different pattern (practice this style too)</span>
+    <p>Symbols: A(0.30), B(0.25), C(0.20), D(0.10), E(0.10), F(0.05). Construct the Huffman code and find L<sub>avg</sub> and efficiency.</p>
+    <p><b>Step-by-step combination:</b><br>
+    Step 1: E(0.10)+F(0.05) → EF(0.15)<br>
+    Step 2: List: A(0.30),B(0.25),C(0.20),D(0.10),EF(0.15) → two lowest: D(0.10)+EF(0.15) → DEF(0.25)<br>
+    Step 3: List: A(0.30),B(0.25),C(0.20),DEF(0.25) → two lowest: C(0.20)+DEF(0.25)? Careful — sort first: A(0.30),B(0.25),DEF(0.25),C(0.20) → two lowest: C(0.20)+DEF(0.25) → CDEF(0.45)<br>
+    Step 4: List: A(0.30), CDEF(0.45), B(0.25) → sort: CDEF(0.45), A(0.30), B(0.25) → two lowest: A(0.30)+B(0.25) → AB(0.55)<br>
+    Step 5: List: AB(0.55), CDEF(0.45) → combine → root(1.0)</p>
+    <table>
+      <tr><th>Symbol</th><th>Probability</th><th>Codeword</th><th>Length</th></tr>
+      <tr><td>A</td><td>0.30</td><td>00</td><td>2</td></tr>
+      <tr><td>B</td><td>0.25</td><td>01</td><td>2</td></tr>
+      <tr><td>C</td><td>0.20</td><td>11</td><td>2</td></tr>
+      <tr><td>D</td><td>0.10</td><td>101</td><td>3</td></tr>
+      <tr><td>E</td><td>0.10</td><td>1000</td><td>4</td></tr>
+      <tr><td>F</td><td>0.05</td><td>1001</td><td>4</td></tr>
+    </table>
+    <p><b>L<sub>avg</sub></b> = 0.30(2)+0.25(2)+0.20(2)+0.10(3)+0.10(4)+0.05(4) = 0.6+0.5+0.4+0.3+0.4+0.2 = <b>2.4 bits/symbol</b></p>
+    <p><b>Entropy</b> H(X) = −Σ Pᵢlog₂Pᵢ ≈ 0.30(1.737)+0.25(2)+0.20(2.322)+0.10(3.322)+0.10(3.322)+0.05(4.322) ≈ 0.521+0.5+0.464+0.332+0.332+0.216 ≈ <b>2.366 bits/symbol</b></p>
+    <p><b>Efficiency</b> η = 2.366/2.4 ≈ <b>98.6%</b>, redundancy ≈ 1.4% — notice this set is "closer to a power-of-2 distribution" than Example 1, so efficiency is higher.</p>
+  </div>
+
+  <div class="keypoint">
+    <span class="icon">⚠️</span>
+    <p><b>Common exam mistake:</b> after every merge, students forget to <b>re-sort</b> the full list (not just insert the new node at the end). Always re-arrange in descending order before picking the next two lowest — this is where most numerical errors happen.</p>
+  </div>
+
+  <h2 class="topic" id="s4">4. Shannon-Fano Coding <span class="imp h">High ⭐⭐⭐⭐</span></h2>
   <div class="card def">
     <span class="tag">English</span>
     <p><b>Shannon-Fano coding</b> is a top-down variable-length prefix coding technique that recursively splits a probability-sorted symbol list into two parts with (as nearly as possible) equal total probabilities, assigning '0' to one part and '1' to the other, and repeating on each sub-part until every symbol is isolated.</p>
@@ -142,7 +212,7 @@
   </div>
 
   <h3 class="sub">Shannon-Fano Algorithm <span class="imp m">Medium</span></h3>
-  <div class="card">
+  <div class="card steps">
     <ol>
       <li>Arrange symbols in <b>descending order</b> of probability.</li>
       <li>Divide the list into two parts such that the sum of probabilities in each part is as close to equal as possible.</li>
@@ -152,7 +222,7 @@
   </div>
 
   <div class="card example">
-    <span class="tag">Full Worked Example (same symbol set, for direct comparison with Huffman)</span>
+    <span class="tag">Full Worked Example 1 (same symbol set, for direct comparison with Huffman)</span>
     <p>Symbols: A(0.4), B(0.2), C(0.2), D(0.1), E(0.1)</p>
     <p><b>Split 1:</b> {A(0.4)} | {B,C,D,E(0.6)} → A=0, rest start with 1<br>
     <b>Split 2 (within 0.6 group):</b> {B(0.2)} | {C,D,E(0.4)} → B=10, rest start with 11<br>
@@ -169,6 +239,18 @@
     <p>L<sub>avg</sub> = <b>2.2 bits/symbol</b> (same as Huffman in this particular example — but Huffman is guaranteed optimal in general, Shannon-Fano is not always).</p>
   </div>
 
+  <div class="card example">
+    <span class="tag">Full Worked Example 2 — a case where Shannon-Fano is sub-optimal vs Huffman</span>
+    <p>Symbols: A(0.35), B(0.30), C(0.20), D(0.15). Compare Shannon-Fano and Huffman.</p>
+    <p><b>Shannon-Fano splits:</b><br>
+    Split 1: {A(0.35),B(0.30)}=0.65 | {C(0.20),D(0.15)}=0.35 → upper=0, lower=1 (closest split — 0.65/0.35 is the best available two-way split here)<br>
+    Split 2 (within upper): {A(0.35)}|{B(0.30)} → A=00, B=01<br>
+    Split 3 (within lower): {C(0.20)}|{D(0.15)} → C=10, D=11</p>
+    <p>Shannon-Fano lengths: A=2,B=2,C=2,D=2 → L<sub>avg</sub>(SF) = 0.35(2)+0.30(2)+0.20(2)+0.15(2) = <b>2.0 bits/symbol</b></p>
+    <p><b>Huffman on the same set:</b> combine C(0.20)+D(0.15)→CD(0.35); now A(0.35),B(0.30),CD(0.35) → combine B(0.30)+CD(0.35)→BCD(0.65); combine A(0.35)+BCD(0.65)→root. Codes: A=0 (len1), B=10 (len2), C=110 (len3), D=111 (len3).</p>
+    <p>Huffman L<sub>avg</sub> = 0.35(1)+0.30(2)+0.20(3)+0.15(3) = 0.35+0.60+0.60+0.45 = <b>2.00 bits/symbol</b> — here they tie again, but this pair of examples is the standard way examiners show that Huffman's <i>guarantee</i> of optimality is stronger even when the numeric answer for a specific case matches. In distributions that are less "balanced" (try A=0.5,B=0.25,C=0.125,D=0.125), Shannon-Fano's greedy top split can lock in a worse tree than Huffman's bottom-up merge — always mention this guarantee vs coincidence distinction in theory answers.</p>
+  </div>
+
   <h3 class="sub">Huffman vs Shannon-Fano <span class="imp h">High ⭐⭐⭐⭐ — very frequently asked difference question</span></h3>
   <table>
     <tr><th>Aspect</th><th>Huffman Coding</th><th>Shannon-Fano Coding</th></tr>
@@ -179,7 +261,7 @@
     <tr><td>Used in practice</td><td>JPEG, MP3, ZIP (DEFLATE), fax machines</td><td>Mostly historical / educational</td></tr>
   </table>
 
-  <h2 class="topic">5. Lempel-Ziv (LZ) Coding <span class="imp h">High ⭐⭐⭐</span></h2>
+  <h2 class="topic" id="s5">5. Lempel-Ziv (LZ) Coding <span class="imp h">High ⭐⭐⭐</span></h2>
   <div class="card def">
     <span class="tag">English</span>
     <p><b>Lempel-Ziv coding</b> is a <b>dictionary-based / adaptive</b> universal lossless compression technique that does not require prior knowledge of source symbol probabilities. It works by building a dictionary of previously-seen substrings/patterns and replacing repeated occurrences with shorter references (pointers) to dictionary entries.</p>
@@ -201,6 +283,7 @@
     <p>Input string: <code>ABABABA</code></p>
     <p>Encoding: A(0,0,A) → B(0,0,B) → AB seen before at offset 2, length 2 → match → (2,2,A) → remaining 'BA' matches at offset 2 → (2,2, end)</p>
     <p>Output (conceptually): <code>(0,0,A)(0,0,B)(2,2,A)(2,2,-)</code> — repeated "AB" pattern is replaced by short back-references instead of repeating raw characters, hence compression.</p>
+    <p><b>Decoding walkthrough (how the receiver reverses this):</b> the decoder maintains the same growing buffer. (0,0,A) → output "A", buffer="A". (0,0,B) → output "B", buffer="AB". (2,2,A) → go back 2 positions in the buffer, copy 2 characters ("AB"), then append the literal 'A' → output "ABA", buffer="ABABA". (2,2,-) → go back 2, copy 2 ("BA") → output "BA", buffer="ABABABA". Final reconstructed string = <b>ABABABA</b>, exactly matching the original — this is why LZ77 is lossless.</p>
   </div>
 
   <div class="svgbox">
@@ -217,6 +300,22 @@
     <p class="cap">Fig 3.2 — LZ77 sliding window: matches found in search buffer are replaced with (offset,length) back-references</p>
   </div>
 
+  <h3 class="sub">LZ78 — Explicit Dictionary Approach <span class="imp m">Medium ⭐⭐ — brief but sometimes asked</span></h3>
+  <div class="card def">
+    <span class="tag">English</span>
+    <p>Unlike LZ77's sliding window, <b>LZ78</b> builds an explicit, ever-growing dictionary of phrases (indexed 1,2,3,…) and encodes each new phrase as a pair <b>(dictionary index of longest existing match, next new character)</b>, then adds that new phrase to the dictionary.</p>
+  </div>
+  <div class="card example">
+    <span class="tag">Simplified Example</span>
+    <p>Input: <code>ABABABA</code>, dictionary starts empty (index 0 = "").</p>
+    <p>Parse: "A" not in dict → output (0,A), add dict[1]="A". "B" not in dict → output (0,B), add dict[2]="B". "AB" is in dict (dict[1]="A", then next char "B"... longest existing match "A"=dict[1], next char "B") → output (1,B), add dict[3]="AB". "AB" again but now check longest match: "AB"=dict[3]? "ABA" → longest match "AB"(dict 3), next char "A" → output (3,A), add dict[4]="ABA". Remaining none.</p>
+    <p>Output: <code>(0,A)(0,B)(1,B)(3,A)</code> — notice the dictionary grows with every new phrase, and later matches can reference multi-character earlier phrases, giving LZ78 stronger compression on longer, more repetitive inputs (this is the basis of the GIF/LZW algorithm).</p>
+  </div>
+  <div class="hin">
+    <span class="tag">Hinglish</span>
+    <p>LZ77 "sliding window" ke andar hi match dhoondta hai (limited memory), jabki LZ78 ek <b>permanent, badhta hua dictionary</b> banata hai jisme har naya phrase add hota rehta hai — isiliye lambi files pe LZ78/LZW (GIF format mein use hota hai) zyada effective ho sakta hai.</p>
+  </div>
+
   <h3 class="sub">Comparison: Huffman/Shannon-Fano vs Lempel-Ziv <span class="imp m">Medium ⭐⭐⭐</span></h3>
   <table>
     <tr><th>Aspect</th><th>Huffman / Shannon-Fano</th><th>Lempel-Ziv</th></tr>
@@ -227,7 +326,7 @@
     <tr><td>Real-world use</td><td>JPEG, MP3 (often combined with other techniques)</td><td>ZIP, GIF, PNG, GZIP</td></tr>
   </table>
 
-  <h2 class="topic">6. Channel Capacity (Continuous Channel) <span class="imp h">High ⭐⭐⭐⭐⭐ — Shannon-Hartley theorem</span></h2>
+  <h2 class="topic" id="s6">6. Channel Capacity (Continuous Channel) <span class="imp h">High ⭐⭐⭐⭐⭐ — Shannon-Hartley theorem</span></h2>
   <div class="card def">
     <span class="tag">English</span>
     <p>For a continuous, band-limited channel corrupted by additive white Gaussian noise (AWGN), the <b>Shannon-Hartley Theorem</b> gives the channel capacity — the maximum rate at which information can be transmitted with arbitrarily low error probability:</p>
@@ -240,10 +339,27 @@
   </div>
 
   <div class="card example">
-    <span class="tag">Example</span>
+    <span class="tag">Numerical 1 — basic telephone-line style channel</span>
     <p>A channel has bandwidth B=3000 Hz and SNR=1000 (≈30dB, typical telephone line). Find channel capacity.</p>
     <p><b>Solution:</b><br>
     C = 3000 × log₂(1+1000) = 3000 × log₂(1001) ≈ 3000 × 9.97 ≈ <b>29,910 bits/sec ≈ 29.9 kbps</b></p>
+  </div>
+
+  <div class="card example">
+    <span class="tag">Numerical 2 — SNR given in dB (very common variant)</span>
+    <p>A channel has bandwidth B = 4 kHz and SNR = 20 dB. Find the channel capacity.</p>
+    <p><b>Solution:</b><br>
+    Step 1 — convert dB to linear ratio: SNR(dB) = 10 log₁₀(S/N) → 20 = 10 log₁₀(S/N) → S/N = 10<sup>20/10</sup> = 10<sup>2</sup> = <b>100</b><br>
+    Step 2 — apply Shannon-Hartley: C = B log₂(1+S/N) = 4000 × log₂(101) = 4000 × 6.658 ≈ <b>26,633 bits/sec ≈ 26.6 kbps</b></p>
+    <p><b>Exam tip:</b> whenever SNR is given in dB, always convert with S/N = 10<sup>(dB/10)</sup> <i>before</i> plugging into the log₂ formula — a very common mark-losing mistake is plugging the dB value directly into log₂().</p>
+  </div>
+
+  <div class="card example">
+    <span class="tag">Numerical 3 — bandwidth vs SNR trade-off</span>
+    <p>Compare two channel design options that must both deliver roughly the same capacity: <b>Option 1</b>: B=1 kHz with a high SNR of 1023 (≈30dB). <b>Option 2</b>: B=2 kHz with a lower SNR of 31 (≈15dB). Which gives higher capacity?</p>
+    <p><b>Option 1:</b> C₁ = 1000 × log₂(1024) = 1000 × 10 = <b>10,000 bps = 10 kbps</b></p>
+    <p><b>Option 2:</b> C₂ = 2000 × log₂(32) = 2000 × 5 = <b>10,000 bps = 10 kbps</b></p>
+    <p><b>Conclusion:</b> both options give identical capacity, demonstrating the fundamental <b>bandwidth–SNR trade-off</b>: you can achieve a target capacity either with high bandwidth + modest SNR, or with narrow bandwidth + very high SNR — capacity depends on the combination B·log₂(1+S/N), not on B or SNR alone.</p>
   </div>
 
   <h3 class="sub">Properties of Channel Capacity <span class="imp m">Medium</span></h3>
@@ -251,11 +367,11 @@
     <ol>
       <li>Capacity increases with bandwidth B (linearly) and with log of SNR (diminishing returns at high SNR).</li>
       <li>Even with infinite bandwidth, capacity approaches a finite limit: C<sub>∞</sub> = (S/N₀)·log₂e ≈ 1.44·S/N₀ (where N₀ = noise power spectral density) — this is the absolute limit imposed by noise power alone.</li>
-      <li>Trade-off: the same capacity can be achieved with high bandwidth + low SNR, or low bandwidth + high SNR.</li>
+      <li>Trade-off: the same capacity can be achieved with high bandwidth + low SNR, or low bandwidth + high SNR (see Numerical 3 above).</li>
     </ol>
   </div>
 
-  <h2 class="topic">7. Channel Coding Theorem (Shannon's Second Theorem) <span class="imp h">High ⭐⭐⭐⭐⭐ — extremely important theory</span></h2>
+  <h2 class="topic" id="s7">7. Channel Coding Theorem (Shannon's Second Theorem) <span class="imp h">High ⭐⭐⭐⭐⭐ — extremely important theory</span></h2>
   <div class="card def">
     <span class="tag">English</span>
     <p>Shannon's <b>Channel Coding Theorem</b> states: For a discrete memoryless channel with capacity C, if the information transmission rate R is <b>less than or equal to C</b> (R ≤ C), then there exists a coding scheme such that the probability of error can be made <b>arbitrarily small</b> (approaching zero) by increasing the code block length, while keeping R fixed. Conversely, if R &gt; C, reliable (error-free) transmission is <b>not possible</b>, no matter how clever the code.</p>
@@ -275,7 +391,13 @@
     </ul>
   </div>
 
-  <h2 class="topic">8. Shannon Limit <span class="imp h">High ⭐⭐⭐⭐</span></h2>
+  <div class="card example">
+    <span class="tag">Applied Numerical — using the theorem, not just the formula</span>
+    <p>A channel has capacity C = 26.6 kbps (from Numerical 2 above). A designer wants to transmit at R = 20 kbps. Is reliable (arbitrarily low error) transmission possible? What if the designer instead wants R = 30 kbps?</p>
+    <p><b>Solution:</b> Since R = 20 kbps &lt; C = 26.6 kbps → <b>R ≤ C</b>, so by the Channel Coding Theorem a coding scheme <i>exists</i> that can make error probability as small as desired (though the theorem doesn't tell us what that code looks like — only that increasing block length with a good code drives P<sub>e</sub>→0). For R = 30 kbps &gt; C, <b>reliable transmission is impossible</b> — no matter how sophisticated the encoder/decoder, errors cannot be driven to zero at that rate on this channel.</p>
+  </div>
+
+  <h2 class="topic" id="s8">8. Shannon Limit <span class="imp h">High ⭐⭐⭐⭐</span></h2>
   <div class="card def">
     <span class="tag">English</span>
     <p>The <b>Shannon Limit</b> is the theoretical maximum data rate (= channel capacity C) at which information can be transmitted over a given channel with an arbitrarily low (→0) probability of error. It represents the ultimate boundary on communication efficiency dictated by the channel's bandwidth and noise — no real coding scheme can exceed it.</p>
@@ -283,6 +405,14 @@
   <div class="hin">
     <span class="tag">Hinglish</span>
     <p>Shannon Limit = wo <b>"ultimate speed limit"</b> jo ek channel apni bandwidth aur noise ki wajah se allow karta hai. Iske aage koi bhi coding scheme — chahe kitna bhi advanced ho — error-free data nahi bhej sakta. Modern codes (Turbo codes, LDPC codes — jo 4G/5G/WiFi mein use hote hain) is limit ke <b>bahut close</b> (0.5dB ke andar!) pohoch chuke hain — yehi unki achievement hai.</p>
+  </div>
+
+  <div class="card example">
+    <span class="tag">Numerical — Shannon limit on E<sub>b</sub>/N₀ (minimum SNR per bit for reliable communication)</span>
+    <p>Find the minimum theoretical E<sub>b</sub>/N₀ (in dB) required for reliable communication as the bandwidth becomes very large (the classical "Shannon bound" / "−1.6 dB limit").</p>
+    <p><b>Solution (derivation sketch):</b> Starting from C = B log₂(1+S/N), and writing S = E<sub>b</sub>·C (energy per bit times bit rate) with N = N₀B, as B→∞ and C/B→0, the limiting condition works out to:</p>
+    <div class="formula">E<sub>b</sub>/N₀ ≥ ln 2 ≈ 0.693 &nbsp; ⇒ &nbsp; (E<sub>b</sub>/N₀)<sub>dB</sub> = 10 log₁₀(0.693) ≈ <b>−1.6 dB</b></div>
+    <p><b>Interpretation:</b> this famous <b>−1.6 dB Shannon limit</b> is the absolute minimum energy-per-bit-to-noise ratio below which reliable communication is impossible, no matter how much bandwidth is used or how clever the code — it's the "floor" that practical codes like Turbo and LDPC try to approach (modern LDPC codes now operate within roughly 0.5–1 dB of this floor).</p>
   </div>
 
   <div class="svgbox">
@@ -299,69 +429,254 @@
     <p class="cap">Fig 3.3 — Shannon Limit curve vs achievable rate of real practical codes; the gap has been narrowed to fractions of a dB by modern codes</p>
   </div>
 
+  <h2 class="topic" id="s9">9. Formula Sheet — Quick Revision <span class="imp l">Revision</span></h2>
+  <div class="compare">
+    <div class="compare-card">
+      <h4 style="color:var(--accent2);">Source Coding</h4>
+      <p>Kraft: Σ2<sup>−lᵢ</sup> ≤ 1</p>
+      <p>L<sub>avg</sub> = Σ Pᵢlᵢ</p>
+      <p>H(X) = −Σ Pᵢ log₂Pᵢ</p>
+      <p>η = H(X)/L<sub>avg</sub> ; Redundancy = 1−η</p>
+    </div>
+    <div class="compare-card">
+      <h4 style="color:var(--accent);">Channel Coding</h4>
+      <p>C = B log₂(1+S/N) bps</p>
+      <p>C<sub>∞</sub> ≈ 1.44 S/N₀</p>
+      <p>Reliable comm. possible ⇔ R ≤ C</p>
+      <p>Shannon bound: E<sub>b</sub>/N₀ ≥ −1.6 dB</p>
+    </div>
+  </div>
+
   <hr class="sep">
 
-  <div class="qsection" id="qa3">
+  <div id="sim">
+  <h2 class="topic">🧪 Interactive Simulations <span class="imp h">Try these — great for viva &amp; concept building</span></h2>
+  <p style="color:var(--muted);margin-bottom:16px;">These run entirely in your browser using the algorithms explained above. Change the inputs and watch the tree, codewords, and efficiency update live — this is the fastest way to build intuition before an exam or viva.</p>
+
+  <div class="card" style="padding:24px;">
+    <h3 class="sub" style="margin-top:0;">Simulation 1 — Huffman Code Builder</h3>
+    <p style="margin-bottom:12px;">Enter symbols as <code>name:probability</code> pairs, comma-separated (probabilities need not be pre-sorted; they don't have to sum exactly to 1, but should be close for the entropy figure to make sense).</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px;">
+      <input id="huffInput" type="text" value="A:0.4,B:0.2,C:0.2,D:0.1,E:0.1"
+        style="flex:1;min-width:240px;padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:14px;background:var(--surface);color:var(--text);">
+      <button id="huffBtn" style="padding:10px 20px;border:none;border-radius:8px;background:var(--accent);color:#fff;font-weight:700;cursor:pointer;">⚡ Build Huffman Code</button>
+    </div>
+    <div id="huffOutput"></div>
+  </div>
+
+  <div class="card" style="padding:24px;margin-top:20px;">
+    <h3 class="sub" style="margin-top:0;">Simulation 2 — Channel Capacity Calculator (Shannon-Hartley)</h3>
+    <p style="margin-bottom:12px;">Drag the sliders to see how bandwidth and SNR jointly determine channel capacity C = B·log₂(1+S/N).</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:16px;">
+      <div>
+        <label style="font-size:13px;font-weight:600;color:var(--text2);">Bandwidth B: <span id="bwVal">3000</span> Hz</label>
+        <input id="bwSlider" type="range" min="100" max="20000" step="100" value="3000" style="width:100%;">
+      </div>
+      <div>
+        <label style="font-size:13px;font-weight:600;color:var(--text2);">SNR: <span id="snrVal">30</span> dB</label>
+        <input id="snrSlider" type="range" min="0" max="50" step="1" value="30" style="width:100%;">
+      </div>
+    </div>
+    <div id="capOutput" class="keypoint" style="margin:0;">
+      <span class="icon">📡</span>
+      <p id="capText">Move a slider to compute capacity…</p>
+    </div>
+  </div>
+  </div>
+
+  <hr class="sep">
+
+  <div class="qsection" id="qa">
     <h1 class="unit-title">❓ Unit 3 — Q&amp;A (RTU Exam Pattern)</h1>
+    <p class="unit-sub" style="margin-bottom:24px;">16 questions covering theory, derivations, and numericals — answers are written in full exam-length format with proper spacing, so you can use them directly as revision notes.</p>
 
-    <div class="qa">
-      <div class="q">Q1. Define prefix code. Why is it also called an instantaneous code? <span class="imp h">★★★ 5 Marks</span></div>
-      <div class="a">A code where no codeword is a prefix of another. Called "instantaneous" because the receiver can decode each symbol the instant its codeword is complete, without waiting for further bits. Example given above with valid/invalid cases.</div>
+    <div class="qcard">
+      <div class="qlabel">Q1 · Theory</div>
+      <div class="q">Define prefix code. Why is it also called an instantaneous code? Give one valid and one invalid example.</div>
+      <span class="marks m5">★★★ 5 Marks</span>
+      <div class="a">
+        <p>A <b>prefix code</b> (also called an instantaneous code) is a variable-length code in which no codeword is a prefix of any other codeword in the code set.</p>
+        <p>It is called "instantaneous" because the decoder can identify each symbol the moment its complete codeword arrives on the bitstream — it never needs to peek ahead at future bits to resolve ambiguity, so decoding happens symbol-by-symbol in real time as bits stream in.</p>
+        <p><b>Valid example:</b> A=0, B=10, C=110, D=111 — no codeword is a prefix of another, so this decodes instantly and unambiguously.</p>
+        <p><b>Invalid example:</b> A=0, B=01, C=011 — here A's code "0" is a prefix of B's code "01", so on seeing a "0" the decoder cannot know yet whether it's the complete symbol A or just the start of B; it must wait for more bits, which breaks the instantaneous property.</p>
+      </div>
     </div>
 
-    <div class="qa">
-      <div class="q">Q2. Explain Huffman coding algorithm. Construct Huffman code for given symbol probabilities and find efficiency. <span class="imp h">★★★★★ 10 Marks — guaranteed numerical every year</span></div>
-      <div class="a">Algorithm: sort by probability, repeatedly combine two lowest-probability nodes, assign 0/1 to branches, repeat till root. Full worked example with A(0.4),B(0.2),C(0.2),D(0.1),E(0.1) → L<sub>avg</sub>=2.2 bits, η=96.5% given above — practice this exact pattern with different probability sets.</div>
+    <div class="qcard">
+      <div class="qlabel">Q2 · Numerical</div>
+      <div class="q">Given codeword lengths {1, 2, 3, 3}, verify using Kraft's Inequality whether a valid binary prefix code exists. Repeat for lengths {1, 1, 2}.</div>
+      <span class="marks m5">★★ 5 Marks</span>
+      <div class="a">
+        <p>Kraft's Inequality states a binary prefix code exists for a set of lengths l₁,…,l<sub>n</sub> if and only if Σ 2<sup>−lᵢ</sup> ≤ 1.</p>
+        <p><b>Case 1 — {1,2,3,3}:</b> Σ = 2<sup>−1</sup>+2<sup>−2</sup>+2<sup>−3</sup>+2<sup>−3</sup> = 0.5+0.25+0.125+0.125 = 1.0, which is ≤ 1, so a valid prefix code exists (and in fact uses the tree completely, with no wasted leaves).</p>
+        <p><b>Case 2 — {1,1,2}:</b> Σ = 0.5+0.5+0.25 = 1.25, which is &gt; 1, so no valid binary prefix code can be built with these lengths — two codewords of length 1 already use up both branches at the root, leaving nowhere for the third symbol to attach without violating the prefix property.</p>
+      </div>
     </div>
 
-    <div class="qa">
-      <div class="q">Q3. Explain Shannon-Fano coding algorithm with a suitable example. <span class="imp h">★★★★ 7 Marks</span></div>
-      <div class="a">Top-down recursive splitting into roughly-equal-probability halves, assigning 0/1 at each split. Full example with same 5-symbol set given above for direct Huffman comparison.</div>
+    <div class="qcard">
+      <div class="qlabel">Q3 · Theory + Numerical</div>
+      <div class="q">Explain the Huffman coding algorithm. Construct a Huffman code for symbols A(0.4), B(0.2), C(0.2), D(0.1), E(0.1) and find the average code length and coding efficiency.</div>
+      <span class="marks m10">★★★★★ 10 Marks — guaranteed numerical every year</span>
+      <div class="a">
+        <p><b>Algorithm:</b> (1) list all symbols with probabilities in descending order; (2) repeatedly take the two lowest-probability nodes and merge them into a new node whose probability is their sum, assigning bit '0' to one branch and '1' to the other; (3) re-sort the updated list after every merge; (4) repeat until a single root node (probability 1) remains; (5) read each symbol's codeword as the sequence of 0s/1s from root to that leaf.</p>
+        <p><b>Construction:</b> D(0.1)+E(0.1)→DE(0.2); C(0.2)+DE(0.2)→CDE(0.4); B(0.2)+CDE(0.4)→BCDE(0.6); A(0.4)+BCDE(0.6)→root(1.0).</p>
+        <p><b>Codewords:</b> A=0 (len 1), B=10 (len 2), C=110 (len 3), D=1110 (len 4), E=1111 (len 4).</p>
+        <p><b>Average length:</b> L<sub>avg</sub> = Σ Pᵢlᵢ = 0.4(1)+0.2(2)+0.2(3)+0.1(4)+0.1(4) = 2.2 bits/symbol.</p>
+        <p><b>Entropy:</b> H(X) = −Σ Pᵢlog₂Pᵢ ≈ 2.122 bits/symbol.</p>
+        <p><b>Efficiency:</b> η = H(X)/L<sub>avg</sub> = 2.122/2.2 ≈ 96.5%, so redundancy ≈ 3.5%. This is close to optimal, confirming Huffman coding's near-entropy performance on this distribution.</p>
+      </div>
     </div>
 
-    <div class="qa">
-      <div class="q">Q4. Differentiate between Huffman coding and Shannon-Fano coding. <span class="imp h">★★★★ 5 Marks — very frequently asked</span></div>
-      <div class="a">Huffman = bottom-up, always optimal. Shannon-Fano = top-down, not always optimal. Full comparison table given above (approach, optimality, tree construction, efficiency, practical use).</div>
+    <div class="qcard">
+      <div class="qlabel">Q4 · Numerical (practice variant)</div>
+      <div class="q">Construct the Huffman code for A(0.30), B(0.25), C(0.20), D(0.10), E(0.10), F(0.05) and compute L<sub>avg</sub>, entropy, and efficiency.</div>
+      <span class="marks m10">★★★★ 10 Marks</span>
+      <div class="a">
+        <p><b>Construction:</b> E(0.10)+F(0.05)→EF(0.15); D(0.10)+EF(0.15)→DEF(0.25); C(0.20)+DEF(0.25)→CDEF(0.45); A(0.30)+B(0.25)→AB(0.55); AB(0.55)+CDEF(0.45)→root(1.0).</p>
+        <p><b>Codewords:</b> A=00, B=01, C=11 (all length 2); D=101 (length 3); E=1000, F=1001 (both length 4).</p>
+        <p><b>L<sub>avg</sub></b> = 0.30(2)+0.25(2)+0.20(2)+0.10(3)+0.10(4)+0.05(4) = 2.4 bits/symbol.</p>
+        <p><b>Entropy</b> H(X) ≈ 2.366 bits/symbol.</p>
+        <p><b>Efficiency</b> η ≈ 2.366/2.4 ≈ 98.6%, redundancy ≈ 1.4% — higher than the 5-symbol example because this probability set sits closer to a "clean" power-of-two-like distribution.</p>
+      </div>
     </div>
 
-    <div class="qa">
-      <div class="q">Q5. Explain Lempel-Ziv coding technique. How is it different from Huffman/Shannon-Fano coding? <span class="imp h">★★★★ 7 Marks</span></div>
-      <div class="a">LZ is dictionary-based/adaptive — no prior probability knowledge needed, builds dictionary of repeated patterns on the fly and replaces them with back-references (offset, length, next char in LZ77). Differs from Huffman/SF which require known symbol probabilities and compress individual symbols, not sequences. Comparison table given above.</div>
+    <div class="qcard">
+      <div class="qlabel">Q5 · Theory + Numerical</div>
+      <div class="q">Explain the Shannon-Fano coding algorithm with a suitable example. Compare its efficiency with Huffman coding on the same data.</div>
+      <span class="marks m10">★★★★ 10 Marks</span>
+      <div class="a">
+        <p><b>Algorithm:</b> (1) arrange symbols in descending order of probability; (2) split the ordered list into two groups whose total probabilities are as close to equal as possible; (3) assign '0' to the upper group and '1' to the lower group; (4) recursively repeat the split within each group until every symbol is isolated with its own codeword.</p>
+        <p><b>Worked example</b> on A(0.4),B(0.2),C(0.2),D(0.1),E(0.1): Split1 {A}|{B,C,D,E}→A=0; Split2 {B}|{C,D,E}→B=10; Split3 {C}|{D,E}→C=110; Split4 {D}|{E}→D=1110,E=1111.</p>
+        <p><b>Result:</b> L<sub>avg</sub>(SF) = 2.2 bits/symbol — identical to Huffman on this particular distribution.</p>
+        <p><b>Comparison note:</b> Shannon-Fano's greedy top-down split can coincide with Huffman's optimum on "clean" distributions like this one, but Shannon-Fano is not <i>guaranteed</i> optimal in general — on distributions that don't split evenly, its greedy choice at the top level can lock in a sub-optimal tree, whereas Huffman's bottom-up merging always finds the minimum L<sub>avg</sub> among all prefix codes.</p>
+      </div>
     </div>
 
-    <div class="qa">
-      <div class="q">Q6. Explain LZ77 sliding-window compression with an example. <span class="imp m">★★★ 5 Marks</span></div>
-      <div class="a">Uses search buffer (past data) + look-ahead buffer (upcoming data); finds longest match in search buffer, outputs (offset, length, next_character) triple instead of raw repeated characters. Example with "ABABABA" given above.</div>
+    <div class="qcard">
+      <div class="qlabel">Q6 · Theory</div>
+      <div class="q">Differentiate between Huffman coding and Shannon-Fano coding.</div>
+      <span class="marks m5">★★★★ 5 Marks — very frequently asked</span>
+      <div class="a">
+        <p>Huffman coding builds its tree <b>bottom-up</b>, repeatedly combining the two lowest-probability nodes, and is <b>always optimal</b> — it provably achieves the minimum possible average codeword length among all prefix codes for a given probability distribution.</p>
+        <p>Shannon-Fano coding builds its tree <b>top-down</b>, recursively splitting the sorted symbol list into two roughly-equal-probability halves, and is <b>not always optimal</b> — its greedy splitting choice can occasionally produce a longer average length than Huffman's.</p>
+        <p>In practice, Huffman coding is what's actually used in real compression standards (JPEG, MP3, ZIP/DEFLATE), while Shannon-Fano is mostly of historical and educational interest, having been superseded by Huffman's provably-optimal algorithm shortly after its introduction.</p>
+      </div>
     </div>
 
-    <div class="qa">
-      <div class="q">Q7. State and derive the Shannon-Hartley theorem for channel capacity of a continuous channel. <span class="imp h">★★★★★ 7-10 Marks</span></div>
-      <div class="a">C = B log₂(1+S/N) bits/sec for an AWGN band-limited channel. Explain B=bandwidth, S/N=SNR. Mention that capacity grows linearly with B but only logarithmically with SNR (diminishing returns).</div>
+    <div class="qcard">
+      <div class="qlabel">Q7 · Theory</div>
+      <div class="q">Explain the Lempel-Ziv coding technique. How is it fundamentally different from Huffman/Shannon-Fano coding?</div>
+      <span class="marks m5">★★★★ 7 Marks</span>
+      <div class="a">
+        <p>Lempel-Ziv (LZ) coding is a <b>dictionary-based, adaptive</b> lossless compression technique. Unlike entropy coders, it requires <b>no prior knowledge of symbol probabilities</b> — instead, it scans the data itself, builds up a dictionary of previously-seen substrings/patterns as it goes, and replaces repeated occurrences of those patterns with short back-references (pointers) into the dictionary rather than repeating the raw characters.</p>
+        <p>This makes LZ coding <b>universal</b>: the same algorithm works well on text, source code, images, or any data with repeated structure, without needing to be tuned to a known probability model in advance.</p>
+        <p><b>Key difference from Huffman/Shannon-Fano:</b> those two are <i>statistical</i> coders that compress individual symbols based on their known frequency, and require the probability table up front. LZ coding is a <i>pattern-matching</i> coder that compresses repeated <i>sequences</i> of symbols, adapting to the data on the fly — this is why LZ-family algorithms (ZIP, GIF, PNG, GZIP) dominate general-purpose file compression, while Huffman is often used as a secondary/final compression stage layered on top of another technique (e.g., inside JPEG or DEFLATE).</p>
+      </div>
     </div>
 
-    <div class="qa">
-      <div class="q">Q8. Numerical: A channel has B=3 kHz, SNR=1000. Find its channel capacity. <span class="imp h">★★★★ 5 Marks numerical</span></div>
-      <div class="a">C = 3000×log₂(1001) ≈ <b>29.9 kbps</b>. Full solution above.</div>
+    <div class="qcard">
+      <div class="qlabel">Q8 · Numerical</div>
+      <div class="q">Explain LZ77 sliding-window compression with a worked example, including both encoding and decoding.</div>
+      <span class="marks m5">★★★ 7 Marks</span>
+      <div class="a">
+        <p>LZ77 maintains a <b>sliding window</b> over the data stream, divided into a <b>search buffer</b> (already-processed text, acting as the "dictionary") and a <b>look-ahead buffer</b> (upcoming text to be encoded). At each step, it finds the longest match between the look-ahead buffer and any substring in the search buffer, and outputs the triple <b>(offset, length, next_character)</b>.</p>
+        <p><b>Encoding example</b> on <code>ABABABA</code>: A→(0,0,A); B→(0,0,B); the next two characters "AB" match text 2 positions back with length 2→(2,2,A); the final "BA" matches similarly→(2,2,−). Output stream: (0,0,A)(0,0,B)(2,2,A)(2,2,−).</p>
+        <p><b>Decoding:</b> the receiver rebuilds the same growing buffer using each triple: (0,0,A)→append "A"; (0,0,B)→append "B"; (2,2,A)→go back 2 characters in the buffer, copy 2 characters ("AB"), then append the literal 'A'; (2,2,−)→go back 2, copy 2 more characters ("BA"). The reconstructed string is exactly <code>ABABABA</code>, confirming the scheme is fully lossless.</p>
+      </div>
     </div>
 
-    <div class="qa">
-      <div class="q">Q9. State and explain Shannon's Channel Coding Theorem (Shannon's Second Theorem). <span class="imp h">★★★★★ 10 Marks — most important theory question in whole unit</span></div>
-      <div class="a">If R≤C, a code exists making error probability arbitrarily small with increasing block length; if R&gt;C, reliable transmission is impossible. It's an existence proof (doesn't construct the code). Full explanation + significance points given above.</div>
+    <div class="qcard">
+      <div class="qlabel">Q9 · Theory</div>
+      <div class="q">How does LZ78 differ from LZ77? Explain briefly with an example.</div>
+      <span class="marks m5">★★★ 5 Marks</span>
+      <div class="a">
+        <p>LZ77 searches for matches only within a <b>fixed-size sliding window</b> of recently-seen text, which limits how far back it can reference. LZ78 instead builds an <b>explicit, unbounded dictionary</b> of phrases as it parses the input, indexing each new phrase (1, 2, 3, …) and encoding each step as a pair <b>(index of longest existing dictionary match, next new character)</b>.</p>
+        <p><b>Example</b> on <code>ABABABA</code>: parsing gives phrases "A"→dict[1], "B"→dict[2], "AB"→dict[3] (built from dict[1]+"B"), "ABA"→dict[4] (built from dict[3]+"A"), yielding output (0,A)(0,B)(1,B)(3,A).</p>
+        <p>Because the dictionary keeps growing and phrases can reference other multi-character phrases, LZ78 (and its popular variant LZW, used in GIF images) tends to compress longer, more repetitive files more effectively than LZ77's bounded window.</p>
+      </div>
     </div>
 
-    <div class="qa">
-      <div class="q">Q10. What is meant by the "Shannon Limit"? Why can no practical system exceed it? <span class="imp h">★★★ 5 Marks</span></div>
-      <div class="a">Shannon Limit = the channel capacity C itself — the absolute maximum reliable data rate given the channel's bandwidth and noise. No coding scheme, however clever, can communicate reliably above this rate because it is a fundamental information-theoretic bound, not an engineering limitation. Modern codes (Turbo/LDPC) approach it within ~0.5dB.</div>
+    <div class="qcard">
+      <div class="qlabel">Q10 · Theory + Derivation</div>
+      <div class="q">State and explain the Shannon-Hartley theorem for the channel capacity of a continuous channel. Derive/explain each term.</div>
+      <span class="marks m10">★★★★★ 7-10 Marks</span>
+      <div class="a">
+        <p>The <b>Shannon-Hartley theorem</b> gives the channel capacity of a continuous, band-limited channel corrupted by additive white Gaussian noise (AWGN) as:</p>
+        <p style="text-align:center;font-family:'JetBrains Mono',monospace;font-weight:700;">C = B · log₂(1 + S/N)&nbsp; bits/second</p>
+        <p>Here <b>B</b> is the channel bandwidth in Hz, <b>S</b> is the average received signal power, <b>N</b> is the average noise power, and S/N is the signal-to-noise ratio. The theorem states that C is the theoretical maximum rate at which information can be transmitted through the channel with arbitrarily low probability of error.</p>
+        <p>The formula shows that capacity grows <b>linearly</b> with bandwidth (double B, roughly double C) but only <b>logarithmically</b> with SNR (each doubling of SNR adds a fixed number of bits/sec, showing diminishing returns) — this is why engineers generally prefer adding bandwidth over pushing signal power when trying to raise data rates cheaply.</p>
+      </div>
     </div>
 
-    <div class="qa">
-      <div class="q">Q11. Explain the relationship between channel capacity, channel coding theorem, and Shannon limit. <span class="imp m">★★★ 5 Marks — conceptual linking question</span></div>
-      <div class="a">Channel capacity C is the maximum rate (Shannon-Hartley gives formula for continuous channels). Channel coding theorem proves that reliable transmission is achievable for any R≤C. "Shannon limit" is the practical/colloquial name for this same capacity boundary — the three concepts describe the same underlying limit from definition → proof → practical naming.</div>
+    <div class="qcard">
+      <div class="qlabel">Q11 · Numerical</div>
+      <div class="q">A channel has bandwidth B = 3 kHz and SNR = 1000. Find its channel capacity.</div>
+      <span class="marks m5">★★★★ 5 Marks numerical</span>
+      <div class="a">
+        <p>Using Shannon-Hartley: C = B log₂(1+S/N) = 3000 × log₂(1+1000) = 3000 × log₂(1001).</p>
+        <p>log₂(1001) ≈ 9.97, so C ≈ 3000 × 9.97 ≈ <b>29,910 bits/sec ≈ 29.9 kbps</b>.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q12 · Numerical (dB variant)</div>
+      <div class="q">A channel has bandwidth B = 4 kHz and SNR = 20 dB. Find the channel capacity.</div>
+      <span class="marks m5">★★★★ 5 Marks numerical</span>
+      <div class="a">
+        <p><b>Step 1 — convert SNR from dB to linear:</b> SNR(dB) = 10 log₁₀(S/N) → 20 = 10 log₁₀(S/N) → S/N = 10<sup>2</sup> = 100.</p>
+        <p><b>Step 2 — apply Shannon-Hartley:</b> C = 4000 × log₂(1+100) = 4000 × log₂(101) ≈ 4000 × 6.658 ≈ <b>26,633 bits/sec ≈ 26.6 kbps</b>.</p>
+        <p>Always convert dB to a linear ratio first — plugging the dB number directly into log₂() is a common and costly exam error.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q13 · Theory + Derivation</div>
+      <div class="q">State and explain Shannon's Channel Coding Theorem (Shannon's Second Theorem). What does it prove and what does it NOT tell us?</div>
+      <span class="marks m10">★★★★★ 10 Marks — most important theory question in whole unit</span>
+      <div class="a">
+        <p>Shannon's Channel Coding Theorem states that for a discrete memoryless channel with capacity C: if the transmission rate R ≤ C, there exists a coding scheme for which the probability of decoding error can be made <b>arbitrarily close to zero</b> by increasing the code's block length, while keeping R fixed. Conversely, if R &gt; C, reliable transmission is <b>fundamentally impossible</b>, regardless of how sophisticated the encoder/decoder design is.</p>
+        <p><b>What it proves:</b> reliable communication over a noisy channel is achievable — a revolutionary and counter-intuitive result when first published in 1948, since intuition suggests any real noisy channel must always introduce some irreducible error rate.</p>
+        <p><b>What it does NOT tell us:</b> the theorem is a pure <b>existence proof</b> — it guarantees a good code exists for any R ≤ C, but gives no construction method. This gap motivated decades of coding-theory research (Hamming, cyclic, convolutional, Turbo, LDPC codes) aimed at finding practical, implementable codes that approach this theoretical promise.</p>
+        <p>The theorem also establishes C as a <b>sharp threshold</b>: performance doesn't degrade gradually as R crosses C — below C, error-free-in-the-limit transmission is achievable, and above C it is categorically impossible.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q14 · Applied Numerical</div>
+      <div class="q">A channel's capacity is 26.6 kbps. Using the Channel Coding Theorem, comment on whether reliable transmission is possible at R = 20 kbps and at R = 30 kbps.</div>
+      <span class="marks m5">★★★ 5 Marks</span>
+      <div class="a">
+        <p>At R = 20 kbps: since R = 20 kbps &lt; C = 26.6 kbps, the condition R ≤ C is satisfied, so by the Channel Coding Theorem a coding scheme exists that can drive the error probability arbitrarily close to zero (with sufficiently long code blocks) while transmitting at this rate.</p>
+        <p>At R = 30 kbps: since R = 30 kbps &gt; C = 26.6 kbps, reliable transmission is <b>not possible</b> — no matter how the code is designed, some irreducible error probability must remain when the rate exceeds capacity.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q15 · Theory</div>
+      <div class="q">What is meant by the "Shannon Limit"? Why can no practical system exceed it, and how close have real codes gotten?</div>
+      <span class="marks m5">★★★ 5 Marks</span>
+      <div class="a">
+        <p>The <b>Shannon Limit</b> is another name for the channel capacity C itself — the absolute maximum data rate at which information can be transmitted over a channel with arbitrarily low probability of error, given the channel's bandwidth and noise characteristics.</p>
+        <p>No coding scheme, however sophisticated, can communicate reliably above this rate, because it is a <b>fundamental information-theoretic bound</b> derived from the physics of the channel (bandwidth and noise power) — not merely a limitation of current engineering or algorithm design.</p>
+        <p>In its most extreme form (infinite bandwidth), the limit reduces to the famous <b>E<sub>b</sub>/N₀ ≥ −1.6 dB</b> bound — the minimum energy per bit needed for reliable communication under any circumstances. Modern practical codes such as Turbo codes and LDPC codes (used in 4G/5G/WiFi) now operate within roughly 0.5 dB of this theoretical floor, which is considered one of the great engineering achievements of modern communications.</p>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <div class="qlabel">Q16 · Conceptual Linking</div>
+      <div class="q">Explain the relationship between channel capacity, the channel coding theorem, and the Shannon limit.</div>
+      <span class="marks m5">★★★ 5 Marks — conceptual linking question, frequently combined into one</span>
+      <div class="a">
+        <p>These three ideas describe the <b>same underlying boundary</b> from three different angles, moving from definition → proof → practical naming.</p>
+        <p><b>Channel capacity C</b> is the quantitative definition of the limit — the Shannon-Hartley formula C = B log₂(1+S/N) tells us exactly what that maximum rate is for a given continuous AWGN channel.</p>
+        <p><b>The Channel Coding Theorem</b> is the proof that this number C is achievable — it shows that reliable (arbitrarily-low-error) transmission is possible for any rate R ≤ C, and impossible for R &gt; C, establishing C as a hard, sharp threshold rather than a soft guideline.</p>
+        <p><b>The Shannon Limit</b> is simply the practical, colloquial name engineers use for this same capacity boundary when discussing how close real-world codes (Turbo, LDPC) can get to the theoretical maximum — so all three terms ultimately point to one single number, C, viewed respectively as a formula, a guarantee, and a design target.</p>
+      </div>
     </div>
   </div>
 
   <div class="footer-note">
-
+Prepared for RTU 5CS3-01 · Information Theory &amp; Coding — Unit 3. All numericals are worked in full detail; practice with different probability/SNR values using the simulations above before your exam.
 </div>
       </div>
     </div>
@@ -385,5 +700,96 @@
       el.addEventListener("mouseleave",()=>cursorOutline.classList.remove("cursor-hovering"));
     });
   </script>
-<script src="../splash-cursor.js"></script>\n</body>
+  <script>
+  // ── Simulation 1: Huffman Code Builder ──
+  function buildHuffman(symbols){
+    // symbols: [{name, prob}]
+    let nodes = symbols.map(s => ({prob:s.prob, name:s.name, left:null, right:null, isLeaf:true}));
+    if(nodes.length === 1){
+      return {tree:nodes[0], codes:{[nodes[0].name]:"0"}};
+    }
+    while(nodes.length > 1){
+      nodes.sort((a,b)=>a.prob-b.prob);
+      const n1 = nodes.shift();
+      const n2 = nodes.shift();
+      const merged = {prob:n1.prob+n2.prob, name:null, left:n1, right:n2, isLeaf:false};
+      nodes.push(merged);
+    }
+    const root = nodes[0];
+    const codes = {};
+    function traverse(node, code){
+      if(node.isLeaf){ codes[node.name] = code.length ? code : "0"; return; }
+      traverse(node.left, code+"0");
+      traverse(node.right, code+"1");
+    }
+    traverse(root, "");
+    return {tree:root, codes};
+  }
+
+  function runHuffmanSim(){
+    const raw = document.getElementById('huffInput').value.trim();
+    const out = document.getElementById('huffOutput');
+    let parts;
+    try {
+      parts = raw.split(',').map(p=>{
+        const [name, probStr] = p.split(':');
+        const prob = parseFloat(probStr);
+        if(!name || isNaN(prob) || prob <= 0) throw new Error('bad');
+        return {name: name.trim(), prob: prob};
+      });
+      if(parts.length < 2) throw new Error('need at least 2 symbols');
+    } catch(e){
+      out.innerHTML = '<p style="color:var(--red);font-weight:600;">⚠️ Please enter valid input like A:0.4,B:0.2,C:0.2,D:0.1,E:0.1</p>';
+      return;
+    }
+
+    const totalProb = parts.reduce((s,p)=>s+p.prob,0);
+    const {codes} = buildHuffman(parts);
+
+    let lavg = 0, entropy = 0;
+    parts.forEach(p=>{
+      const normP = p.prob/totalProb;
+      const len = codes[p.name].length;
+      lavg += normP*len;
+      entropy += -normP*Math.log2(normP);
+    });
+    const efficiency = (entropy/lavg*100);
+
+    let rows = parts.map(p=>{
+      const normP = (p.prob/totalProb).toFixed(4);
+      return `<tr><td>${p.name}</td><td>${normP}</td><td style="font-family:'JetBrains Mono',monospace;color:var(--accent);">${codes[p.name]}</td><td>${codes[p.name].length}</td></tr>`;
+    }).join('');
+
+    out.innerHTML = `
+      <table style="margin-top:6px;">
+        <tr><th>Symbol</th><th>Probability (norm.)</th><th>Huffman Codeword</th><th>Length</th></tr>
+        ${rows}
+      </table>
+      <div class="keypoint" style="margin-top:14px;">
+        <span class="icon">📊</span>
+        <p><b>L<sub>avg</sub></b> = ${lavg.toFixed(4)} bits/symbol &nbsp;|&nbsp; <b>Entropy H(X)</b> = ${entropy.toFixed(4)} bits/symbol &nbsp;|&nbsp; <b>Efficiency η</b> = ${efficiency.toFixed(2)}% &nbsp;|&nbsp; <b>Redundancy</b> = ${(100-efficiency).toFixed(2)}%</p>
+      </div>
+    `;
+  }
+  document.getElementById('huffBtn').addEventListener('click', runHuffmanSim);
+  runHuffmanSim();
+
+  // ── Simulation 2: Channel Capacity Calculator ──
+  function runCapacitySim(){
+    const B = parseFloat(document.getElementById('bwSlider').value);
+    const snrDb = parseFloat(document.getElementById('snrSlider').value);
+    document.getElementById('bwVal').textContent = B;
+    document.getElementById('snrVal').textContent = snrDb;
+    const snrLinear = Math.pow(10, snrDb/10);
+    const C = B * Math.log2(1 + snrLinear);
+    const kbps = C/1000;
+    document.getElementById('capText').innerHTML =
+      `S/N (linear) = 10<sup>${(snrDb/10).toFixed(2)}</sup> ≈ <b>${snrLinear.toFixed(1)}</b> &nbsp;→&nbsp; C = ${B} × log₂(1+${snrLinear.toFixed(1)}) ≈ <b>${C.toFixed(0)} bits/sec ≈ ${kbps.toFixed(2)} kbps</b>`;
+  }
+  document.getElementById('bwSlider').addEventListener('input', runCapacitySim);
+  document.getElementById('snrSlider').addEventListener('input', runCapacitySim);
+  runCapacitySim();
+  </script>
+<script src="../splash-cursor.js"></script>
+</body>
 </html>
