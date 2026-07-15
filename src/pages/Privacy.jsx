@@ -112,7 +112,7 @@ export default function Privacy() {
                   <a href="#contact" onClick={(e) => {
                     e.preventDefault();
                     window.dispatchEvent(new CustomEvent('openContactModal'));
-                  }} className="legal-link" style={{ cursor: "pointer" }}> Contact Admin</a> feature. 
+                  }} className="legal-link" style={{ cursor: "pointer" }}> Contact</a> feature. 
                   We will process deletion requests promptly and remove your data from our systems.
                 </p>
               </div>
@@ -147,7 +147,7 @@ export default function Privacy() {
               e.preventDefault();
               window.dispatchEvent(new CustomEvent('openContactModal'));
             }} className="sl-footer-link" style={{ cursor: "pointer" }}>
-              Contact Admin
+              Contact
             </a>
           </p>
         </footer>

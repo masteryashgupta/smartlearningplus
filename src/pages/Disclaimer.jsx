@@ -147,7 +147,7 @@ export default function Disclaimer() {
               <div className="legal-text">
                 <p>
                   If you believe any content on this platform infringes your copyright, please report it through the 
-                  <Link to="/" state={{ contactTakedown: true }} className="legal-link"> Contact Admin</Link> feature. 
+                  <Link to="/" state={{ contactTakedown: true }} className="legal-link"> Contact</Link> feature. 
                   We will review all takedown requests promptly and remove any infringing content as appropriate.
                 </p>
               </div>
@@ -172,7 +172,7 @@ export default function Disclaimer() {
               // Dispatch custom event to open contact modal
               window.dispatchEvent(new CustomEvent('openContactModal'));
             }} className="sl-footer-link" style={{ cursor: "pointer" }}>
-              Contact Admin
+              Contact
             </a>
           </p>
         </footer>

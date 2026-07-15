@@ -1748,7 +1748,7 @@ const handleContribSubmit = async (e) => {
               className="sl-footer-link" 
               style={{ color: "#2563eb", textDecoration: "none", cursor: "pointer" }}
             >
-              Contact Admin
+              Contact
             </a>
           </p>
         </footer>
@@ -1850,7 +1850,7 @@ const handleContribSubmit = async (e) => {
             className="contact-admin-fab"
           >
             <span style={{ fontSize: "17px", lineHeight: 1 }}>&#9993;&#65039;</span>
-            <span>Contact Admin</span>
+            <span>Contact</span>
           </a>
         )}
 
@@ -1862,7 +1862,7 @@ const handleContribSubmit = async (e) => {
             className="contact-admin-fab"
           >
             <span style={{ fontSize: "17px", lineHeight: 1 }}>&#9993;&#65039;</span>
-            <span>Contact Admin</span>
+            <span>Contact</span>
           </button>
         )}
       </div>
@@ -1890,7 +1890,7 @@ const handleContribSubmit = async (e) => {
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 <div>
                   <div style={{ color: "#fff", fontSize: "18px", fontWeight: 800, letterSpacing: "-0.4px" }}>
-                    &#9993;&#65039; {contactTakedownMode ? "Report Copyright Concern" : "Contact Admin"}
+                    &#9993;&#65039; {contactTakedownMode ? "Report Copyright Concern" : "Contact"}
                   </div>
                   <div style={{ color: "rgba(255,255,255,0.8)", fontSize: "12px", marginTop: "3px" }}>
                     {contactTakedownMode ? "Takedown Request · Priority Review" : "Smart Learning+ · We respond on email"}
@@ -1943,7 +1943,7 @@ const handleContribSubmit = async (e) => {
                   <div style={{ color: "#64748b", fontSize: "12.5px", lineHeight: 1.55, background: contactTakedownMode ? "#fef2f2" : "#f0f9ff", border: contactTakedownMode ? "1px solid #fca5a5" : "1px solid #bae6fd", borderRadius: "10px", padding: "10px 14px" }}>
                     {contactTakedownMode 
                       ? "&#9888; This is a copyright takedown request. Please describe the content in question and we will review it promptly for removal."
-                      : "Fill in your details below. The admin will reply to your email address."}
+                      : "Fill form to report a bug, contribute, give ideas or request functionality."}
                   </div>
 
                   <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>

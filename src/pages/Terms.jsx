@@ -161,7 +161,7 @@ export default function Terms() {
               e.preventDefault();
               window.dispatchEvent(new CustomEvent('openContactModal'));
             }} className="sl-footer-link" style={{ cursor: "pointer" }}>
-              Contact Admin
+              Contact
             </a>
           </p>
         </footer>
