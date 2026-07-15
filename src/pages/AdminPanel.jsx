@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { api } from "../api.js";
 import TimetableGrid from "../components/TimetableGrid.jsx";
 import AnnouncementManager from "../components/AnnouncementManager.jsx";
@@ -50,7 +50,7 @@ const DAYS = [
   { v: 4, l: "Thu" }, { v: 5, l: "Fri" }, { v: 6, l: "Sat" }, { v: 0, l: "Sun" },
 ];
 
-function StatCard({ icon, label, value, sub, color = "#4F46E5" }) {
+function StatCard({ icon, label, value, sub, color = "#10B981" }) {
   return (
     <div className="modern-stat-card">
       <div className="icon-wrapper" style={{ backgroundColor: color + "12", color: color }}>
@@ -62,6 +62,65 @@ function StatCard({ icon, label, value, sub, color = "#4F46E5" }) {
         {sub && <div className="stat-sub">{sub}</div>}
       </div>
     </div>
+  );
+}
+
+function MatrixRain({ height = 240 }) {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+
+    const resize = () => {
+      canvas.width = canvas.parentElement.clientWidth || 400;
+      canvas.height = height;
+    };
+    resize();
+
+    const columns = Math.floor(canvas.width / 14) || 20;
+    const rainDrops = Array(columns).fill(1);
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$#@%&*+-/[]{}()<>?";
+
+    const draw = () => {
+      ctx.fillStyle = "rgba(11, 15, 25, 0.08)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#10B981";
+      ctx.font = "11px monospace";
+
+      for (let i = 0; i < rainDrops.length; i++) {
+        const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+        ctx.fillText(text, i * 14, rainDrops[i] * 14);
+
+        if (rainDrops[i] * 14 > canvas.height && Math.random() > 0.975) {
+          rainDrops[i] = 0;
+        }
+        rainDrops[i]++;
+      }
+    };
+
+    const interval = setInterval(draw, 33);
+    window.addEventListener("resize", resize);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("resize", resize);
+    };
+  }, [height]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: "absolute",
+        inset: 0,
+        zIndex: 0,
+        opacity: 0.18,
+        pointerEvents: "none",
+        borderRadius: "12px",
+      }}
+    />
   );
 }
 
@@ -116,6 +175,75 @@ export default function AdminPanel({ onClose }) {
     }, 6000);
     return () => clearInterval(interval);
   }, []);
+
+  const [terminalHistory, setTerminalHistory] = useState([
+    { text: "Smart Learning+ Zyrex Console [Version 5.0.0]", type: "info" },
+    { text: "Type 'help' for a list of available commands.", type: "info" },
+    { text: "", type: "info" }
+  ]);
+  const [terminalInput, setTerminalInput] = useState("");
+  const [showMatrixRain, setShowMatrixRain] = useState(true);
+  const terminalEndRef = useRef(null);
+
+  useEffect(() => {
+    if (terminalEndRef.current) {
+      terminalEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [terminalHistory]);
+
+  const handleTerminalSubmit = (e) => {
+    e.preventDefault();
+    const input = terminalInput.trim();
+    if (!input) return;
+    const cmd = input.toLowerCase();
+
+    const newHistory = [...terminalHistory, { text: `root@smartlearning:~# ${input}`, type: "command" }];
+
+    let response = [];
+    if (cmd === "help") {
+      response = [
+        { text: "Available commands:", type: "info" },
+        { text: "  neofetch      Display system environment details", type: "info" },
+        { text: "  status        Fetch service health status report", type: "info" },
+        { text: "  users         Dump list of active students", type: "info" },
+        { text: "  subscribers   Show newsletter subscribers count", type: "info" },
+        { text: "  matrix        Toggle terminal matrix code rain", type: "info" },
+        { text: "  clear         Clear screen output", type: "info" }
+      ];
+    } else if (cmd === "neofetch") {
+      response = [
+        { text: "    /\\_/\\      OS: Zyrex OS Core v5", type: "primary" },
+        { text: "   ( o.o )     Kernel: SmartLearning 5.0-generic", type: "primary" },
+        { text: "    > ^ <      Shell: bash / xterm-256color", type: "primary" },
+        { text: "               Memory: 412.5 MB / 1024.0 MB (40%)", type: "primary" },
+        { text: "               Database: PostgreSQL (Supabase)", type: "primary" },
+        { text: "               API Port: 4000 (Active)", type: "primary" }
+      ];
+    } else if (cmd === "status") {
+      response = [
+        { text: "🟢 API Server Status: ONLINE", type: "success" },
+        { text: "🟢 Database Connection: OK", type: "success" },
+        { text: "🟢 Telegram Hook daemon: ACTIVE", type: "success" }
+      ];
+    } else if (cmd === "users") {
+      response = users.map(u => ({ text: `- [ID: ${u.id.slice(0, 8)}] ${u.name} (${u.batch}) - Status: ${u.is_active ? 'ACTIVE' : 'INACTIVE'}`, type: "info" }));
+      if (response.length === 0) response = [{ text: "No registered users in datastore.", type: "error" }];
+    } else if (cmd === "subscribers") {
+      response = [{ text: `Active Notification Subscribers: ${subscribers.length} emails.`, type: "success" }];
+    } else if (cmd === "matrix") {
+      setShowMatrixRain(!showMatrixRain);
+      response = [{ text: `Matrix digital rain overlay: ${!showMatrixRain ? 'ENABLED' : 'DISABLED'}`, type: "success" }];
+    } else if (cmd === "clear") {
+      setTerminalHistory([]);
+      setTerminalInput("");
+      return;
+    } else {
+      response = [{ text: `Command not recognized: '${cmd}'. Type 'help' for instructions.`, type: "error" }];
+    }
+
+    setTerminalHistory([...newHistory, ...response]);
+    setTerminalInput("");
+  };
 
   const [attendanceDate, setAttendanceDate] = useState(new Date().toISOString().slice(0, 10));
   const [attendanceSlots, setAttendanceSlots] = useState([]);
@@ -1205,43 +1333,89 @@ export default function AdminPanel({ onClose }) {
                 </div>
               </div>
 
+              {/* Side-by-Side: Interactive Terminal and Risk List */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                {/* 💻 INTERACTIVE CYBER SHELL */}
+                <div className="lg:col-span-7 modern-card !bg-black border-emerald-500/20 shadow-[0_0_20px_rgba(16,185,129,0.1)] relative flex flex-col justify-between overflow-hidden" style={{ minHeight: "360px" }}>
+                  {showMatrixRain && <MatrixRain height={360} />}
+                  
+                  <div className="relative z-10">
+                    <h3 className="text-xs font-bold text-emerald-400 mb-3 flex items-center gap-2 font-mono">
+                      <span>⌨️</span> interactive_shell.sh
+                    </h3>
+                    
+                    <div className="font-mono text-[11px] overflow-y-auto pr-1 space-y-1" style={{ maxHeight: "250px" }}>
+                      {terminalHistory.map((item, idx) => {
+                        let colorClass = "text-emerald-400";
+                        if (item.type === "command") colorClass = "text-white font-bold";
+                        if (item.type === "error") colorClass = "text-rose-400";
+                        if (item.type === "success") colorClass = "text-cyan-400";
+                        if (item.type === "primary") colorClass = "text-emerald-300";
+                        return (
+                          <div key={idx} className={colorClass}>
+                            {item.text}
+                          </div>
+                        );
+                      })}
+                      <div ref={terminalEndRef} />
+                    </div>
+                  </div>
+
+                  <form onSubmit={handleTerminalSubmit} className="relative z-10 border-t border-emerald-500/20 pt-3 mt-4 flex items-center gap-2 font-mono text-xs">
+                    <span className="text-emerald-400 shrink-0">root@smartlearning:~#</span>
+                    <input
+                      type="text"
+                      value={terminalInput}
+                      onChange={(e) => setTerminalInput(e.target.value)}
+                      placeholder="Type 'help' for instructions..."
+                      className="bg-transparent border-none outline-none text-white w-full font-mono p-0 focus:ring-0"
+                      autoFocus
+                    />
+                  </form>
+                </div>
+
+                {/* ⚠️ LOWEST ATTENDANCE LOG */}
+                <div className="lg:col-span-5 modern-card">
+                  <h3 className="text-xs font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <span>⚠️</span> Low Attendance / At Risk Students
+                  </h3>
+                  {overview.lowAttendance.length === 0 ? (
+                    <div className="text-xs text-slate-500 py-6 text-center font-mono">[NO_RISK_DETECTED]</div>
+                  ) : (
+                    <div className="space-y-4 font-mono">
+                      {overview.lowAttendance.map((u, i) => {
+                        const pct = u.percentage;
+                        const barColor = pct >= 75 ? "#10B981" : pct >= 65 ? "#F59E0B" : "#EF4444";
+                        return (
+                          <div key={i} className="flex items-center gap-4">
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center justify-between mb-1">
+                                <span className="text-xs font-bold text-slate-300">{u.name}</span>
+                                <span className="text-[10px] text-slate-500">{u.batch}</span>
+                              </div>
+                              <div className="h-2 rounded-full bg-slate-800 overflow-hidden">
+                                <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, background: barColor }} />
+                              </div>
+                            </div>
+                            <div className="text-xs font-bold min-w-[45px] text-right" style={{ color: barColor }}>
+                              {pct}%
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+
+              </div>
+
+              {/* CORE STATS GRID */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <StatCard icon="👥" label="Active Students" value={overview.activeUsers} color="#10B981" />
                 <StatCard icon="✅" label="Present Today" value={todayPresent} color="#00FF66" />
                 <StatCard icon="❌" label="Absent Today" value={todayAbsent} color="#EF4444" />
                 <StatCard icon="📚" label="Total Subjects" value={subjects.length} color="#38BDF8" />
-              </div>
-
-              <div className="modern-card">
-                <h3 className="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
-                  <span>⚠️</span> Lowest Attendance / At Risk Students
-                </h3>
-                {overview.lowAttendance.length === 0 ? (
-                  <div className="text-xs text-slate-500 py-3 text-center">All students maintain optimal attendance threshold! 🎉</div>
-                ) : (
-                  <div className="space-y-4">
-                    {overview.lowAttendance.map((u, i) => {
-                      const pct = u.percentage;
-                      const barColor = pct >= 75 ? "#10B981" : pct >= 65 ? "#F59E0B" : "#EF4444";
-                      return (
-                        <div key={i} className="flex items-center gap-4">
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center justify-between mb-1">
-                              <span className="text-xs font-bold text-slate-700">{u.name}</span>
-                              <span className="text-[10px] text-slate-400 font-mono">{u.batch}</span>
-                            </div>
-                            <div className="h-2 rounded-full bg-slate-800 overflow-hidden">
-                              <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, background: barColor }} />
-                            </div>
-                          </div>
-                          <div className="text-sm font-bold font-mono min-w-[45px] text-right" style={{ color: barColor }}>
-                            {pct}%
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
               </div>
             </div>
           )}
