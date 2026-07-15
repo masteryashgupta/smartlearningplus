@@ -1887,7 +1887,7 @@ const handleContribSubmit = async (e) => {
               background: "linear-gradient(135deg, #2563eb, #06b6d4)",
               padding: "24px 28px 20px",
             }}>
-              <div style={{ display: "flex", alignItems: "center", justify: "space-between" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 <div>
                   <div style={{ color: "#fff", fontSize: "18px", fontWeight: 800, letterSpacing: "-0.4px" }}>
                     &#9993;&#65039; {contactTakedownMode ? "Report Copyright Concern" : "Contact Admin"}
@@ -1898,7 +1898,7 @@ const handleContribSubmit = async (e) => {
                 </div>
                 <button
                   onClick={() => { setShowContactModal(false); setContactResult(null); }}
-                  style={{ background: "rgba(255,255,255,0.15)", border: "none", color: "#fff", borderRadius: "50%", width: "32px", height: "32px", cursor: "pointer", fontSize: "16px", display: "flex", alignItems: "center", justify: "center" }}
+                  style={{ background: "rgba(255,255,255,0.15)", border: "none", color: "#fff", borderRadius: "50%", width: "32px", height: "32px", cursor: "pointer", fontSize: "16px", display: "flex", alignItems: "center", justifyContent: "center" }}
                 >&#10005;</button>
               </div>
             </div>
@@ -2026,7 +2026,7 @@ const handleContribSubmit = async (e) => {
               background: "linear-gradient(135deg, #4f46e5, #06b6d4)",
               padding: "24px 28px 20px",
             }}>
-              <div style={{ display: "flex", alignItems: "center", justify: "space-between" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 <div>
                   <div style={{ color: "#fff", fontSize: "18px", fontWeight: 800, letterSpacing: "-0.4px" }}>
                     🔔 Get Mail Updates
@@ -2037,7 +2037,7 @@ const handleContribSubmit = async (e) => {
                 </div>
                 <button
                   onClick={() => { setShowSubscribeModal(false); setSubscribeResult(null); }}
-                  style={{ background: "rgba(255,255,255,0.15)", border: "none", color: "#fff", borderRadius: "50%", width: "32px", height: "32px", cursor: "pointer", fontSize: "16px", display: "flex", alignItems: "center", justify: "center" }}
+                  style={{ background: "rgba(255,255,255,0.15)", border: "none", color: "#fff", borderRadius: "50%", width: "32px", height: "32px", cursor: "pointer", fontSize: "16px", display: "flex", alignItems: "center", justifyContent: "center" }}
                 >&#10005;</button>
               </div>
             </div>
@@ -2086,7 +2086,7 @@ const handleContribSubmit = async (e) => {
                       padding: "12px", background: subscribeLoading ? "#94a3b8" : "linear-gradient(135deg, #4f46e5, #06b6d4)",
                       color: "#fff", border: "none", borderRadius: "10px", fontWeight: 700,
                       fontSize: "13.5px", cursor: subscribeLoading ? "not-allowed" : "pointer",
-                      transition: "opacity 0.15s", display: "flex", alignItems: "center", justify: "center", gap: "8px",
+                      transition: "opacity 0.15s", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
                     }}
                   >
                     {subscribeLoading ? (
