@@ -1864,241 +1864,241 @@ const handleContribSubmit = async (e) => {
             <span>Contact Admin</span>
           </button>
         )}
+      </div>
 
-        {/* ── CONTACT FORM MODAL ── */}
-        {showContactModal && (
-          <div
-            onClick={(e) => { if (e.target === e.currentTarget) { setShowContactModal(false); setContactResult(null); } }}
-            style={{
-              position: "fixed", inset: 0, zIndex: 10000,
-              background: "rgba(0,0,0,0.55)", backdropFilter: "blur(6px)",
-              display: "flex", alignItems: "center", justifyContent: "center", padding: "16px",
-            }}
-          >
+      {/* ── CONTACT FORM MODAL ── */}
+      {showContactModal && (
+        <div
+          onClick={(e) => { if (e.target === e.currentTarget) { setShowContactModal(false); setContactResult(null); } }}
+          style={{
+            position: "fixed", inset: 0, zIndex: 10000,
+            background: "rgba(0,0,0,0.55)", backdropFilter: "blur(6px)",
+            display: "flex", alignItems: "center", justify: "center", padding: "16px",
+          }}
+        >
+          <div style={{
+            background: "#fff", borderRadius: "20px", width: "100%", maxWidth: "440px",
+            boxShadow: "0 20px 60px rgba(0,0,0,0.18)", overflow: "hidden",
+            animation: "sl-fade-up 0.22s ease",
+          }}>
+            {/* Modal Header */}
             <div style={{
-              background: "#fff", borderRadius: "20px", width: "100%", maxWidth: "440px",
-              boxShadow: "0 20px 60px rgba(0,0,0,0.18)", overflow: "hidden",
-              animation: "sl-fade-up 0.22s ease",
+              background: "linear-gradient(135deg, #2563eb, #06b6d4)",
+              padding: "24px 28px 20px",
             }}>
-              {/* Modal Header */}
-              <div style={{
-                background: "linear-gradient(135deg, #2563eb, #06b6d4)",
-                padding: "24px 28px 20px",
-              }}>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                  <div>
-                    <div style={{ color: "#fff", fontSize: "18px", fontWeight: 800, letterSpacing: "-0.4px" }}>
-                      &#9993;&#65039; {contactTakedownMode ? "Report Copyright Concern" : "Contact Admin"}
-                    </div>
-                    <div style={{ color: "rgba(255,255,255,0.8)", fontSize: "12px", marginTop: "3px" }}>
-                      {contactTakedownMode ? "Takedown Request · Priority Review" : "Smart Learning+ · We respond on email"}
-                    </div>
+              <div style={{ display: "flex", alignItems: "center", justify: "space-between" }}>
+                <div>
+                  <div style={{ color: "#fff", fontSize: "18px", fontWeight: 800, letterSpacing: "-0.4px" }}>
+                    &#9993;&#65039; {contactTakedownMode ? "Report Copyright Concern" : "Contact Admin"}
+                  </div>
+                  <div style={{ color: "rgba(255,255,255,0.8)", fontSize: "12px", marginTop: "3px" }}>
+                    {contactTakedownMode ? "Takedown Request · Priority Review" : "Smart Learning+ · We respond on email"}
+                  </div>
+                </div>
+                <button
+                  onClick={() => { setShowContactModal(false); setContactResult(null); }}
+                  style={{ background: "rgba(255,255,255,0.15)", border: "none", color: "#fff", borderRadius: "50%", width: "32px", height: "32px", cursor: "pointer", fontSize: "16px", display: "flex", alignItems: "center", justify: "center" }}
+                >&#10005;</button>
+              </div>
+            </div>
+
+            {/* Modal Body */}
+            <div style={{ padding: "24px 28px 28px" }}>
+              {contactResult ? (
+                /* SUCCESS STATE */
+                <div style={{ textAlign: "center", padding: "12px 0" }}>
+                  <div style={{ fontSize: "48px", marginBottom: "12px" }}>&#9989;</div>
+                  <div style={{ fontWeight: 800, fontSize: "16px", color: "#1b2430", marginBottom: "8px" }}>Message Sent!</div>
+                  <div style={{ color: "#64748b", fontSize: "13px", lineHeight: 1.6, marginBottom: "20px" }}>
+                    Your message has been delivered to the admin. We'll review it and get back to you on your email address as soon as possible.
                   </div>
                   <button
                     onClick={() => { setShowContactModal(false); setContactResult(null); }}
-                    style={{ background: "rgba(255,255,255,0.15)", border: "none", color: "#fff", borderRadius: "50%", width: "32px", height: "32px", cursor: "pointer", fontSize: "16px", display: "flex", alignItems: "center", justifyContent: "center" }}
-                  >&#10005;</button>
+                    style={{ padding: "10px 24px", background: "linear-gradient(135deg, #2563eb, #06b6d4)", color: "#fff", border: "none", borderRadius: "10px", fontWeight: 700, fontSize: "13px", cursor: "pointer" }}
+                  >Close</button>
                 </div>
-              </div>
-
-              {/* Modal Body */}
-              <div style={{ padding: "24px 28px 28px" }}>
-                {contactResult ? (
-                  /* SUCCESS STATE */
-                  <div style={{ textAlign: "center", padding: "12px 0" }}>
-                    <div style={{ fontSize: "48px", marginBottom: "12px" }}>&#9989;</div>
-                    <div style={{ fontWeight: 800, fontSize: "16px", color: "#1b2430", marginBottom: "8px" }}>Message Sent!</div>
-                    <div style={{ color: "#64748b", fontSize: "13px", lineHeight: 1.6, marginBottom: "20px" }}>
-                      Your message has been delivered to the admin. We'll review it and get back to you on your email address as soon as possible.
-                    </div>
-                    <button
-                      onClick={() => { setShowContactModal(false); setContactResult(null); }}
-                      style={{ padding: "10px 24px", background: "linear-gradient(135deg, #2563eb, #06b6d4)", color: "#fff", border: "none", borderRadius: "10px", fontWeight: 700, fontSize: "13px", cursor: "pointer" }}
-                    >Close</button>
+              ) : (
+                /* FORM STATE */
+                <form
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    setContactLoading(true);
+                    setContactResult(null);
+                    try {
+                      // Add [TAKEDOWN] prefix to message if in takedown mode
+                      const messageToSend = contactTakedownMode 
+                        ? `[TAKEDOWN REQUEST] ${contactForm.message}` 
+                        : contactForm.message;
+                      await api.post("/auth/contact", { ...contactForm, message: messageToSend });
+                      setContactResult({ ok: true });
+                    } catch (err) {
+                      setContactResult({ ok: false, text: err.response?.data?.error || "Failed to send. Please try again." });
+                    } finally {
+                      setContactLoading(false);
+                    }
+                  }}
+                  style={{ display: "flex", flexDirection: "column", gap: "14px" }}
+                >
+                  <div style={{ color: "#64748b", fontSize: "12.5px", lineHeight: 1.55, background: contactTakedownMode ? "#fef2f2" : "#f0f9ff", border: contactTakedownMode ? "1px solid #fca5a5" : "1px solid #bae6fd", borderRadius: "10px", padding: "10px 14px" }}>
+                    {contactTakedownMode 
+                      ? "&#9888; This is a copyright takedown request. Please describe the content in question and we will review it promptly for removal."
+                      : "Fill in your details below. The admin will reply to your email address."}
                   </div>
-                ) : (
-                  /* FORM STATE */
-                  <form
-                    onSubmit={async (e) => {
-                      e.preventDefault();
-                      setContactLoading(true);
-                      setContactResult(null);
-                      try {
-                        // Add [TAKEDOWN] prefix to message if in takedown mode
-                        const messageToSend = contactTakedownMode 
-                          ? `[TAKEDOWN REQUEST] ${contactForm.message}` 
-                          : contactForm.message;
-                        await api.post("/auth/contact", { ...contactForm, message: messageToSend });
-                        setContactResult({ ok: true });
-                      } catch (err) {
-                        setContactResult({ ok: false, text: err.response?.data?.error || "Failed to send. Please try again." });
-                      } finally {
-                        setContactLoading(false);
-                      }
+
+                  <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+                    <label style={{ fontSize: "11px", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>Your Name *</label>
+                    <input
+                      type="text" required placeholder="e.g. John Smith"
+                      value={contactForm.name}
+                      onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
+                      style={{ padding: "10px 14px", border: "1px solid #e2e8f0", borderRadius: "10px", fontSize: "13px", outline: "none", fontFamily: "inherit", color: "#1b2430" }}
+                    />
+                  </div>
+
+                  <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+                    <label style={{ fontSize: "11px", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>Your Email *</label>
+                    <input
+                      type="email" required placeholder="you@example.com"
+                      value={contactForm.email}
+                      onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
+                      style={{ padding: "10px 14px", border: "1px solid #e2e8f0", borderRadius: "10px", fontSize: "13px", outline: "none", fontFamily: "inherit", color: "#1b2430" }}
+                    />
+                  </div>
+
+                  <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+                    <label style={{ fontSize: "11px", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>Your Message *</label>
+                    <textarea
+                      required placeholder={contactTakedownMode ? "Describe the content to be removed (e.g., file name, URL, or description)..." : "Describe your question or issue..."}
+                      rows={4}
+                      value={contactForm.message}
+                      onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
+                      style={{ padding: "10px 14px", border: "1px solid #e2e8f0", borderRadius: "10px", fontSize: "13px", outline: "none", fontFamily: "inherit", resize: "vertical", color: "#1b2430" }}
+                    />
+                  </div>
+
+                  {contactResult && !contactResult.ok && (
+                    <div style={{ padding: "10px 14px", background: "#fef2f2", border: "1px solid #fca5a5", borderRadius: "10px", color: "#dc2626", fontSize: "12px", fontWeight: 600 }}>
+                      {contactResult.text}
+                    </div>
+                  )}
+
+                  <button
+                    type="submit" disabled={contactLoading}
+                    style={{
+                      padding: "12px", background: contactLoading ? "#94a3b8" : "linear-gradient(135deg, #2563eb, #06b6d4)",
+                      color: "#fff", border: "none", borderRadius: "10px", fontWeight: 700,
+                      fontSize: "13.5px", cursor: contactLoading ? "not-allowed" : "pointer",
+                      transition: "opacity 0.15s", display: "flex", alignItems: "center", justify: "center", gap: "8px",
                     }}
-                    style={{ display: "flex", flexDirection: "column", gap: "14px" }}
                   >
-                    <div style={{ color: "#64748b", fontSize: "12.5px", lineHeight: 1.55, background: contactTakedownMode ? "#fef2f2" : "#f0f9ff", border: contactTakedownMode ? "1px solid #fca5a5" : "1px solid #bae6fd", borderRadius: "10px", padding: "10px 14px" }}>
-                      {contactTakedownMode 
-                        ? "&#9888; This is a copyright takedown request. Please describe the content in question and we will review it promptly for removal."
-                        : "Fill in your details below. The admin will reply to your email address."}
-                    </div>
-
-                    <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
-                      <label style={{ fontSize: "11px", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>Your Name *</label>
-                      <input
-                        type="text" required placeholder="e.g. John Smith"
-                        value={contactForm.name}
-                        onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
-                        style={{ padding: "10px 14px", border: "1px solid #e2e8f0", borderRadius: "10px", fontSize: "13px", outline: "none", fontFamily: "inherit", color: "#1b2430" }}
-                      />
-                    </div>
-
-                    <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
-                      <label style={{ fontSize: "11px", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>Your Email *</label>
-                      <input
-                        type="email" required placeholder="you@example.com"
-                        value={contactForm.email}
-                        onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
-                        style={{ padding: "10px 14px", border: "1px solid #e2e8f0", borderRadius: "10px", fontSize: "13px", outline: "none", fontFamily: "inherit", color: "#1b2430" }}
-                      />
-                    </div>
-
-                    <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
-                      <label style={{ fontSize: "11px", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>Your Message *</label>
-                      <textarea
-                        required placeholder={contactTakedownMode ? "Describe the content to be removed (e.g., file name, URL, or description)..." : "Describe your question or issue..."}
-                        rows={4}
-                        value={contactForm.message}
-                        onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
-                        style={{ padding: "10px 14px", border: "1px solid #e2e8f0", borderRadius: "10px", fontSize: "13px", outline: "none", fontFamily: "inherit", resize: "vertical", color: "#1b2430" }}
-                      />
-                    </div>
-
-                    {contactResult && !contactResult.ok && (
-                      <div style={{ padding: "10px 14px", background: "#fef2f2", border: "1px solid #fca5a5", borderRadius: "10px", color: "#dc2626", fontSize: "12px", fontWeight: 600 }}>
-                        {contactResult.text}
-                      </div>
+                    {contactLoading ? (
+                      <><div style={{ width: "14px", height: "14px", border: "2px solid rgba(255,255,255,0.3)", borderTop: "2px solid #fff", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} /><span>Sending...</span></>
+                    ) : (
+                      <span>&#128640; {contactTakedownMode ? "Send Takedown Request" : "Send Message"}</span>
                     )}
-
-                    <button
-                      type="submit" disabled={contactLoading}
-                      style={{
-                        padding: "12px", background: contactLoading ? "#94a3b8" : "linear-gradient(135deg, #2563eb, #06b6d4)",
-                        color: "#fff", border: "none", borderRadius: "10px", fontWeight: 700,
-                        fontSize: "13.5px", cursor: contactLoading ? "not-allowed" : "pointer",
-                        transition: "opacity 0.15s", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
-                      }}
-                    >
-                      {contactLoading ? (
-                        <><div style={{ width: "14px", height: "14px", border: "2px solid rgba(255,255,255,0.3)", borderTop: "2px solid #fff", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} /><span>Sending...</span></>
-                      ) : (
-                        <span>&#128640; {contactTakedownMode ? "Send Takedown Request" : "Send Message"}</span>
-                      )}
-                    </button>
-                  </form>
-                )}
-              </div>
+                  </button>
+                </form>
+              )}
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* ── NEWSLETTER SUBSCRIPTION MODAL ── */}
-        {showSubscribeModal && (
-          <div
-            onClick={(e) => { if (e.target === e.currentTarget) { setShowSubscribeModal(false); setSubscribeResult(null); } }}
-            style={{
-              position: "fixed", inset: 0, zIndex: 10000,
-              background: "rgba(0,0,0,0.55)", backdropFilter: "blur(6px)",
-              display: "flex", alignItems: "center", justify: "center", padding: "16px",
-            }}
-          >
+      {/* ── NEWSLETTER SUBSCRIPTION MODAL ── */}
+      {showSubscribeModal && (
+        <div
+          onClick={(e) => { if (e.target === e.currentTarget) { setShowSubscribeModal(false); setSubscribeResult(null); } }}
+          style={{
+            position: "fixed", inset: 0, zIndex: 10000,
+            background: "rgba(0,0,0,0.55)", backdropFilter: "blur(6px)",
+            display: "flex", alignItems: "center", justify: "center", padding: "16px",
+          }}
+        >
+          <div style={{
+            background: "#fff", borderRadius: "20px", width: "100%", maxWidth: "400px",
+            boxShadow: "0 20px 60px rgba(0,0,0,0.18)", overflow: "hidden",
+            animation: "sl-fade-up 0.22s ease",
+          }}>
+            {/* Modal Header */}
             <div style={{
-              background: "#fff", borderRadius: "20px", width: "100%", maxWidth: "400px",
-              boxShadow: "0 20px 60px rgba(0,0,0,0.18)", overflow: "hidden",
-              animation: "sl-fade-up 0.22s ease",
+              background: "linear-gradient(135deg, #4f46e5, #06b6d4)",
+              padding: "24px 28px 20px",
             }}>
-              {/* Modal Header */}
-              <div style={{
-                background: "linear-gradient(135deg, #4f46e5, #06b6d4)",
-                padding: "24px 28px 20px",
-              }}>
-                <div style={{ display: "flex", alignItems: "center", justify: "space-between" }}>
-                  <div>
-                    <div style={{ color: "#fff", fontSize: "18px", fontWeight: 800, letterSpacing: "-0.4px" }}>
-                      🔔 Get Mail Updates
-                    </div>
-                    <div style={{ color: "rgba(255,255,255,0.8)", fontSize: "12px", marginTop: "3px" }}>
-                      Subscribe to Smart Learning+ notifications
-                    </div>
+              <div style={{ display: "flex", alignItems: "center", justify: "space-between" }}>
+                <div>
+                  <div style={{ color: "#fff", fontSize: "18px", fontWeight: 800, letterSpacing: "-0.4px" }}>
+                    🔔 Get Mail Updates
+                  </div>
+                  <div style={{ color: "rgba(255,255,255,0.8)", fontSize: "12px", marginTop: "3px" }}>
+                    Subscribe to Smart Learning+ notifications
+                  </div>
+                </div>
+                <button
+                  onClick={() => { setShowSubscribeModal(false); setSubscribeResult(null); }}
+                  style={{ background: "rgba(255,255,255,0.15)", border: "none", color: "#fff", borderRadius: "50%", width: "32px", height: "32px", cursor: "pointer", fontSize: "16px", display: "flex", alignItems: "center", justify: "center" }}
+                >&#10005;</button>
+              </div>
+            </div>
+
+            {/* Modal Body */}
+            <div style={{ padding: "24px 28px 28px" }}>
+              {subscribeResult && subscribeResult.ok ? (
+                /* SUCCESS STATE */
+                <div style={{ textAlign: "center", padding: "12px 0" }}>
+                  <div style={{ fontSize: "48px", marginBottom: "12px" }}>🎉</div>
+                  <div style={{ fontWeight: 800, fontSize: "16px", color: "#1b2430", marginBottom: "8px" }}>Subscribed!</div>
+                  <div style={{ color: "#64748b", fontSize: "13px", lineHeight: 1.6, marginBottom: "20px" }}>
+                    {subscribeResult.text}
                   </div>
                   <button
                     onClick={() => { setShowSubscribeModal(false); setSubscribeResult(null); }}
-                    style={{ background: "rgba(255,255,255,0.15)", border: "none", color: "#fff", borderRadius: "50%", width: "32px", height: "32px", cursor: "pointer", fontSize: "16px", display: "flex", alignItems: "center", justify: "center" }}
-                  >&#10005;</button>
+                    style={{ padding: "10px 24px", background: "linear-gradient(135deg, #4f46e5, #06b6d4)", color: "#fff", border: "none", borderRadius: "10px", fontWeight: 700, fontSize: "13px", cursor: "pointer" }}
+                  >Close</button>
                 </div>
-              </div>
+              ) : (
+                /* FORM STATE */
+                <form onSubmit={handleSubscribeSubmit} style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+                  <div style={{ color: "#64748b", fontSize: "12.5px", lineHeight: 1.55, background: "#f0f9ff", border: "1px solid #bae6fd", borderRadius: "10px", padding: "10px 14px" }}>
+                    Enter your email to receive instant updates, useful resources, and exam schedules instantly via mail.
+                  </div>
 
-              {/* Modal Body */}
-              <div style={{ padding: "24px 28px 28px" }}>
-                {subscribeResult && subscribeResult.ok ? (
-                  /* SUCCESS STATE */
-                  <div style={{ textAlign: "center", padding: "12px 0" }}>
-                    <div style={{ fontSize: "48px", marginBottom: "12px" }}>🎉</div>
-                    <div style={{ fontWeight: 800, fontSize: "16px", color: "#1b2430", marginBottom: "8px" }}>Subscribed!</div>
-                    <div style={{ color: "#64748b", fontSize: "13px", lineHeight: 1.6, marginBottom: "20px" }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+                    <label style={{ fontSize: "11px", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>Your Email *</label>
+                    <input
+                      type="email" required placeholder="you@example.com"
+                      value={subscribeEmail}
+                      onChange={(e) => setSubscribeEmail(e.target.value)}
+                      style={{ padding: "10px 14px", border: "1px solid #e2e8f0", borderRadius: "10px", fontSize: "13px", outline: "none", fontFamily: "inherit", color: "#1b2430" }}
+                    />
+                  </div>
+
+                  {subscribeResult && !subscribeResult.ok && (
+                    <div style={{ padding: "10px 14px", background: "#fef2f2", border: "1px solid #fca5a5", borderRadius: "10px", color: "#dc2626", fontSize: "12px", fontWeight: 600 }}>
                       {subscribeResult.text}
                     </div>
-                    <button
-                      onClick={() => { setShowSubscribeModal(false); setSubscribeResult(null); }}
-                      style={{ padding: "10px 24px", background: "linear-gradient(135deg, #4f46e5, #06b6d4)", color: "#fff", border: "none", borderRadius: "10px", fontWeight: 700, fontSize: "13px", cursor: "pointer" }}
-                    >Close</button>
-                  </div>
-                ) : (
-                  /* FORM STATE */
-                  <form onSubmit={handleSubscribeSubmit} style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-                    <div style={{ color: "#64748b", fontSize: "12.5px", lineHeight: 1.55, background: "#f0f9ff", border: "1px solid #bae6fd", borderRadius: "10px", padding: "10px 14px" }}>
-                      Enter your email to receive instant updates, useful resources, and exam schedules instantly via mail.
-                    </div>
+                  )}
 
-                    <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
-                      <label style={{ fontSize: "11px", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>Your Email *</label>
-                      <input
-                        type="email" required placeholder="you@example.com"
-                        value={subscribeEmail}
-                        onChange={(e) => setSubscribeEmail(e.target.value)}
-                        style={{ padding: "10px 14px", border: "1px solid #e2e8f0", borderRadius: "10px", fontSize: "13px", outline: "none", fontFamily: "inherit", color: "#1b2430" }}
-                      />
-                    </div>
-
-                    {subscribeResult && !subscribeResult.ok && (
-                      <div style={{ padding: "10px 14px", background: "#fef2f2", border: "1px solid #fca5a5", borderRadius: "10px", color: "#dc2626", fontSize: "12px", fontWeight: 600 }}>
-                        {subscribeResult.text}
-                      </div>
+                  <button
+                    type="submit" disabled={subscribeLoading}
+                    style={{
+                      padding: "12px", background: subscribeLoading ? "#94a3b8" : "linear-gradient(135deg, #4f46e5, #06b6d4)",
+                      color: "#fff", border: "none", borderRadius: "10px", fontWeight: 700,
+                      fontSize: "13.5px", cursor: subscribeLoading ? "not-allowed" : "pointer",
+                      transition: "opacity 0.15s", display: "flex", alignItems: "center", justify: "center", gap: "8px",
+                    }}
+                  >
+                    {subscribeLoading ? (
+                      <><div style={{ width: "14px", height: "14px", border: "2px solid rgba(255,255,255,0.3)", borderTop: "2px solid #fff", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} /><span>Subscribing...</span></>
+                    ) : (
+                      <span>🔔 Subscribe Now</span>
                     )}
-
-                    <button
-                      type="submit" disabled={subscribeLoading}
-                      style={{
-                        padding: "12px", background: subscribeLoading ? "#94a3b8" : "linear-gradient(135deg, #4f46e5, #06b6d4)",
-                        color: "#fff", border: "none", borderRadius: "10px", fontWeight: 700,
-                        fontSize: "13.5px", cursor: subscribeLoading ? "not-allowed" : "pointer",
-                        transition: "opacity 0.15s", display: "flex", alignItems: "center", justify: "center", gap: "8px",
-                      }}
-                    >
-                      {subscribeLoading ? (
-                        <><div style={{ width: "14px", height: "14px", border: "2px solid rgba(255,255,255,0.3)", borderTop: "2px solid #fff", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} /><span>Subscribing...</span></>
-                      ) : (
-                        <span>🔔 Subscribe Now</span>
-                      )}
-                    </button>
-                  </form>
-                )}
-              </div>
+                  </button>
+                </form>
+              )}
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
