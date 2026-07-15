@@ -27,6 +27,31 @@ export default function Home() {
   const [contactForm, setContactForm] = useState({ name: "", email: "", message: "" });
   const [contactLoading, setContactLoading] = useState(false);
   const [contactResult, setContactResult] = useState(null); // { ok, text }
+
+  // Subscription states
+  const [showSubscribeModal, setShowSubscribeModal] = useState(false);
+  const [subscribeEmail, setSubscribeEmail] = useState("");
+  const [subscribeLoading, setSubscribeLoading] = useState(false);
+  const [subscribeResult, setSubscribeResult] = useState(null); // { ok, text }
+
+  const handleSubscribeSubmit = async (e) => {
+    e.preventDefault();
+    if (!subscribeEmail.trim()) return;
+    setSubscribeLoading(true);
+    setSubscribeResult(null);
+    try {
+      const { data } = await api.post("/auth/subscribe", { email: subscribeEmail });
+      setSubscribeResult({ ok: true, text: data.message || "Subscribed successfully!" });
+      setSubscribeEmail("");
+    } catch (err) {
+      setSubscribeResult({
+        ok: false,
+        text: err.response?.data?.error || "Failed to subscribe. Please try again."
+      });
+    } finally {
+      setSubscribeLoading(false);
+    }
+  };
   const [subjects, setSubjects] = useState([]);
   const [myUploads, setMyUploads] = useState([]);
 
@@ -876,6 +901,13 @@ const handleContribSubmit = async (e) => {
                 <div className="sl-nav-links flex items-center gap-6">
                   <a href="#subjects" onClick={(e) => { e.preventDefault(); document.getElementById('subjects')?.scrollIntoView({ behavior: 'smooth' }); }}>Subjects</a>
                   <a href="#downloads" onClick={(e) => { e.preventDefault(); document.getElementById('downloads')?.scrollIntoView({ behavior: 'smooth' }); }}>Downloads</a>
+                  <button
+                    onClick={() => { setShowSubscribeModal(true); setSubscribeEmail(""); setSubscribeResult(null); }}
+                    className="text-xs font-semibold hover:text-indigo-600 transition-colors"
+                    style={{ cursor: "none", background: "none", border: "none", padding: 0 }}
+                  >
+                    Get Updates 🔔
+                  </button>
                 </div>
                 <a
                   href="#login-section"
@@ -1645,6 +1677,54 @@ const handleContribSubmit = async (e) => {
           </div>
         </section>
 
+        {/* NEWSLETTER SUBSCRIPTION SECTION */}
+        <section className="sl-section scroll-anchor" style={{ marginTop: "40px", marginBottom: "40px" }}>
+          <div className="sl-cta animate-fade-in" style={{ background: "linear-gradient(135deg, #1e1b4b 0%, #312e81 40%, #4338ca 100%)", padding: "40px 24px" }}>
+            <h3 style={{ fontSize: "22px", fontWeight: 800, color: "#fff" }}>Stay Updated! 📬</h3>
+            <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.85)", maxWidth: "460px", margin: "8px auto 20px" }}>
+              Subscribe to get instant email notifications about lectures, new study materials, syllabus changes, and useful learning resources.
+            </p>
+            <form onSubmit={handleSubscribeSubmit} className="flex flex-col sm:flex-row gap-2.5 max-w-md mx-auto items-center justify-center">
+              <input
+                type="email"
+                required
+                placeholder="Enter your email address"
+                value={subscribeEmail}
+                onChange={(e) => setSubscribeEmail(e.target.value)}
+                style={{
+                  padding: "10px 16px",
+                  borderRadius: "10px",
+                  border: "1px solid rgba(255,255,255,0.2)",
+                  background: "rgba(255,255,255,0.1)",
+                  color: "#fff",
+                  outline: "none",
+                  fontSize: "13px",
+                  width: "100%",
+                  maxWidth: "280px"
+                }}
+              />
+              <button
+                type="submit"
+                disabled={subscribeLoading}
+                className="px-5 py-2.5 rounded-lg bg-white text-indigo-700 font-bold text-xs hover:bg-slate-50 transition-colors shadow-soft w-full sm:w-auto"
+                style={{ cursor: "none" }}
+              >
+                {subscribeLoading ? "Subscribing..." : "Subscribe"}
+              </button>
+            </form>
+            {subscribeResult && (
+              <div style={{
+                marginTop: "12px",
+                fontSize: "12px",
+                fontWeight: 600,
+                color: subscribeResult.ok ? "#34d399" : "#f87171"
+              }}>
+                {subscribeResult.text}
+              </div>
+            )}
+          </div>
+        </section>
+
         <footer className="mt-12 py-6 border-t border-line/60 text-center">
           <p className="text-xs text-muted font-medium" style={{ marginBottom: "8px" }}>
             © {new Date().getFullYear()} Smart Learning Plus
@@ -1914,6 +1994,102 @@ const handleContribSubmit = async (e) => {
                         <><div style={{ width: "14px", height: "14px", border: "2px solid rgba(255,255,255,0.3)", borderTop: "2px solid #fff", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} /><span>Sending...</span></>
                       ) : (
                         <span>&#128640; {contactTakedownMode ? "Send Takedown Request" : "Send Message"}</span>
+                      )}
+                    </button>
+                  </form>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── NEWSLETTER SUBSCRIPTION MODAL ── */}
+        {showSubscribeModal && (
+          <div
+            onClick={(e) => { if (e.target === e.currentTarget) { setShowSubscribeModal(false); setSubscribeResult(null); } }}
+            style={{
+              position: "fixed", inset: 0, zIndex: 10000,
+              background: "rgba(0,0,0,0.55)", backdropFilter: "blur(6px)",
+              display: "flex", alignItems: "center", justify: "center", padding: "16px",
+            }}
+          >
+            <div style={{
+              background: "#fff", borderRadius: "20px", width: "100%", maxWidth: "400px",
+              boxShadow: "0 20px 60px rgba(0,0,0,0.18)", overflow: "hidden",
+              animation: "sl-fade-up 0.22s ease",
+            }}>
+              {/* Modal Header */}
+              <div style={{
+                background: "linear-gradient(135deg, #4f46e5, #06b6d4)",
+                padding: "24px 28px 20px",
+              }}>
+                <div style={{ display: "flex", alignItems: "center", justify: "space-between" }}>
+                  <div>
+                    <div style={{ color: "#fff", fontSize: "18px", fontWeight: 800, letterSpacing: "-0.4px" }}>
+                      🔔 Get Mail Updates
+                    </div>
+                    <div style={{ color: "rgba(255,255,255,0.8)", fontSize: "12px", marginTop: "3px" }}>
+                      Subscribe to Smart Learning+ notifications
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => { setShowSubscribeModal(false); setSubscribeResult(null); }}
+                    style={{ background: "rgba(255,255,255,0.15)", border: "none", color: "#fff", borderRadius: "50%", width: "32px", height: "32px", cursor: "pointer", fontSize: "16px", display: "flex", alignItems: "center", justify: "center" }}
+                  >&#10005;</button>
+                </div>
+              </div>
+
+              {/* Modal Body */}
+              <div style={{ padding: "24px 28px 28px" }}>
+                {subscribeResult && subscribeResult.ok ? (
+                  /* SUCCESS STATE */
+                  <div style={{ textAlign: "center", padding: "12px 0" }}>
+                    <div style={{ fontSize: "48px", marginBottom: "12px" }}>🎉</div>
+                    <div style={{ fontWeight: 800, fontSize: "16px", color: "#1b2430", marginBottom: "8px" }}>Subscribed!</div>
+                    <div style={{ color: "#64748b", fontSize: "13px", lineHeight: 1.6, marginBottom: "20px" }}>
+                      {subscribeResult.text}
+                    </div>
+                    <button
+                      onClick={() => { setShowSubscribeModal(false); setSubscribeResult(null); }}
+                      style={{ padding: "10px 24px", background: "linear-gradient(135deg, #4f46e5, #06b6d4)", color: "#fff", border: "none", borderRadius: "10px", fontWeight: 700, fontSize: "13px", cursor: "pointer" }}
+                    >Close</button>
+                  </div>
+                ) : (
+                  /* FORM STATE */
+                  <form onSubmit={handleSubscribeSubmit} style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+                    <div style={{ color: "#64748b", fontSize: "12.5px", lineHeight: 1.55, background: "#f0f9ff", border: "1px solid #bae6fd", borderRadius: "10px", padding: "10px 14px" }}>
+                      Enter your email to receive instant updates, useful resources, and exam schedules instantly via mail.
+                    </div>
+
+                    <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+                      <label style={{ fontSize: "11px", fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em" }}>Your Email *</label>
+                      <input
+                        type="email" required placeholder="you@example.com"
+                        value={subscribeEmail}
+                        onChange={(e) => setSubscribeEmail(e.target.value)}
+                        style={{ padding: "10px 14px", border: "1px solid #e2e8f0", borderRadius: "10px", fontSize: "13px", outline: "none", fontFamily: "inherit", color: "#1b2430" }}
+                      />
+                    </div>
+
+                    {subscribeResult && !subscribeResult.ok && (
+                      <div style={{ padding: "10px 14px", background: "#fef2f2", border: "1px solid #fca5a5", borderRadius: "10px", color: "#dc2626", fontSize: "12px", fontWeight: 600 }}>
+                        {subscribeResult.text}
+                      </div>
+                    )}
+
+                    <button
+                      type="submit" disabled={subscribeLoading}
+                      style={{
+                        padding: "12px", background: subscribeLoading ? "#94a3b8" : "linear-gradient(135deg, #4f46e5, #06b6d4)",
+                        color: "#fff", border: "none", borderRadius: "10px", fontWeight: 700,
+                        fontSize: "13.5px", cursor: subscribeLoading ? "not-allowed" : "pointer",
+                        transition: "opacity 0.15s", display: "flex", alignItems: "center", justify: "center", gap: "8px",
+                      }}
+                    >
+                      {subscribeLoading ? (
+                        <><div style={{ width: "14px", height: "14px", border: "2px solid rgba(255,255,255,0.3)", borderTop: "2px solid #fff", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} /><span>Subscribing...</span></>
+                      ) : (
+                        <span>🔔 Subscribe Now</span>
                       )}
                     </button>
                   </form>

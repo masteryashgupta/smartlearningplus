@@ -16,7 +16,8 @@ const TAB_GROUPS = [
     items: [
       { key: "users", label: "Users List", icon: "👥" },
       { key: "registrations", label: "Pending Requests", icon: "📥", badgeKey: "registrationsCount" },
-      { key: "whitelist", label: "Email Whitelist", icon: "🛡️" }
+      { key: "whitelist", label: "Email Whitelist", icon: "🛡️" },
+      { key: "subscribers", label: "Notification Subscribers", icon: "📧" }
     ]
   },
   {
@@ -115,6 +116,7 @@ export default function AdminPanel({ onClose }) {
   const [broadcastLoading, setBroadcastLoading] = useState(false);
   const [broadcastMsg, setBroadcastMsg] = useState(null);
   const [broadcastUserSearch, setBroadcastUserSearch] = useState("");
+  const [broadcastSubSearch, setBroadcastSubSearch] = useState("");
   const [selectedUserIds, setSelectedUserIds] = useState([]);
   const [toast, setToast] = useState(null);
 
@@ -123,6 +125,11 @@ export default function AdminPanel({ onClose }) {
   const [whitelistEmailInput, setWhitelistEmailInput] = useState("");
   const [whitelistSearch, setWhitelistSearch] = useState("");
   const [whitelistLoading, setWhitelistLoading] = useState(false);
+
+  // Subscribers state
+  const [subscribers, setSubscribers] = useState([]);
+  const [subscribersSearch, setSubscribersSearch] = useState("");
+  const [selectedSubscriberIds, setSelectedSubscriberIds] = useState([]);
 
   // Helpers
   function showToast(msg, ok = true) {
@@ -171,6 +178,23 @@ export default function AdminPanel({ onClose }) {
   }
   function reloadWhitelist() {
     api.get("/admin/whitelist").then((r) => setWhitelist(r.data));
+  }
+  function reloadSubscribers() {
+    api.get("/admin/subscribers").then((r) => {
+      setSubscribers(r.data);
+      const ids = r.data.map(s => s.id);
+      setSelectedSubscriberIds(ids);
+    });
+  }
+  async function removeSubscriber(id, email) {
+    if (!window.confirm(`Remove ${email} from subscribers?`)) return;
+    try {
+      await api.delete(`/admin/subscribers/${id}`);
+      reloadSubscribers();
+      showToast("Subscriber removed.");
+    } catch (err) {
+      showToast("Failed to remove subscriber", false);
+    }
   }
   function reloadPendingMaterials() {
     api.get("/admin/materials/pending").then((r) => setPendingMaterials(r.data));
@@ -376,10 +400,14 @@ export default function AdminPanel({ onClose }) {
     if (!broadcastChannels.email && !broadcastChannels.telegram) {
       return setBroadcastMsg({ ok: false, text: "Please select at least one channel." });
     }
-    if (selectedUserIds.length === 0) {
+    const emailRecipientsCount = broadcastChannels.email ? selectedSubscriberIds.length : 0;
+    const totalRecipients = selectedUserIds.length + emailRecipientsCount;
+
+    if (selectedUserIds.length === 0 && emailRecipientsCount === 0) {
       return setBroadcastMsg({ ok: false, text: "Please select at least one recipient." });
     }
-    const confirmSend = window.confirm(`Send broadcast to ${selectedUserIds.length} users?`);
+
+    const confirmSend = window.confirm(`Send broadcast to ${totalRecipients} recipients?`);
     if (!confirmSend) return;
 
     setBroadcastLoading(true);
@@ -390,9 +418,10 @@ export default function AdminPanel({ onClose }) {
         buttonText: broadcastButtonText || undefined,
         buttonLink: broadcastButtonLink || undefined,
         channels: Object.keys(broadcastChannels).filter(k => broadcastChannels[k]),
-        userIds: selectedUserIds
+        userIds: selectedUserIds,
+        subscriberIds: broadcastChannels.email ? selectedSubscriberIds : []
       });
-      setBroadcastMsg({ ok: true, text: `✓ Broadcast successfully queued to ${data.sentCount} users.` });
+      setBroadcastMsg({ ok: true, text: `✓ Broadcast successfully queued to ${data.sentCount} recipients.` });
       setBroadcastSubject("");
       setBroadcastMessage("");
       setBroadcastButtonText("");
@@ -442,6 +471,7 @@ export default function AdminPanel({ onClose }) {
     reloadHolidays();
     reloadUsers();
     reloadWhitelist();
+    reloadSubscribers();
     reloadPendingMaterials();
     reloadRegistrations();
   }, []);
@@ -455,6 +485,7 @@ export default function AdminPanel({ onClose }) {
     if (tab === "health") loadHealth();
     if (tab === "moderator-logs") reloadModeratorLogs();
     if (tab === "registrations") reloadRegistrations();
+    if (tab === "subscribers") reloadSubscribers();
   }, [tab, attendanceDate, week]);
 
   const filteredUsers = users.filter((u) =>
@@ -467,6 +498,11 @@ export default function AdminPanel({ onClose }) {
   const filteredWhitelist = whitelist.filter((w) =>
     whitelistSearch === "" ||
     w.email?.toLowerCase().includes(whitelistSearch.toLowerCase())
+  );
+
+  const filteredSubscribers = subscribers.filter((s) =>
+    subscribersSearch === "" ||
+    s.email?.toLowerCase().includes(subscribersSearch.toLowerCase())
   );
 
   const todayPresent = overview?.todayMarks?.find((m) => m.status === "present")?.count ?? 0;
@@ -1286,6 +1322,39 @@ export default function AdminPanel({ onClose }) {
             </div>
           )}
 
+          {/* 📧 TABS: NOTIFICATION SUBSCRIBERS */}
+          {tab === "subscribers" && (
+            <div className="modern-card">
+              <div className="flex justify-between items-center gap-3 mb-4">
+                <div>
+                  <h3 className="text-sm font-bold text-slate-800">Notification Subscribers ({subscribers.length})</h3>
+                  <p className="text-xs text-slate-400 mt-0.5">Non-registered users who signed up to receive updates via mail.</p>
+                </div>
+                <input
+                  placeholder="Filter subscribers..."
+                  value={subscribersSearch}
+                  onChange={(e) => setSubscribersSearch(e.target.value)}
+                  className="modern-input !py-1.5 max-w-xs"
+                />
+              </div>
+
+              <div className="divide-y max-h-[400px] overflow-y-auto pr-1">
+                {filteredSubscribers.map((s) => (
+                  <div key={s.id} className="py-3 flex justify-between items-center">
+                    <div>
+                      <span className="text-xs font-mono font-semibold text-slate-700">{s.email}</span>
+                      <div className="text-[10px] text-slate-400 mt-0.5">Subscribed on {new Date(s.created_at).toLocaleDateString()}</div>
+                    </div>
+                    <button onClick={() => removeSubscriber(s.id, s.email)} className="text-xs text-rose-500 hover:text-rose-700 font-bold">Remove</button>
+                  </div>
+                ))}
+                {filteredSubscribers.length === 0 && (
+                  <div className="text-center py-10 text-xs text-slate-400">No subscribers found matching your search.</div>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* 📚 TABS: APPROVALS VAULT */}
           {tab === "materials" && (
             <div className="space-y-6">
@@ -1592,6 +1661,62 @@ export default function AdminPanel({ onClose }) {
                     })}
                   </div>
                 </div>
+
+                {broadcastChannels.email && (
+                  <div>
+                    <label className="text-[10px] font-bold text-slate-400 uppercase block mb-1">Notification Subscribers ({selectedSubscriberIds.length} Selected)</label>
+                    <div className="flex gap-2 mb-2">
+                      <input
+                        placeholder="Filter subscriber list..."
+                        value={broadcastSubSearch}
+                        onChange={(e) => setBroadcastSubSearch(e.target.value)}
+                        className="modern-input !py-1.5"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (selectedSubscriberIds.length === subscribers.length) {
+                            setSelectedSubscriberIds([]);
+                          } else {
+                            setSelectedSubscriberIds(subscribers.map(s => s.id));
+                          }
+                        }}
+                        className="modern-btn-secondary !py-1.5 !px-3 text-xs shrink-0"
+                      >
+                        Toggle All
+                      </button>
+                    </div>
+
+                    <div className="border rounded-lg max-h-40 overflow-y-auto p-2 bg-slate-55 space-y-1">
+                      {subscribers.filter(s =>
+                        !broadcastSubSearch || s.email?.toLowerCase().includes(broadcastSubSearch.toLowerCase())
+                      ).map((s) => {
+                        const isChecked = selectedSubscriberIds.includes(s.id);
+                        return (
+                          <label key={s.id} className="flex items-center justify-between p-1.5 hover:bg-white rounded cursor-pointer text-xs">
+                            <span className="flex items-center gap-2 font-medium">
+                              <input
+                                type="checkbox"
+                                checked={isChecked}
+                                onChange={() => {
+                                  if (isChecked) {
+                                    setSelectedSubscriberIds(selectedSubscriberIds.filter(id => id !== s.id));
+                                  } else {
+                                    setSelectedSubscriberIds([...selectedSubscriberIds, s.id]);
+                                  }
+                                }}
+                              />
+                              {s.email}
+                            </span>
+                          </label>
+                        );
+                      })}
+                      {subscribers.length === 0 && (
+                        <div className="text-center py-4 text-xs text-slate-400">No subscribers currently.</div>
+                      )}
+                    </div>
+                  </div>
+                )}
 
                 {broadcastChannels.email && (
                   <div>
