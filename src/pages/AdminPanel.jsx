@@ -97,6 +97,26 @@ export default function AdminPanel({ onClose }) {
   const [registrations, setRegistrations] = useState([]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const [hackerQuote, setHackerQuote] = useState("SECURE CONSOLE READY. SYSTEM STATUS: ENCRYPTED.");
+
+  useEffect(() => {
+    const HACKER_QUOTES = [
+      "SYSTEM STATUS: ONLINE. INTRUSION DETECTION SYSTEM ACTIVE.",
+      "THE MATRIX HAS YOU... FOLLOW THE GREEN SIGNAL.",
+      "HACK THE PLANET. CRYPTOGRAPHIC ENVELOPE SECURE.",
+      "ALL YOUR BROWSER CHUNKS ARE VERIFIED AND CACHED.",
+      "INITIALIZING ATTENDANCE DECRYPTION LAYER...",
+      "DECRYPTING TELEGRAM BOT WEBHOOK DATAGRAMS...",
+      "BYPASSING THE FIREWALL... ACCESS LEVEL: MODERATOR.",
+      "SYSTEM LOAD: OPTIMAL. VECTOR EMBEDDING INDEX: READY."
+    ];
+    const interval = setInterval(() => {
+      const idx = Math.floor(Math.random() * HACKER_QUOTES.length);
+      setHackerQuote(HACKER_QUOTES[idx]);
+    }, 6000);
+    return () => clearInterval(interval);
+  }, []);
+
   const [attendanceDate, setAttendanceDate] = useState(new Date().toISOString().slice(0, 10));
   const [attendanceSlots, setAttendanceSlots] = useState([]);
   const [attendanceLoading, setAttendanceLoading] = useState(false);
@@ -522,37 +542,51 @@ export default function AdminPanel({ onClose }) {
   const activeTabDetails = TAB_GROUPS.flatMap(g => g.items).find(i => i.key === tab);
 
   return (
-    <div className="admin-dashboard-container font-sans flex min-h-screen text-[#1E293B]">
+    <div className="admin-dashboard-container font-mono flex min-h-screen text-slate-300">
       
       {/* SCOPED GLOBAL ADMIN STYLES */}
       <style>{`
         .admin-dashboard-container {
-          --sidebar-bg: #0F172A;
-          --sidebar-hover: #1E293B;
-          --sidebar-active: #4F46E5;
-          --main-bg: #F8FAFC;
-          --card-bg: #FFFFFF;
-          --primary: #4F46E5;
-          --primary-hover: #4338CA;
-          --border: #E2E8F0;
-          --input-focus: #4F46E533;
+          --sidebar-bg: #030712;
+          --sidebar-hover: #111827;
+          --sidebar-active: #10B981;
+          --main-bg: #030712;
+          --card-bg: #0B0F19;
+          --primary: #10B981;
+          --primary-hover: #34D399;
+          --border: #1F2937;
+          --input-focus: rgba(16, 185, 129, 0.25);
           background-color: var(--main-bg);
           width: 100%;
         }
-        
+
+        /* CRT scanline simulation overlay */
+        .admin-dashboard-container::before {
+          content: " ";
+          display: block;
+          position: fixed;
+          top: 0; left: 0; bottom: 0; right: 0;
+          background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.08) 50%), 
+                      linear-gradient(90deg, rgba(16, 185, 129, 0.015), rgba(16, 185, 129, 0.005), rgba(16, 185, 129, 0.015));
+          z-index: 99999;
+          background-size: 100% 4px, 6px 100%;
+          pointer-events: none;
+          opacity: 0.65;
+        }
+
         .admin-sidebar {
           width: 260px;
           background: var(--sidebar-bg);
           color: #94A3B8;
           display: flex;
           flex-direction: column;
-          border-right: 1px solid #1E293B;
+          border-right: 1px solid var(--border);
           flex-shrink: 0;
         }
 
         .admin-sidebar-header {
           padding: 20px 24px;
-          border-bottom: 1px solid #1E293B;
+          border-bottom: 1px solid var(--border);
           display: flex;
           align-items: center;
           gap: 10px;
@@ -568,9 +602,9 @@ export default function AdminPanel({ onClose }) {
         .nav-group-title {
           font-size: 10px;
           font-weight: 700;
-          color: #475569;
+          color: #4B5563;
           text-transform: uppercase;
-          letter-spacing: 0.05em;
+          letter-spacing: 0.08em;
           margin: 18px 0 6px 12px;
         }
 
@@ -593,12 +627,13 @@ export default function AdminPanel({ onClose }) {
 
         .nav-item-btn:hover {
           background: var(--sidebar-hover);
-          color: #F1F5F9;
+          color: var(--primary);
         }
 
         .nav-item-btn.active {
           background: var(--sidebar-active);
-          color: #FFFFFF;
+          color: #030712;
+          box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
         }
 
         .nav-badge {
@@ -619,38 +654,55 @@ export default function AdminPanel({ onClose }) {
 
         .admin-topbar {
           height: 64px;
-          background: #FFFFFF;
+          background: var(--card-bg);
           border-bottom: 1px solid var(--border);
           display: flex;
           align-items: center;
           justify-content: space-between;
           padding: 0 32px;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
         }
 
         .admin-content-area {
           flex: 1;
           overflow-y: auto;
           padding: 32px;
+          background-image: linear-gradient(rgba(16, 185, 129, 0.02) 1px, transparent 1px),
+                            linear-gradient(90deg, rgba(16, 185, 129, 0.02) 1px, transparent 1px);
+          background-size: 30px 30px;
         }
 
         .modern-card {
           background: var(--card-bg);
           border: 1px solid var(--border);
-          border-radius: 16px;
+          border-radius: 12px;
           padding: 24px;
-          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+          box-shadow: 0 0 15px rgba(16, 185, 129, 0.05);
           margin-bottom: 24px;
+          position: relative;
+        }
+
+        /* simulated window controls for each card to look like shell console */
+        .modern-card::before {
+          content: "● ● ●";
+          display: block;
+          font-size: 8px;
+          color: #4B5563;
+          letter-spacing: 2px;
+          margin-bottom: 12px;
+          border-bottom: 1px dashed var(--border);
+          padding-bottom: 8px;
         }
 
         .modern-stat-card {
           background: var(--card-bg);
           border: 1px solid var(--border);
-          border-radius: 16px;
+          border-radius: 12px;
           padding: 20px;
           display: flex;
           align-items: center;
           gap: 16px;
-          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+          box-shadow: 0 0 15px rgba(16, 185, 129, 0.05);
         }
 
         .modern-stat-card .icon-wrapper {
@@ -680,21 +732,22 @@ export default function AdminPanel({ onClose }) {
 
         .modern-stat-card .stat-sub {
           font-size: 11px;
-          color: #94A3B8;
+          color: #64748B;
           font-family: monospace;
           margin-top: 2px;
         }
 
         .modern-input {
           width: 100%;
-          background: #FFFFFF;
+          background: #030712;
           border: 1px solid var(--border);
-          border-radius: 10px;
+          border-radius: 8px;
           padding: 10px 14px;
           font-size: 13px;
-          color: #1E293B;
+          color: #E2E8F0;
           outline: none;
           transition: all 0.15s ease;
+          font-family: inherit;
         }
 
         .modern-input:focus {
@@ -703,23 +756,24 @@ export default function AdminPanel({ onClose }) {
         }
 
         .modern-select {
-          background: #FFFFFF;
+          background: #030712;
           border: 1px solid var(--border);
-          border-radius: 10px;
+          border-radius: 8px;
           padding: 10px 14px;
           font-size: 13px;
-          color: #1E293B;
+          color: #E2E8F0;
           outline: none;
           cursor: pointer;
+          font-family: inherit;
         }
 
         .modern-btn-primary {
           background: var(--primary);
-          color: #FFFFFF;
+          color: #030712;
           font-weight: 700;
           font-size: 13px;
           padding: 10px 18px;
-          border-radius: 10px;
+          border-radius: 8px;
           border: none;
           cursor: pointer;
           transition: background 0.15s ease;
@@ -734,20 +788,20 @@ export default function AdminPanel({ onClose }) {
         }
 
         .modern-btn-secondary {
-          background: #F1F5F9;
-          color: #475569;
+          background: #111827;
+          color: #E2E8F0;
+          border: 1px solid var(--border);
           font-weight: 700;
           font-size: 13px;
           padding: 10px 18px;
-          border-radius: 10px;
-          border: none;
+          border-radius: 8px;
           cursor: pointer;
           transition: all 0.15s ease;
         }
 
         .modern-btn-secondary:hover {
-          background: #E2E8F0;
-          color: #1E293B;
+          background: #1F2937;
+          color: #FFFFFF;
         }
 
         .modern-btn-danger {
@@ -772,14 +826,15 @@ export default function AdminPanel({ onClose }) {
           right: 24px;
           z-index: 100;
           padding: 12px 20px;
-          border-radius: 12px;
+          border-radius: 8px;
           font-size: 13px;
           font-weight: 700;
-          box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
           animation: slideInRight 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
           display: flex;
           align-items: center;
           gap: 8px;
+          font-family: monospace;
         }
 
         @keyframes slideInRight {
@@ -809,7 +864,7 @@ export default function AdminPanel({ onClose }) {
           .sidebar-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.7);
             z-index: 999;
           }
           .admin-topbar {
@@ -820,7 +875,7 @@ export default function AdminPanel({ onClose }) {
             align-items: center;
             justify-content: space-between;
             height: 60px;
-            background: #FFFFFF;
+            background: var(--card-bg);
             border-bottom: 1px solid var(--border);
             padding: 0 16px;
             position: sticky;
@@ -845,14 +900,147 @@ export default function AdminPanel({ onClose }) {
         }
 
         .health-card {
-          background: #FFFFFF;
+          background: var(--card-bg);
           border: 1px solid var(--border);
-          border-radius: 16px;
+          border-radius: 12px;
           padding: 20px;
-          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+          box-shadow: 0 0 15px rgba(16, 185, 129, 0.05);
           display: flex;
           flex-direction: column;
           justify-content: space-between;
+        }
+
+        /* Global Tailwind Overrides for Dark & Monospace Aesthetic */
+        .admin-dashboard-container h1,
+        .admin-dashboard-container h2,
+        .admin-dashboard-container h3,
+        .admin-dashboard-container h4,
+        .admin-dashboard-container h5,
+        .admin-dashboard-container h6 {
+          color: var(--primary) !important;
+          text-shadow: 0 0 5px rgba(16, 185, 129, 0.4);
+        }
+        .admin-dashboard-container label {
+          color: #34D399 !important;
+        }
+        .admin-dashboard-container .text-slate-800,
+        .admin-dashboard-container .text-slate-700,
+        .admin-dashboard-container .text-slate-900 {
+          color: #E2E8F0 !important;
+        }
+        .admin-dashboard-container .text-slate-600,
+        .admin-dashboard-container .text-slate-500,
+        .admin-dashboard-container .text-slate-400 {
+          color: #94A3B8 !important;
+        }
+        .admin-dashboard-container .bg-slate-50 {
+          background-color: #0b0f19 !important;
+        }
+        .admin-dashboard-container .bg-slate-100 {
+          background-color: #111827 !important;
+          color: #10B981 !important;
+        }
+        .admin-dashboard-container .bg-white {
+          background-color: #0b0f19 !important;
+          border-color: #1f2937 !important;
+        }
+        .admin-dashboard-container .border-b {
+          border-bottom-color: #1f2937 !important;
+        }
+        .admin-dashboard-container .divide-y > * + * {
+          border-top-color: #1f2937 !important;
+        }
+        .admin-dashboard-container .hover\:bg-slate-50\/50:hover {
+          background-color: #111827 !important;
+        }
+        .admin-dashboard-container .bg-indigo-50,
+        .admin-dashboard-container .bg-indigo-50\/50 {
+          background-color: rgba(6, 78, 59, 0.2) !important;
+          border-color: rgba(16, 185, 129, 0.3) !important;
+        }
+        .admin-dashboard-container .text-indigo-900,
+        .admin-dashboard-container .text-indigo-700,
+        .admin-dashboard-container .text-indigo-600 {
+          color: #34D399 !important;
+        }
+        .admin-dashboard-container .bg-indigo-100 {
+          background-color: #0b0f19 !important;
+          border: 1px solid var(--primary) !important;
+        }
+        .admin-dashboard-container .text-indigo-700 {
+          color: var(--primary) !important;
+        }
+        .admin-dashboard-container .bg-slate-55 {
+          background-color: #030712 !important;
+        }
+        .admin-dashboard-container .hover\:bg-white:hover {
+          background-color: #111827 !important;
+          color: #FFFFFF !important;
+        }
+        .admin-dashboard-container .card {
+          background-color: var(--card-bg) !important;
+          border-color: var(--border) !important;
+          color: #E2E8F0 !important;
+        }
+        .admin-dashboard-container .text-ink {
+          color: #E2E8F0 !important;
+        }
+        .admin-dashboard-container .border-line {
+          border-color: var(--border) !important;
+        }
+
+        /* Announcement Manager Custom Overrides */
+        .admin-dashboard-container .ann-mgr h2 {
+          color: var(--primary) !important;
+        }
+        .admin-dashboard-container .ann-mgr .subtitle {
+          color: #94A3B8 !important;
+        }
+        .admin-dashboard-container .ann-mgr .field-label {
+          color: #34D399 !important;
+        }
+        .admin-dashboard-container .ann-mgr textarea {
+          background-color: #030712 !important;
+          color: #E2E8F0 !important;
+          border-color: var(--border) !important;
+        }
+        .admin-dashboard-container .ann-mgr .char-count {
+          color: #94a3b8 !important;
+        }
+        .admin-dashboard-container .ann-mgr .toggle-row,
+        .admin-dashboard-container .ann-mgr .setting-group {
+          background: #0b0f19 !important;
+          border-color: var(--border) !important;
+        }
+        .admin-dashboard-container .ann-mgr .toggle-row label,
+        .admin-dashboard-container .ann-mgr .slider-label,
+        .admin-dashboard-container .ann-mgr .setting-title {
+          color: #E2E8F0 !important;
+        }
+        .admin-dashboard-container .ann-mgr .preview-box,
+        .admin-dashboard-container .ann-mgr .preview-label {
+          border-color: var(--border) !important;
+          background: #0b0f19 !important;
+          color: #94A3B8 !important;
+        }
+        .admin-dashboard-container .ann-mgr .btn-primary {
+          background: var(--primary) !important;
+          color: #030712 !important;
+        }
+        .admin-dashboard-container .ann-mgr .btn-danger {
+          background: #111827 !important;
+          color: #EF4444 !important;
+          border-color: #3f1d1d !important;
+        }
+        .admin-dashboard-container .ann-mgr .tips {
+          background: rgba(16, 185, 129, 0.05) !important;
+          border-color: rgba(16, 185, 129, 0.2) !important;
+        }
+        .admin-dashboard-container .ann-mgr .tips-title {
+          color: var(--primary) !important;
+        }
+        .admin-dashboard-container .ann-mgr .tips li {
+          color: #34D399 !important;
         }
       `}</style>
 
@@ -995,10 +1183,10 @@ export default function AdminPanel({ onClose }) {
         {/* 📑 MAIN CONTENT SCROLL AREA */}
         <main className="admin-content-area">
           {onClose && (
-            <div className="modern-card !bg-indigo-50/50 border-indigo-200 p-4 mb-6 flex justify-between items-center">
+            <div className="modern-card !bg-emerald-950/20 border-emerald-500/30 p-4 mb-6 flex justify-between items-center">
               <div>
-                <h3 className="font-bold text-indigo-900 text-sm">🛡️ Moderator Access Mode</h3>
-                <p className="text-xs text-indigo-700 mt-0.5">Permissions: whitelist emails & approve student contributions.</p>
+                <h3 className="font-bold text-emerald-400 text-sm">🛡️ Moderator Access Mode</h3>
+                <p className="text-xs text-emerald-500/70 mt-0.5">Permissions: whitelist emails & approve student contributions.</p>
               </div>
             </div>
           )}
@@ -1006,11 +1194,22 @@ export default function AdminPanel({ onClose }) {
           {/* 📊 TABS: OVERVIEW */}
           {tab === "overview" && overview && (
             <div className="space-y-6 animate-fade-in">
+              {/* Terminal simulated log */}
+              <div className="modern-card !bg-black border-emerald-500/35 p-4 mb-6 font-mono text-[11px] text-emerald-400 border shadow-[0_0_15px_rgba(16,185,129,0.15)] relative overflow-hidden flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse inline-block" />
+                  <span>[console@zyrex] {hackerQuote}</span>
+                </div>
+                <div className="text-[9px] text-emerald-600 uppercase font-bold tracking-widest hidden sm:block">
+                  SECURE_SHELL_ACTIVE
+                </div>
+              </div>
+
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <StatCard icon="👥" label="Active Students" value={overview.activeUsers} color="#4F46E5" />
-                <StatCard icon="✅" label="Present Today" value={todayPresent} color="#10B981" />
+                <StatCard icon="👥" label="Active Students" value={overview.activeUsers} color="#10B981" />
+                <StatCard icon="✅" label="Present Today" value={todayPresent} color="#00FF66" />
                 <StatCard icon="❌" label="Absent Today" value={todayAbsent} color="#EF4444" />
-                <StatCard icon="📚" label="Total Subjects" value={subjects.length} color="#06B6D4" />
+                <StatCard icon="📚" label="Total Subjects" value={subjects.length} color="#38BDF8" />
               </div>
 
               <div className="modern-card">
@@ -1031,7 +1230,7 @@ export default function AdminPanel({ onClose }) {
                               <span className="text-xs font-bold text-slate-700">{u.name}</span>
                               <span className="text-[10px] text-slate-400 font-mono">{u.batch}</span>
                             </div>
-                            <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
+                            <div className="h-2 rounded-full bg-slate-800 overflow-hidden">
                               <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, background: barColor }} />
                             </div>
                           </div>
