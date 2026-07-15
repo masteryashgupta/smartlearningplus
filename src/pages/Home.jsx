@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import { getSession, clearSession, api } from "../api.js";
 import AdminPanel from "./AdminPanel.jsx";
@@ -1867,13 +1868,13 @@ const handleContribSubmit = async (e) => {
       </div>
 
       {/* ── CONTACT FORM MODAL ── */}
-      {showContactModal && (
+      {showContactModal && createPortal(
         <div
           onClick={(e) => { if (e.target === e.currentTarget) { setShowContactModal(false); setContactResult(null); } }}
           style={{
-            position: "fixed", inset: 0, zIndex: 10000,
+            position: "fixed", inset: 0, zIndex: 100000,
             background: "rgba(0,0,0,0.55)", backdropFilter: "blur(6px)",
-            display: "flex", alignItems: "center", justify: "center", padding: "16px",
+            display: "flex", alignItems: "center", justifyContent: "center", padding: "16px",
           }}
         >
           <div style={{
@@ -2001,17 +2002,18 @@ const handleContribSubmit = async (e) => {
               )}
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* ── NEWSLETTER SUBSCRIPTION MODAL ── */}
-      {showSubscribeModal && (
+      {showSubscribeModal && createPortal(
         <div
           onClick={(e) => { if (e.target === e.currentTarget) { setShowSubscribeModal(false); setSubscribeResult(null); } }}
           style={{
-            position: "fixed", inset: 0, zIndex: 10000,
+            position: "fixed", inset: 0, zIndex: 100000,
             background: "rgba(0,0,0,0.55)", backdropFilter: "blur(6px)",
-            display: "flex", alignItems: "center", justify: "center", padding: "16px",
+            display: "flex", alignItems: "center", justifyContent: "center", padding: "16px",
           }}
         >
           <div style={{
@@ -2097,7 +2099,8 @@ const handleContribSubmit = async (e) => {
               )}
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
