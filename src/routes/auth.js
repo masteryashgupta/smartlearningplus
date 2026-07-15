@@ -62,6 +62,32 @@ router.post("/contact", async (req, res) => {
   }
 });
 
+// ---- Public: Subscribe to General Notifications (for non-registered visitors) ----
+router.post("/subscribe", async (req, res) => {
+  const { email } = req.body;
+  if (!email || !email.trim()) return res.status(400).json({ error: "Email is required" });
+  const cleanEmail = email.trim().toLowerCase();
+
+  // Basic email format check
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+    return res.status(400).json({ error: "Invalid email format" });
+  }
+
+  try {
+    const { rows } = await q(
+      "insert into notification_subscribers (email) values ($1) on conflict (email) do nothing returning *",
+      [cleanEmail]
+    );
+    if (rows.length === 0) {
+      return res.json({ ok: true, message: "You are already subscribed!" });
+    }
+    res.json({ ok: true, message: "Subscribed successfully!" });
+  } catch (err) {
+    console.error("[subscribe] Error subscribing email:", err);
+    res.status(500).json({ error: "Failed to subscribe. Please try again." });
+  }
+});
+
 // ---- Admin login (website only) ----
 router.post("/admin/login", async (req, res) => {
   const { email, password } = req.body;

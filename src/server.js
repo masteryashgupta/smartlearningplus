@@ -442,6 +442,15 @@ async function migrateDatabase() {
       )
     `);
 
+    // Ensure notification_subscribers table exists
+    await q(`
+      create table if not exists notification_subscribers (
+        id uuid primary key default gen_random_uuid(),
+        email text unique not null,
+        created_at timestamptz default now()
+      )
+    `);
+
     // Ensure community_materials table exists
     await q(`
       create table if not exists community_materials (

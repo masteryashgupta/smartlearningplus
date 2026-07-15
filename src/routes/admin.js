@@ -163,6 +163,30 @@ router.delete("/whitelist/:id", requireAuth("moderator"), async (req, res) => {
   }
 });
 
+// ---- Subscribers ----
+router.get("/subscribers", requireAuth("moderator"), async (req, res) => {
+  try {
+    const { rows } = await q("select * from notification_subscribers order by created_at desc");
+    res.json(rows);
+  } catch (err) {
+    console.error("Fetch subscribers error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.delete("/subscribers/:id", requireAuth("moderator"), async (req, res) => {
+  try {
+    const { rows } = await q("delete from notification_subscribers where id = $1 returning email", [req.params.id]);
+    if (rows.length > 0) {
+      await logModeratorActivity(req, "subscriber_remove", `Removed "${rows[0].email}" from subscribers`);
+    }
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("Delete subscriber error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 // ---- Registration Requests ----
 router.get("/registrations", requireAuth("moderator"), async (req, res) => {
   try {
@@ -521,20 +545,36 @@ ${body}`;
 
 // ---- Broadcast Announcement to All Users ----
 router.post("/broadcast", requireAuth("admin"), async (req, res) => {
-  const { subject, message, channels, userIds, buttonText, buttonLink } = req.body;
+  const { subject, message, channels, userIds, subscriberIds, buttonText, buttonLink } = req.body;
   if (!message) return res.status(400).json({ error: "Message content is required" });
   if (!channels || !Array.isArray(channels) || channels.length === 0) {
     return res.status(400).json({ error: "At least one channel (email or telegram) is required" });
   }
 
   try {
-    let query = "select id, name, email, telegram_id from users where is_active = true";
-    let params = [];
+    let users = [];
     if (userIds && Array.isArray(userIds) && userIds.length > 0) {
-      query += " and id = any($1)";
-      params.push(userIds);
+      const { rows } = await q(
+        "select id, name, email, telegram_id from users where is_active = true and id = any($1)",
+        [userIds]
+      );
+      users = rows;
+    } else if (!subscriberIds || subscriberIds.length === 0) {
+      // If neither is explicitly provided, default to all active users
+      const { rows } = await q("select id, name, email, telegram_id from users where is_active = true");
+      users = rows;
     }
-    const { rows: users } = await q(query, params);
+
+    let subscribers = [];
+    if (channels.includes("email") && subscriberIds && Array.isArray(subscriberIds) && subscriberIds.length > 0) {
+      const { rows } = await q(
+        "select id, email from notification_subscribers where id = any($1)",
+        [subscriberIds]
+      );
+      subscribers = rows;
+    }
+
+    const totalRecipients = users.length + subscribers.length;
     
     // Run broadcast in background
     const runBroadcast = async () => {
@@ -585,14 +625,30 @@ router.post("/broadcast", requireAuth("admin"), async (req, res) => {
           }
         }
       }
+
+      // Send to subscribers
+      for (const sub of subscribers) {
+        if (channels.includes("email") && sub.email) {
+          try {
+            await sendAnnouncementEmail(sub.email, "Subscriber", subject, message, buttonText, buttonLink);
+            emailSuccessCount++;
+          } catch (err) {
+            console.error(`[broadcast] Failed email to subscriber ${sub.email}:`, err.message || err);
+          }
+        }
+      }
       
       console.log(`[broadcast] Completed. Emails sent: ${emailSuccessCount}, Telegrams sent: ${tgSuccessCount}`);
     };
 
     runBroadcast();
-    await logModeratorActivity(req, "broadcast_send", `Sent broadcast announcement to ${users.length} users via [${channels.join(", ")}]`);
+    await logModeratorActivity(
+      req, 
+      "broadcast_send", 
+      `Sent broadcast announcement to ${totalRecipients} recipients (Users: ${users.length}, Subscribers: ${subscribers.length}) via [${channels.join(", ")}]`
+    );
 
-    res.json({ ok: true, sentCount: users.length });
+    res.json({ ok: true, sentCount: totalRecipients });
   } catch (err) {
     console.error("Broadcast route error:", err);
     res.status(500).json({ error: "Internal server error" });
