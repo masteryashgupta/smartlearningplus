@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { api, setSession, getSession } from "../api.js";
-import { toggleTheme, getTheme } from "../theme.js";
 
 export default function Login({ compact = false, adminOnly = false }) {
   const [params] = useSearchParams();
@@ -14,12 +13,6 @@ export default function Login({ compact = false, adminOnly = false }) {
   const [forgotMode, setForgotMode] = useState(false);
   const [forgotEmail, setForgotEmail] = useState("");
   const [forgotMsg, setForgotMsg] = useState(null); // {ok, text}
-  const [dark, setDark] = useState(getTheme() === "dark");
-
-  function handleThemeToggle() {
-    const newIsDark = toggleTheme();
-    setDark(newIsDark);
-  }
   const [resendVerifyMode, setResendVerifyMode] = useState(false);
   const [resendEmail, setResendEmail] = useState("");
   const [resendMsg, setResendMsg] = useState(null); // {ok, text}
@@ -386,27 +379,11 @@ export default function Login({ compact = false, adminOnly = false }) {
       {cardContent}
     </div>
   ) : (
-    <div className="min-h-screen flex items-center justify-center px-4 relative">
-      <div className="absolute top-4 right-4 z-10">
-        <button
-          type="button"
-          onClick={handleThemeToggle}
-          className="p-2 rounded-xl bg-surface border border-line text-muted hover:text-ink shadow-soft hover:bg-paper transition-all flex items-center justify-center"
-          title={dark ? "Switch to light theme" : "Switch to dark theme"}
-          aria-label="Toggle theme"
-        >
-          {dark ? (
-            <svg className="w-5 h-5 fill-current" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 2.293a1 1 0 011.414 0l.707.707a1 1 0 01-1.414 1.414l-.707-.707a1 1 0 010-1.414zm2.707 5.707a1 1 0 010 1.414l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-2.293 4a1 1 0 010 1.414l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 0zM11 17a1 1 0 100-2v-1a1 1 0 100 2v1zm-4-2.293a1 1 0 010 1.414l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 0zM3 11a1 1 0 100-2h1a1 1 0 100 2h-1zm2.293-4a1 1 0 010-1.414l.707-.707a1 1 0 011.414 1.414l-.707.707a1 1 0 01-1.414 0zM10 5a5 5 0 100 10 5 5 0 000-10z" clipRule="evenodd"/></svg>
-          ) : (
-            <svg className="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg>
-          )}
-        </button>
-      </div>
-
+    <div className="min-h-screen flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8 flex flex-col items-center">
           <img src="/logo.png?v=3" alt="Logo" className="w-12 h-12 object-contain mb-3" />
-          <div className="font-display text-2xl font-bold text-ink tracking-tight">Smart Learning Plus</div>
+          <div className="font-display text-2xl font-bold text-[#1e3a8a] tracking-tight">Smart Learning Plus</div>
           <div className="text-muted text-sm font-mono">Study Smarter, Not Harder</div>
         </div>
         {cardContent}
