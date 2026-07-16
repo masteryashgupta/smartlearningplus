@@ -13,6 +13,9 @@ export default function Login({ compact = false, adminOnly = false }) {
   const [forgotMode, setForgotMode] = useState(false);
   const [forgotEmail, setForgotEmail] = useState("");
   const [forgotMsg, setForgotMsg] = useState(null); // {ok, text}
+  const [resendVerifyMode, setResendVerifyMode] = useState(false);
+  const [resendEmail, setResendEmail] = useState("");
+  const [resendMsg, setResendMsg] = useState(null); // {ok, text}
   const [registerSuccess, setRegisterSuccess] = useState(null); // string message
 
   // Student specific inputs
@@ -123,19 +126,33 @@ export default function Login({ compact = false, adminOnly = false }) {
     }
   }
 
+  async function handleResendVerification(e) {
+    e.preventDefault();
+    setResendMsg(null);
+    setLoading(true);
+    try {
+      const { data } = await api.post("/auth/resend-verification", { email: resendEmail });
+      setResendMsg({ ok: true, text: data.message || "✓ Verification link has been resent! Please check your inbox." });
+    } catch (err) {
+      setResendMsg({ ok: false, text: err.response?.data?.error || "Something went wrong. Please try again." });
+    } finally {
+      setLoading(false);
+    }
+  }
+
   const cardContent = (
     <div className="card p-6 bg-white border border-line rounded-xl shadow-soft">
       {!adminOnly && (
         <div className="flex gap-2 mb-6 bg-paper rounded-xl p-1 border border-line/40">
           <button
             className={`flex-1 py-1.5 rounded-lg text-sm font-medium transition-colors ${studentAction === "login" ? "bg-white shadow-soft text-primary" : "text-muted hover:text-ink"}`}
-            onClick={() => { setStudentAction("login"); setError(""); setForgotMode(false); setForgotMsg(null); setRegisterSuccess(null); }}
+            onClick={() => { setStudentAction("login"); setError(""); setForgotMode(false); setForgotMsg(null); setResendVerifyMode(false); setResendMsg(null); setRegisterSuccess(null); }}
           >
             Sign In
           </button>
           <button
             className={`flex-1 py-1.5 rounded-lg text-sm font-medium transition-colors ${studentAction === "register" ? "bg-white shadow-soft text-primary" : "text-muted hover:text-ink"}`}
-            onClick={() => { setStudentAction("register"); setError(""); setForgotMode(false); setForgotMsg(null); setRegisterSuccess(null); }}
+            onClick={() => { setStudentAction("register"); setError(""); setForgotMode(false); setForgotMsg(null); setResendVerifyMode(false); setResendMsg(null); setRegisterSuccess(null); }}
           >
             Register
           </button>
@@ -173,6 +190,35 @@ export default function Login({ compact = false, adminOnly = false }) {
                 </button>
               </div>
             </form>
+          ) : resendVerifyMode ? (
+            /* ── RESEND VERIFICATION FORM ── */
+            <form onSubmit={handleResendVerification} className="space-y-3">
+              <div className="text-sm font-semibold text-ink mb-1">Resend verification link</div>
+              <p className="text-xs text-muted mb-3">Enter your registered email address and we'll send you a fresh verification link.</p>
+              <input
+                className="input"
+                type="email"
+                placeholder="Your email address"
+                value={resendEmail}
+                onChange={(e) => setResendEmail(e.target.value)}
+                required
+                autoFocus
+              />
+              {resendMsg && (
+                <div className={`text-xs rounded-xl px-3 py-2.5 font-medium ${
+                  resendMsg.ok ? "bg-green-50 text-green-700 border border-green-200" : "bg-red-50 text-red-600 border border-red-200"
+                }`}>{resendMsg.text}</div>
+              )}
+              <button className="btn-primary w-full" disabled={loading}>
+                {loading ? "Sending…" : "Send Verification Link"}
+              </button>
+              <div className="text-center">
+                <button type="button" className="text-xs text-primary hover:underline"
+                  onClick={() => { setResendVerifyMode(false); setResendMsg(null); setResendEmail(""); }}>
+                  ← Back to sign in
+                </button>
+              </div>
+            </form>
           ) : studentAction === "login" ? (
             <form onSubmit={handleStudentLogin} className="space-y-3">
               <div className="text-[11px] text-[#2563eb] text-center bg-[#eff6ff] py-1.5 px-3 rounded-lg border border-[#dbeafe] mb-3.5 font-semibold">
@@ -199,7 +245,25 @@ export default function Login({ compact = false, adminOnly = false }) {
                   {registerSuccess}
                 </div>
               )}
-              {error && <p className="text-bad text-sm">{error}</p>}
+              {error && (
+                <div className="text-bad text-sm space-y-1">
+                  <p>{error}</p>
+                  {error.includes("verify your email") && (
+                    <button
+                      type="button"
+                      className="text-xs text-primary font-medium hover:underline block"
+                      onClick={() => {
+                        setResendVerifyMode(true);
+                        setResendMsg(null);
+                        setResendEmail(studentEmail);
+                        setError("");
+                      }}
+                    >
+                      Didn't get the link? Click here to resend
+                    </button>
+                  )}
+                </div>
+              )}
               <button className="btn-primary w-full" disabled={loading}>
                 {loading ? "Signing in…" : "Sign in"}
               </button>
@@ -212,6 +276,13 @@ export default function Login({ compact = false, adminOnly = false }) {
                 <button type="button" className="text-xs text-muted hover:text-primary hover:underline"
                   onClick={() => { setForgotMode(true); setForgotMsg(null); setForgotEmail(studentEmail); }}>
                   Forgot password?
+                </button>
+              </div>
+
+              <div className="text-center mt-2.5">
+                <button type="button" className="text-xs text-muted hover:text-primary hover:underline"
+                  onClick={() => { setResendVerifyMode(true); setResendMsg(null); setResendEmail(studentEmail); }}>
+                  Resend verification email?
                 </button>
               </div>
 
