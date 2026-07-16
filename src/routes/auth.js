@@ -380,6 +380,49 @@ router.get("/verify-email", async (req, res) => {
   }
 });
 
+// ---- Resend Verification Link ----
+router.post("/resend-verification", async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ error: "Email is required" });
+
+  try {
+    const { rows } = await q("select * from users where lower(email) = lower($1)", [email.trim()]);
+    const user = rows[0];
+
+    const genericSuccess = { ok: true, message: "If that email is pending verification, a new link has been sent. Check your inbox!" };
+
+    if (!user) {
+      return res.json(genericSuccess);
+    }
+
+    if (user.email_verified) {
+      return res.status(400).json({ error: "This email is already verified. You can log in." });
+    }
+
+    const verifyToken = crypto.randomBytes(32).toString("hex");
+    await q("update users set verification_token = $1 where id = $2", [verifyToken, user.id]);
+
+    let frontendBase = process.env.FRONTEND_URL || "https://smartlearningplus.me";
+    if (frontendBase.includes(",")) {
+      const urls = frontendBase.split(",").map((u) => u.trim());
+      const prodUrl = urls.find((u) => !u.includes("localhost"));
+      frontendBase = prodUrl || urls[0];
+    }
+    const verifyUrl = `${frontendBase}/index.html#/verify-email?token=${verifyToken}`;
+
+    try {
+      await sendVerificationEmail(user.email, verifyUrl, user.name);
+    } catch (mailErr) {
+      console.error("[resend-verification] Email send failed:", mailErr.message);
+    }
+
+    res.json(genericSuccess);
+  } catch (err) {
+    console.error("Resend verification error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 
 // Utility used by the bot to (re)generate a fresh one-time token
 export async function issueDashboardToken(userId) {
