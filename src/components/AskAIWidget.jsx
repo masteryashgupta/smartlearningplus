@@ -79,12 +79,12 @@ export default function AskAIWidget() {
       ]);
     } catch (err) {
       console.error(err);
-      const errMsg = err.response?.data?.error || "AI service is currently busy. Please try again in a few seconds.";
+      const errMsg = "I'm having trouble right now, please try again in a moment.";
       setMessages((prev) => [
         ...prev,
         {
           sender: "ai",
-          text: `⚠️ **Error:** ${errMsg}`,
+          text: errMsg,
           sources: [],
           isError: true
         }
