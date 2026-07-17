@@ -6,6 +6,7 @@ import AdminPanel from "./AdminPanel.jsx";
 import Login from "./Login.jsx";
 import SubjectGauge from "../components/SubjectGauge.jsx";
 import Heatmap from "../components/Heatmap.jsx";
+import DayEditor from "../components/DayEditor.jsx";
 import ShareWidget from "../components/ShareWidget.jsx";
 import AnnouncementBar from "../components/AnnouncementBar.jsx";
 
