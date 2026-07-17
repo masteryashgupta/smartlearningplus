@@ -60,9 +60,21 @@ app.use("/api/auth/student/register", authLimiter);
 app.use("/api/auth/forgot-password", authLimiter);
 
 
-const allowedOrigins = process.env.FRONTEND_URL
-  ? process.env.FRONTEND_URL.split(",").map((url) => url.trim())
-  : ["http://localhost:5173", "http://127.0.0.1:5173"];
+const allowedOrigins = [
+  "https://smartlearningplus.me",
+  "https://www.smartlearningplus.me",
+  "http://localhost:5173",
+  "http://127.0.0.1:5173"
+];
+
+if (process.env.FRONTEND_URL) {
+  process.env.FRONTEND_URL.split(",").forEach((url) => {
+    const trimmed = url.trim();
+    if (trimmed && !allowedOrigins.includes(trimmed)) {
+      allowedOrigins.push(trimmed);
+    }
+  });
+}
 
 app.use(
   cors({
