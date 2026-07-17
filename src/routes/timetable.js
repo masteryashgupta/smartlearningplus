@@ -26,7 +26,7 @@ router.get("/", requireAuth(), async (req, res) => {
       week[d] = await getSlotsForDay(d, batch);
     }
   }
-  res.json({ week, subjects: (await q("select * from subjects order by name")).rows });
+  res.json({ week, subjects: (await q("select * from subjects order by case when type = 'theory' then 0 else 1 end, name")).rows });
 });
 
 // ---- Admin: manage subjects ----
