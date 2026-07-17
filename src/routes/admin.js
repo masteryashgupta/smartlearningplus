@@ -150,7 +150,7 @@ router.post("/whitelist", requireAuth("moderator"), async (req, res) => {
   }
 });
 
-router.delete("/whitelist/:id", requireAuth("moderator"), async (req, res) => {
+router.delete("/whitelist/:id", requireAuth("admin"), async (req, res) => {
   try {
     const { rows } = await q("delete from whitelisted_emails where id = $1 returning email", [req.params.id]);
     if (rows.length > 0) {
@@ -174,7 +174,7 @@ router.get("/subscribers", requireAuth("moderator"), async (req, res) => {
   }
 });
 
-router.delete("/subscribers/:id", requireAuth("moderator"), async (req, res) => {
+router.delete("/subscribers/:id", requireAuth("admin"), async (req, res) => {
   try {
     const { rows } = await q("delete from notification_subscribers where id = $1 returning email", [req.params.id]);
     if (rows.length > 0) {
@@ -198,7 +198,7 @@ router.get("/registrations", requireAuth("moderator"), async (req, res) => {
   }
 });
 
-router.post("/registrations/:id/approve", requireAuth("moderator"), async (req, res) => {
+router.post("/registrations/:id/approve", requireAuth("admin"), async (req, res) => {
   try {
     const { rows } = await q("select * from registration_requests where id = $1", [req.params.id]);
     const reqData = rows[0];
@@ -244,7 +244,7 @@ router.post("/registrations/:id/approve", requireAuth("moderator"), async (req, 
   }
 });
 
-router.post("/registrations/:id/reject", requireAuth("moderator"), async (req, res) => {
+router.post("/registrations/:id/reject", requireAuth("admin"), async (req, res) => {
   try {
     const { rows } = await q("update registration_requests set status = 'rejected' where id = $1 returning *", [req.params.id]);
     if (rows.length > 0) {
@@ -364,7 +364,7 @@ router.post("/materials/:id/approve", requireAuth("moderator"), async (req, res)
 });
 
 // Reject a contribution with reason
-router.post("/materials/:id/reject", requireAuth("moderator"), async (req, res) => {
+router.post("/materials/:id/reject", requireAuth("admin"), async (req, res) => {
   const { reason } = req.body;
   if (!reason || !reason.trim()) {
     return res.status(400).json({ error: "Rejection reason is required" });
@@ -406,7 +406,7 @@ router.get("/materials/approved", requireAuth("moderator"), async (req, res) => 
 });
 
 // Toggle hide/unhide an approved material
-router.post("/materials/:id/toggle-hidden", requireAuth("moderator"), async (req, res) => {
+router.post("/materials/:id/toggle-hidden", requireAuth("admin"), async (req, res) => {
   try {
     const { rows } = await q(
       `update community_materials
@@ -425,7 +425,7 @@ router.post("/materials/:id/toggle-hidden", requireAuth("moderator"), async (req
 });
 
 // Permanently delete a material (any status)
-router.delete("/materials/:id", requireAuth("moderator"), async (req, res) => {
+router.delete("/materials/:id", requireAuth("admin"), async (req, res) => {
   try {
     const { rows } = await q(
       `delete from community_materials where id = $1 returning title`,
