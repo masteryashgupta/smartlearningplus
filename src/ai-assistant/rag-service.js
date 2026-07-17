@@ -34,17 +34,27 @@ export async function askRAG(question, subjectCode, mode) {
     [`[${embedding.join(",")}]`, subjectFilter]
   );
 
-  // 3. Build context grounded prompt
+  // 3. Build context grounded prompt and apply similarity threshold
+  const filteredChunks = chunks.filter(c => Number(c.distance) <= 0.65);
   let contextText = "";
-  if (chunks.length > 0) {
-    contextText = chunks
+  if (filteredChunks.length > 0) {
+    contextText = filteredChunks
       .map((c, i) => `[Context ${i + 1}] Source: ${c.source_type} (${c.subject_code} - ${c.topic} ${c.year ? `Year: ${c.year}` : ""})\nContent:\n${c.content}`)
       .join("\n\n---\n\n");
+  } else {
+    return {
+      answer: "I don't have specific information on that in my study materials — try checking the syllabus pages or ask your faculty.",
+      sources: [],
+      served_by: "none"
+    };
   }
 
   const systemInstruction = `You are the Smart Learning Plus Platform Guide, an AI assistant dedicated ONLY to helping users navigate and use the features of this website.
 
-If the user asks a question about their subjects, syllabus, exams, PYQs, solutions, or any study material content, politely DECLINE to answer it. State clearly that your role is to help them use the website's features and you do not provide study solutions. 
+CRITICAL RULES:
+1. ONLY answer questions using the provided context. Do NOT invent links, URLs, facts, or statistics not present in the context.
+2. If the user asks a question about their subjects, syllabus, exams, PYQs, solutions, or any study material content, politely DECLINE to answer it. State clearly that your role is to help them use the website's features and you do not provide study solutions.
+3. If you are uncertain or the context does not contain the answer, say "I don't have specific information on that in my study materials — try checking the relevant page or ask your faculty" rather than guessing.
 
 Website Features & Usage:
 1. Mark Attendance: Users can mark their daily class attendance (Present, Absent, or Cancelled) on the Dashboard. Link: [Mark Attendance](#attendance-section)
@@ -52,7 +62,7 @@ Website Features & Usage:
 3. Share Study Material: Users can upload PDFs, notes, or images to share with the community. Link: [Share Study Material](#subjects)
 4. Subject Attendance Breakdown: Visual indicators showing attendance percentage per subject/lab. Link: [Dashboard](#subjects)
 5. Timetable / Heatmap: View weekly schedule and past attendance history. Link: [Dashboard](#attendance-section)
-6. Syllabus PDFs / Official Schemes: Download official RTU syllabus and examination schemes. Link: [Syllabus PDFs](#downloads)
+6. Syllabus PDFs / Schemes: Download syllabus and examination schemes. Link: [Syllabus PDFs](#downloads)
 7. Telegram Integration: Users can connect their Telegram account to get bot notifications. Link: [Dashboard](#attendance-section)
 8. Subject Modules / Vaults: Direct links to specific subject materials:
    - Analysis of Algorithms (AOA): [AOA Module](/aoa/index.html)
@@ -64,9 +74,7 @@ Website Features & Usage:
 Important Restriction to Mention:
 If asked about login, registration, or marking attendance, you MUST clarify that Login and Registration are restricted to manually approved users only. Self-attendance tracking is not open to everyone.
 
-When explaining a feature or module, provide clear steps or the direct link from the list above. Keep responses helpful, concise, and friendly.
-
-If the user greets you, introduce yourself as the Platform Guide and list a few features you can help with.`;
+When explaining a feature or module, provide clear steps or the direct link from the list above. Keep responses helpful, concise, and friendly.`;
 
   const prompt = `Context:\n${contextText}\n\nUser Question: ${question}`;
 
@@ -76,7 +84,7 @@ If the user greets you, introduce yourself as the Platform Guide and list a few 
   // Format sources list (unique sources only)
   const sources = [];
   const seen = new Set();
-  for (const c of chunks) {
+  for (const c of filteredChunks) {
     const key = `${c.subject_code}-${c.topic}-${c.source_type}`;
     if (!seen.has(key)) {
       seen.add(key);
@@ -92,7 +100,7 @@ If the user greets you, introduce yourself as the Platform Guide and list a few 
 
   return {
     answer: aiResult.answer,
-    sources: [],
+    sources: sources,
     served_by: aiResult.served_by
   };
 }

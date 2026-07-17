@@ -110,18 +110,36 @@ function withTimeout(promise, ms) {
 }
 
 export async function callAI(prompt, systemInstruction = "") {
-  const timeoutMs = 15000; // 15 seconds
-  try {
-    const answer = await withTimeout(callGroq(prompt, systemInstruction), timeoutMs);
-    return { answer, served_by: "groq" };
-  } catch (err) {
-    console.warn("Groq failed or timed out, falling back to Gemini. Error:", err.message);
+  const timeoutMs = 10000; // 10 seconds timeout
+  let attempts = 0;
+  
+  // Try Groq (up to 2 times)
+  while (attempts < 2) {
     try {
-      const answer = await withTimeout(callGemini(prompt, systemInstruction), timeoutMs);
-      return { answer, served_by: "gemini" };
-    } catch (err2) {
-      console.error("Gemini also failed or timed out. Error:", err2.message);
-      throw new Error("Both AI providers (Groq & Gemini) are currently unavailable or timed out. Please try again.");
+      const answer = await withTimeout(callGroq(prompt, systemInstruction), timeoutMs);
+      return { answer, served_by: "groq" };
+    } catch (err) {
+      attempts++;
+      console.warn(`[AI-LOG] Groq attempt ${attempts} failed/timed out. Error: ${err.message}. Timestamp: ${new Date().toISOString()}`);
+      if (attempts === 2) {
+        break;
+      }
+      // Wait a short delay before retry
+      await new Promise(resolve => setTimeout(resolve, 1000));
     }
+  }
+
+  // Fallback to Gemini
+  try {
+    console.log(`[AI-LOG] Groq failed completely. Falling back to Gemini. Timestamp: ${new Date().toISOString()}`);
+    const answer = await withTimeout(callGemini(prompt, systemInstruction), timeoutMs);
+    return { answer, served_by: "gemini" };
+  } catch (err2) {
+    console.error(`[AI-LOG] Gemini also failed. Error: ${err2.message}. Timestamp: ${new Date().toISOString()}`);
+    // Return a clean answer instead of throwing an error to the user
+    return { 
+      answer: "I'm having trouble right now, please try again in a moment.", 
+      served_by: "none" 
+    };
   }
 }
