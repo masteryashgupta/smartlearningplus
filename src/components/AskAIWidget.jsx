@@ -244,7 +244,7 @@ export default function AskAIWidget() {
            {/* AI Disclaimer */}
            <div className="px-3 py-1.5 bg-amber-50/50 border-t border-amber-200 text-center">
              <span className="text-[9px] text-amber-700 font-medium">
-               AI answers may be inaccurate — please verify with official sources.
+               AI answers may be inaccurate — please verify with your course materials.
              </span>
            </div>
 

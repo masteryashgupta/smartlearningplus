@@ -151,7 +151,7 @@ export default function Terms() {
             © {new Date().getFullYear()} Smart Learning Plus
           </p>
           <p className="text-xs text-muted" style={{ marginBottom: "12px" }}>
-            Smart Learning Plus is an independent, non-commercial student resource. Not affiliated with or endorsed by RTU Kota.
+            Smart Learning Plus is an independent, non-commercial student resource. Not affiliated with or endorsed by any institution.
           </p>
           <p className="text-xs" style={{ color: "#64748b" }}>
             <Link to="/disclaimer" className="sl-footer-link">Disclaimer</Link> |{" "}

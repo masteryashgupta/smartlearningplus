@@ -65,11 +65,11 @@ export default function Disclaimer() {
               <div className="legal-text">
                 <p>
                   Smart Learning Plus is an independent, free, non-commercial resource built by a student, for students. 
-                  This platform is created to help RTU Kota engineering students access study materials, track attendance, 
+                  This platform is created to help engineering students access study materials, track attendance, 
                   and navigate their academic journey more effectively.
                 </p>
                 <p>
-                  <strong>Important:</strong> This platform has no official affiliation with Rajasthan Technical University (RTU), 
+                  <strong>Important:</strong> This platform has no affiliation with Rajasthan Technical University (RTU), 
                   any college, university, or educational institution. All content is provided voluntarily by the community 
                   and should be used as a supplementary resource only.
                 </p>
@@ -81,13 +81,13 @@ export default function Disclaimer() {
               <h2 className="legal-heading">Content Ownership & Copyright</h2>
               <div className="legal-text">
                 <p>
-                  Official syllabus PDFs, scheme documents, and similar university materials belong to their respective 
+                  Syllabus PDFs, scheme documents, and similar university materials belong to their respective 
                   original sources, including RTU and its publishers. These materials are shared on this platform solely 
                   for educational reference purposes.
                 </p>
                 <p>
                   All such content is provided "as-is" and is not intended for commercial redistribution. We respect 
-                  the intellectual property rights of the original creators and encourage users to refer to official 
+                  the intellectual property rights of the original creators and encourage users to refer to 
                   university sources for the most authoritative and up-to-date information.
                 </p>
               </div>
@@ -119,7 +119,7 @@ export default function Disclaimer() {
                   to provide helpful information, the AI should not be relied upon as the sole source of academic truth.
                 </p>
                 <p>
-                  <strong>Always verify important academic information</strong> from official sources such as your 
+                  <strong>Always verify important academic information</strong> from university sources such as your 
                   course syllabus, professor's notes, or university publications before making academic decisions.
                 </p>
               </div>
@@ -135,7 +135,7 @@ export default function Disclaimer() {
                   up to date or completely accurate.
                 </p>
                 <p>
-                  Users should always cross-reference with official RTU publications and consult with their academic 
+                  Users should always cross-reference with university publications and consult with their academic 
                   advisors for the most current information.
                 </p>
               </div>
@@ -161,7 +161,7 @@ export default function Disclaimer() {
             © {new Date().getFullYear()} Smart Learning Plus
           </p>
           <p className="text-xs text-muted" style={{ marginBottom: "12px" }}>
-            Smart Learning Plus is an independent, non-commercial student resource. Not affiliated with or endorsed by RTU Kota.
+            Smart Learning Plus is an independent, non-commercial student resource. Not affiliated with or endorsed by any institution.
           </p>
           <p className="text-xs" style={{ color: "#64748b" }}>
             <Link to="/disclaimer" className="sl-footer-link">Disclaimer</Link> |{" "}

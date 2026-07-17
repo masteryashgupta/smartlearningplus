@@ -938,7 +938,7 @@ const handleContribSubmit = async (e) => {
         <div className="flex justify-center mt-2 mb-4">
           <div className="flex items-center gap-2 px-4 py-1.5 rounded-full text-xs" style={{ color: "var(--muted)", backgroundColor: "var(--surface2)", border: "1px solid var(--border)" }}>
             <span>🤖</span>
-            <span className="text-center">This platform's study material and lab experiments are AI-assisted for learning support and may not exactly match official faculty content — please verify before submission.</span>
+            <span className="text-center">This platform's study material and lab experiments are AI-assisted for learning support and may not exactly match faculty content — please verify before submission.</span>
           </div>
         </div>
 
@@ -1640,7 +1640,7 @@ const handleContribSubmit = async (e) => {
 
         {/* SYLLABUS DOWNLOADS */}
         <section className="sl-section scroll-anchor" id="downloads" style={{ paddingBottom: "40px" }}>
-          <div className="sl-eyebrow-sm">Official Schemes</div>
+          <div className="sl-eyebrow-sm">Syllabus Schemes</div>
           <div className="sl-section-title" style={{ marginBottom: "20px" }}>RTU Syllabus Scheme PDFs</div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -1670,7 +1670,7 @@ const handleContribSubmit = async (e) => {
                 <div className="subject-row-icon">📘</div>
                 <div className="subject-row-details">
                   <div className="subject-row-title">Full V-VI Semester Syllabus</div>
-                  <div className="subject-row-code">Official RTU B.Tech CSE topics index</div>
+                  <div className="subject-row-code">RTU B.Tech CSE topics index</div>
                 </div>
               </div>
               <div className="subject-row-arrow">⬇</div>
@@ -1731,7 +1731,7 @@ const handleContribSubmit = async (e) => {
             © {new Date().getFullYear()} Smart Learning Plus
           </p>
           <p className="text-xs text-muted" style={{ marginBottom: "12px" }}>
-            Smart Learning Plus is an independent, non-commercial student resource. Not affiliated with or endorsed by RTU Kota.
+            Smart Learning Plus is an independent, non-commercial student resource. Not affiliated with or endorsed by any institution.
           </p>
           <p className="text-xs" style={{ color: "#64748b" }}>
             <Link to="/disclaimer" className="sl-footer-link" style={{ color: "#2563eb", textDecoration: "none" }}>Disclaimer</Link> |{" "}
