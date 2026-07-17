@@ -1,6 +1,29 @@
 (function() {
   console.log("=== Smart Learning+ Community Loader Initialized ===");
   
+  // Inject Disclaimer/Warning Banner at the top of .sl-shell
+  const shell = document.querySelector(".sl-shell");
+  if (shell) {
+    const disclaimer = document.createElement("div");
+    disclaimer.style.background = "#fffbeb";
+    disclaimer.style.border = "1.5px solid #fef3c7";
+    disclaimer.style.borderRadius = "14px";
+    disclaimer.style.padding = "14px 20px";
+    disclaimer.style.marginBottom = "20px";
+    disclaimer.style.marginTop = "10px";
+    disclaimer.style.fontSize = "13px";
+    disclaimer.style.color = "#78350f";
+    disclaimer.style.lineHeight = "1.6";
+    disclaimer.style.display = "flex";
+    disclaimer.style.alignItems = "flex-start";
+    disclaimer.style.gap = "12px";
+    disclaimer.innerHTML = `
+      <span style="font-size: 18px; flex-shrink: 0; line-height: 1;">⚠️</span>
+      <span><strong>Educational Disclaimer:</strong> All the content on this site is for educational purposes and free to use. It is not affiliated with, authorized, or officially claimed by any institution. This site is built solely for academic help and as a project, not for any income or official sources.</span>
+    `;
+    shell.insertBefore(disclaimer, shell.firstChild);
+  }
+
   // 1. Identify the current subject page code based on location paths (decoded and normalized)
   const decodedPath = decodeURIComponent(window.location.pathname).toLowerCase();
   console.log("Normalized Path:", decodedPath);
