@@ -74,8 +74,12 @@
 
   // 4. Determine API Base dynamic endpoint
   let apiBase = localStorage.getItem("api_url") || "/api";
-  if (apiBase === "/api" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")) {
-    apiBase = "http://localhost:4000/api";
+  if (apiBase === "/api") {
+    if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+      apiBase = "http://localhost:4000/api";
+    } else {
+      apiBase = "https://api.smartlearningplus.me/api";
+    }
   }
   console.log("Resolved API URL:", apiBase);
 
