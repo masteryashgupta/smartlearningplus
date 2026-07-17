@@ -59,7 +59,43 @@ router.post("/holidays", requireAuth("admin"), async (req, res) => {
      on conflict (date, slot_id) do update set reason = $3 returning *`,
     [date, slot_id || null, reason || null, req.auth.id]
   );
-  await logModeratorActivity(req, "holiday_add", `Added/updated holiday on ${date}`);
+  
+  // Construct and send Telegram notification
+  let telegramMessage = "";
+  if (slot_id) {
+    try {
+      const slotRes = await q(
+        `select ts.label, s.name as subject_name, ts.day_of_week
+         from timetable_slots ts
+         join subjects s on s.id = ts.subject_id
+         where ts.id = $1`,
+        [slot_id]
+      );
+      if (slotRes.rows.length > 0) {
+        const slot = slotRes.rows[0];
+        telegramMessage = `🚨 <b>Class Cancelled</b> 🚨\n\n<b>Date:</b> ${date}\n<b>Subject:</b> ${slot.subject_name}\n<b>Slot:</b> ${slot.label || "Regular Class"}\n<b>Reason:</b> ${reason || "No reason specified"}`;
+      }
+    } catch (dbErr) {
+      console.error("Failed to query slot details for telegram notification:", dbErr);
+    }
+  } else {
+    telegramMessage = `📅 <b>Holiday Announcement</b> 📅\n\n<b>Date:</b> ${date}\n<b>Reason:</b> ${reason || "No reason specified"}`;
+  }
+
+  if (telegramMessage && bot) {
+    try {
+      const usersRes = await q("select telegram_id from users where telegram_id is not null and is_active = true");
+      for (const u of usersRes.rows) {
+        bot.sendMessage(u.telegram_id, telegramMessage, { parse_mode: "HTML" }).catch(err => {
+          console.error(`Failed to send cancellation notice to telegram user ${u.telegram_id}:`, err.message || err);
+        });
+      }
+    } catch (err) {
+      console.error("Failed to broadcast telegram notification:", err);
+    }
+  }
+
+  await logModeratorActivity(req, "holiday_add", `Added/updated holiday/cancellation on ${date}`);
   res.json(rows[0]);
 });
 
