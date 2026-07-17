@@ -785,8 +785,8 @@ const handleContribSubmit = async (e) => {
         }
         .contact-admin-fab {
           position: fixed;
-          bottom: 90px;
-          right: 20px;
+          bottom: 24px;
+          right: 24px;
           z-index: 9998;
           display: flex;
           align-items: center;
@@ -808,7 +808,7 @@ const handleContribSubmit = async (e) => {
         }
         @media (max-width: 640px) {
           .contact-admin-fab {
-            bottom: 75px;
+            bottom: 16px;
             right: 16px;
             padding: 12px;
             gap: 0;
@@ -842,11 +842,6 @@ const handleContribSubmit = async (e) => {
         }
         .attendance-preview-fab:hover {
           transform: scale(1.05);
-        }
-        /* Hide all other FABs when AI chat is open */
-        body.ai-chat-open .attendance-preview-fab,
-        body.ai-chat-open .contact-admin-fab {
-          display: none !important;
         }
       `}</style>
 
