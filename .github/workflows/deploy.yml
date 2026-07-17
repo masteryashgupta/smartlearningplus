@@ -36,7 +36,7 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          VITE_API_URL: https://smartlearningplus-backend-production-954a.up.railway.app/api
+          VITE_API_URL: https://api.smartlearningplus.me/api
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
