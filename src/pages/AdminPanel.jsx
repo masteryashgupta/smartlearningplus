@@ -249,7 +249,8 @@ export default function AdminPanel({ onClose }) {
   const [attendanceSlots, setAttendanceSlots] = useState([]);
   const [attendanceLoading, setAttendanceLoading] = useState(false);
   const [slotForm, setSlotForm] = useState({ day_of_week: 1, slot_number: 1, start_time: "08:30", end_time: "09:30", subject_id: "", batch: "ALL", label: "" });
-  const [holidayForm, setHolidayForm] = useState({ date: "", reason: "" });
+  const [holidayForm, setHolidayForm] = useState({ date: "", reason: "", slot_id: "" });
+  const [holidaySlots, setHolidaySlots] = useState([]);
   const [pwForm, setPwForm] = useState({ current: "", next: "", confirm: "" });
   const [pwMsg, setPwMsg] = useState(null);
   const [pwLoading, setPwLoading] = useState(false);
@@ -455,12 +456,12 @@ export default function AdminPanel({ onClose }) {
     e.preventDefault();
     if (!holidayForm.date) return;
     try {
-      await api.post("/admin/holidays", { date: holidayForm.date, reason: holidayForm.reason, slot_id: null });
-      setHolidayForm({ date: "", reason: "" });
+      await api.post("/admin/holidays", { date: holidayForm.date, reason: holidayForm.reason, slot_id: holidayForm.slot_id || null });
+      setHolidayForm({ date: "", reason: "", slot_id: "" });
       reloadHolidays();
-      showToast("Holiday declared!");
+      showToast("Holiday/Cancellation declared!");
     } catch (err) {
-      showToast("Failed to add holiday", false);
+      showToast("Failed to declare holiday/cancellation", false);
     }
   }
 
@@ -635,6 +636,18 @@ export default function AdminPanel({ onClose }) {
     if (tab === "registrations") reloadRegistrations();
     if (tab === "subscribers") reloadSubscribers();
   }, [tab, attendanceDate, week]);
+
+  useEffect(() => {
+    if (!holidayForm.date) {
+      setHolidaySlots([]);
+      return;
+    }
+    const parts = holidayForm.date.split("-");
+    const dObj = new Date(parts[0], parts[1] - 1, parts[2]);
+    const dayNum = dObj.getDay();
+    const slots = week[dayNum] || [];
+    setHolidaySlots(slots);
+  }, [holidayForm.date, week]);
 
   const filteredUsers = users.filter((u) =>
     userSearch === "" ||
@@ -1921,28 +1934,54 @@ export default function AdminPanel({ onClose }) {
           {tab === "holidays" && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="modern-card md:col-span-1">
-                <h3 className="text-sm font-bold text-slate-800 mb-2">Declare Holiday</h3>
-                <p className="text-xs text-slate-400 mb-4">Cancels all lectures and practicals scheduled on the selected date.</p>
+                <h3 className="text-sm font-bold text-slate-800 mb-2">Declare Holiday / Class Cancellation</h3>
+                <p className="text-xs text-slate-400 mb-4">Cancels all lectures or a specific class slot scheduled on the selected date.</p>
                 <form onSubmit={addHoliday} className="space-y-3">
                   <div>
                     <label className="text-[10px] font-bold text-slate-400 uppercase">Date</label>
                     <input type="date" className="modern-input mt-1" value={holidayForm.date} onChange={(e) => setHolidayForm({ ...holidayForm, date: e.target.value })} required />
                   </div>
                   <div>
-                    <label className="text-[10px] font-bold text-slate-400 uppercase">Reason</label>
-                    <input className="modern-input mt-1" placeholder="e.g. Diwali / Mid-Term Break" value={holidayForm.reason} onChange={(e) => setHolidayForm({ ...holidayForm, reason: e.target.value })} />
+                    <label className="text-[10px] font-bold text-slate-400 uppercase">Class Slot (Optional)</label>
+                    <select 
+                      className="modern-select w-full mt-1 text-xs" 
+                      value={holidayForm.slot_id} 
+                      onChange={(e) => setHolidayForm({ ...holidayForm, slot_id: e.target.value })}
+                    >
+                      <option value="">Whole Day (All Classes)</option>
+                      {holidaySlots.map((s) => (
+                        <option key={s.id} value={s.id}>
+                          Slot {s.slot_number}: {s.subject_name} ({s.start_time}-{s.end_time}) - {s.batch}
+                        </option>
+                      ))}
+                    </select>
                   </div>
-                  <button type="submit" className="modern-btn-primary w-full">Mark Holiday</button>
+                  <div>
+                    <label className="text-[10px] font-bold text-slate-400 uppercase">Reason</label>
+                    <input className="modern-input mt-1" placeholder="e.g. Diwali / Faculty on Leave" value={holidayForm.reason} onChange={(e) => setHolidayForm({ ...holidayForm, reason: e.target.value })} />
+                  </div>
+                  <button type="submit" className="modern-btn-primary w-full">Declare</button>
                 </form>
               </div>
 
               <div className="modern-card md:col-span-2">
-                <h3 className="text-sm font-bold text-slate-800 mb-3">Active Declared Holidays ({holidays.length})</h3>
+                <h3 className="text-sm font-bold text-slate-800 mb-3">Active Holidays & Cancellations ({holidays.length})</h3>
                 <div className="divide-y max-h-[400px] overflow-y-auto pr-1">
                   {holidays.map((h) => (
                     <div key={h.id} className="py-3 flex justify-between items-center gap-3">
                       <div>
-                        <div className="text-xs font-bold text-slate-700">{new Date(h.date).toLocaleDateString()}</div>
+                        <div className="text-xs font-bold text-slate-700">
+                          {new Date(h.date).toLocaleDateString()}
+                          {h.subject_name ? (
+                            <span className="ml-2 px-1.5 py-0.5 bg-rose-50 text-rose-600 rounded text-[9px] font-bold">
+                              🚫 Slot {h.slot_number} Cancelled: {h.subject_name} ({h.batch})
+                            </span>
+                          ) : (
+                            <span className="ml-2 px-1.5 py-0.5 bg-amber-50 text-amber-700 rounded text-[9px] font-bold">
+                              🎉 Whole Day Holiday
+                            </span>
+                          )}
+                        </div>
                         {h.reason && <div className="text-[10px] text-slate-400">{h.reason}</div>}
                       </div>
                       <button onClick={() => removeHoliday(h.id)} className="text-xs text-rose-500 hover:text-rose-700 font-bold">Remove</button>
