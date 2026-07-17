@@ -5,6 +5,7 @@ import { fileTypeFromBuffer } from "file-type";
 import { q } from "../db.js";
 import { requireAuth } from "../auth.js";
 import { uploadToB2, signUrls } from "../lib/b2.js";
+import { bot } from "../bot/bot.js";
 
 const router = Router();
 
@@ -207,6 +208,19 @@ router.post("/upload", requireAuth("student"), upload.single("file"), async (req
         req.auth.id
       ]
     );
+
+    // 6. Notify admin via Telegram
+    try {
+      const envAdminId = process.env.ADMIN_TELEGRAM_ID?.trim();
+      if (envAdminId && bot) {
+        const messageHtml = `📥 <b>New Upload Pending Approval</b>\n\n<b>Uploader:</b> ${req.auth.name}\n<b>Title:</b> ${title.trim()}\n<b>Subject:</b> ${subject.name} (${subject.code})\n<b>Type:</b> ${content_type}\n\n<i>Please check the admin panel to approve or reject this upload.</i>`;
+        bot.sendMessage(envAdminId, messageHtml, { parse_mode: "HTML" }).catch(err => {
+          console.error(`Failed to send upload notification to admin via Telegram:`, err);
+        });
+      }
+    } catch (telegramErr) {
+      console.error("Telegram upload notification error:", telegramErr);
+    }
 
     res.json({ ok: true, message: "Submission uploaded successfully. Waiting for admin approval." });
   } catch (err) {
