@@ -302,29 +302,93 @@ router.post("/registrations/:id/reject", requireAuth("admin"), async (req, res) 
 
 // ---- Overview for admin dashboard ----
 router.get("/overview", requireAuth("admin"), async (req, res) => {
-  const usersCount = await q("select count(*) from users where is_active = true");
-  const todayMarks = await q(
-    `select status, count(*) from attendance where date = current_date group by status`
-  );
-  const lowAttendance = await q(
-    `select u.name, u.batch,
-        count(*) filter (where a.status='present') as present,
-        count(*) filter (where a.status in ('present','absent')) as total
-     from users u join attendance a on a.user_id = u.id
-     group by u.id, u.name, u.batch
-     having count(*) filter (where a.status in ('present','absent')) > 0
-     order by (count(*) filter (where a.status='present')::float /
-               nullif(count(*) filter (where a.status in ('present','absent')),0)) asc
-     limit 5`
-  );
-  res.json({
-    activeUsers: Number(usersCount.rows[0].count),
-    todayMarks: todayMarks.rows,
-    lowAttendance: lowAttendance.rows.map((r) => ({
-      ...r,
-      percentage: r.total > 0 ? Math.round((r.present / r.total) * 1000) / 10 : 0,
-    })),
-  });
+  try {
+    const usersCount = await q("select count(*) from users where is_active = true");
+
+    const studentsPresentCount = await q(
+      `select count(distinct user_id) from attendance where date = current_date and status = 'present'`
+    );
+
+    const todayMarks = await q(
+      `select status, count(*) from attendance where date = current_date group by status`
+    );
+
+    const lowAttendance = await q(
+      `select u.name, u.batch,
+          count(*) filter (where a.status='present') as present,
+          count(*) filter (where a.status in ('present','absent')) as total
+       from users u join attendance a on a.user_id = u.id
+       group by u.id, u.name, u.batch
+       having count(*) filter (where a.status in ('present','absent')) > 0
+       order by (count(*) filter (where a.status='present')::float /
+                 nullif(count(*) filter (where a.status in ('present','absent')),0)) asc
+       limit 5`
+    );
+
+    const activeStudents = await q(
+      `select id, name, batch, telegram_username from users where is_active = true order by name asc`
+    );
+
+    const todayAttendanceLogs = await q(
+      `select 
+         a.user_id,
+         a.status,
+         a.marked_at,
+         s.name as subject_name,
+         s.code as subject_code,
+         ts.label as slot_label,
+         ts.start_time,
+         ts.end_time
+       from attendance a
+       join timetable_slots ts on ts.id = a.slot_id
+       join subjects s on s.id = ts.subject_id
+       where a.date = current_date
+       order by ts.start_time asc`
+    );
+
+    const logsByUser = {};
+    for (const log of todayAttendanceLogs.rows) {
+      if (!logsByUser[log.user_id]) logsByUser[log.user_id] = [];
+      logsByUser[log.user_id].push({
+        subject_name: log.slot_label || log.subject_name || log.subject_code,
+        subject_code: log.subject_code,
+        start_time: log.start_time ? log.start_time.slice(0, 5) : "",
+        end_time: log.end_time ? log.end_time.slice(0, 5) : "",
+        status: log.status,
+        marked_at: log.marked_at,
+      });
+    }
+
+    const todayStudentBreakdown = activeStudents.rows.map((u) => {
+      const classes = logsByUser[u.id] || [];
+      const presentCount = classes.filter((c) => c.status === "present").length;
+      const absentCount = classes.filter((c) => c.status === "absent").length;
+      return {
+        id: u.id,
+        name: u.name,
+        batch: u.batch,
+        telegram_username: u.telegram_username,
+        classes,
+        presentCount,
+        absentCount,
+        totalLogged: classes.length,
+      };
+    });
+
+    res.json({
+      activeUsers: Number(usersCount.rows[0].count),
+      studentsPresentToday: Number(studentsPresentCount.rows[0].count),
+      todayMarks: todayMarks.rows,
+      lowAttendance: lowAttendance.rows.map((r) => ({
+        ...r,
+        percentage: r.total > 0 ? Math.round((r.present / r.total) * 1000) / 10 : 0,
+      })),
+      todayStudentBreakdown,
+    });
+  } catch (err) {
+    console.error("Overview fetch error:", err);
+    res.status(500).json({ error: "Failed to fetch overview stats" });
+  }
 });
 
 // ---- Change Admin Password ----
