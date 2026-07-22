@@ -303,14 +303,20 @@ router.post("/registrations/:id/reject", requireAuth("admin"), async (req, res) 
 // ---- Overview for admin dashboard ----
 router.get("/overview", requireAuth("admin"), async (req, res) => {
   try {
+    const targetDate = (req.query.date && /^\d{4}-\d{2}-\d{2}$/.test(req.query.date))
+      ? req.query.date
+      : new Date().toISOString().slice(0, 10);
+
     const usersCount = await q("select count(*) from users where is_active = true");
 
     const studentsPresentCount = await q(
-      `select count(distinct user_id) from attendance where date = current_date and status = 'present'`
+      `select count(distinct user_id) from attendance where date = $1::date and status = 'present'`,
+      [targetDate]
     );
 
     const todayMarks = await q(
-      `select status, count(*) from attendance where date = current_date group by status`
+      `select status, count(*) from attendance where date = $1::date group by status`,
+      [targetDate]
     );
 
     const lowAttendance = await q(
@@ -342,8 +348,9 @@ router.get("/overview", requireAuth("admin"), async (req, res) => {
        from attendance a
        join timetable_slots ts on ts.id = a.slot_id
        join subjects s on s.id = ts.subject_id
-       where a.date = current_date
-       order by ts.start_time asc`
+       where a.date = $1::date
+       order by ts.start_time asc`,
+      [targetDate]
     );
 
     const logsByUser = {};
@@ -376,6 +383,7 @@ router.get("/overview", requireAuth("admin"), async (req, res) => {
     });
 
     res.json({
+      targetDate,
       activeUsers: Number(usersCount.rows[0].count),
       studentsPresentToday: Number(studentsPresentCount.rows[0].count),
       todayMarks: todayMarks.rows,
