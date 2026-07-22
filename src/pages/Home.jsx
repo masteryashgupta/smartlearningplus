@@ -1078,16 +1078,43 @@ const handleContribSubmit = async (e) => {
                 <div className="card p-5 bg-white border border-line rounded-2xl shadow-soft">
                   <h3 className="font-bold text-xs text-ink mb-4 uppercase tracking-wider">Subject Attendance breakdown</h3>
                   {stats?.perSubject && stats.perSubject.length > 0 ? (
-                    <div
-                      style={{
-                        display: "grid",
-                        gridTemplateColumns: "repeat(auto-fill, minmax(78px, 1fr))",
-                        gap: "10px",
-                      }}
-                    >
-                      {stats.perSubject.map((sub) => (
-                        <SubjectGauge key={sub.subject_id} subject={sub} />
-                      ))}
+                    <div className="space-y-5">
+                      {stats.perSubject.some((s) => s.type === "theory") && (
+                        <div>
+                          <div className="text-[10px] font-bold text-muted uppercase tracking-wider mb-2.5">Theory</div>
+                          <div
+                            style={{
+                              display: "grid",
+                              gridTemplateColumns: "repeat(auto-fill, minmax(78px, 1fr))",
+                              gap: "10px",
+                            }}
+                          >
+                            {stats.perSubject
+                              .filter((sub) => sub.type === "theory")
+                              .map((sub) => (
+                                <SubjectGauge key={sub.subject_id} subject={sub} />
+                              ))}
+                          </div>
+                        </div>
+                      )}
+                      {stats.perSubject.some((s) => s.type === "lab") && (
+                        <div>
+                          <div className="text-[10px] font-bold text-muted uppercase tracking-wider mb-2.5">Lab</div>
+                          <div
+                            style={{
+                              display: "grid",
+                              gridTemplateColumns: "repeat(auto-fill, minmax(78px, 1fr))",
+                              gap: "10px",
+                            }}
+                          >
+                            {stats.perSubject
+                              .filter((sub) => sub.type === "lab")
+                              .map((sub) => (
+                                <SubjectGauge key={sub.subject_id} subject={sub} />
+                              ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   ) : (
                     <div className="text-center py-4 text-muted text-xs font-medium">
