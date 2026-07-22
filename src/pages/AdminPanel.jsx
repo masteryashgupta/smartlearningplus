@@ -245,6 +245,8 @@ export default function AdminPanel({ onClose }) {
     setTerminalInput("");
   };
 
+  const [overviewDate, setOverviewDate] = useState(new Date().toISOString().slice(0, 10));
+  const [overviewLoading, setOverviewLoading] = useState(false);
   const [attendanceDate, setAttendanceDate] = useState(new Date().toISOString().slice(0, 10));
   const [attendanceSlots, setAttendanceSlots] = useState([]);
   const [attendanceLoading, setAttendanceLoading] = useState(false);
@@ -614,8 +616,17 @@ export default function AdminPanel({ onClose }) {
     return html;
   };
 
+  function reloadOverview(d) {
+    setOverviewLoading(true);
+    const targetDate = d || overviewDate;
+    api.get(`/admin/overview?date=${targetDate}`)
+      .then((r) => setOverview(r.data))
+      .catch((err) => console.error("Error loading overview:", err))
+      .finally(() => setOverviewLoading(false));
+  }
+
   useEffect(() => {
-    api.get("/admin/overview").then((r) => setOverview(r.data));
+    reloadOverview(overviewDate);
     reloadTimetable();
     reloadHolidays();
     reloadUsers();
@@ -626,6 +637,7 @@ export default function AdminPanel({ onClose }) {
   }, []);
 
   useEffect(() => {
+    if (tab === "overview") reloadOverview(overviewDate);
     if (tab === "attendance") loadAttendance(attendanceDate);
     if (tab === "materials") {
       reloadPendingMaterials();
@@ -635,7 +647,7 @@ export default function AdminPanel({ onClose }) {
     if (tab === "moderator-logs") reloadModeratorLogs();
     if (tab === "registrations") reloadRegistrations();
     if (tab === "subscribers") reloadSubscribers();
-  }, [tab, attendanceDate, week]);
+  }, [tab, attendanceDate, overviewDate, week]);
 
   useEffect(() => {
     if (!holidayForm.date) {
@@ -1423,33 +1435,92 @@ export default function AdminPanel({ onClose }) {
 
               </div>
 
+              {/* 🗓️ DATE SELECTOR BAR */}
+              <div className="modern-card p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-emerald-500/20 bg-slate-950/60">
+                <div className="flex items-center gap-3">
+                  <span className="text-xl">🗓️</span>
+                  <div>
+                    <div className="text-xs font-bold text-slate-100 flex items-center gap-2">
+                      <span>Select Date for Breakdown</span>
+                      {overviewLoading && (
+                        <span className="text-[10px] text-emerald-400 font-mono animate-pulse">
+                          Fetching date records…
+                        </span>
+                      )}
+                    </div>
+                    <div className="text-[11px] text-slate-400 mt-0.5 font-sans">
+                      Viewing attendance stats for {new Date(overviewDate + "T00:00:00").toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric", year: "numeric" })}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 flex-wrap">
+                  <button
+                    onClick={() => {
+                      const todayStr = new Date().toISOString().slice(0, 10);
+                      setOverviewDate(todayStr);
+                    }}
+                    className={`px-3 py-1.5 rounded-lg font-mono text-xs border transition-colors ${
+                      overviewDate === new Date().toISOString().slice(0, 10)
+                        ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/50 font-bold"
+                        : "bg-slate-900 text-slate-400 border-slate-800 hover:text-slate-200"
+                    }`}
+                  >
+                    Today
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      const y = new Date();
+                      y.setDate(y.getDate() - 1);
+                      setOverviewDate(y.toISOString().slice(0, 10));
+                    }}
+                    className={`px-3 py-1.5 rounded-lg font-mono text-xs border transition-colors ${
+                      overviewDate === (() => { const y = new Date(); y.setDate(y.getDate() - 1); return y.toISOString().slice(0, 10); })()
+                        ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/50 font-bold"
+                        : "bg-slate-900 text-slate-400 border-slate-800 hover:text-slate-200"
+                    }`}
+                  >
+                    Yesterday
+                  </button>
+
+                  <input
+                    type="date"
+                    value={overviewDate}
+                    onChange={(e) => setOverviewDate(e.target.value)}
+                    max={new Date().toISOString().slice(0, 10)}
+                    className="bg-slate-900 border border-slate-700 text-emerald-400 font-mono text-xs px-3 py-1.5 rounded-lg outline-none focus:border-emerald-500 cursor-pointer shadow-inner"
+                  />
+                </div>
+              </div>
+
               {/* CORE STATS GRID */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <StatCard icon="👥" label="Active Students" value={overview.activeUsers} sub="Registered students" color="#10B981" />
-                <StatCard icon="🎓" label="Students Present Today" value={`${overview.studentsPresentToday ?? 0} / ${overview.activeUsers}`} sub="Attending ≥1 class today" color="#00FF66" />
-                <StatCard icon="✅" label="Classes Attended Today" value={todayPresent} sub="Total class logs present" color="#38BDF8" />
-                <StatCard icon="❌" label="Classes Missed Today" value={todayAbsent} sub="Total class logs absent" color="#EF4444" />
+                <StatCard icon="🎓" label="Students Present" value={`${overview.studentsPresentToday ?? 0} / ${overview.activeUsers}`} sub={`Attending on ${overviewDate}`} color="#00FF66" />
+                <StatCard icon="✅" label="Classes Attended" value={todayPresent} sub={`Total present on ${overviewDate}`} color="#38BDF8" />
+                <StatCard icon="❌" label="Classes Missed" value={todayAbsent} sub={`Total absent on ${overviewDate}`} color="#EF4444" />
               </div>
 
-              {/* 📅 TODAY'S STUDENT ATTENDANCE BREAKDOWN */}
+              {/* 📅 DAILY STUDENT ATTENDANCE BREAKDOWN */}
               <div className="modern-card">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 pb-3 border-b border-slate-800">
                   <div>
                     <h3 className="text-sm font-bold text-slate-100 flex items-center gap-2">
-                      <span>📅</span> Today's Live Student Attendance Breakdown
+                      <span>📅</span> Student Attendance Breakdown
                     </h3>
                     <p className="text-xs text-slate-400 mt-0.5 font-sans">
-                      Clear view of which student attended which class today vs missed.
+                      Clear view of which student attended which class vs missed on {overviewDate}.
                     </p>
                   </div>
                   <div className="text-[11px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 px-2.5 py-1 rounded-lg self-start sm:self-auto">
-                    {new Date().toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
+                    {new Date(overviewDate + "T00:00:00").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: "numeric" })}
                   </div>
                 </div>
 
                 {!overview.todayStudentBreakdown || overview.todayStudentBreakdown.length === 0 ? (
                   <div className="text-xs text-slate-500 py-8 text-center font-mono">
-                    No active student attendance logged for today yet.
+                    No active student attendance logged for {overviewDate}.
                   </div>
                 ) : (
                   <div className="space-y-3">
@@ -1504,7 +1575,7 @@ export default function AdminPanel({ onClose }) {
                               })
                             ) : (
                               <span className="text-[11px] font-mono text-slate-500 bg-slate-800/40 px-2.5 py-1 rounded-lg border border-slate-800">
-                                ⏸️ No classes logged today
+                                ⏸️ No classes logged on this date
                               </span>
                             )}
                           </div>
