@@ -1425,10 +1425,112 @@ export default function AdminPanel({ onClose }) {
 
               {/* CORE STATS GRID */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <StatCard icon="👥" label="Active Students" value={overview.activeUsers} color="#10B981" />
-                <StatCard icon="✅" label="Present Today" value={todayPresent} color="#00FF66" />
-                <StatCard icon="❌" label="Absent Today" value={todayAbsent} color="#EF4444" />
-                <StatCard icon="📚" label="Total Subjects" value={subjects.length} color="#38BDF8" />
+                <StatCard icon="👥" label="Active Students" value={overview.activeUsers} sub="Registered students" color="#10B981" />
+                <StatCard icon="🎓" label="Students Present Today" value={`${overview.studentsPresentToday ?? 0} / ${overview.activeUsers}`} sub="Attending ≥1 class today" color="#00FF66" />
+                <StatCard icon="✅" label="Classes Attended Today" value={todayPresent} sub="Total class logs present" color="#38BDF8" />
+                <StatCard icon="❌" label="Classes Missed Today" value={todayAbsent} sub="Total class logs absent" color="#EF4444" />
+              </div>
+
+              {/* 📅 TODAY'S STUDENT ATTENDANCE BREAKDOWN */}
+              <div className="modern-card">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 pb-3 border-b border-slate-800">
+                  <div>
+                    <h3 className="text-sm font-bold text-slate-100 flex items-center gap-2">
+                      <span>📅</span> Today's Live Student Attendance Breakdown
+                    </h3>
+                    <p className="text-xs text-slate-400 mt-0.5 font-sans">
+                      Clear view of which student attended which class today vs missed.
+                    </p>
+                  </div>
+                  <div className="text-[11px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 px-2.5 py-1 rounded-lg self-start sm:self-auto">
+                    {new Date().toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
+                  </div>
+                </div>
+
+                {!overview.todayStudentBreakdown || overview.todayStudentBreakdown.length === 0 ? (
+                  <div className="text-xs text-slate-500 py-8 text-center font-mono">
+                    No active student attendance logged for today yet.
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {overview.todayStudentBreakdown.map((stu) => {
+                      const hasClasses = stu.classes && stu.classes.length > 0;
+                      return (
+                        <div
+                          key={stu.id}
+                          className="p-3.5 rounded-xl border border-slate-800/80 bg-slate-900/40 hover:bg-slate-900/80 transition-colors flex flex-col md:flex-row md:items-center justify-between gap-3"
+                        >
+                          {/* Student info */}
+                          <div className="flex items-center gap-3 shrink-0 min-w-[200px]">
+                            <div className="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-xs text-emerald-400 shrink-0">
+                              {stu.name[0]?.toUpperCase()}
+                            </div>
+                            <div>
+                              <div className="text-xs font-bold text-slate-200 flex items-center gap-2">
+                                <span>{stu.name}</span>
+                                <span className="text-[10px] font-mono bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded border border-slate-700">
+                                  {stu.batch}
+                                </span>
+                              </div>
+                              <div className="text-[10px] text-slate-500 font-mono mt-0.5">
+                                {stu.telegram_username ? `@${stu.telegram_username}` : "Telegram unconnected"}
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Class list badges */}
+                          <div className="flex-1 flex flex-wrap items-center gap-2">
+                            {hasClasses ? (
+                              stu.classes.map((cls, cIdx) => {
+                                const isPresent = cls.status === "present";
+                                return (
+                                  <span
+                                    key={cIdx}
+                                    className={`inline-flex items-center gap-1.5 text-[11px] font-mono font-bold px-2.5 py-1 rounded-lg border ${
+                                      isPresent
+                                        ? "bg-emerald-950/50 text-emerald-300 border-emerald-500/40"
+                                        : "bg-rose-950/50 text-rose-300 border-rose-500/40"
+                                    }`}
+                                  >
+                                    <span>{isPresent ? "✅" : "❌"}</span>
+                                    <span>{cls.subject_name}</span>
+                                    {cls.start_time && (
+                                      <span className="opacity-75 font-normal text-[10px]">
+                                        ({cls.start_time})
+                                      </span>
+                                    )}
+                                  </span>
+                                );
+                              })
+                            ) : (
+                              <span className="text-[11px] font-mono text-slate-500 bg-slate-800/40 px-2.5 py-1 rounded-lg border border-slate-800">
+                                ⏸️ No classes logged today
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Class summary counts */}
+                          <div className="shrink-0 font-mono text-xs text-right flex items-center gap-2 self-end md:self-auto">
+                            {hasClasses ? (
+                              <>
+                                <span className="text-emerald-400 font-bold bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-500/20">
+                                  {stu.presentCount} Attended
+                                </span>
+                                {stu.absentCount > 0 && (
+                                  <span className="text-rose-400 font-bold bg-rose-950/40 px-2 py-0.5 rounded border border-rose-500/20">
+                                    {stu.absentCount} Missed
+                                  </span>
+                                )}
+                              </>
+                            ) : (
+                              <span className="text-slate-500 text-[11px]">0/0 logged</span>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             </div>
           )}
