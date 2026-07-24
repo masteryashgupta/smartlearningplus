@@ -79,14 +79,13 @@ if (process.env.FRONTEND_URL) {
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (like mobile apps or curl)
+      // Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) return callback(null, true);
 
-      if (
-        !process.env.FRONTEND_URL ||
-        allowedOrigins.includes(origin) ||
-        allowedOrigins.includes("*")
-      ) {
+      // Always check against the explicit allowlist — never open-wildcard.
+      // allowedOrigins is pre-seeded with hardcoded production URLs so it
+      // remains safe even if FRONTEND_URL is missing from the environment.
+      if (allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS"));
