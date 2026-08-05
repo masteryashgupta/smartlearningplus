@@ -17,6 +17,7 @@ export default function StudentDashboard() {
   const [stats, setStats] = useState(null);
   const [heatmap, setHeatmap] = useState([]);
   const [week, setWeek] = useState({});
+  const [subjects, setSubjects] = useState([]);
   const [leaderboard, setLeaderboard] = useState([]);
   const [profile, setProfile] = useState(null);
   const [loadingProfile, setLoadingProfile] = useState(false);
@@ -24,7 +25,7 @@ export default function StudentDashboard() {
   const refreshData = () => {
     api.get("/attendance/stats").then((r) => setStats(r.data));
     api.get("/attendance/heatmap").then((r) => setHeatmap(r.data));
-    api.get("/timetable").then((r) => setWeek(r.data.week));
+    api.get("/timetable").then((r) => { setWeek(r.data.week); setSubjects(r.data.subjects || []); });
     api.get("/attendance/leaderboard").then((r) => setLeaderboard(r.data));
   };
 
@@ -187,7 +188,7 @@ export default function StudentDashboard() {
               </div>
             )}
 
-            <DayEditor onAttendanceChange={refreshData} />
+            <DayEditor onAttendanceChange={refreshData} subjects={subjects} />
             <Heatmap data={heatmap} />
           </>
         )}

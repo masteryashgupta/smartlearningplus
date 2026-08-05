@@ -1071,7 +1071,7 @@ const handleContribSubmit = async (e) => {
               <div className={`flex-col gap-6 ${showMobileAttendance ? 'flex animate-fade-in' : 'hidden md:flex'}`}>
                 {/* TIMETABLE TRACKER */}
                 <div className="card p-5 bg-white border border-line rounded-2xl shadow-soft">
-                  <DayEditor onAttendanceChange={refreshData} />
+                  <DayEditor onAttendanceChange={refreshData} subjects={subjects} />
                 </div>
 
                 {/* SUBJECT BREAKDOWN */}
