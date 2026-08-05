@@ -106,4 +106,66 @@ router.get("/users/:id/stats", requireAuth("student"), async (req, res) => {
   }
 });
 
+// ── User Extra Slots ─────────────────────────────────────────────────────────
+// Students can add their own one-off classes/labs for a specific date.
+// These are personal only — no other student sees them.
+
+// Create a new extra slot
+router.post("/extra", requireAuth("student"), async (req, res) => {
+  const { date, subject_id, type, slot_label, batch } = req.body;
+  if (!date || !subject_id || !type || !slot_label) {
+    return res.status(400).json({ error: "date, subject_id, type and slot_label are required" });
+  }
+  if (!["class", "lab"].includes(type)) {
+    return res.status(400).json({ error: "type must be 'class' or 'lab'" });
+  }
+  if (type === "lab" && !["G1", "G2"].includes(batch)) {
+    return res.status(400).json({ error: "batch (G1 or G2) is required for labs" });
+  }
+
+  const { rows } = await q(
+    `insert into user_extra_slots (user_id, date, subject_id, type, slot_label, batch, status)
+     values ($1,$2,$3,$4,$5,$6,'present') returning *`,
+    [req.auth.id, date, subject_id, type, slot_label, type === "lab" ? batch : null]
+  );
+  res.json(rows[0]);
+});
+
+// List extra slots for the logged-in user on a given date
+router.get("/extra/:date", requireAuth("student"), async (req, res) => {
+  const { rows } = await q(
+    `select ues.*, s.name as subject_name, s.code as subject_code, s.type as subject_type, s.color
+     from user_extra_slots ues
+     left join subjects s on s.id = ues.subject_id
+     where ues.user_id = $1 and ues.date = $2
+     order by ues.created_at asc`,
+    [req.auth.id, req.params.date]
+  );
+  res.json(rows);
+});
+
+// Update the status of an extra slot
+router.patch("/extra/:id", requireAuth("student"), async (req, res) => {
+  const { status } = req.body;
+  if (!["present", "absent", "cancelled"].includes(status)) {
+    return res.status(400).json({ error: "Invalid status" });
+  }
+  const { rows } = await q(
+    `update user_extra_slots set status = $1 where id = $2 and user_id = $3 returning *`,
+    [status, req.params.id, req.auth.id]
+  );
+  if (rows.length === 0) return res.status(404).json({ error: "Not found" });
+  res.json(rows[0]);
+});
+
+// Delete an extra slot
+router.delete("/extra/:id", requireAuth("student"), async (req, res) => {
+  const { rowCount } = await q(
+    `delete from user_extra_slots where id = $1 and user_id = $2`,
+    [req.params.id, req.auth.id]
+  );
+  if (rowCount === 0) return res.status(404).json({ error: "Not found" });
+  res.json({ ok: true });
+});
+
 export default router;
