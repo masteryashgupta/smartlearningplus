@@ -1477,19 +1477,19 @@ export default function AdminPanel({ onClose }) {
               </div>
 
               {/* 🗓️ DATE SELECTOR BAR */}
-              <div className="modern-card p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-emerald-500/20 bg-slate-950/60">
+              <div className="modern-card p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-indigo-200 bg-white">
                 <div className="flex items-center gap-3">
                   <span className="text-xl">🗓️</span>
                   <div>
-                    <div className="text-xs font-bold text-slate-100 flex items-center gap-2">
+                    <div className="text-xs font-bold text-slate-800 flex items-center gap-2">
                       <span>Select Date for Breakdown</span>
                       {overviewLoading && (
-                        <span className="text-[10px] text-emerald-400 font-mono animate-pulse">
+                        <span className="text-[10px] text-indigo-600 font-mono animate-pulse">
                           Fetching date records…
                         </span>
                       )}
                     </div>
-                    <div className="text-[11px] text-slate-400 mt-0.5 font-sans">
+                    <div className="text-[11px] text-slate-500 mt-0.5 font-sans">
                       Viewing attendance stats for {new Date(overviewDate + "T00:00:00").toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric", year: "numeric" })}
                     </div>
                   </div>
@@ -1503,8 +1503,8 @@ export default function AdminPanel({ onClose }) {
                     }}
                     className={`px-3 py-1.5 rounded-lg font-mono text-xs border transition-colors ${
                       overviewDate === new Date().toISOString().slice(0, 10)
-                        ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/50 font-bold"
-                        : "bg-slate-900 text-slate-400 border-slate-800 hover:text-slate-200"
+                        ? "bg-indigo-100 text-indigo-700 border-indigo-300 font-bold"
+                        : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
                     }`}
                   >
                     Today
@@ -1518,8 +1518,8 @@ export default function AdminPanel({ onClose }) {
                     }}
                     className={`px-3 py-1.5 rounded-lg font-mono text-xs border transition-colors ${
                       overviewDate === (() => { const y = new Date(); y.setDate(y.getDate() - 1); return y.toISOString().slice(0, 10); })()
-                        ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/50 font-bold"
-                        : "bg-slate-900 text-slate-400 border-slate-800 hover:text-slate-200"
+                        ? "bg-indigo-100 text-indigo-700 border-indigo-300 font-bold"
+                        : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
                     }`}
                   >
                     Yesterday
@@ -1530,7 +1530,7 @@ export default function AdminPanel({ onClose }) {
                     value={overviewDate}
                     onChange={(e) => setOverviewDate(e.target.value)}
                     max={new Date().toISOString().slice(0, 10)}
-                    className="bg-slate-900 border border-slate-700 text-emerald-400 font-mono text-xs px-3 py-1.5 rounded-lg outline-none focus:border-emerald-500 cursor-pointer shadow-inner"
+                    className="bg-white border border-slate-300 text-indigo-600 font-mono text-xs px-3 py-1.5 rounded-lg outline-none focus:border-indigo-500 cursor-pointer shadow-sm"
                   />
                 </div>
               </div>
@@ -1538,29 +1538,29 @@ export default function AdminPanel({ onClose }) {
               {/* CORE STATS GRID */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <StatCard icon="👥" label="Active Students" value={overview.activeUsers} sub="Registered students" color="#10B981" />
-                <StatCard icon="🎓" label="Students Present" value={`${overview.studentsPresentToday ?? 0} / ${overview.activeUsers}`} sub={`Attending on ${overviewDate}`} color="#00FF66" />
-                <StatCard icon="✅" label="Classes Attended" value={todayPresent} sub={`Total present on ${overviewDate}`} color="#38BDF8" />
-                <StatCard icon="❌" label="Classes Missed" value={todayAbsent} sub={`Total absent on ${overviewDate}`} color="#EF4444" />
+                <StatCard icon="🎓" label="Students Present" value={`${overview.studentsPresentToday ?? 0} / ${overview.activeUsers}`} sub={`Attending on ${overviewDate}`} color="#059669" />
+                <StatCard icon="✅" label="Classes Attended" value={todayPresent} sub={`Total present on ${overviewDate}`} color="#0284c7" />
+                <StatCard icon="❌" label="Classes Missed" value={todayAbsent} sub={`Total absent on ${overviewDate}`} color="#DC2626" />
               </div>
 
               {/* 📅 DAILY STUDENT ATTENDANCE BREAKDOWN */}
               <div className="modern-card">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 pb-3 border-b border-slate-800">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 pb-3 border-b border-slate-200">
                   <div>
-                    <h3 className="text-sm font-bold text-slate-100 flex items-center gap-2">
+                    <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2">
                       <span>📅</span> Student Attendance Breakdown
                     </h3>
-                    <p className="text-xs text-slate-400 mt-0.5 font-sans">
+                    <p className="text-xs text-slate-500 mt-0.5 font-sans">
                       Clear view of which student attended which class vs missed on {overviewDate}.
                     </p>
                   </div>
-                  <div className="text-[11px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 px-2.5 py-1 rounded-lg self-start sm:self-auto">
+                  <div className="text-[11px] font-mono text-indigo-700 bg-indigo-50 border border-indigo-200 px-2.5 py-1 rounded-lg self-start sm:self-auto font-bold">
                     {new Date(overviewDate + "T00:00:00").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: "numeric" })}
                   </div>
                 </div>
 
                 {!overview.todayStudentBreakdown || overview.todayStudentBreakdown.length === 0 ? (
-                  <div className="text-xs text-slate-500 py-8 text-center font-mono">
+                  <div className="text-xs text-slate-400 py-8 text-center font-mono">
                     No active student attendance logged for {overviewDate}.
                   </div>
                 ) : (
@@ -1570,17 +1570,17 @@ export default function AdminPanel({ onClose }) {
                       return (
                         <div
                           key={stu.id}
-                          className="p-3.5 rounded-xl border border-slate-800/80 bg-slate-900/40 hover:bg-slate-900/80 transition-colors flex flex-col md:flex-row md:items-center justify-between gap-3"
+                          className="p-3.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 transition-colors flex flex-col md:flex-row md:items-center justify-between gap-3"
                         >
                           {/* Student info */}
                           <div className="flex items-center gap-3 shrink-0 min-w-[200px]">
-                            <div className="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-xs text-emerald-400 shrink-0">
+                            <div className="w-8 h-8 rounded-full bg-indigo-100 border border-indigo-200 flex items-center justify-center font-bold text-xs text-indigo-700 shrink-0">
                               {stu.name[0]?.toUpperCase()}
                             </div>
                             <div>
-                              <div className="text-xs font-bold text-slate-200 flex items-center gap-2">
+                              <div className="text-xs font-bold text-slate-800 flex items-center gap-2">
                                 <span>{stu.name}</span>
-                                <span className="text-[10px] font-mono bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded border border-slate-700">
+                                <span className="text-[10px] font-mono bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded border border-slate-300">
                                   {stu.batch}
                                 </span>
                               </div>
@@ -1600,8 +1600,8 @@ export default function AdminPanel({ onClose }) {
                                     key={cIdx}
                                     className={`inline-flex items-center gap-1.5 text-[11px] font-mono font-bold px-2.5 py-1 rounded-lg border ${
                                       isPresent
-                                        ? "bg-emerald-950/50 text-emerald-300 border-emerald-500/40"
-                                        : "bg-rose-950/50 text-rose-300 border-rose-500/40"
+                                        ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                        : "bg-rose-50 text-rose-700 border-rose-200"
                                     }`}
                                   >
                                     <span>{isPresent ? "✅" : "❌"}</span>
@@ -1615,7 +1615,7 @@ export default function AdminPanel({ onClose }) {
                                 );
                               })
                             ) : (
-                              <span className="text-[11px] font-mono text-slate-500 bg-slate-800/40 px-2.5 py-1 rounded-lg border border-slate-800">
+                              <span className="text-[11px] font-mono text-slate-600 bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-200">
                                 ⏸️ No classes logged on this date
                               </span>
                             )}
