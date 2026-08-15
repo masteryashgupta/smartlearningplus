@@ -60,6 +60,7 @@ export default function Home() {
   const [showMobileLockedPreview, setShowMobileLockedPreview] = useState(false);
   const [showMobileWelcome, setShowMobileWelcome] = useState(false);
   const [showMobileAttendance, setShowMobileAttendance] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
 // Contribution Form States
 const [contribTab, setContribTab] = useState("upload");
@@ -865,7 +866,18 @@ const handleContribSubmit = async (e) => {
             Smart Learning
             <span style={{ color: "var(--accent)" }}>+</span>
           </div>
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-3">
+            {/* Mobile Hamburger Button */}
+            <button
+              onClick={() => setMobileNavOpen((v) => !v)}
+              className="sm:hidden flex flex-col gap-1 p-2 rounded-lg bg-surface border border-border hover:bg-paper transition-colors cursor-pointer"
+              aria-label="Toggle Menu"
+            >
+              <span className={`block h-0.5 w-5 bg-ink transition-transform origin-center ${mobileNavOpen ? "rotate-45 translate-y-1.5" : ""}`} />
+              <span className={`block h-0.5 w-5 bg-ink transition-opacity ${mobileNavOpen ? "opacity-0" : ""}`} />
+              <span className={`block h-0.5 w-5 bg-ink transition-transform origin-center ${mobileNavOpen ? "-rotate-45 -translate-y-1.5" : ""}`} />
+            </button>
+
             {session && session.role === "student" ? (
               <div className="flex items-center gap-4">
                 <div className="sl-nav-links flex items-center gap-6">
@@ -882,7 +894,7 @@ const handleContribSubmit = async (e) => {
                     </button>
                   )}
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="hidden sm:flex items-center gap-2">
                   <span className="text-xs text-muted font-mono bg-paper border border-line/60 rounded-lg px-2.5 py-1">{profile?.name || session?.name}</span>
                   <button
                     onClick={signOut}
@@ -929,6 +941,91 @@ const handleContribSubmit = async (e) => {
             )}
           </div>
         </nav>
+
+        {/* MOBILE MENU DROPDOWN */}
+        {mobileNavOpen && (
+          <div className="sm:hidden mb-4 p-4 rounded-2xl bg-white border border-slate-200 shadow-xl flex flex-col gap-3 animate-fade-in z-50 relative">
+            {session && session.role === "student" ? (
+              <>
+                <div className="pb-2 border-b border-slate-100 flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-800 font-mono">👤 {profile?.name || session?.name}</span>
+                  <button
+                    onClick={signOut}
+                    className="px-2.5 py-1 rounded-lg bg-rose-50 text-rose-600 border border-rose-200 text-xs font-bold"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+                <a
+                  href="#attendance-section"
+                  onClick={(e) => { e.preventDefault(); setMobileNavOpen(false); document.getElementById('attendance-section')?.scrollIntoView({ behavior: 'smooth' }); }}
+                  className="px-3 py-2 rounded-xl bg-slate-50 text-slate-700 font-semibold text-sm hover:bg-indigo-50 hover:text-indigo-600 flex items-center gap-2"
+                >
+                  <span>📊</span> Attendance
+                </a>
+                <a
+                  href="#subjects"
+                  onClick={(e) => { e.preventDefault(); setMobileNavOpen(false); document.getElementById('subjects')?.scrollIntoView({ behavior: 'smooth' }); }}
+                  className="px-3 py-2 rounded-xl bg-slate-50 text-slate-700 font-semibold text-sm hover:bg-indigo-50 hover:text-indigo-600 flex items-center gap-2"
+                >
+                  <span>📚</span> Subjects
+                </a>
+                <a
+                  href="#downloads"
+                  onClick={(e) => { e.preventDefault(); setMobileNavOpen(false); document.getElementById('downloads')?.scrollIntoView({ behavior: 'smooth' }); }}
+                  className="px-3 py-2 rounded-xl bg-slate-50 text-slate-700 font-semibold text-sm hover:bg-indigo-50 hover:text-indigo-600 flex items-center gap-2"
+                >
+                  <span>📁</span> Downloads
+                </a>
+                <Link
+                  to="/tools"
+                  onClick={() => setMobileNavOpen(false)}
+                  className="px-3 py-2 rounded-xl bg-indigo-50 text-indigo-600 font-bold text-sm flex items-center gap-2"
+                >
+                  <span>🧰</span> Tools &amp; Utilities
+                </Link>
+                {profile?.is_moderator && (
+                  <button
+                    onClick={() => { setMobileNavOpen(false); setViewModeratorPanel(true); }}
+                    className="px-3 py-2 rounded-xl bg-purple-50 text-purple-700 font-bold text-sm flex items-center gap-2 text-left"
+                  >
+                    <span>🛡️</span> Moderator Panel
+                  </button>
+                )}
+              </>
+            ) : (
+              <>
+                <a
+                  href="#subjects"
+                  onClick={(e) => { e.preventDefault(); setMobileNavOpen(false); document.getElementById('subjects')?.scrollIntoView({ behavior: 'smooth' }); }}
+                  className="px-3 py-2 rounded-xl bg-slate-50 text-slate-700 font-semibold text-sm hover:bg-indigo-50 hover:text-indigo-600 flex items-center gap-2"
+                >
+                  <span>📚</span> Subjects
+                </a>
+                <a
+                  href="#downloads"
+                  onClick={(e) => { e.preventDefault(); setMobileNavOpen(false); document.getElementById('downloads')?.scrollIntoView({ behavior: 'smooth' }); }}
+                  className="px-3 py-2 rounded-xl bg-slate-50 text-slate-700 font-semibold text-sm hover:bg-indigo-50 hover:text-indigo-600 flex items-center gap-2"
+                >
+                  <span>📁</span> Downloads
+                </a>
+                <Link
+                  to="/tools"
+                  onClick={() => setMobileNavOpen(false)}
+                  className="px-3 py-2 rounded-xl bg-indigo-50 text-indigo-600 font-bold text-sm flex items-center gap-2"
+                >
+                  <span>🧰</span> Tools &amp; Utilities
+                </Link>
+                <button
+                  onClick={() => { setMobileNavOpen(false); setShowSubscribeModal(true); setSubscribeEmail(""); setSubscribeResult(null); }}
+                  className="px-3 py-2 rounded-xl bg-amber-50 text-amber-700 font-bold text-sm flex items-center gap-2 text-left"
+                >
+                  <span>🔔</span> Get Updates
+                </button>
+              </>
+            )}
+          </div>
+        )}
 
         {/* AI DISCLAIMER PILL */}
         <div className="flex justify-center mt-2 mb-4">
