@@ -48,7 +48,7 @@ export default function Login({ compact = false, adminOnly = false }) {
       const { data } = await api.post("/auth/student/exchange", { token });
       setSession(data.token, "student", data.user.name);
       localStorage.setItem("is_moderator", data.user.is_moderator ? "true" : "false");
-      window.location.href = "/index.html#/";
+      window.location.href = "/";
       window.location.reload();
     } catch (e) {
       setError(e.response?.data?.error || "Link expired. Get a new one via /dashboard in Telegram.");
@@ -65,7 +65,7 @@ export default function Login({ compact = false, adminOnly = false }) {
       const { data } = await api.post("/auth/student/login", { email: studentEmail, password: studentPassword });
       setSession(data.token, "student", data.user.name);
       localStorage.setItem("is_moderator", data.user.is_moderator ? "true" : "false");
-      window.location.href = "/index.html#/";
+      window.location.href = "/";
       window.location.reload();
     } catch (e) {
       setError(e.response?.data?.error || "Login failed");
@@ -103,7 +103,7 @@ export default function Login({ compact = false, adminOnly = false }) {
     try {
       const { data } = await api.post("/auth/admin/login", { email, password });
       setSession(data.token, "admin", data.name);
-      window.location.href = "/index.html#/";
+      window.location.href = "/";
       window.location.reload();
     } catch (e) {
       setError(e.response?.data?.error || "Login failed");

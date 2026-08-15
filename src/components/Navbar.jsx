@@ -10,7 +10,7 @@ export default function Navbar({ tabs = [], active, onTab, userName }) {
 
   function signOut() {
     clearSession();
-    window.location.href = "/index.html#/login";
+    window.location.href = "/login";
     window.location.reload();
   }
 

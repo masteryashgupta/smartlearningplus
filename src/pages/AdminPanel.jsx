@@ -722,7 +722,7 @@ export default function AdminPanel({ onClose }) {
 
   const handleSignOut = () => {
     localStorage.clear();
-    window.location.href = "/index.html#/login";
+    window.location.href = "/login";
     window.location.reload();
   };
 
