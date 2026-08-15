@@ -22,21 +22,64 @@ export default function PastePage() {
   const [error, setError] = useState(null);
   const [copied, setCopied] = useState(false);
   const [expiry, setExpiry] = useState("permanent");
+  
+  // Custom link states
+  const [customSlug, setCustomSlug] = useState("");
+  const [slugStatus, setSlugStatus] = useState(null); // null | { checking: boolean, ok?: boolean, msg?: string }
+
   const textareaRef = useRef(null);
 
   const charCount = content.length;
   const charPercent = Math.min((charCount / MAX_CHARS) * 100, 100);
+
+  // Live custom slug availability checker (debounced)
+  useEffect(() => {
+    const raw = customSlug.trim();
+    if (!raw) {
+      setSlugStatus(null);
+      return;
+    }
+    const clean = raw.toLowerCase().replace(/[^a-z0-9-_]/g, "");
+    if (clean.length < 3) {
+      setSlugStatus({ checking: false, ok: false, msg: "Min. 3 characters" });
+      return;
+    }
+    
+    setSlugStatus({ checking: true });
+    const timer = setTimeout(async () => {
+      try {
+        const { data } = await api.get(`/paste/check-slug/${encodeURIComponent(clean)}`);
+        if (data.available) {
+          setSlugStatus({ checking: false, ok: true, msg: "✓ Link available" });
+        } else {
+          setSlugStatus({ checking: false, ok: false, msg: data.error || "Link taken" });
+        }
+      } catch {
+        setSlugStatus({ checking: false, ok: false, msg: "Error checking link" });
+      }
+    }, 400);
+
+    return () => clearTimeout(timer);
+  }, [customSlug]);
 
   const handleSave = async () => {
     if (!content.trim()) {
       setError("Please paste or type some text before saving.");
       return;
     }
+    if (slugStatus && !slugStatus.ok && !slugStatus.checking) {
+      setError("Please fix custom link error before saving.");
+      return;
+    }
     setSaving(true);
     setError(null);
     setResult(null);
     try {
-      const { data } = await api.post("/paste", { content, expiry });
+      const payload = { content, expiry };
+      if (customSlug.trim()) {
+        payload.custom_slug = customSlug.trim();
+      }
+      const { data } = await api.post("/paste", payload);
       setResult(data);
     } catch (err) {
       setError(
@@ -362,6 +405,55 @@ export default function PastePage() {
           cursor: pointer;
           padding: 0;
         }
+
+        /* Custom link input styling */
+        .paste-custom-link-wrapper {
+          display: flex;
+          align-items: center;
+          background: #ffffff;
+          border: 1px solid #cbd5e1;
+          border-radius: 10px;
+          padding: 4px 10px;
+          font-size: 12px;
+          font-family: 'JetBrains Mono', monospace;
+          transition: all 0.2s ease;
+        }
+
+        .paste-custom-link-wrapper:focus-within {
+          border-color: #6366f1;
+          box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
+        }
+
+        .paste-custom-link-prefix {
+          color: #94a3b8;
+          font-weight: 500;
+          user-select: none;
+        }
+
+        .paste-custom-link-input {
+          border: none;
+          outline: none;
+          background: transparent;
+          font-family: inherit;
+          font-size: 12px;
+          font-weight: 600;
+          color: #4f46e5;
+          width: 140px;
+        }
+
+        .paste-custom-link-input::placeholder {
+          color: #cbd5e1;
+          font-weight: 400;
+        }
+
+        .paste-custom-status {
+          font-size: 11px;
+          font-weight: 600;
+          margin-left: 4px;
+        }
+        .paste-custom-status.ok { color: #16a34a; }
+        .paste-custom-status.err { color: #dc2626; }
+        .paste-custom-status.loading { color: #6366f1; }
 
         .paste-footer-left svg {
           opacity: 0.6;
@@ -717,6 +809,24 @@ export default function PastePage() {
                   Shareable link · Read-only for viewers
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+                  {/* Custom link input */}
+                  <div className="paste-custom-link-wrapper" title="Optional: Create your own custom link name">
+                    <span className="paste-custom-link-prefix">smartlearningplus.me/</span>
+                    <input
+                      type="text"
+                      className="paste-custom-link-input"
+                      placeholder="custom-link (opt)"
+                      value={customSlug}
+                      onChange={(e) => setCustomSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-_]/g, ""))}
+                      maxLength={50}
+                    />
+                    {slugStatus && (
+                      <span className={`paste-custom-status ${slugStatus.checking ? "loading" : slugStatus.ok ? "ok" : "err"}`}>
+                        {slugStatus.checking ? "⏳" : slugStatus.msg}
+                      </span>
+                    )}
+                  </div>
+
                   {/* Expiry selector */}
                   <div className="paste-expiry-select">
                     <span>⏱</span>
