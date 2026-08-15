@@ -413,10 +413,12 @@ export default function PastePage() {
           background: #ffffff;
           border: 1px solid #cbd5e1;
           border-radius: 10px;
-          padding: 4px 10px;
+          padding: 6px 10px;
           font-size: 12px;
           font-family: 'JetBrains Mono', monospace;
           transition: all 0.2s ease;
+          max-width: 100%;
+          box-sizing: border-box;
         }
 
         .paste-custom-link-wrapper:focus-within {
@@ -428,6 +430,8 @@ export default function PastePage() {
           color: #94a3b8;
           font-weight: 500;
           user-select: none;
+          white-space: nowrap;
+          flex-shrink: 0;
         }
 
         .paste-custom-link-input {
@@ -438,7 +442,8 @@ export default function PastePage() {
           font-size: 12px;
           font-weight: 600;
           color: #4f46e5;
-          width: 140px;
+          flex: 1;
+          min-width: 60px;
         }
 
         .paste-custom-link-input::placeholder {
@@ -722,6 +727,14 @@ export default function PastePage() {
           .paste-card-footer {
             flex-direction: column;
             align-items: stretch;
+            gap: 10px;
+          }
+          .paste-custom-link-wrapper {
+            width: 100%;
+          }
+          .paste-expiry-select {
+            width: 100%;
+            justify-content: space-between;
           }
           .paste-save-btn {
             justify-content: center;
