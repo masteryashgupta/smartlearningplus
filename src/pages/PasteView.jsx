@@ -210,26 +210,33 @@ export default function PasteView() {
           align-items: center;
           justify-content: space-between;
           padding: 12px 18px;
-          background: var(--bg-card);
-          border: 1px solid var(--border);
+          background: #ffffff;
+          border: 1px solid #e2e8f0;
           border-radius: 14px;
-          margin-bottom: 16px;
+          margin-bottom: 20px;
           flex-wrap: wrap;
-          gap: 10px;
-          box-shadow: var(--shadow);
+          gap: 12px;
+          box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .view-meta-left {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          flex-wrap: wrap;
         }
 
         .view-meta-slug {
-          display: flex;
+          display: inline-flex;
           align-items: center;
           gap: 7px;
           font-family: 'JetBrains Mono', monospace;
           font-size: 13px;
           font-weight: 600;
-          color: var(--meta-color);
-          background: var(--meta-bg);
-          border: 1px solid var(--meta-border);
-          padding: 4px 12px;
+          color: #4f46e5;
+          background: rgba(99, 102, 241, 0.08);
+          border: 1px solid rgba(99, 102, 241, 0.2);
+          padding: 5px 12px;
           border-radius: 8px;
         }
 
@@ -550,14 +557,14 @@ export default function PasteView() {
         {paste && !loading && (
           <>
             {/* Meta bar */}
-            <div className="view-meta">
+            <div className="view-meta-bar">
               <div className="view-meta-left">
-                <span className="view-slug">
+                <span className="view-meta-slug">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
                     <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
                   </svg>
-                  /p/{paste.slug}
+                  /{paste.slug}
                 </span>
                 <span className="view-meta-pill">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
