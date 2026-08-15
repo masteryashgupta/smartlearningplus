@@ -1,6 +1,7 @@
 import express from "express";
 import rateLimit from "express-rate-limit";
 import { q } from "../db.js";
+import { requireAuth } from "../auth.js";
 
 const router = express.Router();
 
@@ -56,6 +57,21 @@ const NOUNS = [
   "vista", "void", "wake", "wave", "wind", "wisp", "yarrow", "zenith",
 ];
 
+/** Expiry presets → ISO timestamp or null */
+function resolveExpiry(expiryOption) {
+  const now = new Date();
+  switch (expiryOption) {
+    case "2h":  return new Date(now.getTime() + 2 * 60 * 60 * 1000).toISOString();
+    case "6h":  return new Date(now.getTime() + 6 * 60 * 60 * 1000).toISOString();
+    case "12h": return new Date(now.getTime() + 12 * 60 * 60 * 1000).toISOString();
+    case "1d":  return new Date(now.getTime() + 1 * 24 * 60 * 60 * 1000).toISOString();
+    case "3d":  return new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000).toISOString();
+    case "7d":  return new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString();
+    case "30d": return new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString();
+    default:    return null; // permanent
+  }
+}
+
 /**
  * Generate a memorable slug: adjective-noun-number (e.g. "swift-tiger-07")
  */
@@ -69,16 +85,17 @@ function generateSlug() {
 /**
  * POST /api/paste
  * Create a new paste. Returns { slug, url }.
+ * Body: { content: string, expiry?: "2h"|"6h"|"12h"|"1d"|"3d"|"7d"|"30d"|"permanent" }
  */
 router.post("/", pasteLimiter, async (req, res) => {
   try {
-    const { content } = req.body;
+    const { content, expiry = "permanent" } = req.body;
 
     if (!content || typeof content !== "string") {
       return res.status(400).json({ error: "Content is required." });
     }
 
-    const trimmed = content.trimEnd(); // preserve leading spaces/indent, trim only trailing
+    const trimmed = content.trimEnd();
     if (trimmed.length === 0) {
       return res.status(400).json({ error: "Content cannot be empty." });
     }
@@ -88,6 +105,8 @@ router.post("/", pasteLimiter, async (req, res) => {
         error: "Content too large. Maximum is 200,000 characters.",
       });
     }
+
+    const expiresAt = resolveExpiry(expiry);
 
     // Try to find a unique slug (retry up to 10 times on collision)
     let slug = null;
@@ -105,11 +124,11 @@ router.post("/", pasteLimiter, async (req, res) => {
     }
 
     await q(
-      "INSERT INTO pastes (slug, content, char_count) VALUES ($1, $2, $3)",
-      [slug, trimmed, trimmed.length]
+      "INSERT INTO pastes (slug, content, char_count, expires_at) VALUES ($1, $2, $3, $4)",
+      [slug, trimmed, trimmed.length, expiresAt]
     );
 
-    return res.status(201).json({ slug, url: `/p/${slug}` });
+    return res.status(201).json({ slug, url: `/${slug}`, expires_at: expiresAt });
   } catch (err) {
     console.error("❌ POST /api/paste error:", err);
     return res.status(500).json({ error: "Internal server error." });
@@ -124,13 +143,12 @@ router.get("/:slug", async (req, res) => {
   try {
     const { slug } = req.params;
 
-    // Validate slug format to avoid unnecessary DB queries
     if (!/^[a-z]+-[a-z]+-\d{2}$/.test(slug)) {
       return res.status(404).json({ error: "Paste not found." });
     }
 
     const { rows } = await q(
-      "SELECT slug, content, char_count, created_at FROM pastes WHERE slug = $1",
+      "SELECT slug, content, char_count, created_at, expires_at FROM pastes WHERE slug = $1",
       [slug]
     );
 
@@ -138,9 +156,56 @@ router.get("/:slug", async (req, res) => {
       return res.status(404).json({ error: "Paste not found." });
     }
 
-    return res.json(rows[0]);
+    const paste = rows[0];
+
+    // Check expiry
+    if (paste.expires_at && new Date(paste.expires_at) < new Date()) {
+      // Auto-delete expired paste
+      await q("DELETE FROM pastes WHERE slug = $1", [slug]);
+      return res.status(404).json({ error: "This paste has expired and been deleted." });
+    }
+
+    return res.json(paste);
   } catch (err) {
     console.error("❌ GET /api/paste/:slug error:", err);
+    return res.status(500).json({ error: "Internal server error." });
+  }
+});
+
+/**
+ * GET /api/paste  (admin only)
+ * List all pastes for admin management.
+ */
+router.get("/", requireAuth("admin"), async (req, res) => {
+  try {
+    const { rows } = await q(
+      `SELECT slug, char_count, created_at, expires_at,
+              CASE WHEN expires_at IS NOT NULL AND expires_at < NOW() THEN true ELSE false END as is_expired
+       FROM pastes
+       ORDER BY created_at DESC
+       LIMIT 200`
+    );
+    return res.json(rows);
+  } catch (err) {
+    console.error("❌ GET /api/paste (admin list) error:", err);
+    return res.status(500).json({ error: "Internal server error." });
+  }
+});
+
+/**
+ * DELETE /api/paste/:slug  (admin only)
+ * Hard delete a paste by slug.
+ */
+router.delete("/:slug", requireAuth("admin"), async (req, res) => {
+  try {
+    const { slug } = req.params;
+    const { rowCount } = await q("DELETE FROM pastes WHERE slug = $1", [slug]);
+    if (rowCount === 0) {
+      return res.status(404).json({ error: "Paste not found." });
+    }
+    return res.json({ ok: true, message: `Paste '${slug}' deleted.` });
+  } catch (err) {
+    console.error("❌ DELETE /api/paste/:slug error:", err);
     return res.status(500).json({ error: "Internal server error." });
   }
 });
