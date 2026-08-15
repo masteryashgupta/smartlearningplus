@@ -8,6 +8,8 @@ import VerifyEmail from "./pages/VerifyEmail.jsx";
 import Disclaimer from "./pages/Disclaimer.jsx";
 import Terms from "./pages/Terms.jsx";
 import Privacy from "./pages/Privacy.jsx";
+import PastePage from "./pages/PastePage.jsx";
+import PasteView from "./pages/PasteView.jsx";
 import { getSession } from "./api.js";
 
 export default function App() {
@@ -21,6 +23,8 @@ export default function App() {
       <Route path="/disclaimer" element={<Disclaimer />} />
       <Route path="/terms" element={<Terms />} />
       <Route path="/privacy" element={<Privacy />} />
+      <Route path="/paste" element={<PastePage />} />
+      <Route path="/p/:slug" element={<PasteView />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
