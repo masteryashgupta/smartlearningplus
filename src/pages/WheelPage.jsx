@@ -20,21 +20,25 @@ const stopAllSounds = () => {
       osc.stop();
       osc.disconnect();
     } catch {
-      // ignore already stopped oscillators
+      // ignore already stopped or disconnected nodes
     }
   });
   activeOscillators = [];
 };
 
 const getAudioContext = () => {
-  if (!globalAudioCtx) {
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    if (AudioCtx) {
-      globalAudioCtx = new AudioCtx();
+  try {
+    if (!globalAudioCtx || globalAudioCtx.state === "closed") {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (AudioCtx) {
+        globalAudioCtx = new AudioCtx();
+      }
     }
-  }
-  if (globalAudioCtx && globalAudioCtx.state === "suspended") {
-    globalAudioCtx.resume();
+    if (globalAudioCtx && globalAudioCtx.state === "suspended") {
+      globalAudioCtx.resume().catch(() => {});
+    }
+  } catch (err) {
+    console.warn("⚠️ Web Audio API context creation error:", err);
   }
   return globalAudioCtx;
 };
@@ -49,15 +53,15 @@ const playSound = (type) => {
       const gain = ctx.createGain();
       osc.type = "sine";
       osc.frequency.setValueAtTime(700, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(150, ctx.currentTime + 0.025);
-      gain.gain.setValueAtTime(0.25, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.025);
+      osc.frequency.exponentialRampToValueAtTime(150, ctx.currentTime + 0.02);
+      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.02);
       
       osc.connect(gain);
       gain.connect(ctx.destination);
       
       osc.start(ctx.currentTime);
-      osc.stop(ctx.currentTime + 0.025);
+      osc.stop(ctx.currentTime + 0.02);
       
       activeOscillators.push(osc);
       osc.onended = () => {
@@ -67,29 +71,33 @@ const playSound = (type) => {
       stopAllSounds();
       const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
       notes.forEach((freq, idx) => {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = "triangle";
-        const noteStartTime = ctx.currentTime + idx * 0.09;
-        
-        osc.frequency.setValueAtTime(freq, noteStartTime);
-        gain.gain.setValueAtTime(0.35, noteStartTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, noteStartTime + 0.35);
-        
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        
-        osc.start(noteStartTime);
-        osc.stop(noteStartTime + 0.35);
-        
-        activeOscillators.push(osc);
-        osc.onended = () => {
-          activeOscillators = activeOscillators.filter(o => o !== osc);
-        };
+        try {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "triangle";
+          const noteStartTime = ctx.currentTime + idx * 0.09;
+          
+          osc.frequency.setValueAtTime(freq, noteStartTime);
+          gain.gain.setValueAtTime(0.35, noteStartTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, noteStartTime + 0.35);
+          
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          
+          osc.start(noteStartTime);
+          osc.stop(noteStartTime + 0.35);
+          
+          activeOscillators.push(osc);
+          osc.onended = () => {
+            activeOscillators = activeOscillators.filter(o => o !== osc);
+          };
+        } catch (e) {
+          console.warn("⚠️ Win note scheduling error:", e);
+        }
       });
     }
-  } catch {
-    // Ignore audio autoplay restrictions gracefully
+  } catch (err) {
+    console.warn("⚠️ playSound error:", err);
   }
 };
 
@@ -132,11 +140,12 @@ export default function WheelPage() {
   const [simResults, setSimResults] = useState(null);
   const [simulating, setSimulating] = useState(false);
 
-  // Wheel Physics Refs
+  // Wheel Physics & Audio Throttle Refs
   const canvasRef = useRef(null);
   const currentAngleRef = useRef(0);
   const animFrameRef = useRef(null);
   const lastSoundSectorRef = useRef(-1);
+  const lastTickTimeRef = useRef(0);
 
   // Update entries from multiline text
   const handleRawTextChange = (text) => {
@@ -319,25 +328,32 @@ export default function WheelPage() {
 
       drawWheel();
 
-      // Sound tick logic on segment crossing
+      // Sound tick logic on segment crossing (throttled to max 25-30 ticks/sec for large entry counts)
       if (soundEnabled) {
-        // Top pointer is visually located at 270 deg (1.5 * Math.PI)
-        const pointerAngle = (1.5 * Math.PI - (currentAngleRef.current % (2 * Math.PI)) + 4 * Math.PI) % (2 * Math.PI);
-        let accumulatedAngle = 0;
-        let currentSector = 0;
+        try {
+          const pointerAngle = (1.5 * Math.PI - (currentAngleRef.current % (2 * Math.PI)) + 4 * Math.PI) % (2 * Math.PI);
+          let accumulatedAngle = 0;
+          let currentSector = 0;
 
-        for (let i = 0; i < entries.length; i++) {
-          const sliceAngle = ((Number(entries[i].weight) || 1) / totalWeight) * 2 * Math.PI;
-          if (pointerAngle >= accumulatedAngle && pointerAngle < accumulatedAngle + sliceAngle) {
-            currentSector = i;
-            break;
+          for (let i = 0; i < entries.length; i++) {
+            const sliceAngle = ((Number(entries[i].weight) || 1) / totalWeight) * 2 * Math.PI;
+            if (pointerAngle >= accumulatedAngle && pointerAngle < accumulatedAngle + sliceAngle) {
+              currentSector = i;
+              break;
+            }
+            accumulatedAngle += sliceAngle;
           }
-          accumulatedAngle += sliceAngle;
-        }
 
-        if (currentSector !== lastSoundSectorRef.current) {
-          playSound("tick");
-          lastSoundSectorRef.current = currentSector;
+          if (currentSector !== lastSoundSectorRef.current) {
+            const nowTime = performance.now();
+            if (nowTime - lastTickTimeRef.current >= 35) { // min 35ms between ticks
+              playSound("tick");
+              lastTickTimeRef.current = nowTime;
+            }
+            lastSoundSectorRef.current = currentSector;
+          }
+        } catch (audioErr) {
+          console.warn("⚠️ Tick sound error caught:", audioErr);
         }
       }
 
@@ -346,6 +362,7 @@ export default function WheelPage() {
       } else {
         setSpinning(false);
         stopAllSounds();
+        
         // Determine Winning Segment at top pointer (270deg / 1.5 * Math.PI)
         const pointerAngle = (1.5 * Math.PI - (currentAngleRef.current % (2 * Math.PI)) + 4 * Math.PI) % (2 * Math.PI);
         let acc = 0;
@@ -360,7 +377,13 @@ export default function WheelPage() {
         }
         setWinner(selectedWinner);
         setShowWinnerModal(true);
-        if (soundEnabled) playSound("win");
+
+        if (soundEnabled) {
+          setTimeout(() => {
+            stopAllSounds();
+            playSound("win");
+          }, 40);
+        }
       }
     };
 
