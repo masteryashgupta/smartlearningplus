@@ -203,41 +203,39 @@ export default function PasteView() {
         }
 
         /* Meta bar */
-        .view-meta {
+        .view-meta-bar {
           width: 100%;
           max-width: 900px;
           display: flex;
           align-items: center;
           justify-content: space-between;
-          flex-wrap: wrap;
-          gap: 12px;
+          padding: 12px 18px;
+          background: var(--bg-card);
+          border: 1px solid var(--border);
+          border-radius: 14px;
           margin-bottom: 16px;
+          flex-wrap: wrap;
+          gap: 10px;
+          box-shadow: var(--shadow);
         }
 
-        .view-meta-left {
+        .view-meta-slug {
           display: flex;
           align-items: center;
-          gap: 16px;
-          flex-wrap: wrap;
-        }
-
-        .view-slug {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
+          gap: 7px;
           font-family: 'JetBrains Mono', monospace;
-          font-size: 14px;
-          font-weight: 500;
-          color: #818cf8;
-          background: rgba(99, 102, 241, 0.08);
-          border: 1px solid rgba(99, 102, 241, 0.2);
-          padding: 6px 14px;
+          font-size: 13px;
+          font-weight: 600;
+          color: var(--meta-color);
+          background: var(--meta-bg);
+          border: 1px solid var(--meta-border);
+          padding: 4px 12px;
           border-radius: 8px;
         }
 
         .view-meta-pill {
           font-size: 12px;
-          color: #475569;
+          color: var(--text2);
           display: flex;
           align-items: center;
           gap: 5px;
@@ -255,34 +253,32 @@ export default function PasteView() {
           font-weight: 600;
           font-family: 'Inter', sans-serif;
           cursor: pointer;
-          border: 1px solid rgba(255,255,255,0.08);
-          background: rgba(255,255,255,0.03);
-          color: #64748b;
+          border: 1px solid var(--btn-ghost-border);
+          background: var(--btn-ghost-bg);
+          color: var(--text2);
           transition: all 0.2s;
         }
 
         .view-copy-link-btn:hover {
-          background: rgba(255,255,255,0.07);
-          color: #94a3b8;
+          background: #f8fafc;
+          color: var(--text);
         }
 
         .view-copy-link-btn.copied {
           border-color: rgba(16, 185, 129, 0.3);
           background: rgba(16, 185, 129, 0.08);
-          color: #6ee7b7;
+          color: #059669;
         }
 
         /* Content card */
         .view-card {
           width: 100%;
           max-width: 900px;
-          background: rgba(15, 20, 35, 0.8);
-          border: 1px solid rgba(99, 102, 241, 0.12);
+          background: var(--bg-card);
+          border: 1px solid var(--border);
           border-radius: 20px;
           overflow: hidden;
-          box-shadow: 0 0 0 1px rgba(255,255,255,0.03), 0 24px 64px rgba(0, 0, 0, 0.5);
-          backdrop-filter: blur(12px);
-          animation: fadeIn 0.3s ease;
+          box-shadow: var(--shadow);
         }
 
         @keyframes fadeIn {
@@ -359,7 +355,7 @@ export default function PasteView() {
           font-family: 'JetBrains Mono', monospace;
           font-size: 14px;
           line-height: 1.7;
-          color: #cbd5e1;
+          color: var(--code-color);
           white-space: pre;
           overflow-x: auto;
           word-break: normal;
@@ -371,7 +367,7 @@ export default function PasteView() {
           align-items: center;
           justify-content: space-between;
           padding: 14px 24px;
-          border-top: 1px solid rgba(255,255,255,0.05);
+          border-top: 1px solid var(--header-border);
           flex-wrap: wrap;
           gap: 12px;
         }
@@ -382,9 +378,9 @@ export default function PasteView() {
           gap: 6px;
           font-size: 11px;
           font-weight: 600;
-          color: #475569;
-          background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(255,255,255,0.06);
+          color: var(--text-muted);
+          background: #f1f5f9;
+          border: 1px solid #e2e8f0;
           padding: 5px 12px;
           border-radius: 100px;
           text-transform: uppercase;

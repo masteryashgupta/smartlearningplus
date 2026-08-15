@@ -240,7 +240,6 @@ export default function PastePage() {
           border-radius: 20px;
           overflow: hidden;
           box-shadow: var(--shadow);
-          backdrop-filter: blur(12px);
         }
 
         .paste-card-header {
@@ -338,7 +337,6 @@ export default function PastePage() {
           color: var(--footer-left-color);
         }
 
-        /* Expiry selector */
         .paste-expiry-select {
           display: flex;
           align-items: center;
@@ -364,8 +362,6 @@ export default function PastePage() {
           cursor: pointer;
           padding: 0;
         }
-
-
 
         .paste-footer-left svg {
           opacity: 0.6;
@@ -411,14 +407,13 @@ export default function PastePage() {
           background: rgba(239, 68, 68, 0.08);
           border: 1px solid rgba(239, 68, 68, 0.25);
           border-radius: 12px;
-          color: #fca5a5;
+          color: #ef4444;
           font-size: 13px;
           display: flex;
           align-items: center;
           gap: 10px;
         }
 
-        /* ── Success state ── */
         .paste-success {
           width: 100%;
           max-width: 900px;
@@ -430,11 +425,12 @@ export default function PastePage() {
 
         .paste-success-card {
           width: 100%;
-          background: rgba(15, 20, 35, 0.8);
-          border: 1px solid rgba(99, 102, 241, 0.2);
+          background: var(--bg-card);
+          border: 1px solid var(--border);
           border-radius: 20px;
           padding: 40px 32px;
           text-align: center;
+          box-shadow: var(--shadow);
           animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
@@ -446,8 +442,8 @@ export default function PastePage() {
         .paste-success-icon {
           width: 64px;
           height: 64px;
-          background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(139,92,246,0.2));
-          border: 2px solid rgba(99, 102, 241, 0.4);
+          background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(139,92,246,0.1));
+          border: 2px solid rgba(99, 102, 241, 0.2);
           border-radius: 50%;
           display: flex;
           align-items: center;
@@ -465,24 +461,23 @@ export default function PastePage() {
         .paste-success-title {
           font-size: 22px;
           font-weight: 700;
-          color: #e2e8f0;
+          color: var(--text);
           margin: 0 0 8px;
           letter-spacing: -0.02em;
         }
 
         .paste-success-subtitle {
           font-size: 14px;
-          color: #64748b;
+          color: var(--text-muted);
           margin: 0 0 28px;
         }
 
         .paste-link-box {
           display: flex;
           align-items: center;
-          gap: 0;
-          background: rgba(99, 102, 241, 0.06);
-          border: 1px solid rgba(99, 102, 241, 0.25);
-          border-radius: 14px;
+          background: var(--link-box-bg);
+          border: 1px solid var(--link-box-border);
+          border-radius: 12px;
           overflow: hidden;
           max-width: 520px;
           margin: 0 auto 24px;
@@ -494,19 +489,19 @@ export default function PastePage() {
           font-family: 'JetBrains Mono', monospace;
           font-size: 14px;
           font-weight: 500;
-          color: #a5b4fc;
-          text-overflow: ellipsis;
+          color: var(--link-text);
           overflow: hidden;
+          text-overflow: ellipsis;
           white-space: nowrap;
           text-align: left;
         }
 
         .paste-link-copy-btn {
           padding: 14px 18px;
-          background: rgba(99, 102, 241, 0.15);
+          background: var(--link-copy-bg);
           border: none;
-          border-left: 1px solid rgba(99, 102, 241, 0.2);
-          color: #818cf8;
+          border-left: 1px solid var(--link-copy-border);
+          color: var(--link-copy-color);
           cursor: pointer;
           font-size: 13px;
           font-weight: 600;
@@ -519,13 +514,12 @@ export default function PastePage() {
         }
 
         .paste-link-copy-btn:hover {
-          background: rgba(99, 102, 241, 0.25);
-          color: #c7d2fe;
+          background: rgba(99, 102, 241, 0.15);
         }
 
         .paste-link-copy-btn.copied {
-          background: rgba(16, 185, 129, 0.15);
-          color: #6ee7b7;
+          background: rgba(16, 185, 129, 0.1);
+          color: #059669;
           border-left-color: rgba(16, 185, 129, 0.2);
         }
 
@@ -563,14 +557,14 @@ export default function PastePage() {
         }
 
         .paste-action-btn.ghost {
-          background: rgba(255,255,255,0.04);
-          border-color: rgba(255,255,255,0.08);
-          color: #94a3b8;
+          background: var(--bg-card);
+          border-color: var(--header-border);
+          color: var(--text2);
         }
 
         .paste-action-btn.ghost:hover {
-          background: rgba(255,255,255,0.08);
-          color: #cbd5e1;
+          background: #f8fafc;
+          color: var(--text);
         }
 
         .paste-tips {
@@ -583,13 +577,14 @@ export default function PastePage() {
         }
 
         .paste-tip {
-          background: rgba(255,255,255,0.02);
-          border: 1px solid rgba(255,255,255,0.05);
+          background: var(--tip-bg);
+          border: 1px solid var(--tip-border);
           border-radius: 12px;
           padding: 14px 16px;
           display: flex;
           align-items: flex-start;
           gap: 12px;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.02);
         }
 
         .paste-tip-icon {
@@ -600,7 +595,7 @@ export default function PastePage() {
 
         .paste-tip-text {
           font-size: 12px;
-          color: #475569;
+          color: var(--tip-text);
           line-height: 1.5;
         }
 
