@@ -276,13 +276,14 @@ export default function WheelPage() {
 
       // Sound tick logic on segment crossing
       if (soundEnabled) {
-        const normalizedAngle = (2 * Math.PI - (currentAngleRef.current % (2 * Math.PI))) % (2 * Math.PI);
+        // Top pointer is visually located at 270 deg (1.5 * Math.PI)
+        const pointerAngle = (1.5 * Math.PI - (currentAngleRef.current % (2 * Math.PI)) + 4 * Math.PI) % (2 * Math.PI);
         let accumulatedAngle = 0;
         let currentSector = 0;
 
         for (let i = 0; i < entries.length; i++) {
           const sliceAngle = ((Number(entries[i].weight) || 1) / totalWeight) * 2 * Math.PI;
-          if (normalizedAngle >= accumulatedAngle && normalizedAngle < accumulatedAngle + sliceAngle) {
+          if (pointerAngle >= accumulatedAngle && pointerAngle < accumulatedAngle + sliceAngle) {
             currentSector = i;
             break;
           }
@@ -299,13 +300,13 @@ export default function WheelPage() {
         animFrameRef.current = requestAnimationFrame(animate);
       } else {
         setSpinning(false);
-        // Determine Winning Segment at top pointer (270deg / 1.5PI)
-        const finalAngle = (2 * Math.PI - (currentAngleRef.current % (2 * Math.PI))) % (2 * Math.PI);
+        // Determine Winning Segment at top pointer (270deg / 1.5 * Math.PI)
+        const pointerAngle = (1.5 * Math.PI - (currentAngleRef.current % (2 * Math.PI)) + 4 * Math.PI) % (2 * Math.PI);
         let acc = 0;
         let selectedWinner = entries[0];
         for (let i = 0; i < entries.length; i++) {
           const sliceAngle = ((Number(entries[i].weight) || 1) / totalWeight) * 2 * Math.PI;
-          if (finalAngle >= acc && finalAngle < acc + sliceAngle) {
+          if (pointerAngle >= acc && pointerAngle < acc + sliceAngle) {
             selectedWinner = entries[i];
             break;
           }
