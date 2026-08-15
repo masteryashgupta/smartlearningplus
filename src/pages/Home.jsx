@@ -1897,6 +1897,8 @@ const handleContribSubmit = async (e) => {
             <Link to="/disclaimer" className="sl-footer-link" style={{ color: "#2563eb", textDecoration: "none" }}>Disclaimer</Link> |{" "}
             <Link to="/terms" className="sl-footer-link" style={{ color: "#2563eb", textDecoration: "none" }}>Terms of Use</Link> |{" "}
             <Link to="/privacy" className="sl-footer-link" style={{ color: "#2563eb", textDecoration: "none" }}>Privacy Note</Link> |{" "}
+            <Link to="/paste" className="sl-footer-link" style={{ color: "#2563eb", textDecoration: "none" }}>QuickPaste</Link> |{" "}
+            <Link to="/admin" className="sl-footer-link" style={{ color: "#2563eb", textDecoration: "none" }}>Admin Portal</Link> |{" "}
             <a 
               href="#contact" 
               onClick={(e) => {
