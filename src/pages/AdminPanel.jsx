@@ -1084,15 +1084,49 @@ export default function AdminPanel({ onClose }) {
         .admin-dashboard-container label {
           color: #4f46e5 !important;
         }
-        .admin-dashboard-container .text-slate-800,
+        .admin-dashboard-container .text-slate-100,
+        .admin-dashboard-container .text-slate-200,
+        .admin-dashboard-container .text-slate-300,
         .admin-dashboard-container .text-slate-700,
+        .admin-dashboard-container .text-slate-800,
         .admin-dashboard-container .text-slate-900 {
           color: #1e293b !important;
         }
-        .admin-dashboard-container .text-slate-600,
+        .admin-dashboard-container .text-slate-400,
         .admin-dashboard-container .text-slate-500,
-        .admin-dashboard-container .text-slate-400 {
+        .admin-dashboard-container .text-slate-600 {
           color: #64748b !important;
+        }
+        .admin-dashboard-container .text-emerald-400,
+        .admin-dashboard-container .text-emerald-300 {
+          color: #059669 !important;
+        }
+        .admin-dashboard-container .bg-slate-950,
+        .admin-dashboard-container .bg-slate-950\/60,
+        .admin-dashboard-container .bg-slate-900,
+        .admin-dashboard-container .bg-slate-900\/40,
+        .admin-dashboard-container .bg-slate-900\/80,
+        .admin-dashboard-container .bg-slate-800 {
+          background-color: #f8fafc !important;
+          color: #1e293b !important;
+        }
+        .admin-dashboard-container .border-slate-800,
+        .admin-dashboard-container .border-slate-700,
+        .admin-dashboard-container .border-slate-800\/80 {
+          border-color: #e2e8f0 !important;
+        }
+        .admin-dashboard-container .bg-emerald-950\/60 {
+          background-color: #ecfdf5 !important;
+          color: #047857 !important;
+        }
+        .admin-dashboard-container .border-emerald-500\/30,
+        .admin-dashboard-container .border-emerald-500\/20,
+        .admin-dashboard-container .border-emerald-500\/50 {
+          border-color: #a7f3d0 !important;
+        }
+        .admin-dashboard-container .bg-emerald-500\/20 {
+          background-color: #d1fae5 !important;
+          color: #065f46 !important;
         }
         .admin-dashboard-container .bg-slate-50 {
           background-color: #f8fafc !important;
