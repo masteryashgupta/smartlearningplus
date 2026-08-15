@@ -16,6 +16,24 @@ export default function PasteView() {
       try {
         const { data } = await api.get(`/paste/${slug}`);
         setPaste(data);
+        // Auto-copy text to clipboard when opened
+        if (data && data.content) {
+          try {
+            await navigator.clipboard.writeText(data.content);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 3000);
+          } catch {
+            // Fallback for browsers requiring execCommand or user gesture
+            const el = document.createElement("textarea");
+            el.value = data.content;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand("copy");
+            document.body.removeChild(el);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 3000);
+          }
+        }
       } catch (err) {
         if (err.response?.status === 404) {
           setNotFound(true);
