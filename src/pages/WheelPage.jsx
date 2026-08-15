@@ -10,38 +10,82 @@ const PALETTES = {
   ocean: ["#0284c7", "#0369a1", "#075985", "#0c4a6e", "#0e7490", "#155e75", "#164e63", "#0284c7"]
 };
 
-// Web Audio API Sound Synthesizer (No external asset files needed)
+// Persistent Web Audio API Sound Synthesizer with AudioContext reuse and instant stop capability
+let globalAudioCtx = null;
+let activeOscillators = [];
+
+const stopAllSounds = () => {
+  activeOscillators.forEach((osc) => {
+    try {
+      osc.stop();
+      osc.disconnect();
+    } catch {
+      // ignore already stopped oscillators
+    }
+  });
+  activeOscillators = [];
+};
+
+const getAudioContext = () => {
+  if (!globalAudioCtx) {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (AudioCtx) {
+      globalAudioCtx = new AudioCtx();
+    }
+  }
+  if (globalAudioCtx && globalAudioCtx.state === "suspended") {
+    globalAudioCtx.resume();
+  }
+  return globalAudioCtx;
+};
+
 const playSound = (type) => {
   try {
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    if (!AudioCtx) return;
-    const ctx = new AudioCtx();
+    const ctx = getAudioContext();
+    if (!ctx) return;
 
     if (type === "tick") {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = "sine";
-      osc.frequency.setValueAtTime(600, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(120, ctx.currentTime + 0.04);
-      gain.gain.setValueAtTime(0.3, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.04);
+      osc.frequency.setValueAtTime(700, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(150, ctx.currentTime + 0.025);
+      gain.gain.setValueAtTime(0.25, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.025);
+      
       osc.connect(gain);
       gain.connect(ctx.destination);
-      osc.start();
-      osc.stop(ctx.currentTime + 0.04);
+      
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.025);
+      
+      activeOscillators.push(osc);
+      osc.onended = () => {
+        activeOscillators = activeOscillators.filter(o => o !== osc);
+      };
     } else if (type === "win") {
+      stopAllSounds();
       const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
       notes.forEach((freq, idx) => {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = "triangle";
-        osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.1);
-        gain.gain.setValueAtTime(0.4, ctx.currentTime + idx * 0.1);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.1 + 0.4);
+        const noteStartTime = ctx.currentTime + idx * 0.09;
+        
+        osc.frequency.setValueAtTime(freq, noteStartTime);
+        gain.gain.setValueAtTime(0.35, noteStartTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, noteStartTime + 0.35);
+        
         osc.connect(gain);
         gain.connect(ctx.destination);
-        osc.start(ctx.currentTime + idx * 0.1);
-        osc.stop(ctx.currentTime + idx * 0.1 + 0.4);
+        
+        osc.start(noteStartTime);
+        osc.stop(noteStartTime + 0.35);
+        
+        activeOscillators.push(osc);
+        osc.onended = () => {
+          activeOscillators = activeOscillators.filter(o => o !== osc);
+        };
       });
     }
   } catch {
@@ -250,6 +294,7 @@ export default function WheelPage() {
   // Spin Logic
   const handleSpin = () => {
     if (spinning || entries.length === 0 || totalWeight === 0) return;
+    stopAllSounds();
     setSpinning(true);
     setWinner(null);
     setShowWinnerModal(false);
@@ -300,6 +345,7 @@ export default function WheelPage() {
         animFrameRef.current = requestAnimationFrame(animate);
       } else {
         setSpinning(false);
+        stopAllSounds();
         // Determine Winning Segment at top pointer (270deg / 1.5 * Math.PI)
         const pointerAngle = (1.5 * Math.PI - (currentAngleRef.current % (2 * Math.PI)) + 4 * Math.PI) % (2 * Math.PI);
         let acc = 0;
