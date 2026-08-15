@@ -434,6 +434,8 @@ app.get("/", async (req, res) => {
 });
 
 
+import wheelRoutes from "./routes/wheel.js";
+
 app.use("/api/auth", authRoutes);
 app.use("/api/timetable", timetableRoutes);
 app.use("/api/attendance", attendanceRoutes);
@@ -442,6 +444,7 @@ app.use("/api/materials", materialsRoutes);
 app.use("/api/ask", askRouter);
 app.use("/api/announcement", announcementRoutes);
 app.use("/api/paste", pasteRoutes);
+app.use("/api/wheel", wheelRoutes);
 
 async function migrateDatabase() {
   console.log("🔄 Running database migrations...");
