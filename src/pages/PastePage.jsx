@@ -37,7 +37,7 @@ export default function PastePage() {
 
   const handleCopyLink = useCallback(async () => {
     if (!result) return;
-    const fullUrl = `${window.location.origin}/p/${result.slug}`;
+    const fullUrl = `${window.location.origin}/#/p/${result.slug}`;
     try {
       await navigator.clipboard.writeText(fullUrl);
       setCopied(true);
@@ -63,7 +63,7 @@ export default function PastePage() {
     setTimeout(() => textareaRef.current?.focus(), 100);
   };
 
-  const fullLink = result ? `${window.location.origin}/p/${result.slug}` : "";
+  const fullLink = result ? `${window.location.origin}/#/p/${result.slug}` : "";
 
   return (
     <>
@@ -744,7 +744,7 @@ export default function PastePage() {
 
               <div className="paste-action-row">
                 <a
-                  href={`/p/${result.slug}`}
+                  href={`/#/p/${result.slug}`}
                   className="paste-action-btn primary"
                   target="_blank"
                   rel="noopener noreferrer"
