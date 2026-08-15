@@ -571,25 +571,29 @@ export default function PastePage() {
           border: 1px solid var(--link-box-border);
           border-radius: 12px;
           overflow: hidden;
-          max-width: 520px;
+          max-width: 540px;
           margin: 0 auto 24px;
         }
 
         .paste-link-text {
           flex: 1;
-          padding: 14px 18px;
+          padding: 12px 14px;
           font-family: 'JetBrains Mono', monospace;
-          font-size: 14px;
-          font-weight: 500;
+          font-size: 13px;
+          font-weight: 600;
           color: var(--link-text);
-          overflow: hidden;
-          text-overflow: ellipsis;
+          overflow-x: auto;
           white-space: nowrap;
           text-align: left;
+          word-break: break-all;
+          scrollbar-width: none;
+        }
+        .paste-link-text::-webkit-scrollbar {
+          display: none;
         }
 
         .paste-link-copy-btn {
-          padding: 14px 18px;
+          padding: 12px 16px;
           background: var(--link-copy-bg);
           border: none;
           border-left: 1px solid var(--link-copy-border);
@@ -603,6 +607,7 @@ export default function PastePage() {
           gap: 6px;
           transition: all 0.2s;
           white-space: nowrap;
+          flex-shrink: 0;
         }
 
         .paste-link-copy-btn:hover {
@@ -724,6 +729,28 @@ export default function PastePage() {
           }
           .paste-nav {
             margin-bottom: 24px;
+          }
+          .paste-success-card {
+            padding: 28px 16px;
+          }
+          .paste-link-box {
+            flex-direction: column;
+            align-items: stretch;
+            border-radius: 14px;
+          }
+          .paste-link-text {
+            word-break: break-all;
+            white-space: normal;
+            text-align: center;
+            font-size: 12px;
+            padding: 12px 10px;
+          }
+          .paste-link-copy-btn {
+            justify-content: center;
+            border-left: none;
+            border-top: 1px solid var(--link-copy-border);
+            padding: 12px;
+            width: 100%;
           }
         }
       `}</style>
