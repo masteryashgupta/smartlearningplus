@@ -12,12 +12,20 @@ import PastePage from "./pages/PastePage.jsx";
 import PasteView from "./pages/PasteView.jsx";
 import { getSession } from "./api.js";
 
+function AdminRoute() {
+  const session = getSession();
+  if (session && session.role === "admin") {
+    return <AdminPanel />;
+  }
+  return <Login adminOnly={true} />;
+}
+
 export default function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Home />} />
-      <Route path="/admin" element={<Login adminOnly={true} />} />
+      <Route path="/admin" element={<AdminRoute />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/verify-email" element={<VerifyEmail />} />
       <Route path="/disclaimer" element={<Disclaimer />} />
