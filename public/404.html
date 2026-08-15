@@ -9,7 +9,13 @@
       // We save the full intended URL to sessionStorage, then redirect to the root.
       // The root index.html picks it up and restores it via history.replaceState.
       var l = window.location;
-      sessionStorage.setItem('spa_redirect', l.pathname + l.search + l.hash);
+      // If there is already a hash (like /#/admin), convert it to clean path
+      if (l.hash && l.hash.startsWith('#/')) {
+        var cleanPath = l.hash.substring(1); // e.g. /admin
+        sessionStorage.setItem('spa_redirect', cleanPath + l.search);
+      } else {
+        sessionStorage.setItem('spa_redirect', l.pathname + l.search);
+      }
       l.replace(l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + '/');
     </script>
   </head>

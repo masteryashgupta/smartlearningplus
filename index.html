@@ -17,6 +17,10 @@
         if (redirect) {
           sessionStorage.removeItem('spa_redirect');
           window.history.replaceState(null, null, redirect);
+        } else if (window.location.hash && window.location.hash.startsWith('#/')) {
+          // If someone comes via old bookmark /#/admin or /#/paste, convert hash to clean path
+          var cleanPath = window.location.hash.substring(1);
+          window.history.replaceState(null, null, cleanPath + window.location.search);
         }
       })();
     </script>
