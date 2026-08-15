@@ -734,31 +734,18 @@ export default function AdminPanel({ onClose }) {
       {/* SCOPED GLOBAL ADMIN STYLES */}
       <style>{`
         .admin-dashboard-container {
-          --sidebar-bg: #030712;
-          --sidebar-hover: #111827;
-          --sidebar-active: #10B981;
-          --main-bg: #030712;
-          --card-bg: #0B0F19;
-          --primary: #10B981;
-          --primary-hover: #34D399;
-          --border: #1F2937;
-          --input-focus: rgba(16, 185, 129, 0.25);
+          --sidebar-bg: #ffffff;
+          --sidebar-hover: #f1f5f9;
+          --sidebar-active: #4f46e5;
+          --main-bg: #fafaf8;
+          --card-bg: #ffffff;
+          --primary: #4f46e5;
+          --primary-hover: #4338ca;
+          --border: #e2e8f0;
+          --input-focus: rgba(99, 102, 241, 0.2);
           background-color: var(--main-bg);
           width: 100%;
-        }
-
-        /* CRT scanline simulation overlay */
-        .admin-dashboard-container::before {
-          content: " ";
-          display: block;
-          position: fixed;
-          top: 0; left: 0; bottom: 0; right: 0;
-          background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.08) 50%), 
-                      linear-gradient(90deg, rgba(16, 185, 129, 0.015), rgba(16, 185, 129, 0.005), rgba(16, 185, 129, 0.015));
-          z-index: 99999;
-          background-size: 100% 4px, 6px 100%;
-          pointer-events: none;
-          opacity: 0.65;
+          color: #1e293b;
         }
 
         .admin-sidebar {
@@ -808,7 +795,7 @@ export default function AdminPanel({ onClose }) {
           text-align: left;
           background: transparent;
           border: none;
-          color: #94A3B8;
+          color: #64748b;
           cursor: pointer;
         }
 
@@ -819,8 +806,8 @@ export default function AdminPanel({ onClose }) {
 
         .nav-item-btn.active {
           background: var(--sidebar-active);
-          color: #030712;
-          box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+          color: #ffffff;
+          box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
         }
 
         .nav-badge {
@@ -864,21 +851,9 @@ export default function AdminPanel({ onClose }) {
           border: 1px solid var(--border);
           border-radius: 12px;
           padding: 24px;
-          box-shadow: 0 0 15px rgba(16, 185, 129, 0.05);
+          box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
           margin-bottom: 24px;
           position: relative;
-        }
-
-        /* simulated window controls for each card to look like shell console */
-        .modern-card::before {
-          content: "● ● ●";
-          display: block;
-          font-size: 8px;
-          color: #4B5563;
-          letter-spacing: 2px;
-          margin-bottom: 12px;
-          border-bottom: 1px dashed var(--border);
-          padding-bottom: 8px;
         }
 
         .modern-stat-card {
@@ -889,7 +864,7 @@ export default function AdminPanel({ onClose }) {
           display: flex;
           align-items: center;
           gap: 16px;
-          box-shadow: 0 0 15px rgba(16, 185, 129, 0.05);
+          box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
         }
 
         .modern-stat-card .icon-wrapper {
@@ -926,12 +901,12 @@ export default function AdminPanel({ onClose }) {
 
         .modern-input {
           width: 100%;
-          background: #030712;
+          background: #ffffff;
           border: 1px solid var(--border);
           border-radius: 8px;
           padding: 10px 14px;
           font-size: 13px;
-          color: #E2E8F0;
+          color: #1e293b;
           outline: none;
           transition: all 0.15s ease;
           font-family: inherit;
@@ -943,12 +918,12 @@ export default function AdminPanel({ onClose }) {
         }
 
         .modern-select {
-          background: #030712;
+          background: #ffffff;
           border: 1px solid var(--border);
           border-radius: 8px;
           padding: 10px 14px;
           font-size: 13px;
-          color: #E2E8F0;
+          color: #1e293b;
           outline: none;
           cursor: pointer;
           font-family: inherit;
@@ -956,7 +931,7 @@ export default function AdminPanel({ onClose }) {
 
         .modern-btn-primary {
           background: var(--primary);
-          color: #030712;
+          color: #ffffff;
           font-weight: 700;
           font-size: 13px;
           padding: 10px 18px;
@@ -975,8 +950,8 @@ export default function AdminPanel({ onClose }) {
         }
 
         .modern-btn-secondary {
-          background: #111827;
-          color: #E2E8F0;
+          background: #ffffff;
+          color: #334155;
           border: 1px solid var(--border);
           font-weight: 700;
           font-size: 13px;
@@ -987,8 +962,8 @@ export default function AdminPanel({ onClose }) {
         }
 
         .modern-btn-secondary:hover {
-          background: #1F2937;
-          color: #FFFFFF;
+          background: #f8fafc;
+          color: #0f172a;
         }
 
         .modern-btn-danger {
@@ -1097,7 +1072,7 @@ export default function AdminPanel({ onClose }) {
           justify-content: space-between;
         }
 
-        /* Global Tailwind Overrides for Dark & Monospace Aesthetic */
+        /* Tailwind Overrides for Light Theme */
         .admin-dashboard-container h1,
         .admin-dashboard-container h2,
         .admin-dashboard-container h3,
@@ -1105,108 +1080,106 @@ export default function AdminPanel({ onClose }) {
         .admin-dashboard-container h5,
         .admin-dashboard-container h6 {
           color: var(--primary) !important;
-          text-shadow: 0 0 5px rgba(16, 185, 129, 0.4);
         }
         .admin-dashboard-container label {
-          color: #34D399 !important;
+          color: #4f46e5 !important;
         }
         .admin-dashboard-container .text-slate-800,
         .admin-dashboard-container .text-slate-700,
         .admin-dashboard-container .text-slate-900 {
-          color: #E2E8F0 !important;
+          color: #1e293b !important;
         }
         .admin-dashboard-container .text-slate-600,
         .admin-dashboard-container .text-slate-500,
         .admin-dashboard-container .text-slate-400 {
-          color: #94A3B8 !important;
+          color: #64748b !important;
         }
         .admin-dashboard-container .bg-slate-50 {
-          background-color: #0b0f19 !important;
+          background-color: #f8fafc !important;
         }
         .admin-dashboard-container .bg-slate-100 {
-          background-color: #111827 !important;
-          color: #10B981 !important;
+          background-color: #f1f5f9 !important;
+          color: #4f46e5 !important;
         }
         .admin-dashboard-container .bg-white {
-          background-color: #0b0f19 !important;
-          border-color: #1f2937 !important;
+          background-color: #ffffff !important;
+          border-color: #e2e8f0 !important;
         }
         .admin-dashboard-container .border-b {
-          border-bottom-color: #1f2937 !important;
+          border-bottom-color: #e2e8f0 !important;
         }
         .admin-dashboard-container .divide-y > * + * {
-          border-top-color: #1f2937 !important;
+          border-top-color: #e2e8f0 !important;
         }
         .admin-dashboard-container .hover\:bg-slate-50\/50:hover {
-          background-color: #111827 !important;
+          background-color: #f8fafc !important;
         }
         .admin-dashboard-container .bg-indigo-50,
         .admin-dashboard-container .bg-indigo-50\/50 {
-          background-color: rgba(6, 78, 59, 0.2) !important;
-          border-color: rgba(16, 185, 129, 0.3) !important;
+          background-color: rgba(99, 102, 241, 0.08) !important;
+          border-color: rgba(99, 102, 241, 0.2) !important;
         }
         .admin-dashboard-container .text-indigo-900,
         .admin-dashboard-container .text-indigo-700,
         .admin-dashboard-container .text-indigo-600 {
-          color: #34D399 !important;
+          color: #4f46e5 !important;
         }
         .admin-dashboard-container .bg-indigo-100 {
-          background-color: #0b0f19 !important;
+          background-color: #eef2ff !important;
           border: 1px solid var(--primary) !important;
         }
         .admin-dashboard-container .text-indigo-700 {
           color: var(--primary) !important;
         }
         .admin-dashboard-container .bg-slate-55 {
-          background-color: #030712 !important;
+          background-color: #ffffff !important;
         }
         .admin-dashboard-container .hover\:bg-white:hover {
-          background-color: #111827 !important;
-          color: #FFFFFF !important;
+          background-color: #f8fafc !important;
+          color: #0f172a !important;
         }
         .admin-dashboard-container .card {
           background-color: var(--card-bg) !important;
           border-color: var(--border) !important;
-          color: #E2E8F0 !important;
+          color: #1e293b !important;
         }
         .admin-dashboard-container .text-ink {
-          color: #E2E8F0 !important;
+          color: #1e293b !important;
         }
-        .admin-dashboard-container .border-line {
-          border-color: var(--border) !important;
-        }
-
-        /* Announcement Manager Custom Overrides */
+        /* Announcement Manager Overrides */
         .admin-dashboard-container .ann-mgr h2 {
           color: var(--primary) !important;
         }
         .admin-dashboard-container .ann-mgr .subtitle {
-          color: #94A3B8 !important;
+          color: #64748b !important;
         }
         .admin-dashboard-container .ann-mgr .field-label {
-          color: #34D399 !important;
+          color: #4f46e5 !important;
         }
         .admin-dashboard-container .ann-mgr textarea {
-          background-color: #030712 !important;
-          color: #E2E8F0 !important;
+          background-color: #ffffff !important;
+          color: #1e293b !important;
           border-color: var(--border) !important;
         }
         .admin-dashboard-container .ann-mgr .char-count {
-          color: #94a3b8 !important;
+          color: #64748b !important;
         }
         .admin-dashboard-container .ann-mgr .toggle-row,
         .admin-dashboard-container .ann-mgr .setting-group {
-          background: #0b0f19 !important;
+          background: #f8fafc !important;
           border-color: var(--border) !important;
         }
         .admin-dashboard-container .ann-mgr .toggle-row label,
         .admin-dashboard-container .ann-mgr .slider-label,
         .admin-dashboard-container .ann-mgr .setting-title {
-          color: #E2E8F0 !important;
+          color: #1e293b !important;
         }
         .admin-dashboard-container .ann-mgr .preview-box,
         .admin-dashboard-container .ann-mgr .preview-label {
           border-color: var(--border) !important;
+          background: #f8fafc !important;
+          color: #64748b !important;
+        }
           background: #0b0f19 !important;
           color: #94A3B8 !important;
         }
