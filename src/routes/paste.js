@@ -83,13 +83,45 @@ function generateSlug() {
 }
 
 /**
+ * GET /api/paste/check-slug/:slug
+ * Check if a custom slug is available.
+ */
+router.get("/check-slug/:slug", async (req, res) => {
+  try {
+    const rawSlug = req.params.slug?.trim().toLowerCase();
+    
+    // Clean & format custom slug (letters, numbers, hyphens, underscores)
+    const formattedSlug = rawSlug.replace(/[^a-z0-9-_]/g, "");
+
+    if (!formattedSlug || formattedSlug.length < 3 || formattedSlug.length > 50) {
+      return res.json({ available: false, error: "Link must be 3-50 characters (letters, numbers, hyphens)." });
+    }
+
+    const RESERVED_SLUGS = ["admin", "login", "paste", "privacy", "terms", "disclaimer", "api"];
+    if (RESERVED_SLUGS.includes(formattedSlug)) {
+      return res.json({ available: false, error: "This custom link is reserved by the system." });
+    }
+
+    const { rows } = await q("SELECT 1 FROM pastes WHERE LOWER(slug) = $1", [formattedSlug]);
+    if (rows.length > 0) {
+      return res.json({ available: false, error: "This link is already taken. Try another." });
+    }
+
+    return res.json({ available: true, slug: formattedSlug });
+  } catch (err) {
+    console.error("❌ GET /api/paste/check-slug error:", err);
+    return res.status(500).json({ error: "Internal server error." });
+  }
+});
+
+/**
  * POST /api/paste
  * Create a new paste. Returns { slug, url }.
- * Body: { content: string, expiry?: "2h"|"6h"|"12h"|"1d"|"3d"|"7d"|"30d"|"permanent" }
+ * Body: { content: string, expiry?: string, custom_slug?: string }
  */
 router.post("/", pasteLimiter, async (req, res) => {
   try {
-    const { content, expiry = "permanent" } = req.body;
+    const { content, expiry = "permanent", custom_slug } = req.body;
 
     if (!content || typeof content !== "string") {
       return res.status(400).json({ error: "Content is required." });
@@ -108,14 +140,35 @@ router.post("/", pasteLimiter, async (req, res) => {
 
     const expiresAt = resolveExpiry(expiry);
 
-    // Try to find a unique slug (retry up to 10 times on collision)
     let slug = null;
-    for (let attempt = 0; attempt < 10; attempt++) {
-      const candidate = generateSlug();
-      const { rows } = await q("SELECT 1 FROM pastes WHERE slug = $1", [candidate]);
-      if (rows.length === 0) {
-        slug = candidate;
-        break;
+
+    if (custom_slug && typeof custom_slug === "string" && custom_slug.trim()) {
+      const formattedCustom = custom_slug.trim().toLowerCase().replace(/[^a-z0-9-_]/g, "");
+
+      if (formattedCustom.length < 3 || formattedCustom.length > 50) {
+        return res.status(400).json({ error: "Custom link must be between 3 and 50 characters." });
+      }
+
+      const RESERVED_SLUGS = ["admin", "login", "paste", "privacy", "terms", "disclaimer", "api"];
+      if (RESERVED_SLUGS.includes(formattedCustom)) {
+        return res.status(400).json({ error: "This custom link is reserved." });
+      }
+
+      const { rows } = await q("SELECT 1 FROM pastes WHERE LOWER(slug) = $1", [formattedCustom]);
+      if (rows.length > 0) {
+        return res.status(400).json({ error: "Custom link is already taken. Please pick another." });
+      }
+
+      slug = formattedCustom;
+    } else {
+      // Auto-generate random memorable slug
+      for (let attempt = 0; attempt < 10; attempt++) {
+        const candidate = generateSlug();
+        const { rows } = await q("SELECT 1 FROM pastes WHERE slug = $1", [candidate]);
+        if (rows.length === 0) {
+          slug = candidate;
+          break;
+        }
       }
     }
 
@@ -142,14 +195,15 @@ router.post("/", pasteLimiter, async (req, res) => {
 router.get("/:slug", async (req, res) => {
   try {
     const { slug } = req.params;
+    const cleanSlug = slug?.trim().toLowerCase();
 
-    if (!/^[a-z]+-[a-z]+-\d{2}$/.test(slug)) {
+    if (!cleanSlug || cleanSlug.length > 60) {
       return res.status(404).json({ error: "Paste not found." });
     }
 
     const { rows } = await q(
-      "SELECT slug, content, char_count, created_at, expires_at FROM pastes WHERE slug = $1",
-      [slug]
+      "SELECT slug, content, char_count, created_at, expires_at FROM pastes WHERE LOWER(slug) = $1",
+      [cleanSlug]
     );
 
     if (rows.length === 0) {
@@ -161,7 +215,7 @@ router.get("/:slug", async (req, res) => {
     // Check expiry
     if (paste.expires_at && new Date(paste.expires_at) < new Date()) {
       // Auto-delete expired paste
-      await q("DELETE FROM pastes WHERE slug = $1", [slug]);
+      await q("DELETE FROM pastes WHERE LOWER(slug) = $1", [cleanSlug]);
       return res.status(404).json({ error: "This paste has expired and been deleted." });
     }
 
