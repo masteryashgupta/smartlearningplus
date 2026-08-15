@@ -22,15 +22,7 @@ export default function PastePage() {
   const [error, setError] = useState(null);
   const [copied, setCopied] = useState(false);
   const [expiry, setExpiry] = useState("permanent");
-  const [theme, setTheme] = useState(() => localStorage.getItem("paste_theme") || "dark");
   const textareaRef = useRef(null);
-
-  const isDark = theme === "dark";
-
-  useEffect(() => {
-    localStorage.setItem("paste_theme", theme);
-  }, [theme]);
-  const toggleTheme = () => setTheme(t => t === "dark" ? "light" : "dark");
 
   const charCount = content.length;
   const charPercent = Math.min((charCount / MAX_CHARS) * 100, 100);
@@ -125,38 +117,7 @@ export default function PastePage() {
           --shadow: 0 0 0 1px rgba(255,255,255,0.03), 0 24px 64px rgba(0, 0, 0, 0.5);
         }
 
-        .paste-root.light-mode {
-          --bg: #f1f5fb;
-          --bg-card: #ffffff;
-          --border: rgba(99, 102, 241, 0.2);
-          --text: #1e293b;
-          --text2: #475569;
-          --text-muted: #64748b;
-          --textarea-color: #334155;
-          --placeholder: #94a3b8;
-          --progress-bg: rgba(0,0,0,0.06);
-          --header-bg: rgba(0,0,0,0.02);
-          --header-border: rgba(0,0,0,0.06);
-          --footer-border: rgba(0,0,0,0.06);
-          --footer-left-color: #64748b;
-          --tip-bg: rgba(255,255,255,0.7);
-          --tip-border: rgba(0,0,0,0.07);
-          --tip-text: #64748b;
-          --tip-text-strong: #475569;
-          --card-title-color: #64748b;
-          --char-color: #94a3b8;
-          --link-box-bg: rgba(99, 102, 241, 0.05);
-          --link-box-border: rgba(99, 102, 241, 0.2);
-          --link-text: #4f46e5;
-          --link-copy-bg: rgba(99, 102, 241, 0.08);
-          --link-copy-border: rgba(99, 102, 241, 0.15);
-          --link-copy-color: #4f46e5;
-          --expiry-bg: rgba(99,102,241,0.06);
-          --expiry-border: rgba(99,102,241,0.15);
-          --expiry-color: #4f46e5;
-          --expiry-select-bg: #fff;
-          --shadow: 0 4px 24px rgba(99,102,241,0.08), 0 1px 4px rgba(0,0,0,0.06);
-        }
+
 
         .paste-root {
           min-height: 100vh;
@@ -404,27 +365,7 @@ export default function PastePage() {
           padding: 0;
         }
 
-        /* Theme toggle */
-        .paste-theme-toggle {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          padding: 7px 13px;
-          border-radius: 10px;
-          font-size: 12px;
-          font-weight: 600;
-          font-family: 'Inter', sans-serif;
-          cursor: pointer;
-          border: 1px solid var(--border);
-          background: var(--expiry-bg);
-          color: var(--text2);
-          transition: all 0.2s;
-        }
 
-        .paste-theme-toggle:hover {
-          background: var(--link-copy-bg);
-          color: var(--text);
-        }
 
         .paste-footer-left svg {
           opacity: 0.6;
@@ -700,7 +641,7 @@ export default function PastePage() {
         }
       `}</style>
 
-      <div className={`paste-root${isDark ? "" : " light-mode"}`}>
+      <div className="paste-root">
         {/* Nav */}
         <nav className="paste-nav">
           <Link to="/" className="paste-nav-logo">
@@ -709,16 +650,7 @@ export default function PastePage() {
               Smart<span>Learning</span>Plus
             </span>
           </Link>
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <button
-              onClick={toggleTheme}
-              className="paste-theme-toggle"
-              title={isDark ? "Switch to light mode" : "Switch to dark mode"}
-            >
-              {isDark ? "☀️ Light" : "🌙 Dark"}
-            </button>
-            <span className="paste-nav-badge">QuickPaste</span>
-          </div>
+          <span className="paste-nav-badge">QuickPaste</span>
         </nav>
 
         {!result ? (

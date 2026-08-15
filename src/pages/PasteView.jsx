@@ -10,14 +10,6 @@ export default function PasteView() {
   const [error, setError] = useState(null);
   const [copied, setCopied] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
-  const [theme, setTheme] = useState(() => localStorage.getItem("paste_theme") || "dark");
-
-  const isDark = theme === "dark";
-
-  useEffect(() => {
-    localStorage.setItem("paste_theme", theme);
-  }, [theme]);
-  const toggleTheme = () => setTheme(t => t === "dark" ? "light" : "dark");
 
   useEffect(() => {
     const fetchPaste = async () => {
@@ -109,26 +101,7 @@ export default function PasteView() {
           --shadow: 0 0 0 1px rgba(255,255,255,0.03), 0 24px 64px rgba(0, 0, 0, 0.5);
         }
 
-        .view-root.light-mode {
-          --bg: #f1f5fb;
-          --bg-card: #ffffff;
-          --border: rgba(99, 102, 241, 0.2);
-          --text: #1e293b;
-          --text2: #475569;
-          --text-muted: #64748b;
-          --meta-bg: rgba(99, 102, 241, 0.06);
-          --meta-border: rgba(99, 102, 241, 0.15);
-          --meta-color: #4f46e5;
-          --btn-ghost-bg: #ffffff;
-          --btn-ghost-border: rgba(0,0,0,0.1);
-          --btn-ghost-color: #475569;
-          --header-bg: rgba(0,0,0,0.02);
-          --header-border: rgba(0,0,0,0.06);
-          --line-num-color: #94a3b8;
-          --line-num-border: rgba(0,0,0,0.06);
-          --code-color: #1e293b;
-          --shadow: 0 4px 24px rgba(99,102,241,0.08), 0 1px 4px rgba(0,0,0,0.06);
-        }
+
 
         .view-root {
           min-height: 100vh;
@@ -184,25 +157,7 @@ export default function PasteView() {
 
         .view-nav-logo-text span { color: #6366f1; }
 
-        .view-theme-toggle {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          padding: 7px 13px;
-          border-radius: 10px;
-          font-size: 12px;
-          font-weight: 600;
-          font-family: 'Inter', sans-serif;
-          cursor: pointer;
-          border: 1px solid var(--border);
-          background: var(--btn-ghost-bg);
-          color: var(--btn-ghost-color);
-          transition: all 0.2s;
-        }
 
-        .view-theme-toggle:hover {
-          color: var(--text);
-        }
 
         .view-nav-right {
           display: flex;
@@ -531,7 +486,7 @@ export default function PasteView() {
         }
       `}</style>
 
-      <div className={`view-root${isDark ? "" : " light-mode"}`}>
+      <div className="view-root">
         {/* Nav */}
         <nav className="view-nav">
           <Link to="/" className="view-nav-logo">
@@ -541,13 +496,6 @@ export default function PasteView() {
             </span>
           </Link>
           <div className="view-nav-right">
-            <button
-              onClick={toggleTheme}
-              className="view-theme-toggle"
-              title={isDark ? "Switch to light mode" : "Switch to dark mode"}
-            >
-              {isDark ? "☀️ Light" : "🌙 Dark"}
-            </button>
             <Link to="/paste" className="view-nav-btn primary" id="create-new-paste-btn">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
