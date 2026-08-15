@@ -872,6 +872,7 @@ const handleContribSubmit = async (e) => {
                   <a href="#attendance-section" onClick={(e) => { e.preventDefault(); document.getElementById('attendance-section')?.scrollIntoView({ behavior: 'smooth' }); }}>Attendance</a>
                   <a href="#subjects" onClick={(e) => { e.preventDefault(); document.getElementById('subjects')?.scrollIntoView({ behavior: 'smooth' }); }}>Subjects</a>
                   <a href="#downloads" onClick={(e) => { e.preventDefault(); document.getElementById('downloads')?.scrollIntoView({ behavior: 'smooth' }); }}>Downloads</a>
+                  <Link to="/tools" className="font-semibold text-indigo-600 hover:text-indigo-700">Tools 🧰</Link>
                   {profile?.is_moderator && (
                     <button
                       onClick={() => setViewModeratorPanel(true)}
@@ -896,6 +897,7 @@ const handleContribSubmit = async (e) => {
                 <div className="sl-nav-links flex items-center gap-6">
                   <a href="#subjects" onClick={(e) => { e.preventDefault(); document.getElementById('subjects')?.scrollIntoView({ behavior: 'smooth' }); }}>Subjects</a>
                   <a href="#downloads" onClick={(e) => { e.preventDefault(); document.getElementById('downloads')?.scrollIntoView({ behavior: 'smooth' }); }}>Downloads</a>
+                  <Link to="/tools" className="font-semibold text-indigo-600 hover:text-indigo-700">Tools 🧰</Link>
                   <button
                     onClick={() => { setShowSubscribeModal(true); setSubscribeEmail(""); setSubscribeResult(null); }}
                     className="text-xs font-semibold hover:text-indigo-600 transition-colors"
