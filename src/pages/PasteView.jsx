@@ -10,6 +10,14 @@ export default function PasteView() {
   const [error, setError] = useState(null);
   const [copied, setCopied] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
+  const [theme, setTheme] = useState(() => localStorage.getItem("paste_theme") || "dark");
+
+  const isDark = theme === "dark";
+
+  useEffect(() => {
+    localStorage.setItem("paste_theme", theme);
+  }, [theme]);
+  const toggleTheme = () => setTheme(t => t === "dark" ? "light" : "dark");
 
   useEffect(() => {
     const fetchPaste = async () => {
@@ -79,18 +87,62 @@ export default function PasteView() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
+        /* ── THEME VARIABLES ── */
+        .view-root {
+          --bg: #0a0d14;
+          --bg-card: rgba(15, 20, 35, 0.8);
+          --border: rgba(99, 102, 241, 0.15);
+          --text: #e2e8f0;
+          --text2: #94a3b8;
+          --text-muted: #64748b;
+          --meta-bg: rgba(99, 102, 241, 0.08);
+          --meta-border: rgba(99, 102, 241, 0.2);
+          --meta-color: #818cf8;
+          --btn-ghost-bg: rgba(255,255,255,0.04);
+          --btn-ghost-border: rgba(255,255,255,0.08);
+          --btn-ghost-color: #94a3b8;
+          --header-bg: rgba(255,255,255,0.02);
+          --header-border: rgba(255,255,255,0.05);
+          --line-num-color: #334155;
+          --line-num-border: rgba(255,255,255,0.04);
+          --code-color: #e2e8f0;
+          --shadow: 0 0 0 1px rgba(255,255,255,0.03), 0 24px 64px rgba(0, 0, 0, 0.5);
+        }
+
+        .view-root.light-mode {
+          --bg: #f1f5fb;
+          --bg-card: #ffffff;
+          --border: rgba(99, 102, 241, 0.2);
+          --text: #1e293b;
+          --text2: #475569;
+          --text-muted: #64748b;
+          --meta-bg: rgba(99, 102, 241, 0.06);
+          --meta-border: rgba(99, 102, 241, 0.15);
+          --meta-color: #4f46e5;
+          --btn-ghost-bg: #ffffff;
+          --btn-ghost-border: rgba(0,0,0,0.1);
+          --btn-ghost-color: #475569;
+          --header-bg: rgba(0,0,0,0.02);
+          --header-border: rgba(0,0,0,0.06);
+          --line-num-color: #94a3b8;
+          --line-num-border: rgba(0,0,0,0.06);
+          --code-color: #1e293b;
+          --shadow: 0 4px 24px rgba(99,102,241,0.08), 0 1px 4px rgba(0,0,0,0.06);
+        }
+
         .view-root {
           min-height: 100vh;
-          background: #0a0d14;
+          background: var(--bg);
           background-image:
             radial-gradient(ellipse 80% 50% at 20% -10%, rgba(99, 102, 241, 0.10) 0%, transparent 60%),
             radial-gradient(ellipse 60% 40% at 80% 110%, rgba(139, 92, 246, 0.08) 0%, transparent 60%);
           font-family: 'Inter', sans-serif;
-          color: #e2e8f0;
+          color: var(--text);
           display: flex;
           flex-direction: column;
           align-items: center;
           padding: 0 16px 48px;
+          transition: background 0.3s, color 0.3s;
         }
 
         .view-nav {
@@ -110,7 +162,7 @@ export default function PasteView() {
           align-items: center;
           gap: 10px;
           text-decoration: none;
-          color: #e2e8f0;
+          color: var(--text);
         }
 
         .view-nav-logo-icon {
@@ -127,10 +179,30 @@ export default function PasteView() {
         .view-nav-logo-text {
           font-size: 15px;
           font-weight: 600;
-          color: #94a3b8;
+          color: var(--text2);
         }
 
         .view-nav-logo-text span { color: #6366f1; }
+
+        .view-theme-toggle {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 7px 13px;
+          border-radius: 10px;
+          font-size: 12px;
+          font-weight: 600;
+          font-family: 'Inter', sans-serif;
+          cursor: pointer;
+          border: 1px solid var(--border);
+          background: var(--btn-ghost-bg);
+          color: var(--btn-ghost-color);
+          transition: all 0.2s;
+        }
+
+        .view-theme-toggle:hover {
+          color: var(--text);
+        }
 
         .view-nav-right {
           display: flex;
@@ -459,7 +531,7 @@ export default function PasteView() {
         }
       `}</style>
 
-      <div className="view-root">
+      <div className={`view-root${isDark ? "" : " light-mode"}`}>
         {/* Nav */}
         <nav className="view-nav">
           <Link to="/" className="view-nav-logo">
@@ -469,6 +541,13 @@ export default function PasteView() {
             </span>
           </Link>
           <div className="view-nav-right">
+            <button
+              onClick={toggleTheme}
+              className="view-theme-toggle"
+              title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+            >
+              {isDark ? "☀️ Light" : "🌙 Dark"}
+            </button>
             <Link to="/paste" className="view-nav-btn primary" id="create-new-paste-btn">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>

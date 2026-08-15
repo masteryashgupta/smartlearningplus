@@ -24,6 +24,7 @@ const TAB_GROUPS = [
     title: "Content & Schedule",
     items: [
       { key: "materials", label: "Approvals Vault", icon: "📚", badgeKey: "pendingMaterialsCount" },
+      { key: "pastes", label: "QuickPaste Manager", icon: "📋" },
       { key: "timetable", label: "Timetable Planner", icon: "🗓️" },
       { key: "holidays", label: "Holiday Manager", icon: "🎉" }
     ]
@@ -155,6 +156,12 @@ export default function AdminPanel({ onClose }) {
   const [healthLoading, setHealthLoading] = useState(false);
   const [registrations, setRegistrations] = useState([]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // QuickPaste Manager state
+  const [pastes, setPastes] = useState([]);
+  const [pastesLoading, setPastesLoading] = useState(false);
+  const [pasteSearch, setPasteSearch] = useState("");
+  const [deletingPasteSlug, setDeletingPasteSlug] = useState(null);
 
   const [hackerQuote, setHackerQuote] = useState("SECURE CONSOLE READY. SYSTEM STATUS: ENCRYPTED.");
 
@@ -316,6 +323,32 @@ export default function AdminPanel({ onClose }) {
 
   function reloadTimetable() {
     api.get("/timetable").then((r) => { setWeek(r.data.week); setSubjects(r.data.subjects); });
+  }
+
+  async function reloadPastes() {
+    setPastesLoading(true);
+    try {
+      const { data } = await api.get("/paste");
+      setPastes(data);
+    } catch (err) {
+      console.error("Error loading pastes:", err);
+    } finally {
+      setPastesLoading(false);
+    }
+  }
+
+  async function handleDeletePaste(slug) {
+    if (!window.confirm(`Delete paste '${slug}'? This cannot be undone.`)) return;
+    setDeletingPasteSlug(slug);
+    try {
+      await api.delete(`/paste/${slug}`);
+      showToast(`Paste '${slug}' deleted.`);
+      setPastes(prev => prev.filter(p => p.slug !== slug));
+    } catch (err) {
+      showToast(err.response?.data?.error || "Failed to delete paste", false);
+    } finally {
+      setDeletingPasteSlug(null);
+    }
   }
   function reloadHolidays() {
     api.get("/admin/holidays").then((r) => setHolidays(r.data));
@@ -643,6 +676,7 @@ export default function AdminPanel({ onClose }) {
       reloadPendingMaterials();
       reloadApprovedMaterials();
     }
+    if (tab === "pastes") reloadPastes();
     if (tab === "health") loadHealth();
     if (tab === "moderator-logs") reloadModeratorLogs();
     if (tab === "registrations") reloadRegistrations();
@@ -2574,6 +2608,103 @@ export default function AdminPanel({ onClose }) {
                   </div>
                 </div>
               </div>
+            </div>
+          )}
+
+          {/* 📋 QUICKPASTE MANAGER TAB */}
+          {tab === "pastes" && (
+            <div className="space-y-4 animate-fade-in">
+              <div className="flex items-center justify-between flex-wrap gap-3">
+                <div>
+                  <h2 className="text-sm font-bold text-emerald-400">📋 QuickPaste Manager</h2>
+                  <p className="text-xs text-slate-400 mt-0.5">View and delete user-created public pastes.</p>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <input
+                    type="text"
+                    placeholder="Search by slug…"
+                    value={pasteSearch}
+                    onChange={e => setPasteSearch(e.target.value)}
+                    className="modern-input text-xs py-1.5 px-3"
+                    style={{ maxWidth: "200px" }}
+                  />
+                  <button onClick={reloadPastes} className="modern-btn-secondary text-xs py-1.5 px-3">↻ Refresh</button>
+                </div>
+              </div>
+
+              {pastesLoading ? (
+                <div className="text-center py-12 text-slate-400 text-xs font-mono animate-pulse">Loading pastes…</div>
+              ) : pastes.length === 0 ? (
+                <div className="modern-card text-center py-12">
+                  <div className="text-3xl mb-3">📋</div>
+                  <div className="text-sm font-bold text-slate-400">No pastes yet</div>
+                  <div className="text-xs text-slate-500 mt-1">Pastes created by users will appear here.</div>
+                </div>
+              ) : (
+                <div className="modern-card p-0 overflow-hidden">
+                  <div className="px-4 py-3 border-b border-slate-700/50 flex items-center justify-between">
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">All Pastes ({pastes.filter(p => !pasteSearch || p.slug.includes(pasteSearch.toLowerCase())).length})</span>
+                    <span className="text-xs text-slate-500 font-mono">Latest 200 shown</span>
+                  </div>
+                  <div className="divide-y divide-slate-700/30" style={{ maxHeight: "560px", overflowY: "auto" }}>
+                    {pastes
+                      .filter(p => !pasteSearch || p.slug.includes(pasteSearch.toLowerCase()))
+                      .map(paste => {
+                        const isExpired = paste.expires_at && new Date(paste.expires_at) < new Date();
+                        const isDeleting = deletingPasteSlug === paste.slug;
+                        const expiryLabel = paste.expires_at
+                          ? isExpired
+                            ? "Expired"
+                            : `Expires ${new Date(paste.expires_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Kolkata" })}`
+                          : "Permanent";
+                        return (
+                          <div key={paste.slug} className={`flex items-center justify-between gap-3 px-4 py-3 hover:bg-slate-800/30 transition-colors ${isExpired ? "opacity-50" : ""}`}>
+                            <div className="flex items-center gap-3 min-w-0">
+                              <div className="text-base shrink-0">{isExpired ? "🗑️" : "📄"}</div>
+                              <div className="min-w-0">
+                                <a
+                                  href={`/${paste.slug}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-xs font-bold text-emerald-400 hover:text-emerald-300 font-mono truncate block"
+                                >
+                                  /{paste.slug}
+                                </a>
+                                <div className="flex items-center gap-3 mt-0.5 flex-wrap">
+                                  <span className="text-[10px] text-slate-500 font-mono">{paste.char_count?.toLocaleString()} chars</span>
+                                  <span className="text-[10px] text-slate-500">
+                                    {new Date(paste.created_at).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Kolkata" })}
+                                  </span>
+                                  <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
+                                    isExpired
+                                      ? "bg-red-900/40 text-red-400 border border-red-800/50"
+                                      : paste.expires_at
+                                        ? "bg-amber-900/30 text-amber-400 border border-amber-800/40"
+                                        : "bg-emerald-900/30 text-emerald-400 border border-emerald-800/40"
+                                  }`}>
+                                    {expiryLabel}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                            <button
+                              onClick={() => handleDeletePaste(paste.slug)}
+                              disabled={isDeleting}
+                              className="modern-btn-danger shrink-0 text-[10px] py-1 px-2.5 flex items-center gap-1"
+                            >
+                              {isDeleting ? (
+                                <><span className="animate-spin inline-block">⟳</span> Deleting…</>
+                              ) : (
+                                <>🗑 Delete</>
+                              )}
+                            </button>
+                          </div>
+                        );
+                      })
+                    }
+                  </div>
+                </div>
+              )}
             </div>
           )}
 

@@ -1,16 +1,36 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../api.js";
 
 const MAX_CHARS = 200000;
 
+const EXPIRY_OPTIONS = [
+  { value: "2h",        label: "2 hours" },
+  { value: "6h",        label: "6 hours" },
+  { value: "12h",       label: "12 hours" },
+  { value: "1d",        label: "1 day" },
+  { value: "3d",        label: "3 days" },
+  { value: "7d",        label: "7 days" },
+  { value: "30d",       label: "30 days" },
+  { value: "permanent", label: "♾️ Permanent" },
+];
+
 export default function PastePage() {
   const [content, setContent] = useState("");
   const [saving, setSaving] = useState(false);
-  const [result, setResult] = useState(null); // { slug, url } on success
+  const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
   const [copied, setCopied] = useState(false);
+  const [expiry, setExpiry] = useState("permanent");
+  const [theme, setTheme] = useState(() => localStorage.getItem("paste_theme") || "dark");
   const textareaRef = useRef(null);
+
+  const isDark = theme === "dark";
+
+  useEffect(() => {
+    localStorage.setItem("paste_theme", theme);
+  }, [theme]);
+  const toggleTheme = () => setTheme(t => t === "dark" ? "light" : "dark");
 
   const charCount = content.length;
   const charPercent = Math.min((charCount / MAX_CHARS) * 100, 100);
@@ -24,7 +44,7 @@ export default function PastePage() {
     setError(null);
     setResult(null);
     try {
-      const { data } = await api.post("/paste", { content });
+      const { data } = await api.post("/paste", { content, expiry });
       setResult(data);
     } catch (err) {
       setError(
@@ -63,6 +83,7 @@ export default function PastePage() {
     setTimeout(() => textareaRef.current?.focus(), 100);
   };
 
+  const expiryLabel = EXPIRY_OPTIONS.find(o => o.value === expiry)?.label || "Permanent";
   const fullLink = result ? `${window.location.origin}/${result.slug}` : "";
 
   return (
@@ -70,18 +91,86 @@ export default function PastePage() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
+        /* ── THEME VARIABLES ── */
+        .paste-root {
+          --bg: #0a0d14;
+          --bg-card: rgba(15, 20, 35, 0.8);
+          --border: rgba(99, 102, 241, 0.15);
+          --text: #e2e8f0;
+          --text2: #94a3b8;
+          --text-muted: #64748b;
+          --textarea-color: #cbd5e1;
+          --placeholder: #334155;
+          --progress-bg: rgba(255,255,255,0.04);
+          --header-bg: rgba(255,255,255,0.02);
+          --header-border: rgba(255,255,255,0.05);
+          --footer-border: rgba(255,255,255,0.05);
+          --footer-left-color: #475569;
+          --tip-bg: rgba(255,255,255,0.02);
+          --tip-border: rgba(255,255,255,0.05);
+          --tip-text: #475569;
+          --tip-text-strong: #64748b;
+          --card-title-color: #475569;
+          --char-color: #475569;
+          --link-box-bg: rgba(99, 102, 241, 0.06);
+          --link-box-border: rgba(99, 102, 241, 0.25);
+          --link-text: #a5b4fc;
+          --link-copy-bg: rgba(99, 102, 241, 0.15);
+          --link-copy-border: rgba(99, 102, 241, 0.2);
+          --link-copy-color: #818cf8;
+          --expiry-bg: rgba(255,255,255,0.04);
+          --expiry-border: rgba(255,255,255,0.1);
+          --expiry-color: #94a3b8;
+          --expiry-select-bg: rgba(10,13,20,0.9);
+          --shadow: 0 0 0 1px rgba(255,255,255,0.03), 0 24px 64px rgba(0, 0, 0, 0.5);
+        }
+
+        .paste-root.light-mode {
+          --bg: #f1f5fb;
+          --bg-card: #ffffff;
+          --border: rgba(99, 102, 241, 0.2);
+          --text: #1e293b;
+          --text2: #475569;
+          --text-muted: #64748b;
+          --textarea-color: #334155;
+          --placeholder: #94a3b8;
+          --progress-bg: rgba(0,0,0,0.06);
+          --header-bg: rgba(0,0,0,0.02);
+          --header-border: rgba(0,0,0,0.06);
+          --footer-border: rgba(0,0,0,0.06);
+          --footer-left-color: #64748b;
+          --tip-bg: rgba(255,255,255,0.7);
+          --tip-border: rgba(0,0,0,0.07);
+          --tip-text: #64748b;
+          --tip-text-strong: #475569;
+          --card-title-color: #64748b;
+          --char-color: #94a3b8;
+          --link-box-bg: rgba(99, 102, 241, 0.05);
+          --link-box-border: rgba(99, 102, 241, 0.2);
+          --link-text: #4f46e5;
+          --link-copy-bg: rgba(99, 102, 241, 0.08);
+          --link-copy-border: rgba(99, 102, 241, 0.15);
+          --link-copy-color: #4f46e5;
+          --expiry-bg: rgba(99,102,241,0.06);
+          --expiry-border: rgba(99,102,241,0.15);
+          --expiry-color: #4f46e5;
+          --expiry-select-bg: #fff;
+          --shadow: 0 4px 24px rgba(99,102,241,0.08), 0 1px 4px rgba(0,0,0,0.06);
+        }
+
         .paste-root {
           min-height: 100vh;
-          background: #0a0d14;
+          background: var(--bg);
           background-image:
             radial-gradient(ellipse 80% 50% at 20% -10%, rgba(99, 102, 241, 0.12) 0%, transparent 60%),
             radial-gradient(ellipse 60% 40% at 80% 110%, rgba(139, 92, 246, 0.10) 0%, transparent 60%);
           font-family: 'Inter', sans-serif;
-          color: #e2e8f0;
+          color: var(--text);
           display: flex;
           flex-direction: column;
           align-items: center;
           padding: 0 16px 48px;
+          transition: background 0.3s, color 0.3s;
         }
 
         .paste-nav {
@@ -99,7 +188,7 @@ export default function PastePage() {
           align-items: center;
           gap: 10px;
           text-decoration: none;
-          color: #e2e8f0;
+          color: var(--text);
         }
 
         .paste-nav-logo-icon {
@@ -116,7 +205,7 @@ export default function PastePage() {
         .paste-nav-logo-text {
           font-size: 15px;
           font-weight: 600;
-          color: #94a3b8;
+          color: var(--text2);
         }
 
         .paste-nav-logo-text span {
@@ -162,7 +251,7 @@ export default function PastePage() {
           letter-spacing: -0.02em;
           margin: 0 0 12px;
           line-height: 1.15;
-          background: linear-gradient(135deg, #e2e8f0 0%, #94a3b8 100%);
+          background: linear-gradient(135deg, var(--text) 0%, var(--text2) 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
@@ -185,11 +274,11 @@ export default function PastePage() {
         .paste-card {
           width: 100%;
           max-width: 900px;
-          background: rgba(15, 20, 35, 0.8);
-          border: 1px solid rgba(99, 102, 241, 0.15);
+          background: var(--bg-card);
+          border: 1px solid var(--border);
           border-radius: 20px;
           overflow: hidden;
-          box-shadow: 0 0 0 1px rgba(255,255,255,0.03), 0 24px 64px rgba(0, 0, 0, 0.5);
+          box-shadow: var(--shadow);
           backdrop-filter: blur(12px);
         }
 
@@ -198,8 +287,8 @@ export default function PastePage() {
           align-items: center;
           justify-content: space-between;
           padding: 14px 20px;
-          background: rgba(255,255,255,0.02);
-          border-bottom: 1px solid rgba(255,255,255,0.05);
+          background: var(--header-bg);
+          border-bottom: 1px solid var(--header-border);
         }
 
         .paste-card-dots {
@@ -220,13 +309,13 @@ export default function PastePage() {
         .paste-card-title {
           font-size: 12px;
           font-weight: 500;
-          color: #475569;
+          color: var(--card-title-color);
           font-family: 'JetBrains Mono', monospace;
         }
 
         .paste-char-info {
           font-size: 12px;
-          color: #475569;
+          color: var(--char-color);
           font-family: 'JetBrains Mono', monospace;
         }
 
@@ -243,7 +332,7 @@ export default function PastePage() {
           font-family: 'JetBrains Mono', monospace;
           font-size: 14px;
           line-height: 1.7;
-          color: #cbd5e1;
+          color: var(--textarea-color);
           resize: vertical;
           box-sizing: border-box;
           caret-color: #6366f1;
@@ -251,12 +340,12 @@ export default function PastePage() {
         }
 
         textarea.paste-textarea::placeholder {
-          color: #334155;
+          color: var(--placeholder);
         }
 
         .paste-progress-bar {
           height: 2px;
-          background: rgba(255,255,255,0.04);
+          background: var(--progress-bg);
           margin: 0 24px;
         }
 
@@ -275,7 +364,7 @@ export default function PastePage() {
           align-items: center;
           justify-content: space-between;
           padding: 16px 24px;
-          border-top: 1px solid rgba(255,255,255,0.05);
+          border-top: 1px solid var(--footer-border);
           gap: 12px;
           flex-wrap: wrap;
         }
@@ -285,7 +374,56 @@ export default function PastePage() {
           align-items: center;
           gap: 8px;
           font-size: 12px;
-          color: #475569;
+          color: var(--footer-left-color);
+        }
+
+        /* Expiry selector */
+        .paste-expiry-select {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          background: var(--expiry-bg);
+          border: 1px solid var(--expiry-border);
+          border-radius: 10px;
+          padding: 6px 10px;
+          font-size: 12px;
+          font-weight: 500;
+          color: var(--expiry-color);
+          font-family: 'Inter', sans-serif;
+        }
+
+        .paste-expiry-select select {
+          background: var(--expiry-select-bg);
+          border: none;
+          outline: none;
+          color: var(--expiry-color);
+          font-size: 12px;
+          font-weight: 600;
+          font-family: 'Inter', sans-serif;
+          cursor: pointer;
+          padding: 0;
+        }
+
+        /* Theme toggle */
+        .paste-theme-toggle {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 7px 13px;
+          border-radius: 10px;
+          font-size: 12px;
+          font-weight: 600;
+          font-family: 'Inter', sans-serif;
+          cursor: pointer;
+          border: 1px solid var(--border);
+          background: var(--expiry-bg);
+          color: var(--text2);
+          transition: all 0.2s;
+        }
+
+        .paste-theme-toggle:hover {
+          background: var(--link-copy-bg);
+          color: var(--text);
         }
 
         .paste-footer-left svg {
@@ -562,7 +700,7 @@ export default function PastePage() {
         }
       `}</style>
 
-      <div className="paste-root">
+      <div className={`paste-root${isDark ? "" : " light-mode"}`}>
         {/* Nav */}
         <nav className="paste-nav">
           <Link to="/" className="paste-nav-logo">
@@ -571,7 +709,16 @@ export default function PastePage() {
               Smart<span>Learning</span>Plus
             </span>
           </Link>
-          <span className="paste-nav-badge">QuickPaste</span>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <button
+              onClick={toggleTheme}
+              className="paste-theme-toggle"
+              title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+            >
+              {isDark ? "☀️ Light" : "🌙 Dark"}
+            </button>
+            <span className="paste-nav-badge">QuickPaste</span>
+          </div>
         </nav>
 
         {!result ? (
@@ -642,6 +789,20 @@ export default function PastePage() {
                   </svg>
                   Shareable link · Read-only for viewers
                 </div>
+                <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+                  {/* Expiry selector */}
+                  <div className="paste-expiry-select">
+                    <span>⏱</span>
+                    <select
+                      value={expiry}
+                      onChange={e => setExpiry(e.target.value)}
+                      id="paste-expiry-select"
+                    >
+                      {EXPIRY_OPTIONS.map(o => (
+                        <option key={o.value} value={o.value}>{o.label}</option>
+                      ))}
+                    </select>
+                  </div>
                 <button
                   className="paste-save-btn"
                   onClick={handleSave}
@@ -662,6 +823,7 @@ export default function PastePage() {
                     </>
                   )}
                 </button>
+                </div>
               </div>
             </div>
 
