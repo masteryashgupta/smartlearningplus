@@ -24,7 +24,7 @@ export default function App() {
       <Route path="/terms" element={<Terms />} />
       <Route path="/privacy" element={<Privacy />} />
       <Route path="/paste" element={<PastePage />} />
-      <Route path="/p/:slug" element={<PasteView />} />
+      <Route path="/:slug" element={<PasteView />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
