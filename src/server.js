@@ -14,6 +14,7 @@ import adminRoutes from "./routes/admin.js";
 import materialsRoutes from "./routes/materials.js";
 import { askRouter } from "./ai-assistant/routes.js";
 import announcementRoutes from "./routes/announcement.js";
+import pasteRoutes from "./routes/paste.js";
 import { registerHandlers } from "./bot/handlers.js";
 import { startScheduler } from "./bot/scheduler.js";
 import { setupWebhook, getBotStatus } from "./bot/bot.js";
@@ -440,6 +441,7 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/materials", materialsRoutes);
 app.use("/api/ask", askRouter);
 app.use("/api/announcement", announcementRoutes);
+app.use("/api/paste", pasteRoutes);
 
 async function migrateDatabase() {
   console.log("🔄 Running database migrations...");
@@ -565,6 +567,21 @@ async function migrateDatabase() {
       ALTER TABLE announcement_singleton 
       ADD COLUMN IF NOT EXISTS scroll_speed integer NOT NULL DEFAULT 45,
       ADD COLUMN IF NOT EXISTS gap integer NOT NULL DEFAULT 20
+    `);
+
+    // Create pastes table for the QuickPaste feature (no auth required)
+    await q(`
+      CREATE TABLE IF NOT EXISTS pastes (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        slug TEXT UNIQUE NOT NULL,
+        content TEXT NOT NULL,
+        char_count INT NOT NULL DEFAULT 0,
+        created_at TIMESTAMPTZ DEFAULT NOW(),
+        expires_at TIMESTAMPTZ
+      )
+    `);
+    await q(`
+      CREATE INDEX IF NOT EXISTS pastes_slug_idx ON pastes(slug)
     `);
 
     console.log("✅ Database migrations completed successfully.");
