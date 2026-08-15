@@ -83,38 +83,38 @@ export default function PastePage() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
-        /* ── THEME VARIABLES ── */
+        /* ── THEME VARIABLES (LIGHT THEME) ── */
         .paste-root {
-          --bg: #0a0d14;
-          --bg-card: rgba(15, 20, 35, 0.8);
-          --border: rgba(99, 102, 241, 0.15);
-          --text: #e2e8f0;
-          --text2: #94a3b8;
+          --bg: #FAFAF8;
+          --bg-card: #ffffff;
+          --border: rgba(99, 102, 241, 0.2);
+          --text: #1e293b;
+          --text2: #475569;
           --text-muted: #64748b;
-          --textarea-color: #cbd5e1;
-          --placeholder: #334155;
-          --progress-bg: rgba(255,255,255,0.04);
-          --header-bg: rgba(255,255,255,0.02);
-          --header-border: rgba(255,255,255,0.05);
-          --footer-border: rgba(255,255,255,0.05);
-          --footer-left-color: #475569;
-          --tip-bg: rgba(255,255,255,0.02);
-          --tip-border: rgba(255,255,255,0.05);
-          --tip-text: #475569;
-          --tip-text-strong: #64748b;
-          --card-title-color: #475569;
-          --char-color: #475569;
+          --textarea-color: #1e293b;
+          --placeholder: #94a3b8;
+          --progress-bg: rgba(99, 102, 241, 0.08);
+          --header-bg: #f8fafc;
+          --header-border: #e2e8f0;
+          --footer-border: #e2e8f0;
+          --footer-left-color: #64748b;
+          --tip-bg: #ffffff;
+          --tip-border: #e2e8f0;
+          --tip-text: #64748b;
+          --tip-text-strong: #334155;
+          --card-title-color: #64748b;
+          --char-color: #64748b;
           --link-box-bg: rgba(99, 102, 241, 0.06);
           --link-box-border: rgba(99, 102, 241, 0.25);
-          --link-text: #a5b4fc;
-          --link-copy-bg: rgba(99, 102, 241, 0.15);
+          --link-text: #4f46e5;
+          --link-copy-bg: rgba(99, 102, 241, 0.1);
           --link-copy-border: rgba(99, 102, 241, 0.2);
-          --link-copy-color: #818cf8;
-          --expiry-bg: rgba(255,255,255,0.04);
-          --expiry-border: rgba(255,255,255,0.1);
-          --expiry-color: #94a3b8;
-          --expiry-select-bg: rgba(10,13,20,0.9);
-          --shadow: 0 0 0 1px rgba(255,255,255,0.03), 0 24px 64px rgba(0, 0, 0, 0.5);
+          --link-copy-color: #4f46e5;
+          --expiry-bg: #f1f5f9;
+          --expiry-border: #cbd5e1;
+          --expiry-color: #334155;
+          --expiry-select-bg: #ffffff;
+          --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.05);
         }
 
 

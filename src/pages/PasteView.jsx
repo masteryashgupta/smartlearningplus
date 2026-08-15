@@ -79,26 +79,26 @@ export default function PasteView() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
-        /* ── THEME VARIABLES ── */
+        /* ── THEME VARIABLES (LIGHT THEME) ── */
         .view-root {
-          --bg: #0a0d14;
-          --bg-card: rgba(15, 20, 35, 0.8);
-          --border: rgba(99, 102, 241, 0.15);
-          --text: #e2e8f0;
-          --text2: #94a3b8;
+          --bg: #FAFAF8;
+          --bg-card: #ffffff;
+          --border: rgba(99, 102, 241, 0.2);
+          --text: #1e293b;
+          --text2: #475569;
           --text-muted: #64748b;
-          --meta-bg: rgba(99, 102, 241, 0.08);
+          --meta-bg: rgba(99, 102, 241, 0.06);
           --meta-border: rgba(99, 102, 241, 0.2);
-          --meta-color: #818cf8;
-          --btn-ghost-bg: rgba(255,255,255,0.04);
-          --btn-ghost-border: rgba(255,255,255,0.08);
-          --btn-ghost-color: #94a3b8;
-          --header-bg: rgba(255,255,255,0.02);
-          --header-border: rgba(255,255,255,0.05);
-          --line-num-color: #334155;
-          --line-num-border: rgba(255,255,255,0.04);
-          --code-color: #e2e8f0;
-          --shadow: 0 0 0 1px rgba(255,255,255,0.03), 0 24px 64px rgba(0, 0, 0, 0.5);
+          --meta-color: #4f46e5;
+          --btn-ghost-bg: #ffffff;
+          --btn-ghost-border: #e2e8f0;
+          --btn-ghost-color: #475569;
+          --header-bg: #f8fafc;
+          --header-border: #e2e8f0;
+          --line-num-color: #94a3b8;
+          --line-num-border: #f1f5f9;
+          --code-color: #0f172a;
+          --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.05);
         }
 
 
