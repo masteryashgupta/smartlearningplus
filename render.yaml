@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: smartlearningplus-backend
+    env: node
+    region: oregon # Or choose another region closest to your users
+    plan: free # or starter/standard depending on your needs
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Add all your environment variables here.
+      # You can sync them in the Render Dashboard later.
