@@ -4,15 +4,15 @@ export default {
   theme: {
     extend: {
       colors: {
-        paper: "#FAFAF8",
-        surface: "#FFFFFF",
-        ink: "#1B2430",
-        muted: "#6B7280",
-        line: "#E8E6E1",
+        paper: "var(--color-paper)",
+        surface: "var(--color-surface)",
+        ink: "var(--color-ink)",
+        muted: "var(--color-muted)",
+        line: "var(--color-line)",
         primary: {
-          DEFAULT: "#2563eb",
-          light: "#eff6ff",
-          dark: "#1d4ed8",
+          DEFAULT: "var(--color-primary)",
+          light: "var(--color-primary-light)",
+          dark: "var(--color-primary-dark)",
         },
         good: "#16A34A",
         bad: "#E11D48",
