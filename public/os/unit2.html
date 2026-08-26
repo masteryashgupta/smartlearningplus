@@ -76,6 +76,23 @@
         <p>Simple memory trick: <b>Serial → Batch → Multiprogrammed → Time-sharing → PC → Distributed → Modern</b>. Har step pe goal yahi tha — CPU ka idle time kam karo aur users ko better experience do. Time-sharing sabse important hai exam ke liye — isi se modern multitasking OS ka concept aaya.</p>
       </div>
 
+      <h2 class="topic">Types of Operating Systems <span class="imp m">Medium</span></h2>
+      <div class="card def">
+        <span class="tag">English</span>
+        <p>Operating Systems are classified based on how they process jobs and interact with users:</p>
+      </div>
+      <div class="card">
+        <ul>
+          <li><b>Batch OS:</b> Groups similar jobs together; no direct user interaction.</li>
+          <li><b>Multiprogramming OS:</b> Keeps multiple jobs in memory to maximize CPU utilization.</li>
+          <li><b>Time-Sharing OS:</b> CPU time is shared among multiple users/tasks via a time quantum.</li>
+          <li><b>Real-Time OS:</b> Strict timing constraints and deadlines (e.g., Air traffic control).</li>
+          <li><b>Distributed OS:</b> Loosely coupled independent machines appear as a single system.</li>
+          <li><b>Network OS:</b> Runs on a central server to manage network resources.</li>
+          <li><b>Mobile OS:</b> Designed for smartphones/tablets.</li>
+        </ul>
+      </div>
+
       <h2 class="topic">3. Structure &amp; Operations of OS <span class="imp h">High ⭐⭐⭐⭐</span></h2>
 
       <h3 class="sub">Dual-Mode Operation <span class="imp h">High</span></h3>
@@ -292,6 +309,62 @@ do {                          do {
       <div class="compare">
         <div class="compare-card"><h4>Many-to-Many</h4><p>Many user threads multiplexed onto a smaller/equal number of kernel threads. Best of both — flexibility + parallelism.</p></div>
         <div class="compare-card"><h4>Benefits of Multithreading</h4><p>Responsiveness, resource sharing, economy (cheaper than processes), scalability on multi-core systems.</p></div>
+      </div>
+
+      <h2 class="topic">🧠 Yaad Rakhne Ki Tricks <span class="imp h">Exam-Night Recalls 🔥</span></h2>
+
+      <h3 class="sub">1. Types of Operating Systems</h3>
+      <div class="hin">
+        <span class="tag">Hinglish</span>
+        <p><b>Trick:</b> "<b>B</b>ad <b>M</b>onkeys <b>T</b>hrow <b>R</b>ocks <b>D</b>uring <b>N</b>ight <b>M</b>ovies" <br>(Batch, Multiprogramming, Time-sharing, Real-time, Distributed, Network, Mobile)<br><b>MCQ Tip:</b> Batch = No interaction, Multiprogramming = Max CPU, Time-sharing = Time quantum, Real-time = Strict deadlines.</p>
+      </div>
+
+      <h3 class="sub">2. Evolution of OS</h3>
+      <div class="hin">
+        <span class="tag">Hinglish</span>
+        <p><b>Trick:</b> "<b>S</b>ab <b>B</b>acche <b>M</b>ilkar <b>T</b>ime <b>P</b>e <b>D</b>inner <b>M</b>aangte hain" <br>(<b>S</b>erial → <b>B</b>atch → <b>M</b>ultiprogrammed → <b>T</b>ime-sharing → <b>P</b>C → <b>D</b>istributed → <b>M</b>odern)</p>
+      </div>
+
+      <h3 class="sub">3. OS Structures</h3>
+      <div class="hin">
+        <span class="tag">Hinglish</span>
+        <p><b>Trick:</b> <b>M</b>onolithic = Sab ek bori mein (Fast/messy). <b>L</b>ayered = Pyaz ke chilke (Strict layers). <b>M</b>icrokernel = Sirf VIP kernel mein. <b>C</b>lient-Server = Order aur delivery (Modular).</p>
+      </div>
+
+      <h3 class="sub">4. Process States</h3>
+      <div class="hin">
+        <span class="tag">Hinglish</span>
+        <p><b>Trick:</b> "<b>N</b>eha <b>R</b>eads <b>R</b>omantic <b>W</b>attsPad <b>T</b>ales" <br>(<b>N</b>ew → <b>R</b>eady → <b>R</b>unning → <b>W</b>aiting → <b>T</b>erminated). <br><b>Tip:</b> CPU hamesha <i>Ready</i> se milta hai, <i>Waiting</i> se wapas <i>Ready</i> aana padta hai!</p>
+      </div>
+
+      <h3 class="sub">5. Critical Section Conditions</h3>
+      <div class="hin">
+        <span class="tag">Hinglish</span>
+        <p><b>Trick:</b> <b>"MPB"</b> (Madhya Pradesh Board) <br><b>M</b>utual Exclusion (Ek time pe ek), <b>P</b>rogress (Faltu block mat karo), <b>B</b>ounded Waiting (Life-time intezaar nahi).</p>
+      </div>
+
+      <h3 class="sub">6. Semaphores (Wait/Signal)</h3>
+      <div class="hin">
+        <span class="tag">Hinglish</span>
+        <p><b>Trick:</b> <b>Wait = P = Paas aao (Decrement)</b>, <b>Signal = V = Vapas jao (Increment)</b>. <br>Binary = simple lock (0/1). Counting = parking spots counter (N) manga lo!</p>
+      </div>
+
+      <h3 class="sub">7. Scheduling Algorithms</h3>
+      <div class="hin">
+        <span class="tag">Hinglish</span>
+        <p><b>Trick:</b> <b>FCFS</b> = Always Non-Preemptive. <b>RR (Round Robin)</b> = Always Preemptive. <b>SJF/Priority</b> = Dono ho sakte hain (Agar 'Remaining Time' likha ho = Preemptive).</p>
+      </div>
+
+      <h3 class="sub">8. IPC Models</h3>
+      <div class="hin">
+        <span class="tag">Hinglish</span>
+        <p><b>Trick:</b> <b>Shared Memory</b> = Roommate ke saath fridge (Fast, but ladai/sync hogi). <b>Message Passing</b> = Courier se bhejna (Safer, OS handles it, but Slower).</p>
+      </div>
+
+      <h3 class="sub">9. Multithreading Models</h3>
+      <div class="hin">
+        <span class="tag">Hinglish</span>
+        <p><b>Trick:</b> <b>Many-to-One</b> = 1 counter, bheed bohot (Ek block toh sab block). <b>One-to-One</b> = Har aadmi ka servant (Fast but mehenga). <b>Many-to-Many</b> = Perfect balance (Jaise bank ke 3 counters for 10 people).</p>
       </div>
 
       <!-- Q&A UNIT 2 -->
