@@ -518,6 +518,49 @@ Region 2 decision: p2(0) = ry&sup2;(x+0.5)&sup2; + rx&sup2;(y&#x2212;1)&sup2; &#
     <tr><td>Visual result</td><td>Jagged, stair-step edges</td><td>Smooth, soft edges</td></tr>
     <tr><td>Computation cost</td><td>Low</td><td>Higher (extra intensity calculations)</td></tr>
   </table>
+<div class="hin" style="margin-top:12px;">
+  <span class="tag">Hinglish Trick</span>
+  <p><b>Line Algos:</b> <b>DDA</b> = Decimal / Floating point (Slow round-off). <b>Bresenham</b> = Fast Integer (Decision param $p_0 = 2dy - dx$).<br>
+  <b>Symmetry:</b> Circle = <b>8-Way</b> symmetry (45° arc nikalo, 8 jagah plot karo). Ellipse = <b>4-Way</b> symmetry (2 regions: Slope &lt; 1 and Slope &gt; 1)!</p>
+</div>
+
+<h2 class="topic">🗺️ Unit 3 Overview Map <span class="imp h">Quick Revise</span></h2>
+<div class="card" style="padding: 24px; background: var(--surface2); border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 24px;">
+  <div style="background: #e11d48; color: white; padding: 16px; border-radius: 8px; text-align: center; font-size: 1.2rem; font-weight: bold; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(225, 29, 72, 0.4);">
+    UNIT 3: Graphics Primitives &amp; Scan Conversion
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+    
+    <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #06b6d4; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+      <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">1. Line Algorithms</h4>
+      <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+        <li><b>DDA:</b> Incremental floating point `dy/dx` + `round()`</li>
+        <li><b>Bresenham's:</b> Fast integer arithmetic ($p_0 = 2dy - dx$)</li>
+        <li><b>Update:</b> $p_k &lt; 0 \Rightarrow +2dy$; &nbsp; $p_k \ge 0 \Rightarrow +2dy - 2dx$</li>
+      </ul>
+    </div>
+
+    <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #10b981; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+      <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">2. Circle &amp; Ellipse</h4>
+      <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+        <li><b>Midpoint Circle:</b> 8-way symmetry, $p_0 = 1 - r$</li>
+        <li><b>Midpoint Ellipse:</b> 4-way symmetry (Region 1 &amp; Region 2)</li>
+        <li><b>Inside/Outside:</b> Evaluates sign of implicit function $f(x,y)$</li>
+      </ul>
+    </div>
+
+    <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #f59e0b; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+      <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">3. Polygon Filling &amp; Anti-Aliasing</h4>
+      <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+        <li><b>Scanline Fill:</b> Find edge intersections, sort pairs, fill spans</li>
+        <li><b>Boundary-Fill:</b> Fills until boundary color is hit (4/8-connected)</li>
+        <li><b>Flood-Fill:</b> Replaces interior target color with fill color</li>
+        <li><b>Anti-Aliasing:</b> Area sampling / supersampling to blur stair-steps</li>
+      </ul>
+    </div>
+
+  </div>
 </div>
 
 <!-- 3.14 Q&A -->

@@ -583,6 +583,48 @@ Composite Matrix M = T&#x207B;&sup1; &middot; R&#x1d63;&#x2090;&#x207B;&sup1; &m
     <tr><td>View Volume shape</td><td>Rectangular box</td><td>Frustum (pyramid)</td></tr>
     <tr><td>Application</td><td>CAD, engineering drafts</td><td>Games, movies, simulations</td></tr>
   </table>
+<div class="hin" style="margin-top:12px;">
+  <span class="tag">Hinglish Trick</span>
+  <p><b>Curves:</b> <b>Bézier</b> = Global control (Ek point hilaya toh poori curve hil jayegi — Bernstein formula). <b>B-Spline</b> = Local control (Sirf aas-paas ka tukda badlega — Knot vector magic!).<br>
+  <b>Projections:</b> <b>Parallel</b> = CAD/Architecture (Scale fix, box volume). <b>Perspective</b> = Real World/Eye (Door ki cheez chhoti dikhegi, Frustum pyramid volume!).</p>
+</div>
+
+<h2 class="topic">🗺️ Unit 5 Overview Map <span class="imp h">Quick Revise</span></h2>
+<div class="card" style="padding: 24px; background: var(--surface2); border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 24px;">
+  <div style="background: #e11d48; color: white; padding: 16px; border-radius: 8px; text-align: center; font-size: 1.2rem; font-weight: bold; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(225, 29, 72, 0.4);">
+    UNIT 5: 3D Graphics, Curves &amp; Projections
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+    
+    <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #06b6d4; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+      <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">1. 3D Surfaces &amp; Polygon Tables</h4>
+      <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+        <li><b>Vertex Table:</b> Stores 3D coordinates $(x,y,z)$ of each vertex</li>
+        <li><b>Edge Table:</b> Pointers to vertex pairs $(V_1, V_2)$ for each edge</li>
+        <li><b>Surface Table:</b> Pointers to edge lists $(E_1, E_2, ...)$ per polygon</li>
+      </ul>
+    </div>
+
+    <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #10b981; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+      <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">2. Splines &amp; Curves</h4>
+      <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+        <li><b>Cubic Spline:</b> Interpolates through all control points ($C^2$ smooth)</li>
+        <li><b>Bézier Curve:</b> Bernstein polynomials, passes endpoints only, Convex Hull</li>
+        <li><b>B-Spline:</b> Local control, knot vectors, degree independent of points</li>
+      </ul>
+    </div>
+
+    <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #f59e0b; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+      <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">3. 3D Projections &amp; Volumes</h4>
+      <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+        <li><b>Parallel:</b> COP at $\infty$, preserves true scale (Box view volume)</li>
+        <li><b>Perspective:</b> Finite COP, realistic foreshortening (Frustum volume)</li>
+        <li><b>3D Pipeline:</b> Object $\rightarrow$ World $\rightarrow$ View $\rightarrow$ Projection $\rightarrow$ Screen</li>
+      </ul>
+    </div>
+
+  </div>
 </div>
 
 <!-- 5.12 Q&A SECTION -->

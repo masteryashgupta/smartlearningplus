@@ -772,6 +772,51 @@
     <p>Clipping a pentagon against a rectangular window: process edges of the pentagon against left boundary first (generating an intermediate vertex list), then that list is clipped against right boundary, then top, then bottom — each pass possibly adding intersection vertices and removing outside vertices.</p>
   </div>
 
+  <div class="hin" style="margin-top:12px;">
+    <span class="tag">Hinglish Trick</span>
+    <p><b>Arbitrary Point Transform:</b> <b>"TRT"</b> (<b>T</b>ranslate origin pe lao $\rightarrow$ <b>R</b>otate/Scale karo $\rightarrow$ <b>T</b>ranslate wapas apni jagah bhej do!).<br>
+    <b>Cohen-Sutherland 4-bit Code:</b> <b>"TBRL"</b> (<b>T</b>op, <b>B</b>ottom, <b>R</b>ight, <b>L</b>eft). <code>OR = 0</code> toh Full Accept! <code>AND != 0</code> toh Full Reject!</p>
+  </div>
+
+  <h2 class="topic">🗺️ Unit 4 Overview Map <span class="imp h">Quick Revise</span></h2>
+  <div class="card" style="padding: 24px; background: var(--surface2); border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 24px;">
+    <div style="background: #e11d48; color: white; padding: 16px; border-radius: 8px; text-align: center; font-size: 1.2rem; font-weight: bold; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(225, 29, 72, 0.4);">
+      UNIT 4: 2D Geometric Transformations &amp; Clipping
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+      
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #06b6d4; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">1. 2D Transformations (3×3 Matrix)</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li><b>Translation:</b> $x'=x+t_x, y'=y+t_y$ (Homogeneous matrix)</li>
+          <li><b>Rotation:</b> $x'=x\cos\theta - y\sin\theta, y'=x\sin\theta + y\cos\theta$</li>
+          <li><b>Scaling &amp; Reflection:</b> $S(s_x, s_y)$, Reflection across X/Y axis</li>
+          <li><b>Arbitrary Pivot:</b> $T(x_r, y_r) \cdot R(\theta) \cdot T(-x_r, -y_r)$</li>
+        </ul>
+      </div>
+
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #10b981; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">2. Viewing &amp; Window-to-Viewport</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li><b>Window:</b> World-coordinate area selected for display</li>
+          <li><b>Viewport:</b> Screen display area where content appears</li>
+          <li><b>Mapping:</b> $s_x = \frac{xv_{max}-xv_{min}}{xw_{max}-xw_{min}}, s_y = \frac{yv_{max}-yv_{min}}{yw_{max}-yw_{min}}$</li>
+        </ul>
+      </div>
+
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #f59e0b; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">3. Clipping Algorithms</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li><b>Cohen-Sutherland:</b> 4-bit TBRL code, Bitwise OR &amp; AND tests</li>
+          <li><b>Liang-Barsky:</b> Parametric line clipping ($u \cdot p_k \le q_k$)</li>
+          <li><b>Sutherland-Hodgman:</b> Successive polygon clipping per edge</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
   <hr class="sep">
 
   <div class="qsection scroll-anchor" id="qa">

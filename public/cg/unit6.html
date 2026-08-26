@@ -606,6 +606,51 @@
     </ul>
   </div>
 
+  <div class="hin" style="margin-top:12px;">
+    <span class="tag">Hinglish Trick</span>
+    <p><b>Phong Illumination (ADS):</b> <b>"Aapka Diya Shine"</b> (<b>A</b>mbient = Background chamak, <b>D</b>iffuse = Lambert matte reflection $\vec{N}\cdot\vec{L}$, <b>S</b>pecular = Shiny highlight spot $(\vec{R}\cdot\vec{V})^n$).<br>
+    <b>Shading:</b> <b>Flat</b> (1 color per face) $\rightarrow$ <b>Gouraud</b> (Vertex color interpolate) $\rightarrow$ <b>Phong</b> (Pixel-by-pixel Normal vector interpolate — Best quality!).<br>
+    <b>Color:</b> <b>RGB</b> = Screen (Light add karo, Black se White). <b>CMY</b> = Paper Printing (Ink subtract karo, White se Black)!</p>
+  </div>
+
+  <h2 class="topic">🗺️ Unit 6 Overview Map <span class="imp h">Quick Revise</span></h2>
+  <div class="card" style="padding: 24px; background: var(--surface2); border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 24px;">
+    <div style="background: #e11d48; color: white; padding: 16px; border-radius: 8px; text-align: center; font-size: 1.2rem; font-weight: bold; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(225, 29, 72, 0.4);">
+      UNIT 6: Illumination, Shading &amp; Color Models
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+      
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #06b6d4; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">1. Phong Illumination Model</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li><b>Ambient:</b> Uniform background light $I_a k_a$</li>
+          <li><b>Diffuse:</b> Lambert's cosine law $I_p k_d (\vec{N}\cdot\vec{L})$</li>
+          <li><b>Specular:</b> Shiny directional highlight $I_p k_s (\vec{R}\cdot\vec{V})^n$</li>
+        </ul>
+      </div>
+
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #10b981; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">2. Polygon Shading Techniques</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li><b>Flat Shading:</b> Single normal/color per polygon (Faceted look)</li>
+          <li><b>Gouraud Shading:</b> Bilinear interpolation of vertex intensities</li>
+          <li><b>Phong Shading:</b> Pixel-by-pixel normal vector interpolation</li>
+        </ul>
+      </div>
+
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #f59e0b; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">3. Color Spaces &amp; Models</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li><b>RGB:</b> Additive primary color cube (Displays, Monitors)</li>
+          <li><b>CMY(K):</b> Subtractive color model for hardcopy printing</li>
+          <li><b>HSV &amp; HLS:</b> Intuitive artist models (Hue, Saturation, Value/Light)</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
   <hr class="sep">
 
   <div class="qsection scroll-anchor" id="qa">

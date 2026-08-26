@@ -234,9 +234,48 @@ glEnd();
       <tr><td>32-bit (True + Alpha)</td><td>32</td><td>16.7M + transparency channel</td></tr>
     </table>
   </div>
-  <div class="hin">
-    <span class="tag">Hinglish</span>
-    <p><b>Resolution</b> = screen pe kitne pixels hain (zyada pixels = sharper image). <b>Colour depth</b> = ek pixel kitne colours mein se ek colour hold kar sakta hai (24-bit "True Colour" = 16.7 million colours — human eye ke liye practically unlimited). Jab tum 8-bit colour ki purani games mein "pixelated &amp; limited colours" dekhte ho, wahi colour depth limitation hai.</p>
+  <div class="hin" style="margin-top:12px;">
+    <span class="tag">Hinglish Trick</span>
+    <p><b>Raster vs Random:</b> <b>Raster</b> = TV/Monitor (Pura grid ek line se scan hota hai, aliasing aati hai). <b>Random</b> = Pen plotter (Sirf line pe beam ghumti hai, smooth sharp lines, koi aliasing nahi!).<br>
+    <b>Input Devices:</b> <b>"LSV-CPS"</b> (<b>L</b>ocator, <b>S</b>troke, <b>V</b>aluator, <b>C</b>hoice, <b>P</b>ick, <b>S</b>tring).</p>
+  </div>
+
+  <h2 class="topic">🗺️ Unit 2 Overview Map <span class="imp h">Quick Revise</span></h2>
+  <div class="card" style="padding: 24px; background: var(--surface2); border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 24px;">
+    <div style="background: #e11d48; color: white; padding: 16px; border-radius: 8px; text-align: center; font-size: 1.2rem; font-weight: bold; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(225, 29, 72, 0.4);">
+      UNIT 2: Graphics Hardware, Display Systems &amp; Standards
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+      
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #06b6d4; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">1. Display Architectures</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li><b>Raster Scan:</b> Left→Right, Top→Bottom scanline refresh</li>
+          <li><b>Random Scan (Vector):</b> Deflection directly draws line strokes</li>
+          <li><b>Frame Buffer:</b> Pixel array memory (Width × Height × Depth)</li>
+        </ul>
+      </div>
+
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #10b981; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">2. Display Tech &amp; Color Depth</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li><b>Technologies:</b> CRT, LCD (Liquid crystal), LED, OLED (Self-emitting)</li>
+          <li><b>Color Depth:</b> 1-bit (B&amp;W), 8-bit (256 colors), 24-bit (TrueColor 16.7M)</li>
+          <li><b>Aspect Ratio:</b> Ratio of width to height (e.g. 16:9, 4:3)</li>
+        </ul>
+      </div>
+
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #f59e0b; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">3. Input Devices &amp; Standards</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li><b>Logical Input:</b> Locator, Stroke, Valuator, Choice, Pick, String</li>
+          <li><b>Physical:</b> Mouse, Digitizing Tablet, Joystick, Spaceball</li>
+          <li><b>Standards:</b> GKS (2D ISO), PHIGS (3D Hierarchical), OpenGL</li>
+        </ul>
+      </div>
+
+    </div>
   </div>
 
   <!-- Q&A Unit 2 -->
