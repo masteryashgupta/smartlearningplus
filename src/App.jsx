@@ -37,6 +37,8 @@ export default function App() {
       <Route path="/paste" element={<PastePage />} />
       <Route path="/wheel" element={<WheelPage />} />
       <Route path="/wheel/:id" element={<WheelPage />} />
+      {/* Redirect /index.html → / so HTML subject page back-links don't hit PasteView */}
+      <Route path="/index.html" element={<Navigate to="/" replace />} />
       <Route path="/:slug" element={<PasteView />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
