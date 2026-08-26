@@ -1,10 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import Login from "./pages/Login.jsx";
-import StudentDashboard from "./pages/StudentDashboard.jsx";
 import AdminPanel from "./pages/AdminPanel.jsx";
-import ResetPassword from "./pages/ResetPassword.jsx";
-import VerifyEmail from "./pages/VerifyEmail.jsx";
 import Disclaimer from "./pages/Disclaimer.jsx";
 import Terms from "./pages/Terms.jsx";
 import Privacy from "./pages/Privacy.jsx";
@@ -19,17 +16,15 @@ function AdminRoute() {
   if (session && session.role === "admin") {
     return <AdminPanel />;
   }
-  return <Login adminOnly={true} />;
+  return <Login />;
 }
 
 export default function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Home />} />
+      <Route path="/login" element={<Login />} />
       <Route path="/admin" element={<AdminRoute />} />
-      <Route path="/reset-password" element={<ResetPassword />} />
-      <Route path="/verify-email" element={<VerifyEmail />} />
       <Route path="/disclaimer" element={<Disclaimer />} />
       <Route path="/terms" element={<Terms />} />
       <Route path="/privacy" element={<Privacy />} />
@@ -37,8 +32,14 @@ export default function App() {
       <Route path="/paste" element={<PastePage />} />
       <Route path="/wheel" element={<WheelPage />} />
       <Route path="/wheel/:id" element={<WheelPage />} />
-      {/* Redirect /index.html → / so HTML subject page back-links don't hit PasteView */}
+      
+      {/* Legacy redirects */}
+      <Route path="/dashboard" element={<Navigate to="/" replace />} />
+      <Route path="/verify-email" element={<Navigate to="/" replace />} />
+      <Route path="/reset-password" element={<Navigate to="/" replace />} />
       <Route path="/index.html" element={<Navigate to="/" replace />} />
+      
+      {/* Dynamic paste slug view */}
       <Route path="/:slug" element={<PasteView />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
