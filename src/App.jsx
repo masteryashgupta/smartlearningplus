@@ -13,7 +13,6 @@ import PasteView from "./pages/PasteView.jsx";
 import ToolsPage from "./pages/ToolsPage.jsx";
 import WheelPage from "./pages/WheelPage.jsx";
 import { getSession } from "./api.js";
-import ThemeToggle from "./components/ThemeToggle.jsx";
 
 function AdminRoute() {
   const session = getSession();
@@ -25,9 +24,7 @@ function AdminRoute() {
 
 export default function App() {
   return (
-    <>
-      <ThemeToggle />
-      <Routes>
+    <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Home />} />
       <Route path="/admin" element={<AdminRoute />} />
@@ -43,6 +40,5 @@ export default function App() {
       <Route path="/:slug" element={<PasteView />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
-    </>
   );
 }

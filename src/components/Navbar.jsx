@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { clearSession, getSession } from "../api.js";
 import { useState } from "react";
+import ThemeToggle from "./ThemeToggle.jsx";
 
 export default function Navbar({ tabs = [], active, onTab, userName }) {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ export default function Navbar({ tabs = [], active, onTab, userName }) {
   }
 
   return (
-    <div className="sticky top-0 z-20 bg-paper/95 backdrop-blur-sm border-b border-line">
+    <div className="sticky top-0 z-20 backdrop-blur-sm border-b" style={{ background: 'var(--color-paper, #FAFAF8)', borderColor: 'var(--color-line, #E8E6E1)' }}>
       <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between gap-3">
         {/* Logo */}
         <div className="font-display font-bold text-base leading-none text-primary flex items-center gap-2 shrink-0">
@@ -28,8 +29,8 @@ export default function Navbar({ tabs = [], active, onTab, userName }) {
         {/* Desktop tabs — scrollable, no visible scrollbar */}
         <div className="hidden sm:flex items-center flex-1 max-w-lg mx-auto overflow-hidden">
           <div
-            className="flex items-center gap-0.5 bg-white border border-line rounded-xl p-1 overflow-x-auto w-full"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            className="flex items-center gap-0.5 border rounded-xl p-1 overflow-x-auto w-full"
+            style={{ background: 'var(--color-surface)', borderColor: 'var(--color-line)', scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {tabs.map((t) => (
               <button
@@ -48,6 +49,7 @@ export default function Navbar({ tabs = [], active, onTab, userName }) {
         {/* Right: name + sign out */}
         <div className="hidden sm:flex items-center gap-3 shrink-0">
           <span className="text-xs text-muted font-mono">{displayName}</span>
+          <ThemeToggle />
           <button
             className="text-sm text-muted hover:text-bad transition-colors font-medium"
             onClick={signOut}
@@ -70,7 +72,7 @@ export default function Navbar({ tabs = [], active, onTab, userName }) {
 
       {/* Mobile drawer */}
       {menuOpen && (
-        <div className="sm:hidden border-t border-line bg-paper px-4 py-3 space-y-1 shadow-lg">
+        <div className="sm:hidden border-t px-4 py-3 space-y-1 shadow-lg" style={{ background: 'var(--color-paper)', borderColor: 'var(--color-line)' }}>
           {tabs.map((t) => (
             <button
               key={t.key}

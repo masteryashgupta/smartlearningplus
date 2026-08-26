@@ -9,6 +9,7 @@ import Heatmap from "../components/Heatmap.jsx";
 import DayEditor from "../components/DayEditor.jsx";
 import ShareWidget from "../components/ShareWidget.jsx";
 import AnnouncementBar from "../components/AnnouncementBar.jsx";
+import ThemeToggle from "../components/ThemeToggle.jsx";
 
 export default function Home() {
   const session = getSession();
@@ -296,7 +297,7 @@ const handleContribSubmit = async (e) => {
   }
 
   return (
-    <div className="sl-home min-h-screen text-[#0f172a] font-sans relative overflow-x-hidden">
+    <div className="sl-home min-h-screen font-sans relative overflow-x-hidden" style={{ color: 'var(--text)' }}>
       <AnnouncementBar />
       {/* SCOPED CSS STYLES FOR LANDING PAGE */}
       <style>{`
@@ -328,7 +329,39 @@ const handleContribSubmit = async (e) => {
           --radius: 14px;
           --radius-sm: 8px;
           background: var(--bg);
+          color: var(--text);
+          transition: background 0.3s, color 0.3s;
         }
+
+        /* ── DARK MODE OVERRIDES ── */
+        html.dark .sl-home {
+          --bg: #0f172a;
+          --surface: #1e293b;
+          --surface2: #334155;
+          --border: #334155;
+          --border2: #475569;
+          --text: #f8fafc;
+          --text2: #cbd5e1;
+          --muted: #94a3b8;
+          --accent: #3b82f6;
+          --accent-light: #1e3a8a;
+          --accent-hover: #60a5fa;
+          --accent2: #06b6d4;
+          --accent2-light: #164e63;
+          --green: #10b981;
+          --green-light: #064e3b;
+          --amber: #f59e0b;
+          --amber-light: #78350f;
+          --red: #ef4444;
+          --red-light: #7f1d1d;
+          --purple: #8b5cf6;
+          --purple-light: #4c1d95;
+          --shadow-sm: 0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.2);
+          --shadow: 0 4px 16px rgba(0,0,0,0.4), 0 2px 6px rgba(0,0,0,0.2);
+          --shadow-lg: 0 10px 40px rgba(0,0,0,0.5), 0 4px 16px rgba(0,0,0,0.3);
+        }
+        html.dark .sl-mesh { background: #0f172a; }
+        html.dark .sl-grid-overlay { opacity: 0.3; }
 
 
 
@@ -867,15 +900,17 @@ const handleContribSubmit = async (e) => {
             <span style={{ color: "var(--accent)" }}>+</span>
           </div>
           <div className="flex items-center gap-3">
+            {/* Theme Toggle always visible in nav */}
+            <ThemeToggle />
             {/* Mobile Hamburger Button */}
             <button
               onClick={() => setMobileNavOpen((v) => !v)}
               className="sm:hidden flex flex-col gap-1 p-2 rounded-lg bg-surface border border-border hover:bg-paper transition-colors cursor-pointer"
               aria-label="Toggle Menu"
             >
-              <span className={`block h-0.5 w-5 bg-ink transition-transform origin-center ${mobileNavOpen ? "rotate-45 translate-y-1.5" : ""}`} />
-              <span className={`block h-0.5 w-5 bg-ink transition-opacity ${mobileNavOpen ? "opacity-0" : ""}`} />
-              <span className={`block h-0.5 w-5 bg-ink transition-transform origin-center ${mobileNavOpen ? "-rotate-45 -translate-y-1.5" : ""}`} />
+              <span className={`block h-0.5 w-5 transition-transform origin-center ${mobileNavOpen ? "rotate-45 translate-y-1.5" : ""}`} style={{ background: 'var(--text)' }} />
+              <span className={`block h-0.5 w-5 transition-opacity ${mobileNavOpen ? "opacity-0" : ""}`} style={{ background: 'var(--text)' }} />
+              <span className={`block h-0.5 w-5 transition-transform origin-center ${mobileNavOpen ? "-rotate-45 -translate-y-1.5" : ""}`} style={{ background: 'var(--text)' }} />
             </button>
 
             {session && session.role === "student" ? (
@@ -944,7 +979,7 @@ const handleContribSubmit = async (e) => {
 
         {/* MOBILE MENU DROPDOWN */}
         {mobileNavOpen && (
-          <div className="sm:hidden mb-4 p-4 rounded-2xl bg-white border border-slate-200 shadow-xl flex flex-col gap-3 animate-fade-in z-50 relative">
+          <div className="sm:hidden mb-4 p-4 rounded-2xl shadow-xl flex flex-col gap-3 animate-fade-in z-50 relative" style={{ background: 'var(--surface)', border: '1.5px solid var(--border)' }}>
             {session && session.role === "student" ? (
               <>
                 <div className="pb-2 border-b border-slate-100 flex items-center justify-between">
