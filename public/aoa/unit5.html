@@ -374,6 +374,47 @@ Find: capacity c(e) for every edge e such that:
     <tr><td>Multicommodity Flow</td><td>Route multiple commodities simultaneously</td><td>Shared edge capacity across all commodities</td></tr>
     <tr><td>Network Capacity Assignment</td><td>Optimize delay/throughput by assigning link capacities</td><td>Total budget/cost constraint on capacities</td></tr>
   </table>
+<div class="hin" style="margin-top:12px;">
+  <span class="tag">Hinglish Trick</span>
+  <p><b>Randomized Algorithms:</b> <b>Las Vegas</b> = Casino jackpot (Result 100% sahi aayega, par time variable hai — jaise Randomized QuickSort). <b>Monte Carlo</b> = Fast Car (Time pakka fix hai, par 1% chance hai result galat ho — jaise Karger Min-Cut!).</p>
+</div>
+
+<h2 class="topic">🗺️ Unit 5 Overview Map <span class="imp h">Quick Revise</span></h2>
+<div class="card" style="padding: 24px; background: var(--surface2); border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 24px;">
+  <div style="background: #4f46e5; color: white; padding: 16px; border-radius: 8px; text-align: center; font-size: 1.2rem; font-weight: bold; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);">
+    UNIT 5: Assignment Problems &amp; Randomized Algorithms
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+    
+    <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #06b6d4; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+      <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">1. Assignment Problems</h4>
+      <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+        <li><b>Linear Assignment:</b> 1-to-1 matching, Hungarian Method O(n³)</li>
+        <li><b>QAP:</b> Quadratic (Flow × Distance), NP-Hard</li>
+        <li><b>Flow Shop:</b> Johnson's algo (2 machines: O(n log n); ≥3: NP-Hard)</li>
+      </ul>
+    </div>
+
+    <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #10b981; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+      <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">2. Randomized Paradigms</h4>
+      <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+        <li><b>Las Vegas:</b> Guaranteed correct, random runtime (Random QuickSort)</li>
+        <li><b>Monte Carlo:</b> Deterministic time, small error prob (Miller-Rabin)</li>
+        <li><b>Boosting:</b> Repeat Monte Carlo to drop error to near zero</li>
+      </ul>
+    </div>
+
+    <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #f59e0b; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+      <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">3. Randomized Min-Cut &amp; 2-SAT</h4>
+      <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+        <li><b>Karger's Min-Cut:</b> Random edge contraction until 2 nodes remain</li>
+        <li><b>Min-Cut Success:</b> ≥ 2/(n(n-1)), repeat O(n² log n) times</li>
+        <li><b>Randomized 2-SAT:</b> Random walk on assignments, expected O(n²) steps</li>
+      </ul>
+    </div>
+
+  </div>
 </div>
 
 <!-- 5.12 Q&A -->

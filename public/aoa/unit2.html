@@ -220,6 +220,10 @@ Variable Part → space for dynamically allocated structures, recursion stack, i
   </table>
   <p style="margin-top:8px;">Big-O/Ω allow the case where f(n) and g(n) grow at exactly the same rate (non-strict, "≤"/"≥"); small-o/ω are strict versions ("&lt;"/"&gt;") that exclude equality of growth rate — a subtle but favorite viva/theory question.</p>
 </div>
+<div class="hin" style="margin-top:12px;">
+  <span class="tag">Hinglish Trick</span>
+  <p><b>Big-O</b> = Chhat / Ceiling (Worst case upper bound ≤). <b>Omega (Ω)</b> = Zameen / Floor (Best case lower bound ≥). <b>Theta (Θ)</b> = Beech ki sandhi (Tight exact bound =).</p>
+</div>
 
 <div class="svgbox">
 <svg viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:560px;">
@@ -249,6 +253,10 @@ Variable Part → space for dynamically allocated structures, recursion stack, i
     <tr><td>O(n&sup3;)</td><td>Cubic</td><td>Conventional matrix multiplication</td></tr>
     <tr><td>O(2&#x207F;)</td><td>Exponential</td><td>Brute-force subset generation, naive Fibonacci recursion</td></tr>
   </table>
+</div>
+<div class="hin" style="margin-top:12px;">
+  <span class="tag">Hinglish Trick</span>
+  <p><b>"1 Log Na N-Log Na, Square Cube 2-ki-power Factorial"</b> → Order of growth from fastest to slowest!</p>
 </div>
 
 <!-- 2.4 GROWTH RATE SIMULATOR -->
@@ -926,6 +934,44 @@ Result C = [[19,22],[43,50]]  (matches conventional multiplication ✓)</div>
     <tr><td>2</td><td>Combine cost f(n) equals n<sup>log_b a</sup></td><td>Θ(n<sup>log_b a</sup> log n)</td></tr>
     <tr><td>3</td><td>Combine cost f(n) is larger than n<sup>log_b a</sup></td><td>Θ(f(n))</td></tr>
   </table>
+</div>
+
+<h2 class="topic">🗺️ Unit 2 Overview Map <span class="imp h">Quick Revise</span></h2>
+<div class="card" style="padding: 24px; background: var(--surface2); border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 24px;">
+  <div style="background: #4f46e5; color: white; padding: 16px; border-radius: 8px; text-align: center; font-size: 1.2rem; font-weight: bold; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);">
+    UNIT 2: Algorithm Analysis &amp; Divide and Conquer
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+    
+    <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #06b6d4; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+      <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">1. Asymptotic Analysis</h4>
+      <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+        <li><b>Bounds:</b> Big-O (Upper), Ω (Lower), Θ (Tight)</li>
+        <li><b>Growth:</b> 1 &lt; log n &lt; n &lt; n log n &lt; n² &lt; 2ⁿ &lt; n!</li>
+        <li><b>Recurrences:</b> Master Theorem T(n) = aT(n/b) + f(n) (3 cases)</li>
+      </ul>
+    </div>
+
+    <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #10b981; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+      <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">2. Divide &amp; Conquer Sorts</h4>
+      <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+        <li><b>Binary Search:</b> T(n/2)+O(1) → O(log n)</li>
+        <li><b>Merge Sort:</b> 2T(n/2)+O(n) → O(n log n), Stable, O(n) space</li>
+        <li><b>Quick Sort:</b> Partition around pivot. Avg O(n log n), Worst O(n²), In-place</li>
+      </ul>
+    </div>
+
+    <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #f59e0b; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+      <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">3. Strassen's Matrix Mult</h4>
+      <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+        <li>Conventional: 8 mults → O(n³)</li>
+        <li>Strassen: 7 mults → 7T(n/2)+O(n²) → O(n^2.81)</li>
+        <li>Trade-off: Saves costly multiplications</li>
+      </ul>
+    </div>
+
+  </div>
 </div>
 
 <!-- 2.13 Q&A -->

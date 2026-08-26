@@ -765,6 +765,48 @@ dp[i][w] = max( dp[i-1][w],  profit[i] + dp[i-1][w-weight[i]] )   otherwise</div
     <li>❌ <strong>Forgetting the (n-1) edges rule for MST</strong> — a spanning tree on n vertices always has exactly n−1 edges; stop as soon as that count is reached.</li>
     <li>✅ <strong>Always show the trace table</strong> (not just the final answer) for 10-mark numericals — RTU awards significant step-marks for the working shown.</li>
   </ul>
+<div class="hin" style="margin-top:12px;">
+  <span class="tag">Hinglish Trick</span>
+  <p><b>Greedy vs DP:</b> <b>Greedy</b> = "Aankh band karke abhi ka best lelo" (No regret, fast). <b>DP</b> = "Har option ka chart banao, purana yaad rakho" (Overlapping + Table look-up, guaranteed best!).</p>
+</div>
+
+<h2 class="topic">🗺️ Unit 3 Overview Map <span class="imp h">Quick Revise</span></h2>
+<div class="card" style="padding: 24px; background: var(--surface2); border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 24px;">
+  <div style="background: #4f46e5; color: white; padding: 16px; border-radius: 8px; text-align: center; font-size: 1.2rem; font-weight: bold; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);">
+    UNIT 3: Greedy Method &amp; Dynamic Programming
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+    
+    <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #06b6d4; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+      <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">1. Greedy Paradigms</h4>
+      <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+        <li><b>Fractional Knapsack:</b> Sort by (Profit/Weight) ratio</li>
+        <li><b>Job Sequencing:</b> Sort by profit, schedule in latest free slot</li>
+        <li><b>Optimal Merge:</b> Min-heap, combine 2 smallest files</li>
+        <li><b>MST (V-1 edges):</b> Prim's (dense/vertex) vs Kruskal's (sparse/edge sort)</li>
+      </ul>
+    </div>
+
+    <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #10b981; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+      <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">2. Dynamic Programming</h4>
+      <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+        <li><b>Core:</b> Overlapping Subproblems + Optimal Substructure</li>
+        <li><b>Memoization:</b> Top-Down (Recursive + Cache)</li>
+        <li><b>Tabulation:</b> Bottom-Up (Iterative Table, no stack overhead)</li>
+      </ul>
+    </div>
+
+    <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #f59e0b; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+      <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">3. Classical DP Problems</h4>
+      <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+        <li><b>0/1 Knapsack:</b> dp[i][w] = max(exclude, include) → O(nW)</li>
+        <li><b>MCM:</b> m[i][j] = min_k(m[i][k]+m[k+1][j]+p[i-1]p[k]p[j]) → O(n³)</li>
+        <li><b>LCS:</b> Match: +1 from diagonal; Mismatch: max(left, top) → O(mn)</li>
+      </ul>
+    </div>
+
+  </div>
 </div>
 
 <!-- 3.13 Q&A -->

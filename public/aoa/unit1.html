@@ -86,36 +86,48 @@
       <li><b>CO5:</b> Implement pattern matching algorithms and randomized algorithms.</li>
       <li><b>CO6:</b> Classify problems into P, NP, NP-Hard, NP-Complete and understand approximation algorithms.</li>
     </ul>
+  <div class="hin" style="margin-top:12px;">
+    <span class="tag">Hinglish Trick</span>
+    <p><b>"Doctor Gave Dawaai Before Bed Night"</b> (CO1-6: <b>D</b>ivide &amp; Conquer, <b>G</b>reedy, <b>D</b>P, <b>B</b>acktracking, <b>B</b>ranch &amp; Bound, <b>N</b>P-Complete) — AOA ke 6 core pillars ka sequence!</p>
   </div>
 
-  <div class="svgbox">
-    <svg viewBox="0 0 760 170" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-          <path d="M0,0L6,3L0,6Z" fill="#4f46e5"/>
-        </marker>
-      </defs>
-      <rect x="10" y="60" width="120" height="50" rx="8" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.5"/>
-      <text x="70" y="88" text-anchor="middle" fill="#4f46e5" font-size="12" font-family="Inter,sans-serif" font-weight="700">Problem</text>
-      <text x="70" y="102" text-anchor="middle" fill="#4f46e5" font-size="11" font-family="Inter,sans-serif">Definition</text>
-      <line x1="130" y1="85" x2="158" y2="85" stroke="#4f46e5" stroke-width="1.5" marker-end="url(#ar)"/>
-      <rect x="160" y="60" width="110" height="50" rx="8" fill="#ecfeff" stroke="#06b6d4" stroke-width="1.5"/>
-      <text x="215" y="88" text-anchor="middle" fill="#0369a1" font-size="12" font-family="Inter,sans-serif" font-weight="700">Algorithm</text>
-      <text x="215" y="102" text-anchor="middle" fill="#0369a1" font-size="11" font-family="Inter,sans-serif">Design Strategy</text>
-      <line x1="270" y1="85" x2="298" y2="85" stroke="#4f46e5" stroke-width="1.5" marker-end="url(#ar)"/>
-      <rect x="300" y="60" width="110" height="50" rx="8" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5"/>
-      <text x="355" y="88" text-anchor="middle" fill="#b45309" font-size="12" font-family="Inter,sans-serif" font-weight="700">Complexity</text>
-      <text x="355" y="102" text-anchor="middle" fill="#b45309" font-size="11" font-family="Inter,sans-serif">Analysis (O,Ω,Θ)</text>
-      <line x1="410" y1="85" x2="438" y2="85" stroke="#4f46e5" stroke-width="1.5" marker-end="url(#ar)"/>
-      <rect x="440" y="60" width="110" height="50" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5"/>
-      <text x="495" y="88" text-anchor="middle" fill="#065f46" font-size="12" font-family="Inter,sans-serif" font-weight="700">Correctness</text>
-      <text x="495" y="102" text-anchor="middle" fill="#065f46" font-size="11" font-family="Inter,sans-serif">Proof</text>
-      <line x1="550" y1="85" x2="578" y2="85" stroke="#4f46e5" stroke-width="1.5" marker-end="url(#ar)"/>
-      <rect x="580" y="60" width="120" height="50" rx="8" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="1.5"/>
-      <text x="640" y="88" text-anchor="middle" fill="#6d28d9" font-size="12" font-family="Inter,sans-serif" font-weight="700">Efficient</text>
-      <text x="640" y="102" text-anchor="middle" fill="#6d28d9" font-size="11" font-family="Inter,sans-serif">Implementation</text>
-    </svg>
-    <p class="cap">Fig 1.1 — Algorithm Analysis Workflow: Problem → Design Strategy → Complexity Analysis → Correctness Proof → Implementation</p>
+  <h2 class="topic">🗺️ Unit 1 Overview Map <span class="imp h">Quick Revise</span></h2>
+  <div class="card" style="padding: 24px; background: var(--surface2); border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+    <div style="background: #4f46e5; color: white; padding: 16px; border-radius: 8px; text-align: center; font-size: 1.2rem; font-weight: bold; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);">
+      UNIT 1: Algorithm Analysis &amp; Paradigms Overview
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px;">
+      
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #06b6d4; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">1. Core Objectives</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li>Measure Time &amp; Space complexity (Asymptotics)</li>
+          <li>Choose optimal design paradigms for problems</li>
+          <li>Prove algorithmic correctness mathematically</li>
+        </ul>
+      </div>
+
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #10b981; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">2. Analysis Workflow</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li>Problem Spec → Design Strategy</li>
+          <li>Asymptotic Analysis (O, Ω, Θ)</li>
+          <li>Proof of Correctness → Implementation</li>
+        </ul>
+      </div>
+
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #f59e0b; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">3. 6 Design Paradigms</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li>Divide &amp; Conquer (Merge/Quick)</li>
+          <li>Greedy &amp; Dynamic Programming</li>
+          <li>Backtracking &amp; Branch &amp; Bound</li>
+          <li>Randomized &amp; NP-Completeness</li>
+        </ul>
+      </div>
+
+    </div>
   </div>
 
   <div class="qsection" id="qa">
