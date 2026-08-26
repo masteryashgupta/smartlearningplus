@@ -569,6 +569,51 @@ n = number of equally likely choices/alternatives
   </div>
 </div>
 
+<div class="hin" style="margin-top:12px;">
+  <span class="tag">Hinglish Trick</span>
+  <p><b>GOMS &amp; KLM:</b> <b>GOMS</b> = <b>G</b>oals, <b>O</b>perators, <b>M</b>ethods, <b>S</b>election rules. <b>KLM Operators:</b> <b>"Kyun Point Home Dhyan Me Rakhein"</b> (<b>K</b>eystroke 0.28s, <b>P</b>oint 1.1s, <b>H</b>ome 0.4s, <b>D</b>raw, <b>M</b>ental 1.35s, <b>R</b>esponse).<br>
+  <b>Fitts vs Hick:</b> <b>Fitts' Law</b> = <b>Motor</b> (Mouse se button tak ka travel time $\propto \log(D/W + 1)$). <b>Hick's Law</b> = <b>Mind</b> (Menu ke options mein se choose karne ka time $\propto \log(n + 1)$).</p>
+</div>
+
+<h2 class="topic">🗺️ Unit 3 Overview Map <span class="imp h">Quick Revise</span></h2>
+<div class="card" style="padding: 24px; background: var(--surface2); border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 24px;">
+  <div style="background: #6366f1; color: white; padding: 16px; border-radius: 8px; text-align: center; font-size: 1.2rem; font-weight: bold; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);">
+    UNIT 3: Model-Based Design &amp; Cognitive Evaluation
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+    
+    <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #06b6d4; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+      <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">1. GOMS Family of Models</h4>
+      <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+        <li><b>Components:</b> Goals, Operators, Methods, Selection rules</li>
+        <li><b>CMN-GOMS:</b> Full goal hierarchy, sequential expert performance</li>
+        <li><b>KLM:</b> Keystroke-Level Model ($T = K + P + H + D + M + R$)</li>
+        <li><b>CPM-GOMS:</b> Critical path model for parallel operators</li>
+      </ul>
+    </div>
+
+    <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #10b981; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+      <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">2. Fitts' Law (Motor Pointing)</h4>
+      <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+        <li><b>Formula:</b> $MT = a + b \log_2\left(\frac{D}{W} + 1\right)$</li>
+        <li><b>Index of Difficulty:</b> $ID = \log_2(D/W + 1)$ bits</li>
+        <li><b>UI Principle:</b> Make clickable targets large &amp; place nearby (Screen edges have infinite width!)</li>
+      </ul>
+    </div>
+
+    <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #f59e0b; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+      <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">3. Hick-Hyman Law (Cognitive Choice)</h4>
+      <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+        <li><b>Formula:</b> $RT = a + b \log_2(n + 1)$</li>
+        <li><b>Choice Time:</b> Logarithmic increase with number of options $n$</li>
+        <li><b>UI Principle:</b> Group flat menus into categorized submenus to cut decision cognitive load</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
 <!-- ============ 3.12 Q&A ============ -->
 <div class="qsection" id="u3-qa">
   <h2 class="topic" style="margin-top:0;">3.12 RTU Exam Q&amp;A Bank <span class="imp h">MUST PRACTICE</span></h2>

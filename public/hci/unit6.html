@@ -803,9 +803,50 @@
     <p class="cap">Fig 6: The two families of Unit 6 — Task Models (HTA→CTT) describe WHAT the user does; Dialog State Models (FSM→Statechart→Petri Net) describe HOW the interface responds, with increasing concurrency support left to right</p>
   </div>
 
-  <div class="keypoint" style="display:flex;gap:12px;align-items:flex-start;">
-    <span class="icon">💡</span>
-    <p style="color:var(--text2);">Remember the "story" of this unit for long-answer questions: we start with simple, informal <strong>HTA</strong>, formalise it into <strong>CTT</strong> for engineering rigor and concurrency, then shift focus from "task" to "dialog": start with basic <strong>FSM</strong>, discover the state-explosion problem, fix it with <strong>Statecharts</strong> (hierarchy + concurrency), and finally use <strong>Petri Nets</strong> when explicit synchronisation between parallel activities must be modelled.</p>
+  <div class="hin" style="margin-top:12px;">
+    <span class="tag">Hinglish Trick</span>
+    <p><b>Task &amp; Dialog Models Progression:</b><br>
+    <b>Task (User kya karta hai):</b> <b>HTA</b> (Goals + Subgoals + Plans) $\rightarrow$ <b>CTT</b> (Paternò's Operators: `>>` Next, `[]` Choice, `|||` Parallel, `[>` Cancel).<br>
+    <b>Dialog (UI kaise respond karta hai):</b> <b>FSM</b> (Simple, par State Explosion) $\rightarrow$ <b>Statecharts</b> (Harel's AND/OR states + History) $\rightarrow$ <b>Petri Nets</b> (Places + Transitions + Tokens — Best for Sync!).</p>
+  </div>
+
+  <h2 class="topic">🗺️ Unit 6 Overview Map <span class="imp h">Quick Revise</span></h2>
+  <div class="card" style="padding: 24px; background: var(--surface2); border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 24px;">
+    <div style="background: #6366f1; color: white; padding: 16px; border-radius: 8px; text-align: center; font-size: 1.2rem; font-weight: bold; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);">
+      UNIT 6: Task Modelling &amp; Dialog Design Formalisms
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+      
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #06b6d4; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">1. Task Models (User Goals)</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li><b>HTA:</b> Hierarchical goal decomposition (Goals, Operations, Plans)</li>
+          <li><b>CTT:</b> ConcurTaskTrees (Paternò) with formal temporal operators</li>
+          <li><b>CTT Categories:</b> User, Interaction, Application, Abstract tasks</li>
+          <li><b>Operators:</b> Enabling ($\gg$), Choice ($[]$), Concurrency ($|||$), Deactivation ($[>$)</li>
+        </ul>
+      </div>
+
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #10b981; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">2. Dialog State Models (UI States)</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li><b>FSM:</b> States + Transitions; suffers from state explosion ($2^n$)</li>
+          <li><b>Statecharts (Harel):</b> OR-states (Hierarchy), AND-states (Concurrency)</li>
+          <li><b>History State ($H$):</b> Remembers last active substate on re-entry</li>
+        </ul>
+      </div>
+
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #f59e0b; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">3. Petri Nets &amp; Synchronisation</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li><b>Elements:</b> Places (Circles), Transitions (Bars), Tokens (Dots)</li>
+          <li><b>Firing Rule:</b> Transition fires only when all input places have tokens</li>
+          <li><b>Synchronization:</b> Models concurrent task completion before joining</li>
+        </ul>
+      </div>
+
+    </div>
   </div>
 
   <div class="qsection" id="qa">
