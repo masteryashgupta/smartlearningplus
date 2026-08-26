@@ -422,7 +422,7 @@ export default function Home() {
       <footer className="border-t border-slate-200 dark:border-slate-800 bg-slate-100/80 dark:bg-slate-950 py-10 px-4 mt-auto">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6 text-xs text-slate-600 dark:text-slate-400">
           <div className="flex items-center gap-2">
-            <img src="/logo.png?v=3" alt="Logo" className="w-5 h-5 object-contain" />
+            <img src="/logo.png?v=4" alt="Logo" className="w-5 h-5 object-contain" />
             <span className="font-bold text-slate-900 dark:text-white">Smart Learning+</span>
             <span>· Open Engineering Study Platform</span>
           </div>

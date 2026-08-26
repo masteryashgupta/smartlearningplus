@@ -27,7 +27,7 @@ export default function Navbar({ onOpenSubscribe }) {
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2.5 shrink-0 text-decoration-none group">
           <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-primary to-indigo-500 flex items-center justify-center shadow-md shadow-primary/20 group-hover:scale-105 transition-transform">
-            <img src="/logo.png?v=3" alt="Logo" className="w-5 h-5 object-contain" />
+            <img src="/logo.png?v=4" alt="Logo" className="w-5 h-5 object-contain" />
           </div>
           <span className="font-display font-extrabold text-base tracking-tight text-slate-900 dark:text-white flex items-center">
             Smart Learning<span className="text-primary font-bold text-[10px] ml-1 px-1.5 py-0.5 bg-primary/10 dark:bg-primary/20 rounded-md border border-primary/30">+</span>

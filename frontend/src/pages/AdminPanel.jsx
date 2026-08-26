@@ -236,7 +236,7 @@ export default function AdminPanel() {
         <div className="flex items-center justify-between mb-6 px-2">
           <Link to="/" className="flex items-center gap-2.5 text-decoration-none">
             <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-primary to-indigo-500 flex items-center justify-center shadow-md">
-              <img src="/logo.png?v=3" alt="Logo" className="w-5 h-5 object-contain" />
+              <img src="/logo.png?v=4" alt="Logo" className="w-5 h-5 object-contain" />
             </div>
             <div>
               <div className="font-extrabold text-sm text-white">Smart Learning+</div>

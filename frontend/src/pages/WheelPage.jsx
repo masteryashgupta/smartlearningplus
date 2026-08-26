@@ -771,7 +771,9 @@ export default function WheelPage() {
         {/* Nav */}
         <nav className="wheel-nav">
           <Link to="/" className="wheel-nav-logo">
-            <div className="wheel-nav-logo-icon">🎡</div>
+            <div className="wheel-nav-logo-icon">
+              <img src="/logo.png?v=4" alt="Logo" style={{ width: "22px", height: "22px", objectFit: "contain" }} />
+            </div>
             <span className="wheel-nav-title">{wheelTitle}</span>
           </Link>
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
