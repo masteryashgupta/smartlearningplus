@@ -212,14 +212,8 @@ export default function Home() {
   };
 
   const filteredSubjects = SUBJECTS.filter((s) => {
-    const query = searchQuery.toLowerCase();
-    const matchesQuery =
-      s.name.toLowerCase().includes(query) ||
-      s.code.toLowerCase().includes(query) ||
-      s.desc.toLowerCase().includes(query) ||
-      s.units.some((u) => u.title.toLowerCase().includes(query));
-    if (activeFilter === "all") return matchesQuery;
-    return matchesQuery && s.code.toLowerCase() === activeFilter.toLowerCase();
+    if (activeFilter === "all") return true;
+    return s.code.toLowerCase() === activeFilter.toLowerCase();
   });
 
   return (
@@ -234,13 +228,13 @@ export default function Home() {
       />
 
       {/* HERO SECTION */}
-      <header className="relative pt-12 pb-16 px-4 overflow-hidden border-b border-slate-800/80">
+      <header className="relative pt-12 pb-14 px-4 overflow-hidden border-b border-slate-800/80">
         <div className="absolute inset-0 pointer-events-none opacity-30">
           <div className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-primary/20 blur-3xl" />
           <div className="absolute top-60 -left-40 w-96 h-96 rounded-full bg-indigo-600/15 blur-3xl" />
         </div>
 
-        <div className="max-w-4xl mx-auto text-center relative z-10 space-y-6">
+        <div className="max-w-4xl mx-auto text-center relative z-10 space-y-4">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/10 border border-primary/25 text-primary text-xs font-bold tracking-wide uppercase">
             <span>🚀</span>
             <span>Open Engineering Study Resource Hub</span>
@@ -256,50 +250,6 @@ export default function Home() {
           <p className="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
             Curated unit-by-unit syllabus notes, mnemonic memory tricks, exam cheat sheets, and essential study tools. 100% free and open for every learner.
           </p>
-
-          {/* Quick Search Box */}
-          <div className="max-w-xl mx-auto pt-2">
-            <div className="relative flex items-center">
-              <span className="absolute left-4 text-slate-400 text-base">🔍</span>
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search topics (e.g. Virtual Memory, LR Parsing, Entropy, Dijkstra)..."
-                className="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-slate-900/90 border border-slate-700/80 text-white placeholder-slate-400 text-xs sm:text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 shadow-xl backdrop-blur-xl transition-all"
-              />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery("")}
-                  className="absolute right-3.5 text-xs text-slate-400 hover:text-white px-1.5 py-0.5"
-                >
-                  Clear
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* Action CTAs */}
-          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-            <a
-              href="#subjects"
-              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary to-indigo-600 hover:from-primary/90 text-white text-xs sm:text-sm font-bold shadow-lg shadow-primary/25 transition-all hover:scale-105"
-            >
-              📚 Browse All Subjects
-            </a>
-            <Link
-              to="/tools"
-              className="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700/80 border border-slate-700 text-white text-xs sm:text-sm font-bold transition-all hover:scale-105"
-            >
-              ⚡ Study Tools Hub
-            </Link>
-            <button
-              onClick={() => setShowSubscribeModal(true)}
-              className="px-5 py-2.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs sm:text-sm font-bold transition-all"
-            >
-              📧 Get Email Updates
-            </button>
-          </div>
         </div>
       </header>
 
