@@ -93,22 +93,7 @@ export default function Disclaimer() {
               </div>
             </div>
 
-            {/* Section C: AI Assistant Disclaimer */}
-            <div className="legal-section">
-              <h2 className="legal-heading">AI Assistant Disclaimer</h2>
-              <div className="legal-text">
-                <p>
-                  The SmartAI platform assistant is designed to provide guidance on site features and materials. While we strive 
-                  to provide helpful information, the AI should not be relied upon as the sole source of academic truth.
-                </p>
-                <p>
-                  <strong>Always verify important academic information</strong> from authoritative sources such as your 
-                  official course syllabus, textbooks, or university publications before making academic decisions.
-                </p>
-              </div>
-            </div>
-
-            {/* Section D: No Guarantee of Accuracy */}
+            {/* Section C: No Guarantee of Accuracy */}
             <div className="legal-section">
               <h2 className="legal-heading">No Guarantee of Accuracy</h2>
               <div className="legal-text">

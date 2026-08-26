@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { api } from "../api.js";
 import Navbar from "../components/Navbar.jsx";
 import AnnouncementBar from "../components/AnnouncementBar.jsx";
-import AskAIWidget from "../components/AskAIWidget.jsx";
 import ShareWidget from "../components/ShareWidget.jsx";
 
 const SUBJECTS = [
@@ -393,9 +392,6 @@ export default function Home() {
           </div>
         </div>
       )}
-
-      {/* Floating AI Platform Assistant Widget */}
-      <AskAIWidget />
 
       {/* Floating Share / QR Widget */}
       <ShareWidget />
