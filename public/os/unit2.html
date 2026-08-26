@@ -349,6 +349,63 @@ do {                          do {
 
 
 
+      <h2 class="topic">🗺️ Unit 2 Overview Map <span class="imp h">Quick Revise</span></h2>
+      <div class="card" style="padding: 24px; background: var(--surface2); border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+        <div style="background: #4f46e5; color: white; padding: 16px; border-radius: 8px; text-align: center; font-size: 1.2rem; font-weight: bold; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);">
+          UNIT 2: Intro, Process Management & Synchronization
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+          
+          <!-- Block 1 -->
+          <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #06b6d4; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+            <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">1. Intro, Evolution & Structure</h4>
+            <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+              <li><b>Goals:</b> Process, Memory, File, Device, Security, UI</li>
+              <li><b>Types:</b> Batch, Multi-prog, Time-share, Real-Time, Distributed, Network, Mobile</li>
+              <li><b>Evolution:</b> Serial → Batch → Multi → Time-share → PC → Dist. → Modern</li>
+              <li><b>Modes:</b> User Mode, Kernel Mode</li>
+              <li><b>OS Structure:</b> Monolithic, Layered, Microkernel, Client-Server</li>
+            </ul>
+          </div>
+
+          <!-- Block 2 -->
+          <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #10b981; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+            <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">2. Process & Threads</h4>
+            <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+              <li><b>Process States:</b> New → Ready → Running → Waiting → Terminated</li>
+              <li><b>PCB:</b> PID, State, Program Counter, Registers, Memory Limits</li>
+              <li><b>Scheduling Algos:</b> 
+                <ul style="padding-left: 16px; margin: 4px 0;">
+                  <li>FCFS (Non-Preemptive)</li>
+                  <li>Round Robin (Preemptive)</li>
+                  <li>SJF & Priority (Both)</li>
+                </ul>
+              </li>
+              <li><b>Threads:</b> Lightweight process</li>
+              <li><b>Thread Models:</b> Many-to-One, One-to-One, Many-to-Many</li>
+            </ul>
+          </div>
+
+          <!-- Block 3 -->
+          <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #f59e0b; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+            <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">3. IPC & Synchronization</h4>
+            <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+              <li><b>IPC Models:</b> Shared Memory (fast), Message Passing (safe)</li>
+              <li><b>Critical Section Rules:</b> Mutual Exclusion, Progress, Bounded Waiting</li>
+              <li><b>Semaphores:</b> Integer counter for sync
+                <ul style="padding-left: 16px; margin: 4px 0;">
+                  <li>Binary (0/1) - Locks/Mutex</li>
+                  <li>Counting (N) - Resource pooling</li>
+                </ul>
+              </li>
+              <li><b>Operations:</b> wait() / P (Decrement), signal() / V (Increment)</li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+
       <!-- Q&A UNIT 2 -->
       <div class="qsection scroll-anchor" id="qa2">
         <h1 class="unit-title">❓ Unit 2 — Q&amp;A (RTU Exam Pattern)</h1>
