@@ -303,56 +303,6 @@ export default function Home() {
         </div>
       </header>
 
-      {/* FEATURED EMAIL NOTIFICATION CARD */}
-      <section className="max-w-5xl mx-auto px-4 -mt-6 relative z-20">
-        <div className="rounded-2xl border border-indigo-500/30 bg-gradient-to-r from-indigo-950/70 via-slate-900/90 to-slate-950 p-6 sm:p-8 shadow-2xl backdrop-blur-xl">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="space-y-2 text-center md:text-left">
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-indigo-500/20 text-indigo-300 text-[11px] font-bold uppercase tracking-wider">
-                <span>📬</span>
-                <span>Email Newsletter &amp; Notifications</span>
-              </div>
-              <h3 className="text-lg sm:text-xl font-bold text-white">
-                Never Miss a Unit Cheat Sheet or Exam Update
-              </h3>
-              <p className="text-xs text-slate-300 max-w-md leading-relaxed">
-                Subscribe with your email to receive direct notifications when new theory notes, lab manuals, and one-shot videos are uploaded.
-              </p>
-            </div>
-
-            <form onSubmit={handleSubscribe} className="w-full md:w-auto shrink-0 flex flex-col sm:flex-row items-center gap-2.5">
-              <input
-                type="email"
-                required
-                value={subscribeEmail}
-                onChange={(e) => setSubscribeEmail(e.target.value)}
-                placeholder="Enter your student email..."
-                className="w-full sm:w-72 px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-400 text-xs sm:text-sm focus:outline-none focus:border-indigo-400"
-              />
-              <button
-                type="submit"
-                disabled={subscribeLoading}
-                className="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-primary to-indigo-600 hover:from-primary/90 text-white font-bold text-xs sm:text-sm shadow-md shadow-primary/25 disabled:opacity-50 transition-all shrink-0"
-              >
-                {subscribeLoading ? "Subscribing..." : "Subscribe Free"}
-              </button>
-            </form>
-          </div>
-
-          {subscribeResult && (
-            <div
-              className={`mt-4 p-3 rounded-xl text-xs font-semibold ${
-                subscribeResult.ok
-                  ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                  : "bg-rose-500/10 text-rose-400 border border-rose-500/20"
-              }`}
-            >
-              {subscribeResult.text}
-            </div>
-          )}
-        </div>
-      </section>
-
       {/* MAIN SUBJECT MODULES SECTION */}
       <section id="subjects" className="max-w-6xl mx-auto px-4 py-16 space-y-8 flex-1">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
