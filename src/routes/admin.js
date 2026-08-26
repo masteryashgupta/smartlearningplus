@@ -2,210 +2,87 @@ import { Router } from "express";
 import bcrypt from "bcryptjs";
 import { q } from "../db.js";
 import { requireAuth } from "../auth.js";
-import { computeStats } from "../lib/timetable.js";
-import { signUrls, checkB2Health } from "../lib/b2.js";
-import { getBotStatus, bot } from "../bot/bot.js";
-import crypto from "crypto";
-import { sendVerificationEmail, sendRejectionEmail, sendAnnouncementEmail } from "../lib/mailer.js";
+import { sendAnnouncementEmail } from "../lib/mailer.js";
 
 const router = Router();
 
-export async function logModeratorActivity(req, action, details) {
-  const actorName = req.auth ? (req.auth.name || (req.auth.role === "admin" ? "Admin" : "Moderator")) : "System";
-  
-  // Log to database only if it's a student moderator
-  if (req.auth && req.auth.role === "student") {
-    try {
-      await q(
-        "insert into moderator_logs (moderator_id, moderator_name, action, details) values ($1, $2, $3, $4)",
-        [req.auth.id, actorName, action, details]
-      );
-    } catch (err) {
-      console.error("Failed to log moderator activity:", err);
-    }
-  }
-
-  // Always notify via Telegram
+// Helper to log moderator/admin activities
+async function logModeratorActivity(req, action, details) {
   try {
-    const envAdminId = process.env.ADMIN_TELEGRAM_ID?.trim();
-    if (envAdminId && bot) {
-      const htmlMsg = `🛡️ <b>Platform Activity</b>\n\n<b>By:</b> ${actorName}\n<b>Action:</b> ${action}\n<b>Details:</b> ${details}`;
-      bot.sendMessage(envAdminId, htmlMsg, { parse_mode: "HTML" }).catch(err => {
-        console.error(`Failed to broadcast admin activity to env admin ${envAdminId}:`, err);
-      });
-    }
+    const adminId = req.auth?.id || null;
+    const adminName = req.auth?.name || "Admin";
+    await q(
+      "insert into moderator_logs (moderator_id, moderator_name, action, details) values ($1, $2, $3, $4)",
+      [adminId, adminName, action, details]
+    );
   } catch (err) {
-    console.error("Telegram notification error:", err);
+    console.error("Failed to log activity:", err.message || err);
   }
 }
 
-// ---- Holidays ----
-// slot_id = null -> whole day off for everyone
-router.get("/holidays", requireAuth("admin"), async (req, res) => {
-  const { rows } = await q(
-    `select h.*, ts.label, s.name as subject_name from holidays h
-     left join timetable_slots ts on ts.id = h.slot_id
-     left join subjects s on s.id = ts.subject_id
-     order by h.date desc`
-  );
-  res.json(rows);
-});
-
-router.post("/holidays", requireAuth("admin"), async (req, res) => {
-  const { date, slot_id, reason } = req.body;
-  if (!date) return res.status(400).json({ error: "date is required" });
-  const { rows } = await q(
-    `insert into holidays (date, slot_id, reason, created_by) values ($1,$2,$3,$4)
-     on conflict (date, slot_id) do update set reason = $3 returning *`,
-    [date, slot_id || null, reason || null, req.auth.id]
-  );
-  
-  // Construct and send Telegram notification
-  let telegramMessage = "";
-  if (slot_id) {
-    try {
-      const slotRes = await q(
-        `select ts.label, s.name as subject_name, ts.day_of_week
-         from timetable_slots ts
-         join subjects s on s.id = ts.subject_id
-         where ts.id = $1`,
-        [slot_id]
-      );
-      if (slotRes.rows.length > 0) {
-        const slot = slotRes.rows[0];
-        telegramMessage = `🚨 <b>Class Cancelled</b> 🚨\n\n<b>Date:</b> ${date}\n<b>Subject:</b> ${slot.subject_name}\n<b>Slot:</b> ${slot.label || "Regular Class"}\n<b>Reason:</b> ${reason || "No reason specified"}`;
-      }
-    } catch (dbErr) {
-      console.error("Failed to query slot details for telegram notification:", dbErr);
-    }
-  } else {
-    telegramMessage = `📅 <b>Holiday Announcement</b> 📅\n\n<b>Date:</b> ${date}\n<b>Reason:</b> ${reason || "No reason specified"}`;
-  }
-
-  if (telegramMessage && bot) {
-    try {
-      const usersRes = await q("select telegram_id from users where telegram_id is not null and is_active = true");
-      for (const u of usersRes.rows) {
-        bot.sendMessage(u.telegram_id, telegramMessage, { parse_mode: "HTML" }).catch(err => {
-          console.error(`Failed to send cancellation notice to telegram user ${u.telegram_id}:`, err.message || err);
-        });
-      }
-    } catch (err) {
-      console.error("Failed to broadcast telegram notification:", err);
-    }
-  }
-
-  await logModeratorActivity(req, "holiday_add", `Added/updated holiday/cancellation on ${date}`);
-  res.json(rows[0]);
-});
-
-router.delete("/holidays/:id", requireAuth("admin"), async (req, res) => {
-  await q("delete from holidays where id = $1", [req.params.id]);
-  await logModeratorActivity(req, "holiday_remove", `Deleted holiday ${req.params.id}`);
-  res.json({ ok: true });
-});
-
-// ---- Users ----
-router.get("/users", requireAuth("admin"), async (req, res) => {
-  const { rows } = await q(
-    `select u.id, u.name, u.email, u.batch, u.section, u.telegram_username, u.telegram_id,
-            u.is_active, u.is_moderator, u.created_at,
-            count(*) filter (where a.status='present') as present,
-            count(*) filter (where a.status in ('present','absent')) as total
-     from users u
-     left join attendance a on a.user_id = u.id
-     group by u.id order by u.created_at desc`
-  );
-  res.json(
-    rows.map((r) => ({
-      ...r,
-      percentage: r.total > 0 ? Math.round((r.present / r.total) * 1000) / 10 : null,
-    }))
-  );
-});
-
-router.put("/users/:id", requireAuth("admin"), async (req, res) => {
-  const { name, batch, section, is_active, is_moderator } = req.body;
-  const { rows } = await q(
-    `update users set name = coalesce($1,name), batch = coalesce($2,batch),
-       section = coalesce($3,section), is_active = coalesce($4,is_active),
-       is_moderator = coalesce($5,is_moderator) where id = $6 returning *`,
-    [name, batch, section, is_active, is_moderator, req.params.id]
-  );
-  await logModeratorActivity(req, "user_edit", `Edited user profile: ${rows[0]?.email || req.params.id}`);
-  res.json(rows[0]);
-});
-
-router.delete("/users/:id", requireAuth("admin"), async (req, res) => {
-  await q("delete from users where id = $1", [req.params.id]);
-  await logModeratorActivity(req, "user_delete", `Deleted user ${req.params.id}`);
-  res.json({ ok: true });
-});
-
-// ---- User Stats ----
-router.get("/users/:id/stats", requireAuth("admin"), async (req, res) => {
+// ---- Overview Stats ----
+router.get("/overview", requireAuth("moderator"), async (req, res) => {
   try {
-    const stats = await computeStats(req.params.id);
-    res.json(stats);
+    const [
+      subscribersRes,
+      pendingMaterialsRes,
+      approvedMaterialsRes,
+      pastesRes,
+      announcementRes
+    ] = await Promise.all([
+      q("select count(*) from notification_subscribers"),
+      q("select count(*) from community_materials where status = 'pending'"),
+      q("select count(*) from community_materials where status = 'approved' and is_hidden = false"),
+      q("select count(*) from pastes"),
+      q("select * from announcement_singleton where id = 'global'")
+    ]);
+
+    res.json({
+      subscribersCount: Number(subscribersRes.rows[0]?.count || 0),
+      pendingMaterialsCount: Number(pendingMaterialsRes.rows[0]?.count || 0),
+      approvedMaterialsCount: Number(approvedMaterialsRes.rows[0]?.count || 0),
+      pastesCount: Number(pastesRes.rows[0]?.count || 0),
+      announcement: announcementRes.rows[0] || null
+    });
   } catch (err) {
-    console.error("Error fetching user stats:", err);
+    console.error("Admin overview error:", err);
     res.status(500).json({ error: "Internal server error" });
   }
 });
 
-// ---- Whitelist ----
-router.get("/whitelist", requireAuth("moderator"), async (req, res) => {
-  try {
-    const { rows } = await q("select * from whitelisted_emails order by email asc");
-    res.json(rows);
-  } catch (err) {
-    console.error("Fetch whitelist error:", err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-router.post("/whitelist", requireAuth("moderator"), async (req, res) => {
-  let { email } = req.body;
-  if (!email) return res.status(400).json({ error: "email is required" });
-  email = email.trim().toLowerCase();
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return res.status(400).json({ error: "Invalid email format" });
-  }
-  try {
-    const { rows } = await q(
-      "insert into whitelisted_emails (email) values ($1) on conflict (email) do nothing returning *",
-      [email]
-    );
-    if (rows.length > 0) {
-      await logModeratorActivity(req, "whitelist_add", `Added "${email}" to the whitelist`);
-    }
-    res.json({ ok: true, email: email });
-  } catch (err) {
-    console.error("Add to whitelist error:", err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-router.delete("/whitelist/:id", requireAuth("admin"), async (req, res) => {
-  try {
-    const { rows } = await q("delete from whitelisted_emails where id = $1 returning email", [req.params.id]);
-    if (rows.length > 0) {
-      await logModeratorActivity(req, "whitelist_remove", `Removed "${rows[0].email}" from the whitelist`);
-    }
-    res.json({ ok: true });
-  } catch (err) {
-    console.error("Delete whitelist error:", err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-// ---- Subscribers ----
+// ---- Notification Subscribers Management ----
 router.get("/subscribers", requireAuth("moderator"), async (req, res) => {
   try {
     const { rows } = await q("select * from notification_subscribers order by created_at desc");
     res.json(rows);
   } catch (err) {
     console.error("Fetch subscribers error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.post("/subscribers/add", requireAuth("admin"), async (req, res) => {
+  const { email } = req.body;
+  if (!email || !email.trim()) {
+    return res.status(400).json({ error: "Email is required" });
+  }
+  const cleanEmail = email.trim().toLowerCase();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+    return res.status(400).json({ error: "Invalid email format" });
+  }
+
+  try {
+    const { rows } = await q(
+      "insert into notification_subscribers (email) values ($1) on conflict (email) do nothing returning *",
+      [cleanEmail]
+    );
+    if (rows.length === 0) {
+      return res.status(400).json({ error: "Email is already subscribed" });
+    }
+    await logModeratorActivity(req, "subscriber_add", `Manually added "${cleanEmail}" to subscribers`);
+    res.json({ ok: true, subscriber: rows[0] });
+  } catch (err) {
+    console.error("Add subscriber error:", err);
     res.status(500).json({ error: "Internal server error" });
   }
 });
@@ -223,207 +100,85 @@ router.delete("/subscribers/:id", requireAuth("admin"), async (req, res) => {
   }
 });
 
-// ---- Registration Requests ----
-router.get("/registrations", requireAuth("moderator"), async (req, res) => {
-  try {
-    const { rows } = await q("select * from registration_requests where status = 'pending' order by created_at desc");
-    res.json(rows);
-  } catch (err) {
-    console.error("Fetch registrations error:", err);
-    res.status(500).json({ error: "Internal server error" });
+// ---- Broadcaster / Emailer ----
+router.post("/broadcast", requireAuth("admin"), async (req, res) => {
+  const { subject, message, subscriberIds, customEmails, buttonText, buttonLink } = req.body;
+  if (!message || !message.trim()) {
+    return res.status(400).json({ error: "Message content is required" });
   }
-});
+  if (!subject || !subject.trim()) {
+    return res.status(400).json({ error: "Email subject is required" });
+  }
 
-router.post("/registrations/:id/approve", requireAuth("admin"), async (req, res) => {
   try {
-    const { rows } = await q("select * from registration_requests where id = $1", [req.params.id]);
-    const reqData = rows[0];
-    if (!reqData) return res.status(404).json({ error: "Request not found" });
-    if (reqData.status !== 'pending') return res.status(400).json({ error: "Request already processed" });
+    let targetEmails = [];
 
-    // 1. Add to whitelist
-    await q("insert into whitelisted_emails (email) values ($1) on conflict (email) do nothing", [reqData.email]);
-
-    // 2. Insert into users
-    const connectToken = crypto.randomBytes(16).toString("hex");
-    const verifyToken = crypto.randomBytes(32).toString("hex");
-
-    const userRes = await q(
-      `insert into users (name, email, password_hash, batch, telegram_connect_token, email_verified, verification_token)
-       values ($1, $2, $3, $4, $5, false, $6) returning *`,
-      [reqData.name, reqData.email, reqData.password_hash, reqData.batch, connectToken, verifyToken]
-    );
-    const user = userRes.rows[0];
-
-    // 3. Mark request as approved
-    await q("update registration_requests set status = 'approved' where id = $1", [reqData.id]);
-
-    // 4. Send verification email
-    let frontendBase = process.env.FRONTEND_URL || "https://smartlearningplus.me";
-    if (frontendBase.includes(",")) {
-      const urls = frontendBase.split(",").map((u) => u.trim());
-      const prodUrl = urls.find((u) => !u.includes("localhost"));
-      frontendBase = prodUrl || urls[0];
-    }
-    const verifyUrl = `${frontendBase}/index.html#/verify-email?token=${verifyToken}`;
-    try {
-      await sendVerificationEmail(user.email, verifyUrl, user.name);
-    } catch (mailErr) {
-      console.error("[approve] Verification email send failed:", mailErr.message);
+    if (subscriberIds && Array.isArray(subscriberIds) && subscriberIds.length > 0) {
+      const { rows } = await q(
+        "select email from notification_subscribers where id = any($1)",
+        [subscriberIds]
+      );
+      targetEmails = rows.map((r) => r.email);
+    } else {
+      // Default to all subscribers
+      const { rows } = await q("select email from notification_subscribers");
+      targetEmails = rows.map((r) => r.email);
     }
 
-    await logModeratorActivity(req, "registration_approve", `Approved registration for "${user.email}"`);
-    res.json({ ok: true, message: "Request approved and user created" });
-  } catch (err) {
-    console.error("Approve registration error:", err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
+    // Include any additional custom comma-separated emails
+    if (customEmails && typeof customEmails === "string") {
+      const parsedCustom = customEmails
+        .split(",")
+        .map((e) => e.trim().toLowerCase())
+        .filter((e) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e));
+      targetEmails = [...new Set([...targetEmails, ...parsedCustom])];
+    }
 
-router.post("/registrations/:id/reject", requireAuth("admin"), async (req, res) => {
-  try {
-    const { rows } = await q("update registration_requests set status = 'rejected' where id = $1 returning *", [req.params.id]);
-    if (rows.length > 0) {
-      const user = rows[0];
-      await logModeratorActivity(req, "registration_reject", `Rejected registration for "${user.email}"`);
-      
-      try {
-        await sendRejectionEmail(user.email, user.name);
-      } catch (mailErr) {
-        console.error("[reject] Rejection email send failed:", mailErr.message);
+    if (targetEmails.length === 0) {
+      return res.status(400).json({ error: "No recipients found to send broadcast" });
+    }
+
+    // Execute email dispatch in background
+    const runEmailer = async () => {
+      let sentCount = 0;
+      let failCount = 0;
+
+      for (const email of targetEmails) {
+        try {
+          await sendAnnouncementEmail(
+            email,
+            "Subscriber",
+            subject.trim(),
+            message.trim(),
+            buttonText || "Visit Smart Learning+",
+            buttonLink || process.env.FRONTEND_URL || "https://smartlearningplus.me"
+          );
+          sentCount++;
+        } catch (err) {
+          console.error(`[emailer] Failed sending to ${email}:`, err.message || err);
+          failCount++;
+        }
       }
-    }
-    res.json({ ok: true });
+
+      console.log(`[emailer] Broadcast finished: ${sentCount} sent, ${failCount} failed.`);
+    };
+
+    runEmailer();
+
+    await logModeratorActivity(
+      req,
+      "broadcast_send",
+      `Sent email broadcast "${subject.trim()}" to ${targetEmails.length} recipients`
+    );
+
+    res.json({ ok: true, sentCount: targetEmails.length });
   } catch (err) {
-    console.error("Reject registration error:", err);
+    console.error("Broadcast route error:", err);
     res.status(500).json({ error: "Internal server error" });
   }
 });
 
-// ---- Overview for admin dashboard ----
-router.get("/overview", requireAuth("admin"), async (req, res) => {
-  try {
-    const targetDate = (req.query.date && /^\d{4}-\d{2}-\d{2}$/.test(req.query.date))
-      ? req.query.date
-      : new Date().toISOString().slice(0, 10);
-
-    const usersCount = await q("select count(*) from users where is_active = true");
-
-    const studentsPresentCount = await q(
-      `select count(distinct user_id) from attendance where date = $1::date and status = 'present'`,
-      [targetDate]
-    );
-
-    const todayMarks = await q(
-      `select status, count(*) from attendance where date = $1::date group by status`,
-      [targetDate]
-    );
-
-    const lowAttendance = await q(
-      `select u.name, u.batch,
-          count(*) filter (where a.status='present') as present,
-          count(*) filter (where a.status in ('present','absent')) as total
-       from users u join attendance a on a.user_id = u.id
-       group by u.id, u.name, u.batch
-       having count(*) filter (where a.status in ('present','absent')) > 0
-       order by (count(*) filter (where a.status='present')::float /
-                 nullif(count(*) filter (where a.status in ('present','absent')),0)) asc
-       limit 5`
-    );
-
-    const activeStudents = await q(
-      `select id, name, batch, telegram_username from users where is_active = true order by name asc`
-    );
-
-    const todayAttendanceLogs = await q(
-      `select 
-         a.user_id,
-         a.status,
-         a.marked_at,
-         s.name as subject_name,
-         s.code as subject_code,
-         ts.label as slot_label,
-         ts.start_time,
-         ts.end_time
-       from attendance a
-       join timetable_slots ts on ts.id = a.slot_id
-       join subjects s on s.id = ts.subject_id
-       where a.date = $1::date
-       order by ts.start_time asc`,
-      [targetDate]
-    );
-
-    const logsByUser = {};
-    for (const log of todayAttendanceLogs.rows) {
-      if (!logsByUser[log.user_id]) logsByUser[log.user_id] = [];
-      logsByUser[log.user_id].push({
-        subject_name: log.slot_label || log.subject_name || log.subject_code,
-        subject_code: log.subject_code,
-        start_time: log.start_time ? log.start_time.slice(0, 5) : "",
-        end_time: log.end_time ? log.end_time.slice(0, 5) : "",
-        status: log.status,
-        marked_at: log.marked_at,
-      });
-    }
-
-    const todayStudentBreakdown = activeStudents.rows.map((u) => {
-      const classes = logsByUser[u.id] || [];
-      const presentCount = classes.filter((c) => c.status === "present").length;
-      const absentCount = classes.filter((c) => c.status === "absent").length;
-      return {
-        id: u.id,
-        name: u.name,
-        batch: u.batch,
-        telegram_username: u.telegram_username,
-        classes,
-        presentCount,
-        absentCount,
-        totalLogged: classes.length,
-      };
-    });
-
-    res.json({
-      targetDate,
-      activeUsers: Number(usersCount.rows[0].count),
-      studentsPresentToday: Number(studentsPresentCount.rows[0].count),
-      todayMarks: todayMarks.rows,
-      lowAttendance: lowAttendance.rows.map((r) => ({
-        ...r,
-        percentage: r.total > 0 ? Math.round((r.present / r.total) * 1000) / 10 : 0,
-      })),
-      todayStudentBreakdown,
-    });
-  } catch (err) {
-    console.error("Overview fetch error:", err);
-    res.status(500).json({ error: "Failed to fetch overview stats" });
-  }
-});
-
-// ---- Change Admin Password ----
-router.post("/change-password", requireAuth("admin"), async (req, res) => {
-  const { currentPassword, newPassword } = req.body;
-  if (!currentPassword || !newPassword)
-    return res.status(400).json({ error: "currentPassword and newPassword are required" });
-  if (newPassword.length < 8)
-    return res.status(400).json({ error: "New password must be at least 8 characters" });
-
-  try {
-    const { rows } = await q("select * from admins where id = $1", [req.auth.id]);
-    const admin = rows[0];
-    if (!admin) return res.status(404).json({ error: "Admin not found" });
-
-    const ok = await bcrypt.compare(currentPassword, admin.password_hash);
-    if (!ok) return res.status(401).json({ error: "Current password is incorrect" });
-
-    const hash = await bcrypt.hash(newPassword, 10);
-    await q("update admins set password_hash = $1 where id = $2", [hash, req.auth.id]);
-    res.json({ ok: true, message: "Password updated successfully" });
-  } catch (err) {
-    console.error("Change password error:", err);
-  }
-});
-
-// Fetch pending study materials list
+// ---- Study Materials Moderation (Approvals Vault) ----
 router.get("/materials/pending", requireAuth("moderator"), async (req, res) => {
   try {
     const { rows } = await q(
@@ -433,70 +188,13 @@ router.get("/materials/pending", requireAuth("moderator"), async (req, res) => {
        where cm.status = 'pending'
        order by cm.created_at asc`
     );
-    res.json(await signUrls(rows));
+    res.json(rows);
   } catch (err) {
-    console.error("[materials-pending] Error:", err);
-    res.status(500).json({ error: "Failed to load pending materials" });
+    console.error("Fetch pending materials error:", err);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
-// Fetch pending materials counter badge
-router.get("/materials/pending/count", requireAuth("moderator"), async (req, res) => {
-  try {
-    const { rows } = await q("select count(*) from community_materials where status = 'pending'");
-    res.json({ count: Number(rows[0].count) });
-  } catch (err) {
-    console.error("[materials-pending-count] Error:", err);
-    res.status(500).json({ error: "Failed to fetch counts" });
-  }
-});
-
-// Approve a contribution
-router.post("/materials/:id/approve", requireAuth("moderator"), async (req, res) => {
-  try {
-    const { rows } = await q(
-      `update community_materials 
-       set status = 'approved', reviewed_by = $1, reviewed_at = now()
-       where id = $2 returning *`,
-      [req.auth.id, req.params.id]
-    );
-    if (rows.length === 0) {
-      return res.status(404).json({ error: "Material not found" });
-    }
-    await logModeratorActivity(req, "approve_material", `Approved material "${rows[0].title}"`);
-    res.json({ ok: true, message: "Material approved successfully", material: rows[0] });
-  } catch (err) {
-    console.error("[materials-approve] Error:", err);
-    res.status(500).json({ error: "Database error during approval" });
-  }
-});
-
-// Reject a contribution with reason
-router.post("/materials/:id/reject", requireAuth("admin"), async (req, res) => {
-  const { reason } = req.body;
-  if (!reason || !reason.trim()) {
-    return res.status(400).json({ error: "Rejection reason is required" });
-  }
-
-  try {
-    const { rows } = await q(
-      `update community_materials 
-       set status = 'rejected', rejection_reason = $1, reviewed_by = $2, reviewed_at = now()
-       where id = $3 returning *`,
-      [reason.trim(), req.auth.id, req.params.id]
-    );
-    if (rows.length === 0) {
-      return res.status(404).json({ error: "Material not found" });
-    }
-    await logModeratorActivity(req, "reject_material", `Rejected material "${rows[0].title}". Reason: "${reason.trim()}"`);
-    res.json({ ok: true, message: "Material rejected successfully", material: rows[0] });
-  } catch (err) {
-    console.error("[materials-reject] Error:", err);
-    res.status(500).json({ error: "Database error during rejection" });
-  }
-});
-
-// Fetch ALL approved materials (for admin management view)
 router.get("/materials/approved", requireAuth("moderator"), async (req, res) => {
   try {
     const { rows } = await q(
@@ -506,108 +204,115 @@ router.get("/materials/approved", requireAuth("moderator"), async (req, res) => 
        where cm.status = 'approved'
        order by cm.created_at desc`
     );
-    res.json(await signUrls(rows));
+    res.json(rows);
   } catch (err) {
-    console.error("[materials-approved] Error:", err);
-    res.status(500).json({ error: "Failed to load approved materials" });
+    console.error("Fetch approved materials error:", err);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
-// Toggle hide/unhide an approved material
-router.post("/materials/:id/toggle-hidden", requireAuth("admin"), async (req, res) => {
+router.post("/materials/:id/approve", requireAuth("moderator"), async (req, res) => {
   try {
     const { rows } = await q(
       `update community_materials
-       set is_hidden = NOT is_hidden
-       where id = $1 returning id, is_hidden`,
+       set status = 'approved',
+           reviewed_at = now()
+       where id = $1
+       returning *`,
       [req.params.id]
     );
     if (rows.length === 0) return res.status(404).json({ error: "Material not found" });
-    const verb = rows[0].is_hidden ? "Hid" : "Unhid";
-    await logModeratorActivity(req, "toggle_hidden_material", `${verb} material "${rows[0].title}"`);
-    res.json({ ok: true, is_hidden: rows[0].is_hidden });
+
+    await logModeratorActivity(req, "material_approve", `Approved study material "${rows[0].title}"`);
+    res.json({ ok: true, material: rows[0] });
   } catch (err) {
-    console.error("[materials-toggle-hidden] Error:", err);
-    res.status(500).json({ error: "Database error toggling hidden state" });
+    console.error("Approve material error:", err);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
-// Permanently delete a material (any status)
+router.post("/materials/:id/reject", requireAuth("moderator"), async (req, res) => {
+  const { reason } = req.body;
+  try {
+    const { rows } = await q(
+      `update community_materials
+       set status = 'rejected',
+           rejection_reason = $1,
+           reviewed_at = now()
+       where id = $2
+       returning *`,
+      [reason || "Does not meet guidelines", req.params.id]
+    );
+    if (rows.length === 0) return res.status(404).json({ error: "Material not found" });
+
+    await logModeratorActivity(req, "material_reject", `Rejected material "${rows[0].title}" — Reason: ${reason || "Not specified"}`);
+    res.json({ ok: true, material: rows[0] });
+  } catch (err) {
+    console.error("Reject material error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.patch("/materials/:id/toggle-visibility", requireAuth("moderator"), async (req, res) => {
+  try {
+    const { rows } = await q(
+      `update community_materials
+       set is_hidden = not is_hidden
+       where id = $1
+       returning *`,
+      [req.params.id]
+    );
+    if (rows.length === 0) return res.status(404).json({ error: "Material not found" });
+
+    await logModeratorActivity(req, "material_toggle_visibility", `Toggled visibility for "${rows[0].title}" to ${rows[0].is_hidden ? "Hidden" : "Visible"}`);
+    res.json({ ok: true, material: rows[0] });
+  } catch (err) {
+    console.error("Toggle visibility error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 router.delete("/materials/:id", requireAuth("admin"), async (req, res) => {
   try {
-    const { rows } = await q(
-      `delete from community_materials where id = $1 returning title`,
-      [req.params.id]
-    );
-    if (rows.length === 0) return res.status(404).json({ error: "Material not found" });
-    await logModeratorActivity(req, "delete_material", `Deleted material "${rows[0].title}"`);
+    const { rows } = await q("delete from community_materials where id = $1 returning title", [req.params.id]);
+    if (rows.length > 0) {
+      await logModeratorActivity(req, "material_delete", `Deleted study material "${rows[0].title}"`);
+    }
     res.json({ ok: true });
   } catch (err) {
-    console.error("[materials-delete] Error:", err);
-    res.status(500).json({ error: "Database error during delete" });
+    console.error("Delete material error:", err);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
-// System health checks (database, Telegram bot, Backblaze B2, Resend mailer)
-router.get("/health", requireAuth("admin"), async (req, res) => {
-  const health = {
-    database: { status: "offline", latency: null, error: null },
-    telegram: { status: "offline", type: null },
-    b2: { status: "offline", error: null },
-    resend: { status: "offline", error: null },
-    server: { status: "online", uptime: process.uptime(), memory: process.memoryUsage() }
-  };
-
-  // 1. Database Check
+// ---- QuickPaste Management ----
+router.get("/pastes", requireAuth("moderator"), async (req, res) => {
   try {
-    const start = Date.now();
-    await q("SELECT 1");
-    health.database.status = "online";
-    health.database.latency = `${Date.now() - start}ms`;
+    const { rows } = await q("select id, slug, char_count, created_at, expires_at from pastes order by created_at desc");
+    res.json(rows);
   } catch (err) {
-    health.database.error = err.message || "Failed to query db";
+    console.error("Fetch pastes error:", err);
+    res.status(500).json({ error: "Internal server error" });
   }
-
-  // 2. Telegram Bot Check
-  try {
-    const status = getBotStatus();
-    health.telegram.status = (status.startsWith("Active") || status.startsWith("Polling") || status.startsWith("Webhook")) ? "online" : "offline";
-    health.telegram.type = status;
-  } catch (err) {
-    health.telegram.type = "Error";
-  }
-
-  // 3. Backblaze B2 Check
-  try {
-    const b2res = await checkB2Health();
-    health.b2.status = b2res.status;
-    if (b2res.error) health.b2.error = b2res.error;
-  } catch (err) {
-    health.b2.error = err.message || "Error running B2 health";
-  }
-
-  // 4. Resend Mailer Check
-  const resendKey = process.env.RESEND_API_KEY;
-  if (!resendKey) {
-    health.resend.status = "offline";
-    health.resend.error = "RESEND_API_KEY not configured";
-  } else {
-    health.resend.status = "online";
-    health.resend.error = null;
-  }
-
-  res.json(health);
 });
 
-// ---- Moderator Logs ----
-router.get("/moderator-logs", requireAuth("admin"), async (req, res) => {
+router.delete("/pastes/:id", requireAuth("admin"), async (req, res) => {
   try {
-    const { rows } = await q(
-      `select ml.*, u.email as moderator_email
-       from moderator_logs ml
-       left join users u on u.id = ml.moderator_id
-       order by ml.created_at desc`
-    );
+    const { rows } = await q("delete from pastes where id = $1 returning slug", [req.params.id]);
+    if (rows.length > 0) {
+      await logModeratorActivity(req, "paste_delete", `Deleted paste "/${rows[0].slug}"`);
+    }
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("Delete paste error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// ---- Moderator Audit Logs ----
+router.get("/moderator-logs", requireAuth("moderator"), async (req, res) => {
+  try {
+    const { rows } = await q("select * from moderator_logs order by created_at desc limit 200");
     res.json(rows);
   } catch (err) {
     console.error("Fetch moderator logs error:", err);
@@ -615,150 +320,60 @@ router.get("/moderator-logs", requireAuth("admin"), async (req, res) => {
   }
 });
 
-function formatTelegramMessage(name, message) {
-  // Escape HTML tags to prevent broken XML formatting errors on Telegram API
-  let escaped = message
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
+// ---- System Health Check ----
+router.get("/health", requireAuth("moderator"), async (req, res) => {
+  const health = {
+    database: { status: "offline", latencyMs: null },
+    resendMailer: { status: "offline", type: "Resend API" },
+    timestamp: new Date().toISOString()
+  };
 
-  // Bold **text** -> <b>text</b>
-  escaped = escaped.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+  // 1. PostgreSQL DB Check
+  const start = Date.now();
+  try {
+    await q("select 1");
+    health.database.status = "online";
+    health.database.latencyMs = Date.now() - start;
+  } catch (e) {
+    health.database.status = "offline";
+    health.database.error = e.message;
+  }
 
-  // Italic *text* or _text_ -> <i>text</i>
-  escaped = escaped.replace(/\*(.*?)\*/g, "<i>$1</i>");
-  escaped = escaped.replace(/_(.*?)_/g, "<i>$1</i>");
+  // 2. Resend Mailer Check
+  if (process.env.RESEND_API_KEY) {
+    health.resendMailer.status = "online";
+  } else {
+    health.resendMailer.status = "not configured";
+  }
 
-  // Links [text](url) -> <a href="$2">$1</a>
-  escaped = escaped.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>');
+  res.json(health);
+});
 
-  // Bullet points: lines starting with "- " or "* " -> "• "
-  const lines = escaped.split(/\r?\n/);
-  const formattedLines = lines.map((line) => {
-    const trimmed = line.trim();
-    if (trimmed.startsWith("- ") || trimmed.startsWith("* ")) {
-      return `• ${trimmed.substring(2)}`;
-    }
-    return line;
-  });
-
-  const body = formattedLines.join("\n");
-
-  return `📢 <b>Smart Learning+ Announcement</b>
-
-Hi <b>${name}</b>,
-
-${body}`;
-}
-
-// ---- Broadcast Announcement to All Users ----
-router.post("/broadcast", requireAuth("admin"), async (req, res) => {
-  const { subject, message, channels, userIds, subscriberIds, buttonText, buttonLink } = req.body;
-  if (!message) return res.status(400).json({ error: "Message content is required" });
-  if (!channels || !Array.isArray(channels) || channels.length === 0) {
-    return res.status(400).json({ error: "At least one channel (email or telegram) is required" });
+// ---- Security Settings: Change Admin Password ----
+router.post("/settings/password", requireAuth("admin"), async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  if (!currentPassword || !newPassword) {
+    return res.status(400).json({ error: "Current and new password are required" });
+  }
+  if (newPassword.length < 6) {
+    return res.status(400).json({ error: "New password must be at least 6 characters" });
   }
 
   try {
-    let users = [];
-    if (userIds && Array.isArray(userIds) && userIds.length > 0) {
-      const { rows } = await q(
-        "select id, name, email, telegram_id from users where is_active = true and id = any($1)",
-        [userIds]
-      );
-      users = rows;
-    } else if (!subscriberIds || subscriberIds.length === 0) {
-      // If neither is explicitly provided, default to all active users
-      const { rows } = await q("select id, name, email, telegram_id from users where is_active = true");
-      users = rows;
-    }
+    const { rows } = await q("select * from admins where id = $1", [req.auth.id]);
+    const admin = rows[0];
+    if (!admin) return res.status(404).json({ error: "Admin not found" });
 
-    let subscribers = [];
-    if (channels.includes("email") && subscriberIds && Array.isArray(subscriberIds) && subscriberIds.length > 0) {
-      const { rows } = await q(
-        "select id, email from notification_subscribers where id = any($1)",
-        [subscriberIds]
-      );
-      subscribers = rows;
-    }
+    const ok = await bcrypt.compare(currentPassword, admin.password_hash);
+    if (!ok) return res.status(401).json({ error: "Incorrect current password" });
 
-    const totalRecipients = users.length + subscribers.length;
-    
-    // Run broadcast in background
-    const runBroadcast = async () => {
-      let emailSuccessCount = 0;
-      let tgSuccessCount = 0;
- 
-      for (const user of users) {
-        // Send email
-        if (channels.includes("email") && user.email) {
-          try {
-            await sendAnnouncementEmail(user.email, user.name, subject, message, buttonText, buttonLink);
-            emailSuccessCount++;
-          } catch (err) {
-            console.error(`[broadcast] Failed email to ${user.email}:`, err.message || err);
-          }
-        }
+    const hash = await bcrypt.hash(newPassword, 10);
+    await q("update admins set password_hash = $1 where id = $2", [hash, req.auth.id]);
 
-        // Send Telegram
-        if (channels.includes("telegram") && user.telegram_id && bot) {
-          try {
-            const formattedTgMsg = formatTelegramMessage(user.name, message);
-            
-            let telegramLink = buttonLink || process.env.FRONTEND_URL || "https://smartlearningplus.me";
-            if (!buttonLink && telegramLink.includes(",")) {
-              const urls = telegramLink.split(",").map((u) => u.trim());
-              const prodUrl = urls.find((u) => !u.includes("localhost"));
-              telegramLink = prodUrl || urls[0];
-            }
-
-            const inlineKeyboard = {
-              inline_keyboard: [
-                [
-                  {
-                    text: buttonText || "Go to Dashboard",
-                    url: telegramLink
-                  }
-                ]
-              ]
-            };
-
-            await bot.sendMessage(user.telegram_id, formattedTgMsg, {
-              parse_mode: "HTML",
-              reply_markup: inlineKeyboard
-            });
-            tgSuccessCount++;
-          } catch (err) {
-            console.error(`[broadcast] Failed Telegram to ${user.telegram_id}:`, err.message || err);
-          }
-        }
-      }
-
-      // Send to subscribers
-      for (const sub of subscribers) {
-        if (channels.includes("email") && sub.email) {
-          try {
-            await sendAnnouncementEmail(sub.email, "Subscriber", subject, message, buttonText, buttonLink);
-            emailSuccessCount++;
-          } catch (err) {
-            console.error(`[broadcast] Failed email to subscriber ${sub.email}:`, err.message || err);
-          }
-        }
-      }
-      
-      console.log(`[broadcast] Completed. Emails sent: ${emailSuccessCount}, Telegrams sent: ${tgSuccessCount}`);
-    };
-
-    runBroadcast();
-    await logModeratorActivity(
-      req, 
-      "broadcast_send", 
-      `Sent broadcast announcement to ${totalRecipients} recipients (Users: ${users.length}, Subscribers: ${subscribers.length}) via [${channels.join(", ")}]`
-    );
-
-    res.json({ ok: true, sentCount: totalRecipients });
+    await logModeratorActivity(req, "password_change", "Admin changed security password");
+    res.json({ ok: true, message: "Password updated successfully" });
   } catch (err) {
-    console.error("Broadcast route error:", err);
+    console.error("Change password error:", err);
     res.status(500).json({ error: "Internal server error" });
   }
 });

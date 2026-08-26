@@ -1,5 +1,5 @@
 {
-  "name": "attendance-tracker-backend",
+  "name": "smartlearningplus-backend",
   "version": "1.0.0",
   "type": "module",
   "scripts": {
@@ -20,8 +20,6 @@
     "helmet": "^8.2.0",
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.2.0",
-    "node-cron": "^4.6.0",
-    "node-telegram-bot-api": "^1.2.0",
     "nodemailer": "^9.0.3",
     "pdf-parse": "^2.4.5",
     "pg": "^8.12.0",

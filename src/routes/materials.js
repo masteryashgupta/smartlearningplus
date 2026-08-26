@@ -3,9 +3,7 @@ import multer from "multer";
 import sanitizeHtml from "sanitize-html";
 import { fileTypeFromBuffer } from "file-type";
 import { q } from "../db.js";
-import { requireAuth } from "../auth.js";
 import { uploadToB2, signUrls } from "../lib/b2.js";
-import { bot } from "../bot/bot.js";
 
 const router = Router();
 
@@ -13,12 +11,25 @@ const router = Router();
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
-    fileSize: 100 * 1024 * 1024 // 100MB overall max file limit (Multer catches this)
+    fileSize: 100 * 1024 * 1024 // 100MB overall max file limit
+  }
+});
+
+// Fetch all subjects for study materials & notes navigation
+router.get("/subjects", async (req, res) => {
+  try {
+    const { rows } = await q(
+      "select id, code, name, type, color from subjects order by name asc"
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error("[materials/subjects] Error:", err);
+    res.status(500).json({ error: "Failed to fetch subjects" });
   }
 });
 
 // Soft check for duplicate titles within the same subject
-router.get("/check-title", requireAuth("student"), async (req, res) => {
+router.get("/check-title", async (req, res) => {
   const { title, subject_id } = req.query;
   if (!title || !subject_id) {
     return res.status(400).json({ error: "Title and subject_id are required" });
@@ -33,24 +44,6 @@ router.get("/check-title", requireAuth("student"), async (req, res) => {
   } catch (err) {
     console.error("[check-title] Error:", err);
     res.status(500).json({ error: "Database error during duplicate check" });
-  }
-});
-
-// Fetch a student's own contribution history
-router.get("/my-uploads", requireAuth("student"), async (req, res) => {
-  try {
-    const { rows } = await q(
-      `select cm.*, s.name as subject_name, s.code as subject_code
-       from community_materials cm
-       join subjects s on s.id = cm.subject_id
-       where cm.uploaded_by = $1
-       order by cm.created_at desc`,
-      [req.auth.id]
-    );
-    res.json(await signUrls(rows));
-  } catch (err) {
-    console.error("[my-uploads] Error:", err);
-    res.status(500).json({ error: "Failed to load upload history" });
   }
 });
 
@@ -72,160 +65,111 @@ router.get("/approved/:subject_code", async (req, res) => {
   }
 });
 
-// Handle new study material upload / submission
-router.post("/upload", requireAuth("student"), upload.single("file"), async (req, res) => {
-  const { title, subject_id, section, content_type, text_content } = req.body;
+// Public submission of community study materials (pending admin approval)
+router.post("/upload", upload.single("file"), async (req, res) => {
+  const { title, subject_id, section, content_type, text_content, uploader_name } = req.body;
 
   // Basic validation
   if (!title || !subject_id || !section || !content_type) {
-    return res.status(400).json({ error: "title, subject_id, section and content_type are required" });
+    return res.status(400).json({ error: "Title, subject, section, and content type are required" });
   }
   if (!["pdf", "image", "text", "html"].includes(content_type)) {
     return res.status(400).json({ error: "Invalid content_type" });
   }
 
   try {
-    // 1. Rate Limiting Check (Max 5 pending uploads per user per day)
-    const { rows: countRows } = await q(
-      "select count(*) from community_materials where uploaded_by = $1 and status = 'pending' and created_at > now() - interval '1 day'",
-      [req.auth.id]
-    );
-    if (Number(countRows[0].count) >= 5) {
-      return res.status(429).json({ error: "Daily upload limit reached. You can have a maximum of 5 pending submissions." });
-    }
-
-    // 2. Fetch subject to make sure it exists
+    // 1. Fetch subject to make sure it exists
     const { rows: subRows } = await q("select * from subjects where id = $1", [subject_id]);
     if (subRows.length === 0) {
       return res.status(400).json({ error: "Selected subject does not exist" });
     }
-    const subject = subRows[0];
 
+    const cleanUploaderName = (uploader_name && uploader_name.trim()) ? uploader_name.trim() : "Community Member";
     let fileUrl = null;
     let sanitizedText = null;
 
-    // 3. Handle File Uploads (PDF / Image)
-    if (["pdf", "image"].includes(content_type)) {
+    // 2. Process based on content_type
+    if (content_type === "pdf") {
       if (!req.file) {
-        return res.status(400).json({ error: "No file was uploaded." });
+        return res.status(400).json({ error: "PDF file is required" });
+      }
+      if (req.file.size > 100 * 1024 * 1024) {
+        return res.status(400).json({ error: "PDF file size must not exceed 100MB" });
       }
 
-      // Size checks
-      const fileSize = req.file.size;
-      if (content_type === "pdf" && fileSize > 100 * 1024 * 1024) {
-        return res.status(400).json({ error: "PDF files cannot exceed 100MB." });
-      }
-      if (content_type === "image" && fileSize > 2 * 1024 * 1024) {
-        return res.status(400).json({ error: "Image files cannot exceed 2MB." });
+      const detected = await fileTypeFromBuffer(req.file.buffer);
+      if (!detected || detected.mime !== "application/pdf") {
+        return res.status(400).json({ error: "Uploaded file is not a valid PDF document" });
       }
 
-      // MIME type checks (Server-side validation)
-      const fileTypeResult = await fileTypeFromBuffer(req.file.buffer);
-      if (!fileTypeResult) {
-        return res.status(400).json({ error: "Could not identify file format." });
+      fileUrl = await uploadToB2(req.file.buffer, req.file.originalname, "application/pdf");
+    } else if (content_type === "image") {
+      if (!req.file) {
+        return res.status(400).json({ error: "Image file is required" });
       }
-      const mime = fileTypeResult.mime;
-
-      if (content_type === "pdf" && mime !== "application/pdf") {
-        return res.status(400).json({ error: "Uploaded file is not a valid PDF." });
-      }
-      if (content_type === "image" && !["image/png", "image/jpeg", "image/jpg", "image/webp"].includes(mime)) {
-        return res.status(400).json({ error: "Uploaded file is not a supported image (PNG/JPEG/WEBP only)." });
+      if (req.file.size > 20 * 1024 * 1024) {
+        return res.status(400).json({ error: "Image file size must not exceed 20MB" });
       }
 
-      // Upload to Backblaze B2
-      const extension = fileTypeResult.ext;
-      const b2FileName = `contributions/${subject.code}/${content_type}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${extension}`;
-      
-      fileUrl = await uploadToB2(req.file.buffer, b2FileName, mime);
-    }
+      const detected = await fileTypeFromBuffer(req.file.buffer);
+      const allowedImageMimes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+      if (!detected || !allowedImageMimes.includes(detected.mime)) {
+        return res.status(400).json({ error: "Uploaded file is not a valid image (JPEG, PNG, WebP, GIF)" });
+      }
 
-    // 4. Handle Text/HTML Submissions with Sanitization
-    if (["text", "html"].includes(content_type)) {
+      fileUrl = await uploadToB2(req.file.buffer, req.file.originalname, detected.mime);
+    } else if (content_type === "text") {
       if (!text_content || !text_content.trim()) {
-        return res.status(400).json({ error: "Content body cannot be empty." });
+        return res.status(400).json({ error: "Text content is required" });
+      }
+      if (text_content.length > 50000) {
+        return res.status(400).json({ error: "Text content exceeds maximum character limit of 50,000" });
+      }
+      sanitizedText = text_content.trim();
+    } else if (content_type === "html") {
+      if (!text_content || !text_content.trim()) {
+        return res.status(400).json({ error: "HTML content is required" });
+      }
+      if (text_content.length > 100000) {
+        return res.status(400).json({ error: "HTML content exceeds maximum character limit of 100,000" });
       }
 
-      // Extra Hardening: Pre-check for malicious style vectors containing url() or expression()
-      const lowerContent = text_content.toLowerCase();
-      if (lowerContent.includes("url(") || lowerContent.includes("expression(")) {
-        return res.status(400).json({ error: "Inline styles containing 'url()' or 'expression()' are restricted for security reasons." });
-      }
-
-      // Clean submitted content using sanitize-html
       sanitizedText = sanitizeHtml(text_content, {
-        allowedTags: [
-          "p", "h1", "h2", "h3", "h4", "h5", "h6", "strong", "em", "b", "i", 
-          "ul", "ol", "li", "table", "thead", "tbody", "tr", "td", "th", 
-          "blockquote", "code", "pre", "img", "a", "br", "hr", "span", "div"
-        ],
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat(["h1", "h2", "h3", "img", "pre", "code", "table", "tbody", "thead", "tr", "th", "td"]),
         allowedAttributes: {
-          a: ["href", "name", "target", "rel"],
+          ...sanitizeHtml.defaults.allowedAttributes,
+          "*": ["style", "class"],
           img: ["src", "alt", "title", "width", "height"],
-          span: ["style"],
-          div: ["style"],
-          p: ["style"]
-        },
-        transformTags: {
-          a: (tagName, attribs) => {
-            return {
-              tagName: "a",
-              attribs: {
-                ...attribs,
-                target: "_blank",
-                rel: "noopener noreferrer"
-              }
-            };
-          }
-        },
-        allowedStyles: {
-          '*': {
-            'color': [/^.*$/],
-            'background-color': [/^.*$/],
-            'text-align': [/^.*$/],
-            'font-size': [/^.*$/],
-            'font-weight': [/^.*$/],
-            'padding': [/^.*$/],
-            'margin': [/^.*$/],
-            'border': [/^.*$/]
-          }
+          a: ["href", "target", "rel"]
         }
       });
     }
 
-    // 5. Save to database
-    await q(
-      `insert into community_materials (title, subject_id, section, content_type, uploader_name, file_url, text_content, uploaded_by, status)
-       values ($1, $2, $3, $4, $5, $6, $7, $8, 'pending')`,
+    // 3. Insert into database with status='pending'
+    const { rows: inserted } = await q(
+      `insert into community_materials (
+        title, subject_id, section, content_type, uploader_name, file_url, text_content, status
+      ) values ($1, $2, $3, $4, $5, $6, $7, 'pending')
+      returning id, title, status, created_at`,
       [
         title.trim(),
         subject_id,
         section.trim(),
         content_type,
-        req.auth.name,
+        cleanUploaderName,
         fileUrl,
-        sanitizedText,
-        req.auth.id
+        sanitizedText
       ]
     );
 
-    // 6. Notify admin via Telegram
-    try {
-      const envAdminId = process.env.ADMIN_TELEGRAM_ID?.trim();
-      if (envAdminId && bot) {
-        const messageHtml = `📥 <b>New Upload Pending Approval</b>\n\n<b>Uploader:</b> ${req.auth.name}\n<b>Title:</b> ${title.trim()}\n<b>Subject:</b> ${subject.name} (${subject.code})\n<b>Type:</b> ${content_type}\n\n<i>Please check the admin panel to approve or reject this upload.</i>`;
-        bot.sendMessage(envAdminId, messageHtml, { parse_mode: "HTML" }).catch(err => {
-          console.error(`Failed to send upload notification to admin via Telegram:`, err);
-        });
-      }
-    } catch (telegramErr) {
-      console.error("Telegram upload notification error:", telegramErr);
-    }
-
-    res.json({ ok: true, message: "Submission uploaded successfully. Waiting for admin approval." });
+    res.status(201).json({
+      ok: true,
+      message: "Material submitted successfully! It will be reviewed by an administrator before appearing publicly.",
+      material: inserted[0]
+    });
   } catch (err) {
-    console.error("[upload] Error uploading material:", err);
-    res.status(500).json({ error: "Failed to process upload due to server error." });
+    console.error("[upload] Processing error:", err);
+    res.status(500).json({ error: "Failed to upload study material. Please try again." });
   }
 });
 

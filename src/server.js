@@ -8,16 +8,12 @@ dotenv.config();
 
 import { q } from "./db.js";
 import authRoutes from "./routes/auth.js";
-import timetableRoutes from "./routes/timetable.js";
-import attendanceRoutes from "./routes/attendance.js";
 import adminRoutes from "./routes/admin.js";
 import materialsRoutes from "./routes/materials.js";
 import { askRouter } from "./ai-assistant/routes.js";
 import announcementRoutes from "./routes/announcement.js";
 import pasteRoutes from "./routes/paste.js";
-import { registerHandlers } from "./bot/handlers.js";
-import { startScheduler } from "./bot/scheduler.js";
-import { setupWebhook, getBotStatus } from "./bot/bot.js";
+import wheelRoutes from "./routes/wheel.js";
 
 const app = express();
 app.set("trust proxy", 1);
@@ -28,7 +24,7 @@ app.use(
         defaultSrc: ["'self'"],
         styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
         fontSrc: ["'self'", "https://fonts.gstatic.com"],
-        imgSrc: ["'self'", "data:"],
+        imgSrc: ["'self'", "data:", "https:"],
         scriptSrc: ["'self'", "'unsafe-inline'"],
       },
     },
@@ -40,26 +36,22 @@ app.disable("x-powered-by");
 // Rate Limiters
 const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 200, // Limit each IP to 200 requests per window
+  max: 300,
   message: { error: "Too many requests from this IP, please try again later." },
   standardHeaders: true,
   legacyHeaders: false,
 });
 
 const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 15, // Limit each IP to 15 login/register/forgot requests per window
-  message: { error: "Too many auth attempts. Please try again in 15 minutes." },
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  message: { error: "Too many login attempts. Please try again in 15 minutes." },
   standardHeaders: true,
   legacyHeaders: false,
 });
 
 app.use("/api/", generalLimiter);
-app.use("/api/auth/student/login", authLimiter);
 app.use("/api/auth/admin/login", authLimiter);
-app.use("/api/auth/student/register", authLimiter);
-app.use("/api/auth/forgot-password", authLimiter);
-
 
 const allowedOrigins = [
   "https://smartlearningplus.me",
@@ -80,12 +72,7 @@ if (process.env.FRONTEND_URL) {
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) return callback(null, true);
-
-      // Always check against the explicit allowlist — never open-wildcard.
-      // allowedOrigins is pre-seeded with hardcoded production URLs so it
-      // remains safe even if FRONTEND_URL is missing from the environment.
       if (allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
@@ -120,21 +107,10 @@ app.get("/", async (req, res) => {
     dbStatusColor = "var(--danger)";
   }
 
-  const botState = getBotStatus();
-  let botStatusText = botState;
-  let botStatusDot = "active";
-  let botStatusColor = "var(--success)";
-
-  if (botState === "Not Configured" || botState === "Disabled") {
-    botStatusDot = "inactive";
-    botStatusColor = "var(--text-muted)";
-  } else if (botState.includes("Failed") || botState === "Unauthorized") {
-    botStatusDot = "inactive";
-    botStatusColor = "var(--danger)";
-  } else if (botState.includes("Missing")) {
-    botStatusDot = "warning";
-    botStatusColor = "var(--warning)";
-  }
+  const mailerConfigured = Boolean(process.env.RESEND_API_KEY);
+  const mailerStatusText = mailerConfigured ? "Online (Resend)" : "Not Configured";
+  const mailerStatusDot = mailerConfigured ? "active" : "inactive";
+  const mailerStatusColor = mailerConfigured ? "var(--success)" : "var(--warning)";
 
   const seconds = process.uptime();
   const d = Math.floor(seconds / (3600 * 24));
@@ -356,7 +332,7 @@ app.get("/", async (req, res) => {
                 </svg>
             </div>
             <h1>Smart Learning Plus</h1>
-            <div class="subtitle">System Status Dashboard</div>
+            <div class="subtitle">Open Learning Platform &amp; Email Notification System</div>
         </div>
 
         <div class="status-grid">
@@ -382,11 +358,11 @@ app.get("/", async (req, res) => {
 
             <div class="card">
                 <div class="card-header">
-                    <span class="card-title">Telegram Bot</span>
+                    <span class="card-title">Emailer (Resend)</span>
                 </div>
-                <div class="status-badge" style="color: ${botStatusColor}">
-                    <span class="status-dot ${botStatusDot}"></span>
-                    ${botStatusText}
+                <div class="status-badge" style="color: ${mailerStatusColor}">
+                    <span class="status-dot ${mailerStatusDot}"></span>
+                    ${mailerStatusText}
                 </div>
             </div>
 
@@ -433,12 +409,7 @@ app.get("/", async (req, res) => {
 </html>`);
 });
 
-
-import wheelRoutes from "./routes/wheel.js";
-
 app.use("/api/auth", authRoutes);
-app.use("/api/timetable", timetableRoutes);
-app.use("/api/attendance", attendanceRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/materials", materialsRoutes);
 app.use("/api/ask", askRouter);
@@ -449,15 +420,6 @@ app.use("/api/wheel", wheelRoutes);
 async function migrateDatabase() {
   console.log("🔄 Running database migrations...");
   try {
-    // Ensure whitelisted_emails table exists
-    await q(`
-      create table if not exists whitelisted_emails (
-        id uuid primary key default gen_random_uuid(),
-        email text unique not null,
-        created_at timestamptz default now()
-      )
-    `);
-
     // Ensure notification_subscribers table exists
     await q(`
       create table if not exists notification_subscribers (
@@ -478,7 +440,6 @@ async function migrateDatabase() {
         uploader_name text,
         file_url text,
         text_content text,
-        uploaded_by uuid references users(id) on delete set null,
         status text not null default 'pending' check (status in ('pending', 'approved', 'rejected')),
         rejection_reason text,
         reviewed_by uuid references admins(id) on delete set null,
@@ -487,29 +448,17 @@ async function migrateDatabase() {
       )
     `);
 
-    // Add is_hidden column for admin moderation of approved materials (safe migration)
+    // Add is_hidden column for admin moderation of approved materials
     await q(`
       alter table community_materials
       add column if not exists is_hidden boolean not null default false
-    `);
-
-    // Add is_moderator column for users
-    await q(`
-      alter table users
-      add column if not exists is_moderator boolean not null default false
-    `);
-
-    // Drop reviewed_by constraint to allow users (moderators) to review
-    await q(`
-      alter table community_materials
-      drop constraint if exists community_materials_reviewed_by_fkey
     `);
 
     // Create moderator logs table to record moderator activities
     await q(`
       create table if not exists moderator_logs (
         id uuid primary key default gen_random_uuid(),
-        moderator_id uuid references users(id) on delete set null,
+        moderator_id uuid references admins(id) on delete set null,
         moderator_name text not null,
         action text not null,
         details text,
@@ -540,23 +489,13 @@ async function migrateDatabase() {
       )
     `);
 
-    // Create index on study_chunks (use try/catch since index might already exist and CREATE INDEX IF NOT EXISTS is supported in PG 9.5+)
     try {
       await q("create index if not exists study_chunks_embedding_idx on study_chunks using ivfflat (embedding vector_cosine_ops)");
     } catch (e) {
       console.warn("⚠️ Could not create vector index:", e.message);
     }
 
-    // Update subject names to match timetable formatting (code - lecturer)
-    await q(`
-      UPDATE subjects SET name = 'HCI - PT' WHERE code = 'HCI' AND name != 'HCI - PT';
-      UPDATE subjects SET name = 'CGM - CU' WHERE code = 'CGM' AND name != 'CGM - CU';
-      UPDATE subjects SET name = 'AOA - MS' WHERE code = 'AOA' AND name != 'AOA - MS';
-      UPDATE subjects SET name = 'CD - YP' WHERE code = 'CD' AND name != 'CD - YP';
-      UPDATE subjects SET name = 'ITC - DR. YZU' WHERE code = 'ITC' AND name != 'ITC - DR. YZU';
-      UPDATE subjects SET name = 'OS - AS' WHERE code = 'OS' AND name != 'OS - AS';
-    `);
-    // Create announcement singleton table (one row, always updated in-place)
+    // Create announcement singleton table
     await q(`
       CREATE TABLE IF NOT EXISTS announcement_singleton (
         id text PRIMARY KEY,
@@ -572,7 +511,7 @@ async function migrateDatabase() {
       ADD COLUMN IF NOT EXISTS gap integer NOT NULL DEFAULT 20
     `);
 
-    // Create pastes table for the QuickPaste feature (no auth required)
+    // Create pastes table for QuickPaste
     await q(`
       CREATE TABLE IF NOT EXISTS pastes (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -616,9 +555,6 @@ const PORT = process.env.PORT || 4000;
   try {
     await migrateDatabase();
     await bootstrapAdmin();
-    registerHandlers();
-    await setupWebhook(app);
-    startScheduler();
     app.listen(PORT, () => console.log(`🚀 Backend running on port ${PORT}`));
   } catch (error) {
     console.error("❌ Fatal error during backend startup:", error);

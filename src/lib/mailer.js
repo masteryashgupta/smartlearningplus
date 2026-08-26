@@ -104,7 +104,7 @@ function getEmailLayout(title, subtitle, contentHtml, name, buttonText = "", but
       
       <!-- Body -->
       <div style="padding: 32px; background: #ffffff;">
-        <p style="color: #1b2430; font-size: 16px; font-weight: 700; margin: 0 0 16px;">Hi ${name || "User"},</p>
+        <p style="color: #1b2430; font-size: 16px; font-weight: 700; margin: 0 0 16px;">Hi ${name || "Learner"},</p>
         <div style="color: #334155; font-size: 14.5px; line-height: 1.65; margin: 0; font-family: inherit;">
           ${contentHtml}
         </div>
@@ -119,11 +119,10 @@ function getEmailLayout(title, subtitle, contentHtml, name, buttonText = "", but
           </a>
         </div>
         <p style="color: #94a3b8; font-size: 11px; margin: 0 0 6px; line-height: 1.5;">
-          Smart Learning+ · Attendance OS
+          Smart Learning+ · Open Engineering Study Hub
         </p>
         <p style="color: #cbd5e1; font-size: 10px; margin: 0; line-height: 1.4;">
-          This email was sent to you as a registered member of Smart Learning+. 
-          For any assistance, please reach out to the platform administration.
+          This email was sent to you because you subscribed to study notifications on Smart Learning+. 
         </p>
       </div>
     </div>
@@ -131,143 +130,13 @@ function getEmailLayout(title, subtitle, contentHtml, name, buttonText = "", but
 }
 
 /**
- * Send a password-reset email via Resend (HTTPS API — works on Railway).
- * @param {string} to  Recipient email
- * @param {string} resetUrl  Full reset link
- * @param {string} name  Recipient's name
- */
-export async function sendResetEmail(to, resetUrl, name) {
-  const client = getClient();
-  if (!client) {
-    console.warn("[mailer] Skipping email — Resend client not configured");
-    return;
-  }
-
-  const fromAddress = process.env.RESEND_FROM || "Smart Learning+ <onboarding@resend.dev>";
-
-  const contentHtml = `
-    <p style="margin: 0 0 16px;">We received a request to reset your Attendance OS password.</p>
-    <p style="margin: 0 0 16px;">Please click the button below to choose a new password. This link expires in <strong>1 hour</strong>.</p>
-    <p style="font-size: 12px; color: #94a3b8; margin-top: 24px;">If you didn't request this, you can safely ignore this email.</p>
-  `;
-
-  const html = getEmailLayout(
-    "Smart Learning+",
-    "Password Reset Request",
-    contentHtml,
-    name,
-    "Reset Password",
-    resetUrl
-  );
-
-  const { data, error } = await client.emails.send({
-    from: fromAddress,
-    to,
-    subject: "Reset your Attendance OS password",
-    html,
-  });
-
-  if (error) {
-    throw new Error(`Resend error: ${JSON.stringify(error)}`);
-  }
-
-  console.log(`[mailer] Reset email sent to ${to} — id: ${data?.id}`);
-}
-
-/**
- * Send an email verification link via Resend.
- * @param {string} to  Recipient email
- * @param {string} verifyUrl  Full verification link
- * @param {string} name  Recipient's name
- */
-export async function sendVerificationEmail(to, verifyUrl, name) {
-  const client = getClient();
-  if (!client) {
-    console.warn("[mailer] Skipping email — Resend client not configured");
-    return;
-  }
-
-  const fromAddress = process.env.RESEND_FROM || "Smart Learning+ <onboarding@resend.dev>";
-
-  const contentHtml = `
-    <p style="color: #15803d; font-size: 16px; font-weight: bold; margin: 0 0 16px;">🎉 Your registration has been approved!</p>
-    <p style="margin: 0 0 16px;">Thanks for signing up for Smart Learning+ Attendance OS. Click the button below to verify your email address and activate your account.</p>
-    <p style="font-size: 12px; color: #94a3b8; margin-top: 24px;">If you did not register for this account, you can safely ignore this email.</p>
-  `;
-
-  const html = getEmailLayout(
-    "Smart Learning+",
-    "Confirm your email address",
-    contentHtml,
-    name,
-    "Verify Email Address",
-    verifyUrl
-  );
-
-  const { data, error } = await client.emails.send({
-    from: fromAddress,
-    to,
-    subject: "Verify your Smart Learning+ email address",
-    html,
-  });
-
-  if (error) {
-    throw new Error(`Resend error: ${JSON.stringify(error)}`);
-  }
-
-  console.log(`[mailer] Verification email sent to ${to} — id: ${data?.id}`);
-}
-
-/**
- * Send a rejection email via Resend.
- * @param {string} to  Recipient email
- * @param {string} name  Recipient's name
- */
-export async function sendRejectionEmail(to, name) {
-  const client = getClient();
-  if (!client) {
-    console.warn("[mailer] Skipping email — Resend client not configured");
-    return;
-  }
-
-  const fromAddress = process.env.RESEND_FROM || "Smart Learning+ <onboarding@resend.dev>";
-
-  const contentHtml = `
-    <p style="margin: 0 0 16px;">Thank you for your interest in Smart Learning+.</p>
-    <p style="margin: 0 0 16px;">Unfortunately, your registration request has not been approved at this time. Access to the platform is currently limited and requires manual administrator approval.</p>
-    <p style="font-size: 12px; color: #94a3b8; margin-top: 24px;">If you believe this is a mistake, please contact the administrator.</p>
-  `;
-
-  const html = getEmailLayout(
-    "Smart Learning+",
-    "Registration Update",
-    contentHtml,
-    name,
-    "",
-    "",
-    "linear-gradient(135deg, #ef4444, #dc2626)"
-  );
-
-  const { data, error } = await client.emails.send({
-    from: fromAddress,
-    to,
-    subject: "Update on your Smart Learning+ registration",
-    html,
-  });
-
-  if (error) {
-    throw new Error(`Resend error: ${JSON.stringify(error)}`);
-  }
-
-  console.log(`[mailer] Rejection email sent to ${to} — id: ${data?.id}`);
-}
-
-/**
- * Send an announcement email via Resend.
+ * Send an announcement / newsletter email via Resend.
  * @param {string} to  Recipient email
  * @param {string} name  Recipient's name
  * @param {string} subject  Email subject
  * @param {string} message  Email message content (plain text or markdown format)
+ * @param {string} buttonText  Optional CTA button label
+ * @param {string} buttonLink  Optional CTA button URL
  */
 export async function sendAnnouncementEmail(to, name, subject, message, buttonText, buttonLink) {
   const client = getClient();
@@ -277,16 +146,15 @@ export async function sendAnnouncementEmail(to, name, subject, message, buttonTe
   }
 
   const fromAddress = process.env.RESEND_FROM || "Smart Learning+ <onboarding@resend.dev>";
-
   const contentHtml = parseMarkdown(message);
   const frontendUrl = getFrontendUrl();
 
   const html = getEmailLayout(
     "Smart Learning+",
-    "Announcement",
+    "Study Update & Announcement",
     contentHtml,
     name,
-    buttonText || "Go to Dashboard",
+    buttonText || "Visit Smart Learning+",
     buttonLink || frontendUrl
   );
 
