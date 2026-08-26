@@ -9,11 +9,11 @@ import PastePage from "./pages/PastePage.jsx";
 import PasteView from "./pages/PasteView.jsx";
 import ToolsPage from "./pages/ToolsPage.jsx";
 import WheelPage from "./pages/WheelPage.jsx";
-import { getSession } from "./api.js";
+import { useAuth } from "./context/AuthContext.jsx";
 
 function AdminRoute() {
-  const session = getSession();
-  if (session && session.role === "admin") {
+  const { isAdmin } = useAuth();
+  if (isAdmin) {
     return <AdminPanel />;
   }
   return <Navigate to="/login" replace />;

@@ -1,20 +1,21 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { api, setSession, getSession } from "../api.js";
+import { api } from "../api.js";
+import { useAuth } from "../context/AuthContext.jsx";
 
 export default function Login() {
   const navigate = useNavigate();
+  const { session, login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const session = getSession();
-    if (session && session.role === "admin") {
-      window.location.href = "/admin";
+    if (session?.role === "admin") {
+      navigate("/admin", { replace: true });
     }
-  }, []);
+  }, [session, navigate]);
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -29,8 +30,9 @@ export default function Login() {
         email: email.trim(),
         password,
       });
-      setSession(data.token, "admin", data.name);
-      window.location.href = "/admin";
+      // Instantly update reactive auth context state & navigate to admin
+      login(data.token, "admin", data.name);
+      navigate("/admin", { replace: true });
     } catch (err) {
       console.error("Admin login error:", err);
       const msg =

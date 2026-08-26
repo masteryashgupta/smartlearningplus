@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { api, clearSession } from "../api.js";
+import { api } from "../api.js";
 import AnnouncementManager from "../components/AnnouncementManager.jsx";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext.jsx";
 
 const TABS = [
   { key: "overview", label: "Overview", icon: "📊" },
@@ -33,6 +34,8 @@ function StatCard({ icon, label, value, sub, color = "#10B981" }) {
 }
 
 export default function AdminPanel() {
+  const navigate = useNavigate();
+  const { logout } = useAuth();
   const [tab, setTab] = useState("overview");
   const [overview, setOverview] = useState(null);
   const [loadingOverview, setLoadingOverview] = useState(true);
@@ -221,8 +224,8 @@ export default function AdminPanel() {
   };
 
   function signOut() {
-    clearSession();
-    window.location.href = "/login";
+    logout();
+    navigate("/login", { replace: true });
   }
 
   const filteredSubscribers = subscribers.filter((s) =>

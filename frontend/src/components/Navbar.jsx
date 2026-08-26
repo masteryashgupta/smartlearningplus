@@ -1,18 +1,17 @@
 import { Link, useNavigate } from "react-router-dom";
-import { getSession, clearSession } from "../api.js";
 import { useState } from "react";
 import ThemeToggle from "./ThemeToggle.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
 
 const GITHUB_REPO_URL = "https://github.com/masteryashgupta/smartlearningplus";
 
 export default function Navbar({ onOpenSubscribe }) {
   const navigate = useNavigate();
-  const session = getSession();
+  const { session, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
 
   function signOut() {
-    clearSession();
-    window.location.reload();
+    logout();
   }
 
   return (
