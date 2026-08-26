@@ -891,3 +891,235 @@ body .sl-res-card .arr {
   font-weight: bold !important;
   margin-left: auto !important;
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   DARK MODE OVERRIDES — applies to all static HTML subject pages.
+   These override hardcoded rgba() backgrounds and color values that
+   cannot be changed by CSS variables alone.
+═══════════════════════════════════════════════════════════════════ */
+
+/* ── Body & global transitions ── */
+html.dark body {
+  background: var(--bg) !important;
+  color: var(--text) !important;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* ── Unit pages: sticky topbar ── */
+html.dark .topbar {
+  background: rgba(15, 23, 42, 0.92) !important;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.4) !important;
+  border-bottom-color: var(--border) !important;
+}
+
+/* ── Index/Vault pages: sticky topbar (inline styles have !important on mobile) ── */
+html.dark .sl-topbar {
+  background: rgba(15, 23, 42, 0.92) !important;
+  border-bottom-color: var(--border) !important;
+}
+html.dark .sl-topbar-nav a {
+  color: var(--text2) !important;
+}
+html.dark .sl-topbar-nav a:hover {
+  color: var(--accent) !important;
+}
+
+/* ── Topbar nav links on unit pages ── */
+html.dark .nav a {
+  background: var(--surface) !important;
+  color: var(--muted) !important;
+  border-color: var(--border) !important;
+}
+html.dark .nav a:hover {
+  color: var(--accent) !important;
+  background: var(--accent-light) !important;
+}
+
+/* ── Mesh background on index pages ── */
+html.dark .sl-mesh {
+  background: var(--bg) !important;
+}
+
+/* ── Tip/Hint banners ── */
+html.dark .tip-banner {
+  background: rgba(120, 53, 15, 0.25) !important;
+  border-color: #78350f !important;
+  color: #fbbf24 !important;
+}
+html.dark .sl-tip {
+  background: rgba(120, 53, 15, 0.25) !important;
+  border-color: #78350f !important;
+  color: #fbbf24 !important;
+}
+
+/* ── Hinglish cards ── */
+html.dark .hin {
+  background: rgba(120, 53, 15, 0.2) !important;
+  color: #fcd34d !important;
+  border-color: #78350f !important;
+}
+html.dark .hin .tag {
+  color: #fcd34d !important;
+}
+
+/* ── Keypoint cards ── */
+html.dark .keypoint {
+  background: var(--accent-light) !important;
+  border-color: var(--accent) !important;
+}
+
+/* ── Formula blocks ── */
+html.dark .formula {
+  background: #0d1b2a !important;
+  border-color: var(--border) !important;
+  color: #7dd3fc !important;
+}
+
+/* ── SVG diagrams on unit pages: override hardcoded white fills ── */
+html.dark svg text {
+  fill: var(--text) !important;
+}
+html.dark .svgbox {
+  background: var(--surface2) !important;
+  border-color: var(--border) !important;
+}
+html.dark .svgbox rect[fill="#fff1f2"],
+html.dark .svgbox rect[fill="#fffbeb"],
+html.dark .svgbox rect[fill="#ecfeff"],
+html.dark .svgbox rect[fill="#eef2ff"],
+html.dark .svgbox rect[fill="#f0fdf4"],
+html.dark .svgbox rect[fill="#f8fafc"] {
+  fill: #1e293b !important;
+}
+
+/* ── Tables ── */
+html.dark table {
+  border-color: var(--border) !important;
+}
+html.dark th {
+  background: var(--surface2) !important;
+  color: var(--accent) !important;
+  border-color: var(--border) !important;
+}
+html.dark td {
+  border-color: var(--border) !important;
+  color: var(--text2) !important;
+}
+html.dark tr:hover td {
+  background: var(--surface2) !important;
+}
+
+/* ── Hero sections on unit pages ── */
+html.dark .hero {
+  background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent2-light) 100%) !important;
+  border-color: var(--border) !important;
+}
+html.dark .hero h1 {
+  color: #93c5fd !important;
+}
+html.dark .hero p {
+  color: var(--text2) !important;
+}
+
+/* ── Unit title headings ── */
+html.dark .unit-title {
+  color: #93c5fd !important;
+  border-bottom-color: var(--border) !important;
+}
+html.dark h2.topic {
+  color: #93c5fd !important;
+  border-left-color: var(--accent) !important;
+}
+html.dark h3.sub {
+  color: var(--accent2) !important;
+}
+
+/* ── Q&A cards ── */
+html.dark .qcard {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+html.dark .qcard .q {
+  color: var(--text) !important;
+}
+html.dark .qcard .a {
+  color: var(--text2) !important;
+}
+html.dark .qcard .qlabel {
+  color: var(--muted) !important;
+}
+html.dark .qcard:hover {
+  border-color: var(--accent) !important;
+}
+
+/* ── Steps / numbered lists ── */
+html.dark .steps ol li {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+  color: var(--text2) !important;
+}
+html.dark .steps ol li::before {
+  background: var(--accent-light) !important;
+  color: var(--accent) !important;
+  border-color: var(--border) !important;
+}
+
+/* ── Code inline ── */
+html.dark code {
+  background: var(--accent-light) !important;
+  color: var(--accent-hover) !important;
+  border-color: var(--border) !important;
+}
+
+/* ── Compare cards ── */
+html.dark .compare-card {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+  color: var(--text2) !important;
+}
+
+/* ── TOC / Table of contents ── */
+html.dark .toc {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+html.dark .toc a {
+  color: var(--text2) !important;
+}
+html.dark .toc a:hover {
+  color: var(--accent) !important;
+}
+html.dark .toc .sublabel {
+  background: var(--surface2) !important;
+  color: var(--muted) !important;
+}
+
+/* ── Footer note ── */
+html.dark .footer-note {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+  color: var(--muted) !important;
+}
+
+/* ── Syllabus block ── */
+html.dark .syllabus-block {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+
+/* ── Badge/importance tags ── */
+html.dark .imp.h {
+  background: var(--red-light) !important;
+  color: var(--red) !important;
+  border-color: var(--red) !important;
+}
+html.dark .imp.m {
+  background: var(--amber-light) !important;
+  color: var(--amber) !important;
+  border-color: var(--amber) !important;
+}
+html.dark .imp.l {
+  background: var(--accent-light) !important;
+  color: var(--accent) !important;
+  border-color: var(--accent) !important;
+}
