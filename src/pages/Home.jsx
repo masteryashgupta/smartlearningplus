@@ -777,9 +777,6 @@ export default function Home() {
             <Link to="/privacy" className="hover:text-white transition-colors">
               Privacy
             </Link>
-            <Link to="/admin" className="text-slate-500 hover:text-slate-300 transition-colors font-mono">
-              Admin Login
-            </Link>
           </div>
         </div>
       </footer>

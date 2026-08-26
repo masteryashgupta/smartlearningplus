@@ -68,7 +68,7 @@ export default function Navbar({ onOpenSubscribe, onOpenContribute }) {
         {/* Right action items */}
         <div className="hidden md:flex items-center gap-3 shrink-0">
           <ThemeToggle />
-          {session && session.role === "admin" ? (
+          {session && session.role === "admin" && (
             <div className="flex items-center gap-2">
               <Link
                 to="/admin"
@@ -83,13 +83,6 @@ export default function Navbar({ onOpenSubscribe, onOpenContribute }) {
                 Sign out
               </button>
             </div>
-          ) : (
-            <Link
-              to="/admin"
-              className="text-xs text-slate-400 hover:text-slate-200 transition-colors px-2.5 py-1.5 rounded-lg hover:bg-white/5"
-            >
-              Admin
-            </Link>
           )}
         </div>
 
@@ -146,30 +139,20 @@ export default function Navbar({ onOpenSubscribe, onOpenContribute }) {
               📧 Subscribe to Email Notifications
             </button>
           )}
-          <div className="pt-3 border-t border-slate-800 flex items-center justify-between">
-            {session && session.role === "admin" ? (
-              <>
-                <Link
-                  to="/admin"
-                  onClick={() => setMenuOpen(false)}
-                  className="text-xs font-semibold text-primary"
-                >
-                  ⚙️ Admin Panel
-                </Link>
-                <button onClick={signOut} className="text-xs text-rose-400 font-medium">
-                  Sign out
-                </button>
-              </>
-            ) : (
+          {session && session.role === "admin" && (
+            <div className="pt-3 border-t border-slate-800 flex items-center justify-between">
               <Link
                 to="/admin"
                 onClick={() => setMenuOpen(false)}
-                className="text-xs text-slate-400 hover:text-slate-200"
+                className="text-xs font-semibold text-primary"
               >
-                Admin Sign In
+                ⚙️ Admin Panel
               </Link>
-            )}
-          </div>
+              <button onClick={signOut} className="text-xs text-rose-400 font-medium">
+                Sign out
+              </button>
+            </div>
+          )}
         </div>
       )}
     </nav>
