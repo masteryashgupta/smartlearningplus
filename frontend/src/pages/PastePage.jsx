@@ -805,9 +805,7 @@ export default function PastePage() {
         {/* Nav */}
         <nav className="paste-nav">
           <Link to="/" className="paste-nav-logo">
-            <div className="paste-nav-logo-icon">
-              <img src="/logo.png?v=4" alt="Logo" style={{ width: "22px", height: "22px", objectFit: "contain" }} />
-            </div>
+            <img src="/logo.png?v=4" alt="Logo" style={{ width: "32px", height: "32px", borderRadius: "50%", objectFit: "cover" }} />
             <span className="paste-nav-logo-text">
               Smart<span>Learning</span>Plus
             </span>

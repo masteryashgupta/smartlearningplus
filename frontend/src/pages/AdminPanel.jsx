@@ -235,9 +235,11 @@ export default function AdminPanel() {
       <aside className="w-full md:w-64 bg-slate-900/90 border-b md:border-b-0 md:border-r border-slate-800 p-4 flex flex-col shrink-0">
         <div className="flex items-center justify-between mb-6 px-2">
           <Link to="/" className="flex items-center gap-2.5 text-decoration-none">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-primary to-indigo-500 flex items-center justify-center shadow-md">
-              <img src="/logo.png?v=4" alt="Logo" className="w-5 h-5 object-contain" />
-            </div>
+            <img
+              src="/logo.png?v=4"
+              alt="Logo"
+              className="w-8 h-8 rounded-full object-cover shadow-sm shrink-0"
+            />
             <div>
               <div className="font-extrabold text-sm text-white">Smart Learning+</div>
               <div className="text-[10px] text-slate-400 font-mono">Admin Portal</div>

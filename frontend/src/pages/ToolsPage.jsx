@@ -368,9 +368,7 @@ export default function ToolsPage() {
         {/* Nav */}
         <nav className="tools-nav">
           <Link to="/" className="tools-nav-logo">
-            <div className="tools-nav-logo-icon">
-              <img src="/logo.png?v=4" alt="Logo" style={{ width: "22px", height: "22px", objectFit: "contain" }} />
-            </div>
+            <img src="/logo.png?v=4" alt="Logo" style={{ width: "32px", height: "32px", borderRadius: "50%", objectFit: "cover" }} />
             <span className="tools-nav-logo-text">
               Smart<span>Learning</span>Plus
             </span>

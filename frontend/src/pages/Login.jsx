@@ -40,10 +40,12 @@ export default function Login() {
       <div className="w-full max-w-md">
         {/* Logo and Brand */}
         <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center gap-2 mb-3 group text-decoration-none">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary to-indigo-500 flex items-center justify-center shadow-lg shadow-primary/25 group-hover:scale-105 transition-transform">
-              <img src="/logo.png?v=4" alt="Logo" className="w-6 h-6 object-contain" />
-            </div>
+          <Link to="/" className="inline-flex items-center gap-2.5 mb-3 group text-decoration-none">
+            <img
+              src="/logo.png?v=4"
+              alt="Logo"
+              className="w-10 h-10 rounded-full object-cover shadow-lg shadow-primary/10 group-hover:scale-105 transition-transform shrink-0"
+            />
             <span className="font-display font-extrabold text-xl tracking-tight text-white">
               Smart Learning<span className="text-primary font-bold text-xs ml-1 px-1.5 py-0.5 bg-primary/20 rounded-md border border-primary/30">+</span>
             </span>

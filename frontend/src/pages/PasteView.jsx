@@ -534,9 +534,7 @@ export default function PasteView() {
         {/* Nav */}
         <nav className="view-nav">
           <Link to="/" className="view-nav-logo">
-            <div className="view-nav-logo-icon">
-              <img src="/logo.png?v=4" alt="Logo" style={{ width: "22px", height: "22px", objectFit: "contain" }} />
-            </div>
+            <img src="/logo.png?v=4" alt="Logo" style={{ width: "32px", height: "32px", borderRadius: "50%", objectFit: "cover" }} />
             <span className="view-nav-logo-text">
               Smart<span>Learning</span>Plus
             </span>

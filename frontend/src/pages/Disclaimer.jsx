@@ -39,7 +39,7 @@ export default function Disclaimer() {
         {/* NAV */}
         <nav className="sl-nav">
           <Link to="/" className="sl-logo" style={{ display: "flex", alignItems: "center", gap: "8px", textDecoration: "none" }}>
-            <img src="/logo.png?v=4" alt="Logo" style={{ width: "24px", height: "24px", objectFit: "contain" }} />
+            <img src="/logo.png?v=4" alt="Logo" style={{ width: "24px", height: "24px", borderRadius: "50%", objectFit: "cover" }} />
             Smart Learning
             <span style={{ color: "#2563eb" }}>+</span>
           </Link>
