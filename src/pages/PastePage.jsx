@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../api.js";
+import ThemeToggle from "../components/ThemeToggle.jsx";
 
 const MAX_CHARS = 200000;
 
@@ -160,7 +161,39 @@ export default function PastePage() {
           --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.05);
         }
 
-
+        /* ── THEME VARIABLES (DARK THEME) ── */
+        html.dark .paste-root {
+          --bg: #0f172a;
+          --bg-card: #1e293b;
+          --border: rgba(99, 102, 241, 0.3);
+          --text: #f8fafc;
+          --text2: #e2e8f0;
+          --text-muted: #94a3b8;
+          --textarea-color: #f8fafc;
+          --placeholder: #64748b;
+          --progress-bg: rgba(99, 102, 241, 0.15);
+          --header-bg: #1e293b;
+          --header-border: #334155;
+          --footer-border: #334155;
+          --footer-left-color: #94a3b8;
+          --tip-bg: #1e293b;
+          --tip-border: #334155;
+          --tip-text: #94a3b8;
+          --tip-text-strong: #e2e8f0;
+          --card-title-color: #94a3b8;
+          --char-color: #94a3b8;
+          --link-box-bg: rgba(99, 102, 241, 0.12);
+          --link-box-border: rgba(99, 102, 241, 0.35);
+          --link-text: #818cf8;
+          --link-copy-bg: rgba(99, 102, 241, 0.2);
+          --link-copy-border: rgba(99, 102, 241, 0.35);
+          --link-copy-color: #a5b4fc;
+          --expiry-bg: #0f172a;
+          --expiry-border: #334155;
+          --expiry-color: #cbd5e1;
+          --expiry-select-bg: #1e293b;
+          --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05);
+        }
 
         .paste-root {
           min-height: 100vh;
@@ -777,7 +810,13 @@ export default function PastePage() {
               Smart<span>Learning</span>Plus
             </span>
           </Link>
-          <span className="paste-nav-badge">QuickPaste</span>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <span className="paste-nav-badge">QuickPaste</span>
+            <ThemeToggle />
+            <Link to="/tools" style={{ textDecoration: "none", color: "var(--text-muted)", fontSize: "13px", fontWeight: 600, padding: "6px 12px", borderRadius: "8px", border: "1px solid var(--border)", background: "var(--bg-card)", transition: "all 0.2s" }}>
+              🧰 Tools
+            </Link>
+          </div>
         </nav>
 
         {!result ? (

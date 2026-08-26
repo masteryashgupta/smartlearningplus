@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import { api } from "../api.js";
+import ThemeToggle from "../components/ThemeToggle.jsx";
 
 export default function PasteView() {
   const { slug } = useParams();
@@ -117,6 +118,28 @@ export default function PasteView() {
           --line-num-border: #f1f5f9;
           --code-color: #0f172a;
           --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.05);
+        }
+
+        /* ── THEME VARIABLES (DARK THEME) ── */
+        html.dark .view-root {
+          --bg: #0f172a;
+          --bg-card: #1e293b;
+          --border: rgba(99, 102, 241, 0.3);
+          --text: #f8fafc;
+          --text2: #e2e8f0;
+          --text-muted: #94a3b8;
+          --meta-bg: rgba(99, 102, 241, 0.15);
+          --meta-border: rgba(99, 102, 241, 0.35);
+          --meta-color: #818cf8;
+          --btn-ghost-bg: #1e293b;
+          --btn-ghost-border: #334155;
+          --btn-ghost-color: #cbd5e1;
+          --header-bg: #1e293b;
+          --header-border: #334155;
+          --line-num-color: #64748b;
+          --line-num-border: #334155;
+          --code-color: #f8fafc;
+          --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05);
         }
 
 
@@ -522,6 +545,10 @@ export default function PasteView() {
                 <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
               </svg>
               New Paste
+            </Link>
+            <ThemeToggle />
+            <Link to="/tools" className="view-nav-btn ghost">
+              🧰 Tools
             </Link>
             <Link to="/" className="view-nav-btn ghost">
               ← Home

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import { api } from "../api.js";
+import ThemeToggle from "../components/ThemeToggle.jsx";
 
 // Predefined palette colors
 const PALETTES = {
@@ -705,6 +706,65 @@ export default function WheelPage() {
           margin: 12px 0 24px;
           word-break: break-word;
         }
+
+        /* ── DARK THEME SUPPORT ── */
+        html.dark .wheel-root {
+          background: #0f172a;
+          color: #f8fafc;
+        }
+        html.dark .wheel-nav-title {
+          color: #f8fafc;
+        }
+        html.dark .wheel-stage-card,
+        html.dark .wheel-panel-card {
+          background: #1e293b;
+          border-color: #334155;
+          box-shadow: 0 10px 30px -5px rgba(0,0,0,0.4);
+        }
+        html.dark .panel-tabs {
+          background: #0f172a;
+        }
+        html.dark .panel-tab-btn {
+          color: #94a3b8;
+        }
+        html.dark .panel-tab-btn.active {
+          background: #1e293b;
+          color: #818cf8;
+        }
+        html.dark .entries-textarea {
+          background: #0f172a;
+          border-color: #334155;
+          color: #f8fafc;
+        }
+        html.dark .weight-row {
+          background: #0f172a;
+          border-color: #334155;
+          color: #e2e8f0;
+        }
+        html.dark .weight-input {
+          background: #1e293b;
+          border-color: #334155;
+          color: #f8fafc;
+        }
+        html.dark .winner-card {
+          background: #1e293b;
+          border: 1px solid #334155;
+          color: #f8fafc;
+        }
+        html.dark .winner-name {
+          color: #818cf8;
+        }
+        html.dark input[type="text"],
+        html.dark select {
+          background: #0f172a;
+          border-color: #334155;
+          color: #f8fafc;
+        }
+        html.dark .tools-btn-back {
+          background: #1e293b !important;
+          border-color: #334155 !important;
+          color: #94a3b8 !important;
+        }
       `}</style>
 
       <div className="wheel-root">
@@ -714,7 +774,7 @@ export default function WheelPage() {
             <div className="wheel-nav-logo-icon">🎡</div>
             <span className="wheel-nav-title">{wheelTitle}</span>
           </Link>
-          <div style={{ display: "flex", gap: "8px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
             <button
               onClick={handleSaveWheel}
               disabled={saving}
@@ -731,7 +791,8 @@ export default function WheelPage() {
             >
               {saving ? "Saving…" : "💾 Save & Share"}
             </button>
-            <Link to="/tools" style={{
+            <ThemeToggle />
+            <Link to="/tools" className="tools-btn-back" style={{
               padding: "8px 16px", borderRadius: "10px", background: "#fff",
               border: "1px solid #e2e8f0", color: "#64748b", textDecoration: "none",
               fontWeight: 600, fontSize: "12px"

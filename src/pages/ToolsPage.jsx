@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import ThemeToggle from "../components/ThemeToggle.jsx";
 
 export default function ToolsPage() {
   const tools = [
@@ -43,6 +44,16 @@ export default function ToolsPage() {
           flex-direction: column;
           align-items: center;
           padding: 0 16px 64px;
+          transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* ── DARK THEME SUPPORT ── */
+        html.dark .tools-root {
+          background: #0f172a;
+          background-image:
+            radial-gradient(ellipse 80% 50% at 20% -10%, rgba(99, 102, 241, 0.15) 0%, transparent 60%),
+            radial-gradient(ellipse 60% 40% at 80% 110%, rgba(16, 185, 129, 0.10) 0%, transparent 60%);
+          color: #f8fafc;
         }
 
         .tools-nav {
@@ -81,9 +92,20 @@ export default function ToolsPage() {
           font-weight: 700;
           font-family: 'Space Grotesk', sans-serif;
           color: #0f172a;
+          transition: color 0.2s;
         }
 
         .tools-nav-logo-text span { color: #6366f1; }
+
+        html.dark .tools-nav-logo-text {
+          color: #f8fafc;
+        }
+
+        .tools-nav-actions {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
 
         .tools-nav-link {
           text-decoration: none;
@@ -95,12 +117,28 @@ export default function ToolsPage() {
           border: 1px solid #e2e8f0;
           background: #ffffff;
           transition: all 0.2s;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          height: 34px;
         }
 
         .tools-nav-link:hover {
           color: #4f46e5;
           border-color: #c7d2fe;
           background: #f8fafc;
+        }
+
+        html.dark .tools-nav-link {
+          background: #1e293b;
+          border-color: #334155;
+          color: #94a3b8;
+        }
+
+        html.dark .tools-nav-link:hover {
+          background: #334155;
+          border-color: #6366f1;
+          color: #818cf8;
         }
 
         .tools-hero {
@@ -123,6 +161,13 @@ export default function ToolsPage() {
           margin-bottom: 16px;
           text-transform: uppercase;
           letter-spacing: 0.05em;
+          transition: all 0.2s;
+        }
+
+        html.dark .tools-hero-badge {
+          background: rgba(99, 102, 241, 0.18);
+          border-color: rgba(99, 102, 241, 0.35);
+          color: #a5b4fc;
         }
 
         .tools-hero-title {
@@ -132,6 +177,11 @@ export default function ToolsPage() {
           color: #0f172a;
           margin: 0 0 12px;
           letter-spacing: -0.02em;
+          transition: color 0.2s;
+        }
+
+        html.dark .tools-hero-title {
+          color: #f8fafc;
         }
 
         .tools-hero-desc {
@@ -139,6 +189,11 @@ export default function ToolsPage() {
           color: #64748b;
           line-height: 1.6;
           margin: 0;
+          transition: color 0.2s;
+        }
+
+        html.dark .tools-hero-desc {
+          color: #94a3b8;
         }
 
         .tools-grid {
@@ -169,6 +224,17 @@ export default function ToolsPage() {
           box-shadow: 0 12px 36px -4px rgba(99, 102, 241, 0.12);
         }
 
+        html.dark .tool-card {
+          background: #1e293b;
+          border-color: #334155;
+          box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4);
+        }
+
+        html.dark .tool-card:hover {
+          border-color: #6366f1;
+          box-shadow: 0 12px 36px -4px rgba(99, 102, 241, 0.25);
+        }
+
         .tool-card-top {
           margin-bottom: 24px;
         }
@@ -190,6 +256,12 @@ export default function ToolsPage() {
           font-size: 26px;
           background: #f8fafc;
           border: 1px solid #e2e8f0;
+          transition: all 0.2s;
+        }
+
+        html.dark .tool-card-icon {
+          background: #0f172a;
+          border-color: #334155;
         }
 
         .tool-card-badge {
@@ -201,6 +273,12 @@ export default function ToolsPage() {
           color: #475569;
           text-transform: uppercase;
           letter-spacing: 0.04em;
+          transition: all 0.2s;
+        }
+
+        html.dark .tool-card-badge {
+          background: #334155;
+          color: #cbd5e1;
         }
 
         .tool-card-title {
@@ -209,6 +287,11 @@ export default function ToolsPage() {
           font-family: 'Space Grotesk', sans-serif;
           color: #0f172a;
           margin: 0 0 6px;
+          transition: color 0.2s;
+        }
+
+        html.dark .tool-card-title {
+          color: #f8fafc;
         }
 
         .tool-card-tagline {
@@ -216,6 +299,11 @@ export default function ToolsPage() {
           font-weight: 600;
           color: #4f46e5;
           margin-bottom: 12px;
+          transition: color 0.2s;
+        }
+
+        html.dark .tool-card-tagline {
+          color: #818cf8;
         }
 
         .tool-card-desc {
@@ -223,6 +311,11 @@ export default function ToolsPage() {
           color: #64748b;
           line-height: 1.6;
           margin-bottom: 20px;
+          transition: color 0.2s;
+        }
+
+        html.dark .tool-card-desc {
+          color: #94a3b8;
         }
 
         .tool-card-features {
@@ -240,6 +333,13 @@ export default function ToolsPage() {
           background: #f8fafc;
           border: 1px solid #e2e8f0;
           color: #475569;
+          transition: all 0.2s;
+        }
+
+        html.dark .tool-feature-tag {
+          background: #0f172a;
+          border-color: #334155;
+          color: #94a3b8;
         }
 
         .tool-card-btn {
@@ -273,9 +373,12 @@ export default function ToolsPage() {
               Smart<span>Learning</span>Plus
             </span>
           </Link>
-          <Link to="/" className="tools-nav-link">
-            ← Home
-          </Link>
+          <div className="tools-nav-actions">
+            <ThemeToggle />
+            <Link to="/" className="tools-nav-link">
+              ← Home
+            </Link>
+          </div>
         </nav>
 
         {/* Hero */}
