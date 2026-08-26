@@ -357,6 +357,52 @@
     <p>A hash table symbol table uses a hash function h(name) to compute a bucket index; collisions are resolved using chaining (linked list per bucket) — allowing O(1) average insert and lookup even for thousands of identifiers.</p>
   </div>
 
+  <div class="hin" style="margin-top:12px;">
+    <span class="tag">Hinglish Trick</span>
+    <p><b>Activation Record Fields:</b> <b>"Rahul Passed Compiler And Scored Lot of Time"</b> (<b>R</b>eturn value, <b>P</b>arameters, <b>C</b>ontrol link [Dynamic], <b>A</b>ccess link [Static], <b>S</b>aved machine status, <b>L</b>ocal variables, <b>T</b>emporaries).<br>
+    <b>Control vs Access Link:</b> <b>Control (Dynamic)</b> = Kisne mujhe call kiya (Caller). <b>Access (Static)</b> = Mera baap kaun hai (Enclosing lexical parent scope)!</p>
+  </div>
+
+  <h2 class="topic">🗺️ Unit 5 Overview Map <span class="imp h">Quick Revise</span></h2>
+  <div class="card" style="padding: 24px; background: var(--surface2); border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 24px;">
+    <div style="background: #7c3aed; color: white; padding: 16px; border-radius: 8px; text-align: center; font-size: 1.2rem; font-weight: bold; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);">
+      UNIT 5: Storage Organization &amp; Symbol Table Management
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+      
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #06b6d4; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">1. Runtime Memory Layout</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li><b>Code/Text:</b> Fixed read-only machine instructions</li>
+          <li><b>Static Data:</b> Global &amp; static variables (Compile-time size)</li>
+          <li><b>Stack:</b> Function call Activation Records (LIFO growth ↓)</li>
+          <li><b>Heap:</b> Dynamically allocated memory (malloc/free growth ↑)</li>
+        </ul>
+      </div>
+
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #10b981; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">2. Activation Records &amp; Scope</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li><b>AR Fields:</b> Params, Return, Control link, Access link, Locals</li>
+          <li><b>Control Link:</b> Points to Caller AR (stack teardown)</li>
+          <li><b>Access Link:</b> Points to Enclosing Lexical Parent AR</li>
+          <li><b>Display Array:</b> Global pointer array for O(1) non-local access</li>
+        </ul>
+      </div>
+
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #f59e0b; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">3. Parameters &amp; Symbol Table</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li><b>Passing:</b> By Value, By Reference, Copy-Restore, By Name</li>
+          <li><b>Symbol Table:</b> Name, Type, Scope, Memory offset, Line num</li>
+          <li><b>Data Structures:</b> Hash Tables with Chaining (O(1) avg lookup)</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
   <hr class="sep">
 
   <!-- Q&A SECTION -->

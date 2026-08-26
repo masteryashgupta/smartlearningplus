@@ -137,9 +137,47 @@
       </tbody>
     </table>
   </div>
-  <div class="hin">
-    <span class="tag">Hinglish</span>
-    <p>Bahut students sochte hain "ye subject kabhi kaam nahi aayega" — lekin reality ye hai ki <b>parsing aur grammar concepts</b> bahut jagah use hote hain: JSON parsing, regex engines, SQL query parsing, configuration files (YAML/JSON) padhna — sab compiler design ke concepts hain. Plus, ye subject tumhari programming fundamentals ko bahut strong karta hai.</p>
+  <div class="hin" style="margin-top:12px;">
+    <span class="tag">Hinglish Trick</span>
+    <p><b>"Let's Start Solving Important Online Tests"</b> (<b>L</b>exical, <b>S</b>yntax, <b>S</b>emantic, <b>I</b>ntermediate Code, <b>O</b>ptimization, <b>T</b>arget Code) — Compiler ke 6 phases ka order!</p>
+  </div>
+
+  <h2 class="topic">🗺️ Unit 1 Overview Map <span class="imp h">Quick Revise</span></h2>
+  <div class="card" style="padding: 24px; background: var(--surface2); border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 24px;">
+    <div style="background: #7c3aed; color: white; padding: 16px; border-radius: 8px; text-align: center; font-size: 1.2rem; font-weight: bold; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);">
+      UNIT 1: Compiler Architecture &amp; Phase Pipeline
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px;">
+      
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #06b6d4; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">1. Front-End (Analysis)</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li><b>Lexical Analysis:</b> Source code → Stream of Tokens</li>
+          <li><b>Syntax Analysis:</b> Tokens → Parse Tree (Grammar check)</li>
+          <li><b>Semantic Analysis:</b> Type checking &amp; Scope verification</li>
+        </ul>
+      </div>
+
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #10b981; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">2. Intermediate &amp; Storage</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li><b>ICG:</b> Three-Address Code (TAC), Quadruples, Triples</li>
+          <li><b>Symbol Table:</b> Manages identifiers, types &amp; memory offsets</li>
+          <li><b>Error Handler:</b> Detects &amp; reports syntax/semantic errors</li>
+        </ul>
+      </div>
+
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #f59e0b; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">3. Back-End (Synthesis)</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li><b>Code Optimizer:</b> Loop invariant, Dead code, Peephole</li>
+          <li><b>Code Generator:</b> Instruction selection &amp; Register allocation</li>
+          <li><b>Target Code:</b> Assembly / Machine executable</li>
+        </ul>
+      </div>
+
+    </div>
   </div>
 
   <div class="qsection" id="qa">

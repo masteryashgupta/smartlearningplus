@@ -544,6 +544,51 @@
     <p>The flow-of-control translation method is preferred in real compilers (used in if/while statements) because it produces more efficient code by avoiding evaluation of the right operand when the left operand already determines the result — this is precisely "short-circuit evaluation" as seen in C/C++/Java (<code>&amp;&amp;</code>, <code>||</code>).</p>
   </div>
 
+  <div class="hin" style="margin-top:12px;">
+    <span class="tag">Hinglish Trick</span>
+    <p><b>SDD Types:</b> <b>S-Attributed</b> = Sirf Children se value aati hai (Bottom-Up/Synthesized). <b>L-Attributed</b> = Parent aur Left siblings se value aati hai (Left-to-Right DFS).<br>
+    <b>TAC Forms:</b> <b>Quadruples</b> = 4 dabbe <code>(op, arg1, arg2, res)</code> (Shift karna easy). <b>Triples</b> = 3 dabbe <code>(op, arg1, arg2)</code> (Result index ban jata hai, move karna mushkil!).</p>
+  </div>
+
+  <h2 class="topic">🗺️ Unit 4 Overview Map <span class="imp h">Quick Revise</span></h2>
+  <div class="card" style="padding: 24px; background: var(--surface2); border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 24px;">
+    <div style="background: #7c3aed; color: white; padding: 16px; border-radius: 8px; text-align: center; font-size: 1.2rem; font-weight: bold; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);">
+      UNIT 4: Syntax-Directed Translation &amp; Intermediate Code Generation
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+      
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #06b6d4; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">1. Syntax Directed Definitions</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li><b>Synthesized (S):</b> Computed from children values (Bottom-Up)</li>
+          <li><b>Inherited (I):</b> Computed from parent &amp; left siblings</li>
+          <li><b>S-Attributed:</b> Uses synthesized only → Evaluated in Post-order / LR</li>
+          <li><b>L-Attributed:</b> Synthesized + Left-restricted Inherited → Evaluated in Depth-First / LL</li>
+        </ul>
+      </div>
+
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #10b981; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">2. Intermediate Code Forms</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li><b>Postfix:</b> Operators follow operands (Reverse Polish)</li>
+          <li><b>DAG:</b> Directed Acyclic Graph — eliminates common sub-expressions</li>
+          <li><b>Three-Address Code (TAC):</b> At most 3 operands per instruction `x = y op z`</li>
+        </ul>
+      </div>
+
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #f59e0b; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">3. TAC Representations &amp; Control</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li><b>Quadruples:</b> (op, arg1, arg2, result) — Easy to optimize/relocate</li>
+          <li><b>Triples:</b> (op, arg1, arg2) — Result referenced by position index</li>
+          <li><b>Short-Circuit:</b> Jumps generated directly for `&&` and `||` logic</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
   <hr class="sep">
 
   <!-- Q&A SECTION -->

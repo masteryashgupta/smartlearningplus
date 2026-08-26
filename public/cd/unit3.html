@@ -722,6 +722,52 @@ stmt : expr ';'
     <p>This rule says: "if a statement can't be parsed normally, skip tokens until a semicolon, report the error, and resume parsing from there."</p>
   </div>
 
+  <div class="hin" style="margin-top:12px;">
+    <span class="tag">Hinglish Trick</span>
+    <p><b>LR Parsers Power:</b> <b>"Low Score Levels Cleared"</b> (<b>LR(0) &lt; SLR(1) &lt; LALR(1) &lt; CLR(1)</b>) — Sabse chhota/kamzor LR(0), sabse powerful CLR(1). LALR(1) mein CLR(1) ke same-core states merge hote hain!<br>
+    <b>LL(1) Table:</b> Rule ko daalo <b>FIRST</b> ke column mein. Agar <b>ε</b> mile, toh daalo <b>FOLLOW</b> ke column mein!</p>
+  </div>
+
+  <h2 class="topic">🗺️ Unit 3 Overview Map <span class="imp h">Quick Revise</span></h2>
+  <div class="card" style="padding: 24px; background: var(--surface2); border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 24px;">
+    <div style="background: #7c3aed; color: white; padding: 16px; border-radius: 8px; text-align: center; font-size: 1.2rem; font-weight: bold; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);">
+      UNIT 3: Parsing &amp; Context-Free Grammars
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+      
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #06b6d4; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">1. Top-Down Parsing</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li><b>Concept:</b> Root → Leaves (Leftmost Derivation)</li>
+          <li><b>Prerequisites:</b> Eliminate Left Recursion &amp; Left Factor</li>
+          <li><b>LL(1):</b> Predictive parsing using FIRST &amp; FOLLOW sets</li>
+          <li><b>Condition:</b> No multiple entries in any table cell M[A,a]</li>
+        </ul>
+      </div>
+
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #10b981; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">2. Bottom-Up Parsing (LR)</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li><b>Concept:</b> Leaves → Root (Reverse Rightmost Derivation)</li>
+          <li><b>Actions:</b> Shift (push token), Reduce (handle → LHS), Accept</li>
+          <li><b>Conflicts:</b> Shift/Reduce (S/R) &amp; Reduce/Reduce (R/R)</li>
+          <li><b>Power:</b> LR(0) &lt; SLR(1) &lt; LALR(1) &lt; CLR(1)</li>
+        </ul>
+      </div>
+
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #f59e0b; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">3. YACC &amp; Operator Grammars</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li><b>Operator Precedence:</b> No ε and no adjacent non-terminals</li>
+          <li><b>YACC:</b> LALR(1) parser generator (Declarations %% Rules %% Code)</li>
+          <li><b>Error Recovery:</b> Special `error` token + panic synchronization</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
   <hr class="sep">
 
   <!-- Q&A SECTION -->

@@ -628,6 +628,51 @@ int main() {
     </ul>
   </div>
 
+  <div class="hin" style="margin-top:12px;">
+    <span class="tag">Hinglish Trick</span>
+    <p><b>Lexical Terms:</b> <b>Pattern</b> = Niyam / Formula (Regex). <b>Lexeme</b> = Actual text jo code mein likha hai (e.g. "total"). <b>Token</b> = Category tag jo parser ko milta hai (e.g. ID).<br>
+    <b>LEX Sections:</b> <b>"DRU"</b> (<b>D</b>eclarations %% <b>R</b>ules %% <b>U</b>ser C Code).</p>
+  </div>
+
+  <h2 class="topic">🗺️ Unit 2 Overview Map <span class="imp h">Quick Revise</span></h2>
+  <div class="card" style="padding: 24px; background: var(--surface2); border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 24px;">
+    <div style="background: #7c3aed; color: white; padding: 16px; border-radius: 8px; text-align: center; font-size: 1.2rem; font-weight: bold; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);">
+      UNIT 2: Introduction to Compilers &amp; Lexical Analysis
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+      
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #06b6d4; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">1. Compiler Basics</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li><b>Compiler:</b> Whole program → Machine executable (.exe)</li>
+          <li><b>Interpreter:</b> Line-by-line translation &amp; execution</li>
+          <li><b>Bootstrapping:</b> Writing a compiler in its own source language</li>
+        </ul>
+      </div>
+
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #10b981; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">2. Lexical Analysis (Scanner)</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li><b>Role:</b> Strip whitespace/comments → Generate Tokens</li>
+          <li><b>Terms:</b> Token (category), Lexeme (string), Pattern (regex)</li>
+          <li><b>Automata:</b> Regex → NFA (Thompson) → DFA (Subset)</li>
+          <li><b>Buffering:</b> 2-Buffer scheme with Sentinels (EOF)</li>
+        </ul>
+      </div>
+
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #f59e0b; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">3. LEX Tool &amp; Errors</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li><b>LEX Spec:</b> Declarations %% Rules %% Auxiliary C functions</li>
+          <li><b>Compilation:</b> lex.l → lex.yy.c → gcc → Scanner</li>
+          <li><b>Error Recovery:</b> Panic Mode (discard chars until valid token)</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
   <div class="qsection" id="qa">
     <h1 class="unit-title">❓ Unit 2 — Q&amp;A (RTU Exam Pattern)</h1>
 
