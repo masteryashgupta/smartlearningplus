@@ -12,9 +12,9 @@ export default function Login() {
   useEffect(() => {
     const session = getSession();
     if (session && session.role === "admin") {
-      navigate("/admin");
+      window.location.href = "/admin";
     }
-  }, [navigate]);
+  }, []);
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -25,11 +25,20 @@ export default function Login() {
     setError("");
     setLoading(true);
     try {
-      const { data } = await api.post("/auth/admin/login", { email, password });
+      const { data } = await api.post("/auth/admin/login", {
+        email: email.trim(),
+        password,
+      });
       setSession(data.token, "admin", data.name);
-      navigate("/admin");
+      window.location.href = "/admin";
     } catch (err) {
-      setError(err.response?.data?.error || "Invalid credentials. Please try again.");
+      console.error("Admin login error:", err);
+      const msg =
+        err.response?.data?.error ||
+        (err.code === "ERR_NETWORK"
+          ? "Network error: Unable to connect to backend server."
+          : "Invalid credentials. Please verify your admin email and password.");
+      setError(msg);
     } finally {
       setLoading(false);
     }

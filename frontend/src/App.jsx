@@ -16,7 +16,7 @@ function AdminRoute() {
   if (session && session.role === "admin") {
     return <AdminPanel />;
   }
-  return <Login />;
+  return <Navigate to="/login" replace />;
 }
 
 export default function App() {

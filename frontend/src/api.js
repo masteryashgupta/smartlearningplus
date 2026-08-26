@@ -16,6 +16,12 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    if (error.response?.status === 401) {
+      if (window.location.pathname.startsWith("/admin")) {
+        clearSession();
+        window.location.href = "/login";
+      }
+    }
     if (!error.response) {
       console.error(
         "🚨 Network Error. Request details:",
