@@ -82,23 +82,49 @@
         </ul>
       </div>
 
-      <div class="svgbox">
-        <svg viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg">
-          <style>.b{fill:#f0f4ff;stroke:#4f46e5;stroke-width:1.5;}.l{fill:#0f172a;font-size:12px;font-family:Consolas,monospace;text-anchor:middle;}</style>
-          <rect class="b" x="270" y="10" width="160" height="40" rx="8"/>
-          <text class="l" x="350" y="34">Application Programs</text>
-          <line x1="350" y1="50" x2="350" y2="65" stroke="#4f46e5" stroke-width="1.5"/>
-          <rect x="250" y="65" width="200" height="40" rx="8" fill="#eef2ff" stroke="#06b6d4" stroke-width="1.5"/>
-          <text class="l" x="350" y="89">Operating System</text>
-          <line x1="350" y1="105" x2="350" y2="120" stroke="#4f46e5" stroke-width="1.5"/>
-          <rect x="230" y="120" width="240" height="40" rx="8" fill="#fff1f2" stroke="#ef4444" stroke-width="1.5"/>
-          <text class="l" x="350" y="144">Hardware (CPU, RAM, Disk, I/O)</text>
-          <line x1="270" y1="30" x2="80" y2="30" stroke="#64748b" stroke-width="1"/>
-          <text class="l" x="170" y="20" fill="#64748b">Users interact via apps</text>
-          <line x1="100" y1="30" x2="100" y2="85" stroke="#64748b" stroke-dasharray="3,3"/>
-          <line x1="100" y1="85" x2="250" y2="85" stroke="#64748b" stroke-dasharray="3,3"/>
-        </svg>
-        <p class="cap">Fig 1.1 — OS as the intermediary layer between application programs and raw hardware</p>
+      <div class="hin" style="margin-top:12px;">
+        <span class="tag">Hinglish Trick</span>
+        <p><b>"Sunita Pagal Mujhko Dekh Fasi"</b> (CO1: <b>S</b>tructure, CO2: <b>P</b>rocessor, CO3: <b>M</b>emory, CO4: <b>D</b>eadlock, CO5: <b>F</b>ile &amp; OS case studies) — Poore syllabus ke 5 units ka order!</p>
+      </div>
+
+      <h2 class="topic">🗺️ Unit 1 Overview Map <span class="imp h">Quick Revise</span></h2>
+      <div class="card" style="padding: 24px; background: var(--surface2); border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+        <div style="background: #4f46e5; color: white; padding: 16px; border-radius: 8px; text-align: center; font-size: 1.2rem; font-weight: bold; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);">
+          UNIT 1: Course Objective, Scope &amp; Architecture
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px;">
+          
+          <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #06b6d4; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+            <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">1. Core Objectives</h4>
+            <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+              <li>Understand OS internals &amp; architecture</li>
+              <li>Master Process, CPU &amp; Thread scheduling</li>
+              <li>Learn Memory allocation &amp; Virtual memory</li>
+              <li>Prevent Deadlocks &amp; manage storage/devices</li>
+            </ul>
+          </div>
+
+          <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #10b981; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+            <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">2. Two Main Roles of OS</h4>
+            <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+              <li><b>Resource Manager:</b> Hardware allocation (CPU, RAM, Disk)</li>
+              <li><b>Extended Machine:</b> Hides complex hardware via simple APIs</li>
+            </ul>
+          </div>
+
+          <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #f59e0b; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+            <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">3. Course Outcomes (CO1-CO5)</h4>
+            <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+              <li><b>CO1:</b> OS Structure &amp; Generations</li>
+              <li><b>CO2:</b> CPU Scheduling &amp; Sync</li>
+              <li><b>CO3:</b> Paging &amp; Page Replacement</li>
+              <li><b>CO4:</b> Deadlock Detection &amp; Disk I/O</li>
+              <li><b>CO5:</b> File Management &amp; Linux/UNIX</li>
+            </ul>
+          </div>
+
+        </div>
       </div>
 
       <!-- Q&A UNIT 1 -->

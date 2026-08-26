@@ -56,6 +56,10 @@
         <tr><td><code>Time &amp; Date</code></td><td>Creation, modification, last access</td><td>2024-01-15</td></tr>
         <tr><td><code>User ID</code></td><td>Owner of the file</td><td>user: rahul</td></tr>
       </table>
+      <div class="hin" style="margin-top:12px;">
+        <span class="tag">Hinglish Trick</span>
+        <p><b>"NIT Lene Se Pure Time Utho"</b> (<b>N</b>ame, <b>I</b>dentifier, <b>T</b>ype, <b>L</b>ocation, <b>S</b>ize, <b>P</b>rotection, <b>T</b>ime, <b>U</b>ser ID) — 8 File Attributes yaad rakhne ki trick!</p>
+      </div>
 
       <h3 class="sub">File Operations</h3>
       <div class="compare">
@@ -133,6 +137,10 @@
           <li><b>Capability List</b> — Row of access matrix stored with each domain (user/process). Process has a list of capabilities (tickets) it can use.</li>
         </ul>
       </div>
+      <div class="hin" style="margin-top:12px;">
+        <span class="tag">Hinglish Trick</span>
+        <p><b>ACL</b> = File ke darwaze pe guard ki guest-list (Column-wise). <b>Capability</b> = User ke pocket ka VIP pass (Row-wise).</p>
+      </div>
 
       <h2 class="topic">6. File Security <span class="imp h">High ⭐⭐⭐</span></h2>
       <div class="card def">
@@ -165,6 +173,44 @@
       <div class="hin">
         <span class="tag">Hinglish</span>
         <p>Authentication = "prove karo ki tum wohi ho jo tum claim kar rahe ho." Password sabse common hai lekin weakest bhi — isiliye MFA (Multi-Factor Authentication) use hota hai jaise bank mein password + OTP. Biometrics = fingerprint ya face, ye hardest to fake hote hain.</p>
+      </div>
+
+      <h2 class="topic">🗺️ Unit 5 Overview Map <span class="imp h">Quick Revise</span></h2>
+      <div class="card" style="padding: 24px; background: var(--surface2); border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+        <div style="background: #4f46e5; color: white; padding: 16px; border-radius: 8px; text-align: center; font-size: 1.2rem; font-weight: bold; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);">
+          UNIT 5: File Management &amp; Security
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+          
+          <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #06b6d4; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+            <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">1. File Concept &amp; Types</h4>
+            <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+              <li><b>Attributes:</b> Name, Inode, Type, Location, Size, rwx, Time, Owner</li>
+              <li><b>Types:</b> Regular, Directory, Character/Block device, Socket, Link</li>
+              <li><b>Operations:</b> Create, Open, Read, Write, Seek, Truncate, Delete</li>
+            </ul>
+          </div>
+
+          <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #10b981; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+            <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">2. Directories &amp; Access</h4>
+            <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+              <li><b>Directories:</b> Single, Two-level, Tree, Acyclic Graph (links), General</li>
+              <li><b>Path:</b> Absolute (/root/..) vs Relative (../dir)</li>
+              <li><b>Access:</b> Sequential (tape/log), Direct (random/db), Indexed</li>
+            </ul>
+          </div>
+
+          <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #f59e0b; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+            <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">3. Security &amp; Auth</h4>
+            <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+              <li><b>Access Matrix:</b> Domains (rows) × Objects (cols)</li>
+              <li><b>Implement:</b> ACL (per file) vs Capability List (per user)</li>
+              <li><b>Auth:</b> Know (password), Have (OTP), Are (Biometrics)</li>
+            </ul>
+          </div>
+
+        </div>
       </div>
 
       <!-- Q&A UNIT 5 -->

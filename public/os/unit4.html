@@ -66,6 +66,10 @@
         <tr><td><b>Detection</b></td><td>Allow deadlock, detect &amp; recover</td><td>Better resource use; recovery cost</td><td>Wait-for Graph</td></tr>
         <tr><td><b>Ignorance</b></td><td>Ostrich Algorithm — pretend it won't happen</td><td>Best performance; risky</td><td>Windows, Linux (approx.)</td></tr>
       </table>
+      <div class="hin" style="margin-top:12px;">
+        <span class="tag">Hinglish Trick</span>
+        <p><b>"PADI"</b> — <b>P</b>revention (Strict rules), <b>A</b>voidance (Banker loan checklist), <b>D</b>etection (Graph check karo), <b>I</b>gnorance (Ostrich approach: aankh band karlo!).</p>
+      </div>
 
       <h2 class="topic">3. Deadlock Prevention <span class="imp h">High ⭐⭐⭐</span></h2>
       <div class="card">
@@ -184,6 +188,47 @@
         <p>Disk queue: 98, 183, 37, 122, 14, 124, 65, 67. Head starts at 53. Apply SSTF.</p>
         <p>From 53: closest = 65 (diff 12). From 65: closest = 67 (diff 2). From 67: closest = 37 (diff 30). From 37: closest = 14 (diff 23). From 14: closest = 98 (diff 84). From 98: closest = 122 (diff 24). From 122: closest = 124 (diff 2). From 124: closest = 183 (diff 59).</p>
         <p><b>Sequence: 53→65→67→37→14→98→122→124→183. Total movement = 236 cylinders.</b></p>
+      </div>
+      <div class="hin" style="margin-top:12px;">
+        <span class="tag">Hinglish Trick</span>
+        <p><b>SSTF</b> = Pass wala (Greedy), <b>SCAN</b> = Lift (End tak jao), <b>C-SCAN</b> = One-way circle (return blank), <b>LOOK</b> = Smart Lift (sirf last passenger tak jao, boundary tak nahi!).</p>
+      </div>
+
+      <h2 class="topic">🗺️ Unit 4 Overview Map <span class="imp h">Quick Revise</span></h2>
+      <div class="card" style="padding: 24px; background: var(--surface2); border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+        <div style="background: #4f46e5; color: white; padding: 16px; border-radius: 8px; text-align: center; font-size: 1.2rem; font-weight: bold; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);">
+          UNIT 4: Deadlock &amp; Device Management
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+          
+          <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #ef4444; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+            <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">1. Deadlock Core</h4>
+            <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+              <li><b>4 Conditions (MHNC):</b> Mutual Exclusion, Hold &amp; Wait, No Preemption, Circular Wait</li>
+              <li><b>Handling (PADI):</b> Prevention, Avoidance, Detection, Ignorance</li>
+              <li><b>Avoidance:</b> Banker's Algorithm (Need = Max - Alloc, Safe Sequence)</li>
+            </ul>
+          </div>
+
+          <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #3b82f6; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+            <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">2. Graphs &amp; Recovery</h4>
+            <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+              <li><b>RAG:</b> Request edge (P→R), Assignment (R→P)</li>
+              <li><b>WFG:</b> Cycle = Deadlock (Single instance)</li>
+              <li><b>Recovery:</b> Process termination (Abort all/one-by-one) or Preemption (Victim rollback)</li>
+            </ul>
+          </div>
+
+          <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #10b981; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+            <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">3. Device &amp; Disk Scheduling</h4>
+            <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+              <li><b>I/O Handling:</b> Polling (CPU busy), Interrupt (ISR), DMA (Direct RAM)</li>
+              <li><b>Disk Algos:</b> FCFS, SSTF (Closest), SCAN (Elevator), C-SCAN (Circular), LOOK</li>
+            </ul>
+          </div>
+
+        </div>
       </div>
 
       <!-- Q&A UNIT 4 -->

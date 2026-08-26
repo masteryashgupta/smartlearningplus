@@ -115,6 +115,10 @@
           <tr><td><b>Orphan Process</b></td><td>Parent has terminated but child still running — adopted by init process (PID 1).</td></tr>
         </table>
       </div>
+      <div class="hin" style="margin-top:12px;">
+        <span class="tag">Hinglish Trick</span>
+        <p><b>Zombie</b> = Bachha mar gaya par baap ko khabar nahi (Process table mein entry bachi hai). <b>Orphan</b> = Baap chala gaya, bachha akela hai (Init process PID 1 god le leta hai!).</p>
+      </div>
 
       <h2 class="topic">6.2 Linux — Introduction &amp; Architecture <span class="imp h">High ⭐⭐⭐⭐⭐ — guaranteed every year</span></h2>
       <div class="card def">
@@ -182,6 +186,10 @@ fi</div>
         <tr><td>Scheduling</td><td>Rate Monotonic, EDF (Earliest Deadline First)</td><td>Priority-based, soft guarantees</td></tr>
         <tr><td>OS needed</td><td>Dedicated RTOS (VxWorks, FreeRTOS, QNX)</td><td>General OS with real-time extensions (Linux PREEMPT_RT)</td></tr>
       </table>
+      <div class="hin" style="margin-top:12px;">
+        <span class="tag">Hinglish Trick</span>
+        <p><b>Hard RTOS</b> = Jaan ka khatra (Airbag, Missile — 1ms late to khatam!). <b>Soft RTOS</b> = Thoda buffer chalega (YouTube streaming, online gaming — video atki to chalega).</p>
+      </div>
 
       <h3 class="sub">RTOS Key Features</h3>
       <div class="card">
@@ -251,6 +259,45 @@ fi</div>
           <text x="225" y="262" fill="#64748b" font-size="10" font-family="Inter">Low addr</text>
         </svg>
         <p class="cap">Fig 6.4 — UNIX Process Virtual Address Space Layout</p>
+      </div>
+
+      <h2 class="topic">🗺️ Unit 6 Overview Map <span class="imp h">Quick Revise</span></h2>
+      <div class="card" style="padding: 24px; background: var(--surface2); border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+        <div style="background: #4f46e5; color: white; padding: 16px; border-radius: 8px; text-align: center; font-size: 1.2rem; font-weight: bold; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);">
+          UNIT 6: UNIX, Linux, RTOS &amp; Mobile OS
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+          
+          <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #10b981; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+            <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">1. UNIX &amp; Linux</h4>
+            <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+              <li><b>UNIX:</b> Multiuser, everything is file, Inode structure</li>
+              <li><b>Linux:</b> Linus 1991, Open Source Monolithic Modular Kernel</li>
+              <li><b>Process:</b> fork() clone, exec() load, wait(), Zombie vs Orphan</li>
+            </ul>
+          </div>
+
+          <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #f59e0b; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+            <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">2. Real-Time OS (RTOS)</h4>
+            <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+              <li><b>Core Rule:</b> Correctness = Result + Deadline</li>
+              <li><b>Hard RTOS:</b> Zero tolerance (Airbags, Pacemaker, VxWorks)</li>
+              <li><b>Soft RTOS:</b> Tolerable delay (Video stream, Gaming)</li>
+              <li><b>Priority Inversion:</b> Solved via Priority Inheritance</li>
+            </ul>
+          </div>
+
+          <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #3b82f6; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+            <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">3. Mobile OS (Android / iOS)</h4>
+            <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+              <li><b>Android 5 Layers:</b> Apps → Framework → ART/Libs → Linux Kernel</li>
+              <li><b>Kernel:</b> Android (Linux modified) vs iOS (XNU / BSD Mach)</li>
+              <li><b>Address Space:</b> Stack (grows ↓), Heap (grows ↑), Data, Text</li>
+            </ul>
+          </div>
+
+        </div>
       </div>
 
       <!-- Q&A UNIT 6 -->
