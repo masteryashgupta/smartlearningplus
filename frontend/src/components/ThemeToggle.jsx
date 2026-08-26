@@ -12,9 +12,9 @@ export default function ThemeToggle({ className = "" }) {
   }, []);
 
   const toggle = () => {
-    if (isDark) {
+    if (document.documentElement.classList.contains("dark")) {
       document.documentElement.classList.remove("dark");
-      localStorage.removeItem("theme");
+      localStorage.setItem("theme", "light");
       setIsDark(false);
     } else {
       document.documentElement.classList.add("dark");
@@ -26,27 +26,12 @@ export default function ThemeToggle({ className = "" }) {
   return (
     <button
       onClick={toggle}
+      type="button"
       title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
-      className={className}
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
-        width: "34px",
-        height: "34px",
-        borderRadius: "10px",
-        border: "1.5px solid var(--border, #e2e8f0)",
-        background: "var(--surface, #ffffff)",
-        color: "var(--text, #0f172a)",
-        fontSize: "16px",
-        cursor: "pointer",
-        transition: "background 0.2s, border-color 0.2s, transform 0.15s",
-        flexShrink: 0,
-      }}
-      onMouseEnter={e => { e.currentTarget.style.transform = "scale(1.1)"; }}
-      onMouseLeave={e => { e.currentTarget.style.transform = "scale(1)"; }}
+      aria-label={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
+      className={`p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition-all flex items-center justify-center ${className}`}
     >
-      {isDark ? "☀️" : "🌙"}
+      <span className="text-base leading-none select-none">{isDark ? "☀️" : "🌙"}</span>
     </button>
   );
 }
