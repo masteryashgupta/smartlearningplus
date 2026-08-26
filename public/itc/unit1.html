@@ -121,6 +121,49 @@
     <p class="cap">Fig 1.1 — Block diagram of a general communication system (this is the "scope map" of the whole subject)</p>
   </div>
 
+  <div class="hin" style="margin-top:12px;">
+    <span class="tag">Hinglish Trick</span>
+    <p><b>Communication System Pipeline:</b> <b>Source</b> $\rightarrow$ <b>Source Encoder</b> (Faltu bits hatao/Compress karo) $\rightarrow$ <b>Channel Encoder</b> (Parity/Guard bits jodo taaki noise se bache) $\rightarrow$ <b>Channel</b> (Noise ⚡) $\rightarrow$ <b>Channel Decoder</b> $\rightarrow$ <b>Source Decoder</b> $\rightarrow$ <b>Sink</b> (Destination)!</p>
+  </div>
+
+  <h2 class="topic">🗺️ Unit 1 Overview Map <span class="imp h">Quick Revise</span></h2>
+  <div class="card" style="padding: 24px; background: var(--surface2); border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 24px;">
+    <div style="background: #0ea5e9; color: white; padding: 16px; border-radius: 8px; text-align: center; font-size: 1.2rem; font-weight: bold; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);">
+      UNIT 1: Communication Architecture &amp; ITC Fundamentals
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px;">
+      
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #06b6d4; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">1. Information Quantification</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li><b>Self Information:</b> $I(x_i) = \log_2(1/p_i)$ bits</li>
+          <li><b>Entropy $H(X)$:</b> Average uncertainty per symbol $\sum p_i \log(1/p_i)$</li>
+          <li><b>Mutual Information:</b> Information shared between input &amp; output</li>
+        </ul>
+      </div>
+
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #10b981; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">2. Source vs Channel Coding</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li><b>Source Coding:</b> Compression (Huffman, Shannon-Fano, LZ)</li>
+          <li><b>Channel Coding:</b> Error correction (LBC, Cyclic, BCH, RS)</li>
+          <li><b>Shannon Capacity:</b> Maximum error-free data rate $C$</li>
+        </ul>
+      </div>
+
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #f59e0b; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">3. Practical Applications</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li><b>Storage:</b> CD/DVD/HDD (Reed-Solomon, CRC)</li>
+          <li><b>Wireless:</b> 4G/5G, WiFi, Satellite deep-space telemetry</li>
+          <li><b>Media:</b> JPEG, MP3, ZIP archives, QR codes</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
   <div class="qsection" id="qa1">
     <h1 class="unit-title">❓ Unit 1 — Q&amp;A (RTU Exam Pattern)</h1>
     <div class="qa">

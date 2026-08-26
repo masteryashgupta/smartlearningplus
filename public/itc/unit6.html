@@ -378,6 +378,50 @@ Decoded input bits (u): 1, 1, 0  (flush bits 0,0 dropped)</div>
   </div>
 </div>
 
+<div class="hin" style="margin-top:12px;">
+  <span class="tag">Hinglish Trick</span>
+  <p><b>Viterbi Algorithm:</b> <b>"ACS Karo, Traceback Pao"</b> (<b>A</b>dd Branch Metric $\rightarrow$ <b>C</b>ompare Incoming Paths $\rightarrow$ <b>S</b>elect Survivor Path [Min Hamming distance]).<br>
+  <b>Free Distance ($d_{free}$):</b> All-zero (00) se niklo aur wapas 00 pe aao — jo <b>sabse kam weight (1s ka count)</b> wala path hoga, wahi $d_{free}$ hai! Corrects $\lfloor (d_{free}-1)/2 \rfloor$ errors.</p>
+</div>
+
+<h2 class="topic">🗺️ Unit 6 Overview Map <span class="imp h">Quick Revise</span></h2>
+<div class="card" style="padding: 24px; background: var(--surface2); border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 24px;">
+  <div style="background: #0ea5e9; color: white; padding: 16px; border-radius: 8px; text-align: center; font-size: 1.2rem; font-weight: bold; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);">
+    UNIT 6: Convolutional Codes &amp; Viterbi Decoding
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+    
+    <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #06b6d4; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+      <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">1. Encoder &amp; Structural Memory</h4>
+      <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+        <li><b>Parameters:</b> $(n,k,m)$ code, rate $R=k/n$, constraint length $K=m+1$</li>
+        <li><b>Memory:</b> Shift register of $m$ stages $\Rightarrow 2^m$ possible states</li>
+        <li><b>Generators:</b> Mod-2 adders connected via generator vectors $g_1, g_2$</li>
+      </ul>
+    </div>
+
+    <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #10b981; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+      <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">2. Code Representations</h4>
+      <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+        <li><b>Code Tree:</b> Binary tree branching at each time instant ($2^t$ growth)</li>
+        <li><b>State Diagram:</b> Directed graph of $2^m$ states with input/output edges</li>
+        <li><b>Trellis Diagram:</b> Time-indexed state transitions (Repeats after $K$ steps)</li>
+      </ul>
+    </div>
+
+    <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #f59e0b; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+      <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">3. Viterbi Decoding &amp; Free Distance</h4>
+      <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+        <li><b>ML Decoding:</b> Finds code path with minimum total Hamming metric</li>
+        <li><b>ACS Rule:</b> Add branch metric, Compare converging paths, Select survivor</li>
+        <li><b>Free Distance:</b> $d_{free} = \text{min weight path leaving and returning to 00}$</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
 <!-- Q&A -->
 <hr class="sep">
 <div class="qsection" id="qa6">

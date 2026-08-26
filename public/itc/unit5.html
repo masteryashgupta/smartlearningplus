@@ -745,6 +745,51 @@ If S=110: error at position 4. Flip bit 4 to correct. &#x2713;
   </table>
 </div>
 
+<div class="hin" style="margin-top:12px;">
+  <span class="tag">Hinglish Trick</span>
+  <p><b>Systematic Cyclic Encoding:</b> <b>"Shift, Divide, Add Remainder"</b> ($x^{n-k} \cdot m(x)$ ko $g(x)$ se divide karo, jo remainder $r(x)$ bache use jodd do $\rightarrow c(x) = x^{n-k}m(x) + r(x)$!).<br>
+  <b>Fundamental Identity:</b> <b>$g(x) \cdot h(x) = x^n + 1$</b> | <b>Syndrome:</b> <b>$S(x) = r(x) \bmod g(x)$</b>.</p>
+</div>
+
+<h2 class="topic">🗺️ Unit 5 Overview Map <span class="imp h">Quick Revise</span></h2>
+<div class="card" style="padding: 24px; background: var(--surface2); border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 24px;">
+  <div style="background: #0ea5e9; color: white; padding: 16px; border-radius: 8px; text-align: center; font-size: 1.2rem; font-weight: bold; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);">
+    UNIT 5: Cyclic Codes &amp; Polynomial Code Algebra
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+    
+    <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #06b6d4; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+      <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">1. Algebraic Properties</h4>
+      <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+        <li><b>Cyclic Shift:</b> $c^{(1)}(x) = x \cdot c(x) \bmod (x^n+1) \in C$</li>
+        <li><b>Generator $g(x)$:</b> Degree $n-k$, divides $x^n+1$</li>
+        <li><b>Parity Check $h(x)$:</b> Degree $k$, $g(x) \cdot h(x) = x^n+1$</li>
+        <li><b>Galois Field:</b> Arithmetic modulo 2 over GF(2) / GF($2^m$)</li>
+      </ul>
+    </div>
+
+    <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #10b981; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+      <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">2. Systematic Encoding</h4>
+      <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+        <li><b>Step 1:</b> Shift message poly by $n-k$ positions $\rightarrow x^{n-k}m(x)$</li>
+        <li><b>Step 2:</b> Divide by $g(x)$ to get parity remainder $r(x)$</li>
+        <li><b>Step 3:</b> $c(x) = x^{n-k}m(x) + r(x)$ (Message intact at high end)</li>
+      </ul>
+    </div>
+
+    <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #f59e0b; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+      <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">3. LFSR Circuits &amp; Syndrome</h4>
+      <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+        <li><b>Encoder LFSR:</b> $n-k$ flip-flop shift register with feedback taps $g_i$</li>
+        <li><b>Syndrome Poly:</b> $S(x) = r(x) \bmod g(x) = e(x) \bmod g(x)$</li>
+        <li><b>Error Vector:</b> $S(x) \ne 0 \Rightarrow$ matches error syndrome table</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
 <!-- 5.10 RTU Q&A -->
 <div class="qsection" id="u5-qa">
   <h2 class="topic">5.10 RTU Exam Q&amp;A &#x2014; Complete Bank <span class="imp h">EXAM READY</span></h2>

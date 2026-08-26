@@ -986,6 +986,52 @@
     </div>
   </div>
 
+  <div class="hin" style="margin-top:12px;">
+    <span class="tag">Hinglish Trick</span>
+    <p><b>Matrices:</b> <b>$G = [I_k | P]$</b> (k Message + r Parity). <b>$H = [P^T | I_r]$</b> (Parity transpose + r Identity). <b>$G \cdot H^T = 0$</b> pakka zero hoga!<br>
+    <b>Syndrome Decoding:</b> <b>$S = r \cdot H^T$</b> (Syndrome $S$ jis column of $H$ se match kare, wahi bit corrupt hai — use flip kar do!).<br>
+    <b>Hamming Rule:</b> Detects $d_{min} - 1$ errors, Corrects $\lfloor (d_{min}-1)/2 \rfloor$ errors.</p>
+  </div>
+
+  <h2 class="topic">🗺️ Unit 4 Overview Map <span class="imp h">Quick Revise</span></h2>
+  <div class="card" style="padding: 24px; background: var(--surface2); border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 24px;">
+    <div style="background: #0ea5e9; color: white; padding: 16px; border-radius: 8px; text-align: center; font-size: 1.2rem; font-weight: bold; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);">
+      UNIT 4: Linear Block Codes (LBC) &amp; Syndrome Decoding
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+      
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #06b6d4; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">1. LBC Fundamentals</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li><b>Parameters:</b> $(n,k)$ code, rate $R=k/n$, parity bits $r=n-k$</li>
+          <li><b>Linearity:</b> Modulo-2 sum (XOR) of any 2 codewords is a codeword</li>
+          <li><b>Distance:</b> $d_{min} = \text{min non-zero weight } w_{min}$</li>
+          <li><b>Detection/Correction:</b> $t_d = d_{min}-1$; &nbsp; $t_c = \lfloor (d_{min}-1)/2 \rfloor$</li>
+        </ul>
+      </div>
+
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #10b981; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">2. Generator &amp; Parity Matrices</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li><b>Generator Matrix:</b> $G_{k \times n} = [I_k | P]$, codeword $c = m \cdot G$</li>
+          <li><b>Parity Check:</b> $H_{r \times n} = [P^T | I_r]$, checks $c \cdot H^T = 0$</li>
+          <li><b>Orthogonality:</b> $G \cdot H^T = 0 \pmod 2$</li>
+        </ul>
+      </div>
+
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #f59e0b; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">3. Syndrome Decoding &amp; Hamming</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li><b>Syndrome:</b> $S = r \cdot H^T = e \cdot H^T$ (1-to-1 error mapping)</li>
+          <li><b>Standard Array:</b> Coset leaders represent most likely error patterns</li>
+          <li><b>Hamming Code:</b> $(2^r-1, 2^r-r-1)$, $d_{min}=3$, single-error correcting</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
   <hr class="sep">
 
   <div class="qsection scroll-anchor" id="qa">

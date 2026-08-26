@@ -589,7 +589,50 @@ I(X;Y) = H(X) − H(X|Y)
     <p>④ <b>H(X|Y)</b> = H(X,Y) − H(Y) = 1.906 − 0.954 = <b>0.952 bits</b></p>
     <p>⑤ <b>H(Y|X)</b> = H(X,Y) − H(X) = 1.906 − 1 = <b>0.906 bits</b></p>
     <p>⑥ <b>I(X;Y)</b> = H(X) − H(X|Y) = 1 − 0.952 = <b>0.048 bits</b> &nbsp;(cross-check: H(X)+H(Y)−H(X,Y) = 1+0.954−1.906 = 0.048 ✓)</p>
-    <p class="note">💡 Exam tip: Always compute H(X,Y) directly from the joint matrix first — every other quantity (H(X|Y), H(Y|X), I(X;Y)) follows from it using the standard relations. This is the fastest, error-free order to solve such numericals.</p>
+  </div>
+
+  <div class="hin" style="margin-top:12px;">
+    <span class="tag">Hinglish Trick</span>
+    <p><b>Entropy Venn Diagram:</b> <b>$H(X,Y)$</b> = Dono circles ka poora Union. <b>$I(X;Y)$</b> = Beech ka common Intersection (Shared info). <b>$H(X|Y)$</b> = Left ka bacha hua hissa (Y pata hone ke baad X ki uncertainty).<br>
+    <b>BSC Capacity:</b> <b>$C = 1 - H(p)$</b> (1 bit ideal capacity mein se noise entropy $H(p)$ minus kardo!).</p>
+  </div>
+
+  <h2 class="topic">🗺️ Unit 2 Overview Map <span class="imp h">Quick Revise</span></h2>
+  <div class="card" style="padding: 24px; background: var(--surface2); border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 24px;">
+    <div style="background: #0ea5e9; color: white; padding: 16px; border-radius: 8px; text-align: center; font-size: 1.2rem; font-weight: bold; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);">
+      UNIT 2: Information Measurement, Entropy &amp; Channels
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+      
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #06b6d4; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">1. Information &amp; Entropy</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li><b>Self Information:</b> $I(x_i) = \log_2(1/p_i)$ bits</li>
+          <li><b>Entropy $H(X)$:</b> $\sum p_i \log_2(1/p_i)$ (Max $\log_2 M$ at equiprobable)</li>
+          <li><b>Continuous Entropy:</b> $h(X) = -\int f(x)\log_2 f(x)dx$</li>
+        </ul>
+      </div>
+
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #10b981; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">2. Joint &amp; Conditional Entropy</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li><b>Joint Entropy:</b> $H(X,Y) = -\sum \sum P(x_i, y_j)\log_2 P(x_i, y_j)$</li>
+          <li><b>Conditional:</b> $H(X|Y) = H(X,Y) - H(Y) \le H(X)$</li>
+          <li><b>Mutual Info:</b> $I(X;Y) = H(X) - H(X|Y) = H(Y) - H(Y|X)$</li>
+        </ul>
+      </div>
+
+      <div style="background: var(--surface); padding: 16px; border-radius: 8px; border-left: 5px solid #f59e0b; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 12px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px;">3. Discrete Memoryless Channels</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--muted); line-height: 1.6;">
+          <li><b>DMC:</b> Channel matrix $[P(y_j|x_i)]$, memoryless property</li>
+          <li><b>BSC:</b> Binary Symmetric Channel with crossover $p$ ($C = 1 - H(p)$)</li>
+          <li><b>BEC:</b> Binary Erasure Channel with erasure prob $\epsilon$ ($C = 1 - \epsilon$)</li>
+        </ul>
+      </div>
+
+    </div>
   </div>
 
   <hr class="sep">
