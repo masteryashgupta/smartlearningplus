@@ -1,4 +1,0 @@
-Experiment - 3
-Aim - Implement Bubble Sort algorithm to sort a given set of elements and 
-determine the time required to sort the elements. The elements can be read 
-from a file or can be generated using the random number generator.

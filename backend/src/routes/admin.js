@@ -25,22 +25,16 @@ router.get("/overview", requireAuth("moderator"), async (req, res) => {
   try {
     const [
       subscribersRes,
-      pendingMaterialsRes,
-      approvedMaterialsRes,
       pastesRes,
       announcementRes
     ] = await Promise.all([
       q("select count(*) from notification_subscribers"),
-      q("select count(*) from community_materials where status = 'pending'"),
-      q("select count(*) from community_materials where status = 'approved' and is_hidden = false"),
       q("select count(*) from pastes"),
       q("select * from announcement_singleton where id = 'global'")
     ]);
 
     res.json({
       subscribersCount: Number(subscribersRes.rows[0]?.count || 0),
-      pendingMaterialsCount: Number(pendingMaterialsRes.rows[0]?.count || 0),
-      approvedMaterialsCount: Number(approvedMaterialsRes.rows[0]?.count || 0),
       pastesCount: Number(pastesRes.rows[0]?.count || 0),
       announcement: announcementRes.rows[0] || null
     });
@@ -174,113 +168,6 @@ router.post("/broadcast", requireAuth("admin"), async (req, res) => {
     res.json({ ok: true, sentCount: targetEmails.length });
   } catch (err) {
     console.error("Broadcast route error:", err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-// ---- Study Materials Moderation (Approvals Vault) ----
-router.get("/materials/pending", requireAuth("moderator"), async (req, res) => {
-  try {
-    const { rows } = await q(
-      `select cm.*, s.name as subject_name, s.code as subject_code
-       from community_materials cm
-       join subjects s on s.id = cm.subject_id
-       where cm.status = 'pending'
-       order by cm.created_at asc`
-    );
-    res.json(rows);
-  } catch (err) {
-    console.error("Fetch pending materials error:", err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-router.get("/materials/approved", requireAuth("moderator"), async (req, res) => {
-  try {
-    const { rows } = await q(
-      `select cm.*, s.name as subject_name, s.code as subject_code
-       from community_materials cm
-       join subjects s on s.id = cm.subject_id
-       where cm.status = 'approved'
-       order by cm.created_at desc`
-    );
-    res.json(rows);
-  } catch (err) {
-    console.error("Fetch approved materials error:", err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-router.post("/materials/:id/approve", requireAuth("moderator"), async (req, res) => {
-  try {
-    const { rows } = await q(
-      `update community_materials
-       set status = 'approved',
-           reviewed_at = now()
-       where id = $1
-       returning *`,
-      [req.params.id]
-    );
-    if (rows.length === 0) return res.status(404).json({ error: "Material not found" });
-
-    await logModeratorActivity(req, "material_approve", `Approved study material "${rows[0].title}"`);
-    res.json({ ok: true, material: rows[0] });
-  } catch (err) {
-    console.error("Approve material error:", err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-router.post("/materials/:id/reject", requireAuth("moderator"), async (req, res) => {
-  const { reason } = req.body;
-  try {
-    const { rows } = await q(
-      `update community_materials
-       set status = 'rejected',
-           rejection_reason = $1,
-           reviewed_at = now()
-       where id = $2
-       returning *`,
-      [reason || "Does not meet guidelines", req.params.id]
-    );
-    if (rows.length === 0) return res.status(404).json({ error: "Material not found" });
-
-    await logModeratorActivity(req, "material_reject", `Rejected material "${rows[0].title}" — Reason: ${reason || "Not specified"}`);
-    res.json({ ok: true, material: rows[0] });
-  } catch (err) {
-    console.error("Reject material error:", err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-router.patch("/materials/:id/toggle-visibility", requireAuth("moderator"), async (req, res) => {
-  try {
-    const { rows } = await q(
-      `update community_materials
-       set is_hidden = not is_hidden
-       where id = $1
-       returning *`,
-      [req.params.id]
-    );
-    if (rows.length === 0) return res.status(404).json({ error: "Material not found" });
-
-    await logModeratorActivity(req, "material_toggle_visibility", `Toggled visibility for "${rows[0].title}" to ${rows[0].is_hidden ? "Hidden" : "Visible"}`);
-    res.json({ ok: true, material: rows[0] });
-  } catch (err) {
-    console.error("Toggle visibility error:", err);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-router.delete("/materials/:id", requireAuth("admin"), async (req, res) => {
-  try {
-    const { rows } = await q("delete from community_materials where id = $1 returning title", [req.params.id]);
-    if (rows.length > 0) {
-      await logModeratorActivity(req, "material_delete", `Deleted study material "${rows[0].title}"`);
-    }
-    res.json({ ok: true });
-  } catch (err) {
-    console.error("Delete material error:", err);
     res.status(500).json({ error: "Internal server error" });
   }
 });

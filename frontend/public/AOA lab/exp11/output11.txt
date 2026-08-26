@@ -1,9 +1,0 @@
-Output:
-
-Enter first string: AGGTAB
-Enter second string: GXTXAYB
-
-Length of Longest Common Subsequence = 4
-Longest Common Subsequence = GTAB
-
-Time Required = 0.000003 seconds

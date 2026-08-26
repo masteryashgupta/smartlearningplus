@@ -1,2 +1,0 @@
-Experiment - 11
-Aim - Implement Longest Common Subsequence problem using Dynamic Programming.

@@ -1,4 +1,0 @@
-Experiment - 5
-Aim - Implement Binary Search algorithm to search a value from a given set of 
-elements. The elements can be read from a file or can be generated using the 
-random number generator.

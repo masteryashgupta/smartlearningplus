@@ -65,12 +65,12 @@ export default function Disclaimer() {
               <div className="legal-text">
                 <p>
                   Smart Learning Plus is an independent, free, non-commercial resource built by a student, for students. 
-                  This platform is created to help engineering students access study materials, track attendance, 
-                  and navigate their academic journey more effectively.
+                  This platform is created to help engineering students access curated study materials, visual revision notes, 
+                  and navigate their academic preparation more effectively.
                 </p>
                 <p>
                   <strong>Important:</strong> This platform has no affiliation with Rajasthan Technical University (RTU), 
-                  any college, university, or educational institution. All content is provided voluntarily by the community 
+                  any college, university, or educational institution. All content is provided for study assistance 
                   and should be used as a supplementary resource only.
                 </p>
               </div>
@@ -82,7 +82,7 @@ export default function Disclaimer() {
               <div className="legal-text">
                 <p>
                   Syllabus PDFs, scheme documents, and similar university materials belong to their respective 
-                  original sources, including RTU and its publishers. These materials are shared on this platform solely 
+                  original sources, including RTU and its publishers. These materials are referenced on this platform solely 
                   for educational reference purposes.
                 </p>
                 <p>
@@ -93,39 +93,22 @@ export default function Disclaimer() {
               </div>
             </div>
 
-            {/* Section C: User-Contributed Content */}
-            <div className="legal-section">
-              <h2 className="legal-heading">User-Contributed Content</h2>
-              <div className="legal-text">
-                <p>
-                  Students can upload study material through the contribution system. When content is submitted, it goes 
-                  through an admin approval process. This approval is solely a quality and relevance check — it does 
-                  NOT imply ownership verification or endorsement of the content's originality.
-                </p>
-                <p>
-                  <strong>The uploader is solely responsible</strong> for ensuring they have the right to share any 
-                  content they upload. By submitting material, users confirm that it is their own work or that they have 
-                  obtained proper permission to share it.
-                </p>
-              </div>
-            </div>
-
-            {/* Section D: AI Assistant Disclaimer */}
+            {/* Section C: AI Assistant Disclaimer */}
             <div className="legal-section">
               <h2 className="legal-heading">AI Assistant Disclaimer</h2>
               <div className="legal-text">
                 <p>
-                  The SmartAI/RAG-based assistant may generate inaccurate, incomplete, or outdated answers. While we strive 
+                  The SmartAI platform assistant is designed to provide guidance on site features and materials. While we strive 
                   to provide helpful information, the AI should not be relied upon as the sole source of academic truth.
                 </p>
                 <p>
-                  <strong>Always verify important academic information</strong> from university sources such as your 
-                  course syllabus, professor's notes, or university publications before making academic decisions.
+                  <strong>Always verify important academic information</strong> from authoritative sources such as your 
+                  official course syllabus, textbooks, or university publications before making academic decisions.
                 </p>
               </div>
             </div>
 
-            {/* Section E: No Guarantee of Accuracy */}
+            {/* Section D: No Guarantee of Accuracy */}
             <div className="legal-section">
               <h2 className="legal-heading">No Guarantee of Accuracy</h2>
               <div className="legal-text">
@@ -135,8 +118,8 @@ export default function Disclaimer() {
                   up to date or completely accurate.
                 </p>
                 <p>
-                  Users should always cross-reference with university publications and consult with their academic 
-                  advisors for the most current information.
+                  Users should always cross-reference with university publications and consult official curriculum documents 
+                  for the most current information.
                 </p>
               </div>
             </div>
@@ -169,7 +152,6 @@ export default function Disclaimer() {
             <Link to="/privacy" className="sl-footer-link">Privacy Note</Link> |{" "}
             <a href="#contact" onClick={(e) => {
               e.preventDefault();
-              // Dispatch custom event to open contact modal
               window.dispatchEvent(new CustomEvent('openContactModal'));
             }} className="sl-footer-link" style={{ cursor: "pointer" }}>
               Contact

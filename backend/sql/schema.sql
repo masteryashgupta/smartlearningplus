@@ -104,53 +104,40 @@ for each row execute function set_updated_at();
 -- ============================================================
 
 insert into subjects (code, name, type, color) values
-  ('HCI', 'HCI - PT', 'theory', '#6D5EF5'),
-  ('CGM', 'CGM - CU', 'theory', '#22B8CF'),
-  ('AOA', 'AOA - MS', 'theory', '#51CF66'),
-  ('CD',  'CD - YP', 'theory', '#FCC419'),
-  ('ITC', 'ITC - DR. YZU', 'theory', '#FF8787'),
-  ('OS',  'OS - AS', 'theory', '#845EF7'),
-  ('AOALAB', 'AOA Lab', 'lab', '#51CF66'),
-  ('CGMLAB', 'CGM Lab', 'lab', '#22B8CF'),
-  ('AJLAB', 'AJ Lab', 'lab', '#FF6B6B'),
-  ('CDLAB', 'CD Lab', 'lab', '#FCC419')
+  ('HCI', 'Human Computer Interaction', 'theory', '#6D5EF5'),
+  ('CGM', 'Computer Graphics & Multimedia', 'theory', '#22B8CF'),
+  ('AOA', 'Analysis of Algorithms', 'theory', '#51CF66'),
+  ('CD',  'Compiler Design', 'theory', '#FCC419'),
+  ('ITC', 'Information Theory & Coding', 'theory', '#FF8787'),
+  ('OS',  'Operating Systems', 'theory', '#845EF7')
 on conflict (code) do update set name = excluded.name;
 
--- Timetable seed — 5CSG CS-5, 2026-27 (from the JECRC sheet).
+-- Timetable seed — 5CSG CS-5 (Theory Slots).
 -- Slots: 1=8:30-9:30 2=9:30-10:30 3=10:30-11:30 4=11:30-12:30
 --        (BREAK 12:30-1:30, not a slot) 5=1:30-2:30 6=2:30-3:30
 -- day_of_week: 1=Mon 2=Tue 3=Wed 4=Thu 5=Fri 6=Sat
--- Edit times/subjects any time from the Admin Panel — this just seeds it.
 
 insert into timetable_slots (day_of_week, slot_number, start_time, end_time, subject_id, batch, label)
-select 1, 1, '08:30'::time, '09:30'::time, id, 'ALL', 'HCI - PT' from subjects where code='HCI'
-union all select 1, 2, '09:30'::time, '10:30'::time, id, 'ALL', 'CGM - CU' from subjects where code='CGM'
-union all select 1, 3, '10:30'::time, '11:30'::time, id, 'ALL', 'AOA - MS' from subjects where code='AOA'
-union all select 1, 4, '11:30'::time, '12:30'::time, id, 'ALL', 'CD - YP' from subjects where code='CD'
+select 1, 1, '08:30'::time, '09:30'::time, id, 'ALL', 'HCI' from subjects where code='HCI'
+union all select 1, 2, '09:30'::time, '10:30'::time, id, 'ALL', 'CGM' from subjects where code='CGM'
+union all select 1, 3, '10:30'::time, '11:30'::time, id, 'ALL', 'AOA' from subjects where code='AOA'
+union all select 1, 4, '11:30'::time, '12:30'::time, id, 'ALL', 'CD' from subjects where code='CD'
 
-union all select 3, 1, '08:30'::time, '09:30'::time, id, 'ALL', 'CGM - CU' from subjects where code='CGM'
-union all select 3, 3, '10:30'::time, '11:30'::time, id, 'ALL', 'AOA - MS' from subjects where code='AOA'
-union all select 3, 4, '11:30'::time, '12:30'::time, id, 'ALL', 'OS - AS' from subjects where code='OS'
-union all select 3, 5, '13:30'::time, '14:30'::time, id, 'ALL', 'ITC - DR. YZU' from subjects where code='ITC'
+union all select 3, 1, '08:30'::time, '09:30'::time, id, 'ALL', 'CGM' from subjects where code='CGM'
+union all select 3, 3, '10:30'::time, '11:30'::time, id, 'ALL', 'AOA' from subjects where code='AOA'
+union all select 3, 4, '11:30'::time, '12:30'::time, id, 'ALL', 'OS' from subjects where code='OS'
+union all select 3, 5, '13:30'::time, '14:30'::time, id, 'ALL', 'ITC' from subjects where code='ITC'
 
-union all select 4, 1, '08:30'::time, '09:30'::time, id, 'ALL', 'CD - YP' from subjects where code='CD'
-union all select 4, 2, '09:30'::time, '10:30'::time, id, 'ALL', 'HCI - PT' from subjects where code='HCI'
-union all select 4, 3, '10:30'::time, '11:30'::time, id, 'ALL', 'OS - AS' from subjects where code='OS'
-union all select 4, 4, '11:30'::time, '12:30'::time, id, 'ALL', 'AOA - MS' from subjects where code='AOA'
-union all select 4, 5, '13:30'::time, '15:30'::time, id, 'G1', 'AJ Lab (BM-AS) - G1' from subjects where code='AJLAB'
-union all select 4, 5, '13:30'::time, '15:30'::time, id, 'G2', 'CGM Lab-KK-CP1 - G2' from subjects where code='CGMLAB'
+union all select 4, 1, '08:30'::time, '09:30'::time, id, 'ALL', 'CD' from subjects where code='CD'
+union all select 4, 2, '09:30'::time, '10:30'::time, id, 'ALL', 'HCI' from subjects where code='HCI'
+union all select 4, 3, '10:30'::time, '11:30'::time, id, 'ALL', 'OS' from subjects where code='OS'
+union all select 4, 4, '11:30'::time, '12:30'::time, id, 'ALL', 'AOA' from subjects where code='AOA'
 
-union all select 5, 1, '08:30'::time, '10:30'::time, id, 'G1', 'AoA Lab-MS-CP7 - G1' from subjects where code='AOALAB'
-union all select 5, 3, '10:30'::time, '11:30'::time, id, 'ALL', 'CGM - CU' from subjects where code='CGM'
-union all select 5, 4, '11:30'::time, '12:30'::time, id, 'ALL', 'ITC - DR. YZU' from subjects where code='ITC'
-union all select 5, 5, '13:30'::time, '15:30'::time, id, 'G1', 'CD Lab-CP6-YP - G1' from subjects where code='CDLAB'
-union all select 5, 5, '13:30'::time, '15:30'::time, id, 'G2', 'AJ Lab-CP8-AS - G2' from subjects where code='AJLAB'
+union all select 5, 3, '10:30'::time, '11:30'::time, id, 'ALL', 'CGM' from subjects where code='CGM'
+union all select 5, 4, '11:30'::time, '12:30'::time, id, 'ALL', 'ITC' from subjects where code='ITC'
 
-union all select 6, 1, '08:30'::time, '10:30'::time, id, 'G2', 'AoA Lab-MS-CP7 - G2' from subjects where code='AOALAB'
-union all select 6, 3, '10:30'::time, '11:30'::time, id, 'ALL', 'OS - AS' from subjects where code='OS'
-union all select 6, 4, '11:30'::time, '12:30'::time, id, 'ALL', 'CD - YP' from subjects where code='CD'
-union all select 6, 5, '13:30'::time, '15:30'::time, id, 'G1', 'CGM Lab-KK-CP8 - G1' from subjects where code='CGMLAB'
-union all select 6, 5, '13:30'::time, '15:30'::time, id, 'G2', 'CD Lab-CP2-YP - G2' from subjects where code='CDLAB'
+union all select 6, 3, '10:30'::time, '11:30'::time, id, 'ALL', 'OS' from subjects where code='OS'
+union all select 6, 4, '11:30'::time, '12:30'::time, id, 'ALL', 'CD' from subjects where code='CD'
 on conflict (day_of_week, slot_number, batch) do nothing;
 
 -- Tuesday has no classes on the sheet — nothing seeded for day_of_week=2.

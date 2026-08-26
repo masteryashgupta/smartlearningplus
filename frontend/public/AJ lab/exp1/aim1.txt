@@ -1,2 +1,0 @@
-To write an AWT program to create check boxes for different courses of a
-university such that the courses selected will be displayed.

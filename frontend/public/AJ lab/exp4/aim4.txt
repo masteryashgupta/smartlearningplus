@@ -1,3 +1,0 @@
-To develop a JDBC application to perform database driven operations like
-insert, delete, update, and selection using Statement, PreparedStatement,
-and ResultSet.

@@ -1,2 +1,0 @@
-To write a socket program in java to implement client server
-communication using socket and server socket class.

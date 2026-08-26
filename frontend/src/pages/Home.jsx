@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../api.js";
 import Navbar from "../components/Navbar.jsx";
@@ -10,7 +10,6 @@ const SUBJECTS = [
   {
     code: "OS",
     name: "Operating Systems",
-    lecturer: "AS",
     color: "#845EF7",
     icon: "💻",
     desc: "Process synchronization, CPU scheduling, virtual memory, paging, and deadlocks.",
@@ -27,7 +26,6 @@ const SUBJECTS = [
   {
     code: "HCI",
     name: "Human Computer Interaction",
-    lecturer: "PT",
     color: "#6D5EF5",
     icon: "🎨",
     desc: "Interaction models, usability engineering, heuristic evaluation, and GOMS.",
@@ -45,7 +43,6 @@ const SUBJECTS = [
   {
     code: "CD",
     name: "Compiler Design",
-    lecturer: "YP",
     color: "#FCC419",
     icon: "⚙️",
     desc: "Lexical analyzers, LL/LR parsing tables, syntax-directed translation, and code generation.",
@@ -62,7 +59,6 @@ const SUBJECTS = [
   {
     code: "CGM",
     name: "Computer Graphics & Multimedia",
-    lecturer: "CU",
     color: "#22B8CF",
     icon: "📐",
     desc: "Raster algorithms, 2D/3D geometric transformations, clipping, and rendering pipelines.",
@@ -80,7 +76,6 @@ const SUBJECTS = [
   {
     code: "AOA",
     name: "Analysis of Algorithms",
-    lecturer: "MS",
     color: "#51CF66",
     icon: "⚡",
     desc: "Asymptotic notation, Divide & Conquer, Dynamic Programming, Greedy, and NP-completeness.",
@@ -97,7 +92,6 @@ const SUBJECTS = [
   {
     code: "ITC",
     name: "Information Theory & Coding",
-    lecturer: "DR. YZU",
     color: "#FF8787",
     icon: "📡",
     desc: "Entropy, Huffman coding, channel capacity theorem, linear block codes, and cyclic codes.",
@@ -114,7 +108,6 @@ const SUBJECTS = [
 ];
 
 export default function Home() {
-  const [searchQuery, setSearchQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState("all");
 
   // Email Subscription State
@@ -122,25 +115,6 @@ export default function Home() {
   const [subscribeLoading, setSubscribeLoading] = useState(false);
   const [subscribeResult, setSubscribeResult] = useState(null);
   const [showSubscribeModal, setShowSubscribeModal] = useState(false);
-
-  // Community Contribution Modal State
-  const [showContributeModal, setShowContributeModal] = useState(false);
-  const [contribTitle, setContribTitle] = useState("");
-  const [contribSubjectId, setContribSubjectId] = useState("");
-  const [contribSection, setContribSection] = useState("Unit 1");
-  const [contribContentType, setContribContentType] = useState("pdf");
-  const [contribFile, setContribFile] = useState(null);
-  const [contribTextContent, setContribTextContent] = useState("");
-  const [contribUploaderName, setContribUploaderName] = useState("");
-  const [contribLoading, setContribLoading] = useState(false);
-  const [contribMessage, setContribMessage] = useState(null);
-  const [subjectsList, setSubjectsList] = useState([]);
-
-  useEffect(() => {
-    api.get("/materials/subjects")
-      .then((r) => setSubjectsList(r.data))
-      .catch((err) => console.error("Subjects fetch error:", err));
-  }, []);
 
   const handleSubscribe = async (e) => {
     e.preventDefault();
@@ -161,56 +135,6 @@ export default function Home() {
     }
   };
 
-  const handleContribSubmit = async (e) => {
-    e.preventDefault();
-    if (!contribTitle.trim()) return setContribMessage({ type: "error", text: "Title is required" });
-    if (!contribSubjectId) return setContribMessage({ type: "error", text: "Please select a subject" });
-
-    if (["pdf", "image"].includes(contribContentType) && !contribFile) {
-      return setContribMessage({ type: "error", text: "Please select a file to upload" });
-    }
-    if (["text", "html"].includes(contribContentType) && !contribTextContent.trim()) {
-      return setContribMessage({ type: "error", text: "Content text is required" });
-    }
-
-    setContribLoading(true);
-    setContribMessage(null);
-
-    try {
-      const formData = new FormData();
-      formData.append("title", contribTitle.trim());
-      formData.append("subject_id", contribSubjectId);
-      formData.append("section", contribSection);
-      formData.append("content_type", contribContentType);
-      formData.append("uploader_name", contribUploaderName.trim() || "Anonymous Contributor");
-
-      if (["pdf", "image"].includes(contribContentType)) {
-        formData.append("file", contribFile);
-      } else {
-        formData.append("text_content", contribTextContent);
-      }
-
-      const { data } = await api.post("/materials/upload", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
-      setContribMessage({
-        type: "success",
-        text: data.message || "Study material submitted! An administrator will review and publish it.",
-      });
-      setContribTitle("");
-      setContribFile(null);
-      setContribTextContent("");
-    } catch (err) {
-      setContribMessage({
-        type: "error",
-        text: err.response?.data?.error || "Failed to submit study material. Please try again.",
-      });
-    } finally {
-      setContribLoading(false);
-    }
-  };
-
   const filteredSubjects = SUBJECTS.filter((s) => {
     if (activeFilter === "all") return true;
     return s.code.toLowerCase() === activeFilter.toLowerCase();
@@ -224,7 +148,6 @@ export default function Home() {
       {/* Navigation Header */}
       <Navbar
         onOpenSubscribe={() => setShowSubscribeModal(true)}
-        onOpenContribute={() => setShowContributeModal(true)}
       />
 
       {/* HERO SECTION */}
@@ -314,10 +237,7 @@ export default function Home() {
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="font-mono text-xs font-bold text-slate-400">{s.code}</span>
-                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 font-semibold">
-                          Faculty: {s.lecturer}
-                        </span>
+                        <span className="font-mono text-xs font-bold text-primary">{s.code}</span>
                       </div>
                       <h3 className="text-base font-bold text-white group-hover:text-primary transition-colors">
                         {s.name}
@@ -380,7 +300,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 max-w-4xl mx-auto gap-6">
             {/* Tool 1: QuickPaste */}
             <Link
               to="/paste"
@@ -416,24 +336,6 @@ export default function Home() {
                 <span>&rarr;</span>
               </div>
             </Link>
-
-            {/* Tool 3: Community Vault */}
-            <div
-              onClick={() => setShowContributeModal(true)}
-              className="p-6 rounded-2xl border border-slate-800 bg-slate-900/70 hover:border-cyan-500/50 transition-all hover:scale-105 group cursor-pointer"
-            >
-              <div className="text-3xl mb-3">📤</div>
-              <h3 className="text-base font-bold text-white group-hover:text-cyan-400 transition-colors">
-                Share Notes &amp; PDFs
-              </h3>
-              <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-                Contribute your own unit notes, lab codes, or handwritten cheat sheets to help other students.
-              </p>
-              <div className="mt-4 text-xs font-bold text-cyan-400 flex items-center gap-1">
-                <span>Upload Material</span>
-                <span>&rarr;</span>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -488,160 +390,6 @@ export default function Home() {
                 {subscribeResult.text}
               </div>
             )}
-          </div>
-        </div>
-      )}
-
-      {/* COMMUNITY CONTRIBUTION MODAL */}
-      {showContributeModal && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-          <div className="w-full max-w-lg rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl space-y-4 my-8 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between">
-              <h3 className="text-base font-bold text-white flex items-center gap-2">
-                <span>📤</span>
-                <span>Share Study Material with Peers</span>
-              </h3>
-              <button
-                onClick={() => setShowContributeModal(false)}
-                className="text-slate-400 hover:text-white text-lg font-bold"
-              >
-                ✕
-              </button>
-            </div>
-
-            <p className="text-xs text-slate-300">
-              Submit your notes, cheat sheets, or lab solutions. Submissions will be verified by an administrator before appearing publicly.
-            </p>
-
-            {contribMessage && (
-              <div
-                className={`p-3 rounded-xl text-xs font-medium ${
-                  contribMessage.type === "success"
-                    ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                    : "bg-rose-500/10 text-rose-400 border border-rose-500/20"
-                }`}
-              >
-                {contribMessage.text}
-              </div>
-            )}
-
-            <form onSubmit={handleContribSubmit} className="space-y-4">
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
-                  Material Title *
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={contribTitle}
-                  onChange={(e) => setContribTitle(e.target.value)}
-                  placeholder="e.g. Unit 3 Quick Cheat Sheet & Formulas"
-                  className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:border-primary"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">
-                    Subject *
-                  </label>
-                  <select
-                    required
-                    value={contribSubjectId}
-                    onChange={(e) => setContribSubjectId(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:border-primary"
-                  >
-                    <option value="">Select Subject...</option>
-                    {subjectsList.map((sub) => (
-                      <option key={sub.id} value={sub.id}>
-                        {sub.name} ({sub.code})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">
-                    Section / Unit *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={contribSection}
-                    onChange={(e) => setContribSection(e.target.value)}
-                    placeholder="e.g. Unit 2 or Lab Code"
-                    className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:border-primary"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">
-                    Format *
-                  </label>
-                  <select
-                    value={contribContentType}
-                    onChange={(e) => setContribContentType(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:border-primary"
-                  >
-                    <option value="pdf">PDF Document (Max 100MB)</option>
-                    <option value="image">Image (JPEG/PNG)</option>
-                    <option value="text">Text / Markdown</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">
-                    Your Name (Optional)
-                  </label>
-                  <input
-                    type="text"
-                    value={contribUploaderName}
-                    onChange={(e) => setContribUploaderName(e.target.value)}
-                    placeholder="e.g. Yash or Anonymous"
-                    className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:border-primary"
-                  />
-                </div>
-              </div>
-
-              {["pdf", "image"].includes(contribContentType) ? (
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">
-                    Upload File *
-                  </label>
-                  <input
-                    type="file"
-                    required
-                    accept={contribContentType === "pdf" ? ".pdf" : "image/*"}
-                    onChange={(e) => setContribFile(e.target.files[0])}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white hover:file:bg-primary/90"
-                  />
-                </div>
-              ) : (
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">
-                    Content Text *
-                  </label>
-                  <textarea
-                    rows={6}
-                    required
-                    value={contribTextContent}
-                    onChange={(e) => setContribTextContent(e.target.value)}
-                    placeholder="Type or paste your notes here..."
-                    className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs font-mono focus:outline-none focus:border-primary"
-                  />
-                </div>
-              )}
-
-              <button
-                type="submit"
-                disabled={contribLoading}
-                className="w-full py-3 rounded-xl bg-gradient-to-r from-primary to-indigo-600 text-white font-bold text-xs shadow-lg shadow-primary/25 disabled:opacity-50"
-              >
-                {contribLoading ? "Submitting..." : "Submit for Verification"}
-              </button>
-            </form>
           </div>
         </div>
       )}

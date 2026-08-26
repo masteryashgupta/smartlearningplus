@@ -1,3 +1,0 @@
-Experiment - 6
-Aim - Compute two 2 by 2 matrix multiplication to find multiplication matrix 
-using Strassen's Matrix Multiplication.

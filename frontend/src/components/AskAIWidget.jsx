@@ -4,8 +4,8 @@ import { api } from "../api.js";
 const SUGGESTIONS = [
   "How do I mark attendance?",
   "Where can I find syllabus PDFs?",
-  "How does the leaderboard work?",
-  "How can I share study material?"
+  "How does QuickPaste work?",
+  "Where can I find QRS revision sheets?"
 ];
 
 const SUBJECT_MAP = [

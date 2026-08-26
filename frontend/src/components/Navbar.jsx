@@ -3,7 +3,7 @@ import { getSession, clearSession } from "../api.js";
 import { useState } from "react";
 import ThemeToggle from "./ThemeToggle.jsx";
 
-export default function Navbar({ onOpenSubscribe, onOpenContribute }) {
+export default function Navbar({ onOpenSubscribe }) {
   const navigate = useNavigate();
   const session = getSession();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -46,14 +46,6 @@ export default function Navbar({ onOpenSubscribe, onOpenContribute }) {
           >
             📋 QuickPaste
           </Link>
-          {onOpenContribute && (
-            <button
-              onClick={onOpenContribute}
-              className="px-3 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 transition-colors"
-            >
-              📤 Contribute
-            </button>
-          )}
           {onOpenSubscribe && (
             <button
               onClick={onOpenSubscribe}
@@ -123,14 +115,6 @@ export default function Navbar({ onOpenSubscribe, onOpenContribute }) {
           >
             📋 QuickPaste
           </Link>
-          {onOpenContribute && (
-            <button
-              onClick={() => { onOpenContribute(); setMenuOpen(false); }}
-              className="w-full text-left px-3 py-2.5 rounded-xl text-sm font-medium text-slate-200 hover:bg-white/5"
-            >
-              📤 Share Study Material
-            </button>
-          )}
           {onOpenSubscribe && (
             <button
               onClick={() => { onOpenSubscribe(); setMenuOpen(false); }}

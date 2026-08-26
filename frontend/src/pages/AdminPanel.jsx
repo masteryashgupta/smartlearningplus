@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { api, clearSession } from "../api.js";
 import AnnouncementManager from "../components/AnnouncementManager.jsx";
 import { Link } from "react-router-dom";
@@ -7,7 +7,6 @@ const TABS = [
   { key: "overview", label: "Overview", icon: "📊" },
   { key: "broadcast", label: "Emailer / Broadcaster", icon: "📢" },
   { key: "subscribers", label: "Email Subscribers", icon: "📧" },
-  { key: "materials", label: "Approvals Vault", icon: "📚", badgeKey: "pendingMaterialsCount" },
   { key: "announcement", label: "Announcement Bar", icon: "📣" },
   { key: "pastes", label: "QuickPaste Manager", icon: "📋" },
   { key: "moderator-logs", label: "Activity Logs", icon: "🕵️‍♂️" },
@@ -54,14 +53,6 @@ export default function AdminPanel() {
   const [broadcasting, setBroadcasting] = useState(false);
   const [broadcastResult, setBroadcastResult] = useState(null);
 
-  // Approvals Vault
-  const [pendingMaterials, setPendingMaterials] = useState([]);
-  const [approvedMaterials, setApprovedMaterials] = useState([]);
-  const [materialsSubTab, setMaterialsSubTab] = useState("pending");
-  const [previewMaterial, setPreviewMaterial] = useState(null);
-  const [rejectionReason, setRejectionReason] = useState("");
-  const [rejectionTargetId, setRejectionTargetId] = useState(null);
-
   // Pastes
   const [pastes, setPastes] = useState([]);
 
@@ -91,19 +82,6 @@ export default function AdminPanel() {
       setSubscribers(data);
     } catch (err) {
       console.error("Subscribers error:", err);
-    }
-  };
-
-  const fetchMaterials = async () => {
-    try {
-      const [pendingRes, approvedRes] = await Promise.all([
-        api.get("/admin/materials/pending"),
-        api.get("/admin/materials/approved"),
-      ]);
-      setPendingMaterials(pendingRes.data);
-      setApprovedMaterials(approvedRes.data);
-    } catch (err) {
-      console.error("Materials error:", err);
     }
   };
 
@@ -137,7 +115,6 @@ export default function AdminPanel() {
   useEffect(() => {
     fetchOverview();
     if (tab === "subscribers") fetchSubscribers();
-    if (tab === "materials") fetchMaterials();
     if (tab === "pastes") fetchPastes();
     if (tab === "moderator-logs") fetchLogs();
     if (tab === "health") fetchHealth();
@@ -211,53 +188,6 @@ export default function AdminPanel() {
     }
   };
 
-  // Handle Material Approve / Reject
-  const handleApproveMaterial = async (id) => {
-    try {
-      await api.post(`/admin/materials/${id}/approve`);
-      fetchMaterials();
-      fetchOverview();
-    } catch (err) {
-      alert("Failed to approve material");
-    }
-  };
-
-  const handleRejectMaterial = async (id) => {
-    if (!rejectionReason.trim()) {
-      alert("Please provide a rejection reason.");
-      return;
-    }
-    try {
-      await api.post(`/admin/materials/${id}/reject`, { reason: rejectionReason.trim() });
-      setRejectionTargetId(null);
-      setRejectionReason("");
-      fetchMaterials();
-      fetchOverview();
-    } catch (err) {
-      alert("Failed to reject material");
-    }
-  };
-
-  const handleToggleMaterialVisibility = async (id) => {
-    try {
-      await api.patch(`/admin/materials/${id}/toggle-visibility`);
-      fetchMaterials();
-    } catch (err) {
-      alert("Failed to toggle visibility");
-    }
-  };
-
-  const handleDeleteMaterial = async (id) => {
-    if (!window.confirm("Permanently delete this material?")) return;
-    try {
-      await api.delete(`/admin/materials/${id}`);
-      fetchMaterials();
-      fetchOverview();
-    } catch (err) {
-      alert("Failed to delete material");
-    }
-  };
-
   // Handle Delete Paste
   const handleDeletePaste = async (id, slug) => {
     if (!window.confirm(`Delete paste "/${slug}"?`)) return;
@@ -266,7 +196,7 @@ export default function AdminPanel() {
       fetchPastes();
       fetchOverview();
     } catch (err) {
-      alert("Failed to delete paste");
+      alert(err.response?.data?.error || "Failed to delete paste");
     }
   };
 
@@ -321,7 +251,6 @@ export default function AdminPanel() {
         <nav className="space-y-1 flex-1 overflow-y-auto">
           {TABS.map((t) => {
             const isActive = tab === t.key;
-            const badge = t.badgeKey && overview ? overview[t.badgeKey] : null;
             return (
               <button
                 key={t.key}
@@ -336,11 +265,6 @@ export default function AdminPanel() {
                   <span>{t.icon}</span>
                   <span>{t.label}</span>
                 </div>
-                {badge > 0 && (
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500 text-white">
-                    {badge}
-                  </span>
-                )}
               </button>
             );
           })}
@@ -365,31 +289,17 @@ export default function AdminPanel() {
             <div>
               <h2 className="text-xl font-bold text-white">Platform Dashboard</h2>
               <p className="text-xs text-slate-400 mt-0.5">
-                Overview of subscribers, study materials vault, and communication status
+                Overview of subscribers, QuickPastes, and communication status
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <StatCard
                 icon="📧"
                 label="Email Subscribers"
                 value={overview?.subscribersCount ?? 0}
                 sub="Notification recipients"
                 color="#6366F1"
-              />
-              <StatCard
-                icon="📚"
-                label="Approved Materials"
-                value={overview?.approvedMaterialsCount ?? 0}
-                sub="Live in study vaults"
-                color="#10B981"
-              />
-              <StatCard
-                icon="📥"
-                label="Pending Submissions"
-                value={overview?.pendingMaterialsCount ?? 0}
-                sub="Awaiting admin approval"
-                color="#F59E0B"
               />
               <StatCard
                 icon="📋"
@@ -406,7 +316,7 @@ export default function AdminPanel() {
                 <span>⚡</span>
                 <span>Quick Admin Actions</span>
               </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <button
                   onClick={() => setTab("broadcast")}
                   className="p-4 rounded-xl bg-slate-800 hover:bg-slate-700/80 border border-slate-700 text-left transition-all"
@@ -422,14 +332,6 @@ export default function AdminPanel() {
                   <div className="text-lg mb-1">👥</div>
                   <div className="text-xs font-bold text-white">Manage Subscribers</div>
                   <div className="text-[11px] text-slate-400 mt-0.5">View and export email list</div>
-                </button>
-                <button
-                  onClick={() => setTab("materials")}
-                  className="p-4 rounded-xl bg-slate-800 hover:bg-slate-700/80 border border-slate-700 text-left transition-all"
-                >
-                  <div className="text-lg mb-1">📥</div>
-                  <div className="text-xs font-bold text-white">Review Submissions</div>
-                  <div className="text-[11px] text-slate-400 mt-0.5">{overview?.pendingMaterialsCount || 0} pending in vault</div>
                 </button>
               </div>
             </div>
@@ -490,7 +392,7 @@ export default function AdminPanel() {
                     required
                     value={broadcastMsg}
                     onChange={(e) => setBroadcastMsg(e.target.value)}
-                    placeholder="Hi there,\n\nWe have updated the Operating Systems unit 2 study notes with new memory management diagrams and exam cheat sheets.\n\n- Topic 1: Virtual Memory\n- Topic 2: Page Replacement Algorithms\n\nCheck them out on the platform!"
+                    placeholder={"Hi there,\n\nWe have updated the Operating Systems unit 2 study notes with new memory management diagrams and exam cheat sheets.\n\n- Topic 1: Virtual Memory\n- Topic 2: Page Replacement Algorithms\n\nCheck them out on the platform!"}
                     className="w-full px-4 py-3 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 text-xs font-mono focus:outline-none focus:border-primary resize-y"
                   />
                 </div>
@@ -498,122 +400,106 @@ export default function AdminPanel() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                      Button Text (Optional)
+                      Button Text
                     </label>
                     <input
                       type="text"
                       value={broadcastBtnText}
                       onChange={(e) => setBroadcastBtnText(e.target.value)}
                       placeholder="Visit Smart Learning+"
-                      className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:border-primary"
+                      className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs"
                     />
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                      Button Link (Optional)
+                      Button Link
                     </label>
                     <input
                       type="text"
                       value={broadcastBtnLink}
                       onChange={(e) => setBroadcastBtnLink(e.target.value)}
                       placeholder="https://smartlearningplus.me"
-                      className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:border-primary"
+                      className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs"
                     />
                   </div>
                 </div>
 
                 <div>
                   <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                    Custom Extra Emails (Optional, comma-separated)
+                    Additional Custom Emails (Comma-separated, optional)
                   </label>
                   <input
                     type="text"
                     value={customEmails}
                     onChange={(e) => setCustomEmails(e.target.value)}
-                    placeholder="test@domain.com, student@domain.com"
-                    className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:border-primary"
+                    placeholder="extra1@example.com, extra2@example.com"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs"
                   />
                 </div>
 
                 <button
                   type="submit"
                   disabled={broadcasting}
-                  className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-primary to-indigo-600 hover:from-primary/90 text-white font-bold text-xs shadow-lg shadow-primary/25 disabled:opacity-50 flex items-center justify-center gap-2 transition-all"
+                  className="w-full py-3 rounded-xl bg-gradient-to-r from-primary to-indigo-600 hover:from-primary/90 hover:to-indigo-500 text-white font-bold text-xs shadow-lg shadow-primary/25 disabled:opacity-50 transition-all flex items-center justify-center gap-2"
                 >
-                  {broadcasting ? (
-                    <>
-                      <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                      <span>Dispatching Broadcast...</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>🚀</span>
-                      <span>Send Email Broadcast Now</span>
-                    </>
-                  )}
+                  <span>{broadcasting ? "Dispatching Broadcast..." : "🚀 Send Broadcast Email"}</span>
                 </button>
               </form>
 
-              {/* Preview Card */}
+              {/* Preview */}
               <div className="p-6 rounded-2xl border border-slate-800 bg-slate-900/40 space-y-4">
-                <h3 className="text-sm font-bold text-slate-300">Live Email Layout Preview</h3>
-                <div className="rounded-xl border border-slate-700 bg-slate-950 overflow-hidden shadow-xl text-left">
-                  <div className="bg-gradient-to-r from-primary to-indigo-600 p-5 text-white">
-                    <div className="text-lg font-extrabold">Smart Learning+</div>
-                    <div className="text-[11px] opacity-80 uppercase tracking-wider mt-0.5">Study Update &amp; Notification</div>
+                <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                  <span>👁️</span>
+                  <span>Email Preview</span>
+                </h3>
+                <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3 font-sans">
+                  <div className="text-xs font-bold text-white border-b border-slate-800 pb-2">
+                    Subject: {broadcastSubject || "(No subject set)"}
                   </div>
-                  <div className="p-5 space-y-3">
-                    <div className="text-xs font-bold text-white">
-                      Subject: {broadcastSubject || "Announcement from Smart Learning+"}
+                  <div className="text-xs text-slate-300 whitespace-pre-line leading-relaxed">
+                    {broadcastMsg || "Email content preview will appear here..."}
+                  </div>
+                  {broadcastBtnText && (
+                    <div className="pt-2">
+                      <span className="inline-block px-4 py-2 rounded-lg bg-primary text-white text-xs font-bold shadow-md">
+                        {broadcastBtnText}
+                      </span>
                     </div>
-                    <div className="text-xs text-slate-300 whitespace-pre-wrap font-sans leading-relaxed">
-                      {broadcastMsg || "Your announcement message will render here in clean, styled typography with Markdown support."}
-                    </div>
-                    {broadcastBtnText && (
-                      <div className="pt-2">
-                        <span className="inline-block px-4 py-2 rounded-lg bg-primary text-white font-bold text-xs shadow-sm">
-                          {broadcastBtnText} &rarr;
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                  <div className="p-4 bg-slate-900 border-t border-slate-800 text-[10px] text-slate-400">
-                    Smart Learning+ · Open Engineering Study Hub
-                  </div>
+                  )}
                 </div>
               </div>
             </div>
           </div>
         )}
 
-        {/* TAB 3: SUBSCRIBERS */}
+        {/* TAB 3: EMAIL SUBSCRIBERS */}
         {tab === "subscribers" && (
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h2 className="text-xl font-bold text-white flex items-center gap-2">
                   <span>📧</span>
-                  <span>Notification Subscribers ({subscribers.length})</span>
+                  <span>Notification Email Subscribers ({subscribers.length})</span>
                 </h2>
                 <p className="text-xs text-slate-400 mt-0.5">
-                  Users who opted in to receive study updates, exam tips, and feature announcements.
+                  Subscribed users who receive unit updates and platform broadcast emails.
                 </p>
               </div>
 
-              {/* Add Subscriber Inline Form */}
+              {/* Add Subscriber Form */}
               <form onSubmit={handleAddSubscriber} className="flex items-center gap-2">
                 <input
                   type="email"
                   required
                   value={newSubEmail}
                   onChange={(e) => setNewSubEmail(e.target.value)}
-                  placeholder="Add subscriber email..."
-                  className="px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs focus:outline-none focus:border-primary w-48 sm:w-60"
+                  placeholder="new.student@domain.com"
+                  className="px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-primary"
                 />
                 <button
                   type="submit"
                   disabled={subAdding}
-                  className="px-3.5 py-2 rounded-xl bg-primary hover:bg-primary/90 text-white text-xs font-bold transition-colors shrink-0"
+                  className="px-4 py-2 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs shrink-0 transition-colors"
                 >
                   {subAdding ? "Adding..." : "+ Add"}
                 </button>
@@ -622,7 +508,7 @@ export default function AdminPanel() {
 
             {subMessage && (
               <div
-                className={`p-3 rounded-xl text-xs font-medium ${
+                className={`p-3.5 rounded-xl text-xs font-medium ${
                   subMessage.type === "success"
                     ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
                     : "bg-rose-500/10 text-rose-400 border border-rose-500/20"
@@ -632,21 +518,20 @@ export default function AdminPanel() {
               </div>
             )}
 
-            {/* Search & Table */}
             <div className="p-4 rounded-2xl border border-slate-800 bg-slate-900/60 backdrop-blur-md space-y-4">
               <div className="flex items-center justify-between gap-4">
                 <input
                   type="text"
                   value={subSearch}
                   onChange={(e) => setSubSearch(e.target.value)}
-                  placeholder="🔍 Search subscribers..."
-                  className="px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs w-full max-w-xs focus:outline-none focus:border-primary"
+                  placeholder="Filter subscribers..."
+                  className="px-3 py-1.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs w-full max-w-xs focus:outline-none focus:border-primary"
                 />
                 <button
                   onClick={() => {
                     const emails = subscribers.map((s) => s.email).join("\n");
                     navigator.clipboard.writeText(emails);
-                    alert("Copied all subscriber emails to clipboard!");
+                    alert(`Copied ${subscribers.length} email addresses to clipboard!`);
                   }}
                   className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition-colors shrink-0"
                 >
@@ -701,187 +586,7 @@ export default function AdminPanel() {
           </div>
         )}
 
-        {/* TAB 4: APPROVALS VAULT */}
-        {tab === "materials" && (
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                  <span>📚</span>
-                  <span>Study Materials Approvals Vault</span>
-                </h2>
-                <p className="text-xs text-slate-400 mt-0.5">
-                  Review and moderate community-submitted study notes and cheat sheets.
-                </p>
-              </div>
-              <div className="flex items-center gap-1 bg-slate-900 p-1 rounded-xl border border-slate-800">
-                <button
-                  onClick={() => setMaterialsSubTab("pending")}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                    materialsSubTab === "pending"
-                      ? "bg-primary text-white"
-                      : "text-slate-400 hover:text-white"
-                  }`}
-                >
-                  Pending ({pendingMaterials.length})
-                </button>
-                <button
-                  onClick={() => setMaterialsSubTab("approved")}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                    materialsSubTab === "approved"
-                      ? "bg-primary text-white"
-                      : "text-slate-400 hover:text-white"
-                  }`}
-                >
-                  Approved ({approvedMaterials.length})
-                </button>
-              </div>
-            </div>
-
-            {materialsSubTab === "pending" ? (
-              <div className="space-y-3">
-                {pendingMaterials.length === 0 ? (
-                  <div className="p-8 text-center rounded-2xl border border-slate-800 bg-slate-900/40 text-slate-400 text-xs">
-                    🎉 All pending community materials have been reviewed!
-                  </div>
-                ) : (
-                  pendingMaterials.map((m) => (
-                    <div
-                      key={m.id}
-                      className="p-5 rounded-2xl border border-slate-800 bg-slate-900/60 backdrop-blur-md space-y-3"
-                    >
-                      <div className="flex items-start justify-between gap-4">
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-primary/20 text-primary border border-primary/30">
-                              {m.subject_name}
-                            </span>
-                            <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-300">
-                              {m.section}
-                            </span>
-                            <span className="text-[10px] uppercase font-mono text-slate-400">
-                              {m.content_type}
-                            </span>
-                          </div>
-                          <h4 className="text-sm font-bold text-white mt-1.5">{m.title}</h4>
-                          <p className="text-xs text-slate-400 mt-0.5">
-                            Uploaded by <strong className="text-slate-200">{m.uploader_name || "Anonymous"}</strong> ·{" "}
-                            {new Date(m.created_at).toLocaleString()}
-                          </p>
-                        </div>
-
-                        <div className="flex items-center gap-2 shrink-0">
-                          {m.file_url && (
-                            <a
-                              href={m.file_url}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-white transition-colors"
-                            >
-                              View File ↗
-                            </a>
-                          )}
-                          <button
-                            onClick={() => handleApproveMaterial(m.id)}
-                            className="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-colors"
-                          >
-                            ✓ Approve
-                          </button>
-                          <button
-                            onClick={() => setRejectionTargetId(m.id)}
-                            className="px-3.5 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition-colors"
-                          >
-                            ✕ Reject
-                          </button>
-                        </div>
-                      </div>
-
-                      {rejectionTargetId === m.id && (
-                        <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center gap-2">
-                          <input
-                            type="text"
-                            value={rejectionReason}
-                            onChange={(e) => setRejectionReason(e.target.value)}
-                            placeholder="Reason for rejection..."
-                            className="flex-1 px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-white text-xs"
-                          />
-                          <button
-                            onClick={() => handleRejectMaterial(m.id)}
-                            className="px-3 py-1.5 rounded-lg bg-rose-600 text-white text-xs font-bold"
-                          >
-                            Confirm Reject
-                          </button>
-                          <button
-                            onClick={() => setRejectionTargetId(null)}
-                            className="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 text-xs"
-                          >
-                            Cancel
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  ))
-                )}
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {approvedMaterials.length === 0 ? (
-                  <div className="p-8 text-center rounded-2xl border border-slate-800 bg-slate-900/40 text-slate-400 text-xs">
-                    No approved materials yet.
-                  </div>
-                ) : (
-                  approvedMaterials.map((m) => (
-                    <div
-                      key={m.id}
-                      className="p-4 rounded-xl border border-slate-800 bg-slate-900/40 flex items-center justify-between gap-4"
-                    >
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs font-bold text-white">{m.title}</span>
-                          <span className="text-[10px] text-slate-400">({m.subject_name} · {m.section})</span>
-                          {m.is_hidden && (
-                            <span className="px-1.5 py-0.5 rounded text-[9px] bg-rose-500/20 text-rose-400 border border-rose-500/30">
-                              Hidden
-                            </span>
-                          )}
-                        </div>
-                        <div className="text-[11px] text-slate-500 mt-0.5">
-                          By {m.uploader_name || "Community"} · {new Date(m.created_at).toLocaleDateString()}
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        {m.file_url && (
-                          <a
-                            href={m.file_url}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-xs text-primary hover:underline px-2"
-                          >
-                            View
-                          </a>
-                        )}
-                        <button
-                          onClick={() => handleToggleMaterialVisibility(m.id)}
-                          className="text-xs text-slate-400 hover:text-white px-2 py-1"
-                        >
-                          {m.is_hidden ? "Unhide" : "Hide"}
-                        </button>
-                        <button
-                          onClick={() => handleDeleteMaterial(m.id)}
-                          className="text-xs text-rose-400 hover:text-rose-300 px-2 py-1"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* TAB 5: ANNOUNCEMENT BAR */}
+        {/* TAB 4: ANNOUNCEMENT BAR */}
         {tab === "announcement" && (
           <div className="space-y-6">
             <div>
@@ -897,7 +602,7 @@ export default function AdminPanel() {
           </div>
         )}
 
-        {/* TAB 6: QUICKPASTE MANAGER */}
+        {/* TAB 5: QUICKPASTE MANAGER */}
         {tab === "pastes" && (
           <div className="space-y-6">
             <div>
@@ -956,7 +661,7 @@ export default function AdminPanel() {
           </div>
         )}
 
-        {/* TAB 7: MODERATOR LOGS */}
+        {/* TAB 6: MODERATOR LOGS */}
         {tab === "moderator-logs" && (
           <div className="space-y-6">
             <div>
@@ -965,7 +670,7 @@ export default function AdminPanel() {
                 <span>Moderator &amp; Admin Activity Logs</span>
               </h2>
               <p className="text-xs text-slate-400 mt-0.5">
-                Audit trail of platform broadcasts, material moderation, and configuration updates.
+                Audit trail of platform broadcasts and configuration updates.
               </p>
             </div>
 
@@ -1008,7 +713,7 @@ export default function AdminPanel() {
           </div>
         )}
 
-        {/* TAB 8: SYSTEM HEALTH */}
+        {/* TAB 7: SYSTEM HEALTH */}
         {tab === "health" && (
           <div className="space-y-6">
             <div>
@@ -1047,7 +752,7 @@ export default function AdminPanel() {
           </div>
         )}
 
-        {/* TAB 9: SECURITY SETTINGS */}
+        {/* TAB 8: SECURITY SETTINGS */}
         {tab === "settings" && (
           <div className="space-y-6">
             <div>

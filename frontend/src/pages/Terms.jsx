@@ -75,11 +75,11 @@ export default function Terms() {
             <div className="legal-section">
               <h2 className="legal-heading">Acceptable Use</h2>
               <div className="legal-text">
-                <p>You agree to use this site and any Sign In accounts responsibly and for their intended educational purposes. Specifically, you will not:</p>
+                <p>You agree to use this site responsibly and for its intended educational purposes. Specifically, you will not:</p>
                 <ul className="legal-list">
-                  <li>Upload, post, or distribute any content that is defamatory, obscene, or infringes on intellectual property rights</li>
-                  <li>Engage in spam uploads or abuse the admin approval system</li>
-                  <li>Use the platform for any commercial purpose or to solicit business</li>
+                  <li>Distribute any content that is defamatory, obscene, or infringes on intellectual property rights</li>
+                  <li>Abuse public tools, automated endpoints, or paste features</li>
+                  <li>Use the platform for any unauthorized commercial purpose or to solicit business</li>
                   <li>Attempt to gain unauthorized access to any portion of the site or its features</li>
                   <li>Interfere with or disrupt the site's operation, servers, or networks</li>
                 </ul>
@@ -120,13 +120,11 @@ export default function Terms() {
               <h2 className="legal-heading">Access Restriction</h2>
               <div className="legal-text">
                 <p>
-                  We reserve the right, at our sole discretion, to terminate or suspend access to the site, 
-                  including any Sign In accounts, for any reason, including but not limited to:
+                  We reserve the right, at our sole discretion, to terminate or suspend access to any portion of the site for any reason, including but not limited to:
                 </p>
                 <ul className="legal-list">
                   <li>Violation of these Terms of Use</li>
-                  <li>Spam uploads or abuse of the contribution system</li>
-                  <li>Misuse of admin approval features</li>
+                  <li>Attempted abuse or exploitation of tool APIs</li>
                   <li>Any conduct that we believe is harmful to the platform or other users</li>
                 </ul>
               </div>
