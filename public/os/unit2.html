@@ -72,8 +72,8 @@
         <tr><td><b>7. Modern/Mobile OS</b></td><td>Multi-core support, virtualization, touch-based mobile OS</td><td>2000s-present (Linux, Windows, Android, iOS)</td></tr>
       </table>
       <div class="hin">
-        <span class="tag">Hinglish</span>
-        <p>Simple memory trick: <b>Serial → Batch → Multiprogrammed → Time-sharing → PC → Distributed → Modern</b>. Har step pe goal yahi tha — CPU ka idle time kam karo aur users ko better experience do. Time-sharing sabse important hai exam ke liye — isi se modern multitasking OS ka concept aaya.</p>
+        <span class="tag">Hinglish Trick</span>
+        <p><b>"Sab Bacche Milkar Time Pe Dinner Maangte hain"</b><br>(<b>S</b>erial → <b>B</b>atch → <b>M</b>ultiprogrammed → <b>T</b>ime-sharing → <b>P</b>C → <b>D</b>istributed → <b>M</b>odern)<br>Har step pe goal yahi tha — CPU ka idle time kam karo aur users ko better experience do.</p>
       </div>
 
       <h2 class="topic">Types of Operating Systems <span class="imp m">Medium</span></h2>
@@ -91,6 +91,10 @@
           <li><b>Network OS:</b> Runs on a central server to manage network resources.</li>
           <li><b>Mobile OS:</b> Designed for smartphones/tablets.</li>
         </ul>
+      </div>
+      <div class="hin">
+        <span class="tag">Hinglish Trick</span>
+        <p><b>"Bad Monkeys Throw Rocks During Night Movies"</b><br>(Batch, Multiprogramming, Time-sharing, Real-time, Distributed, Network, Mobile)<br><b>MCQ Tip:</b> Batch = No interaction, Multiprogramming = Max CPU, Time-sharing = Time quantum, Real-time = Strict deadlines.</p>
       </div>
 
       <h2 class="topic">3. Structure &amp; Operations of OS <span class="imp h">High ⭐⭐⭐⭐</span></h2>
@@ -113,6 +117,10 @@
         <tr><td><b>Microkernel</b></td><td>Minimal core (IPC, scheduling) in kernel; most services run as user-space processes</td><td>Mach, QNX</td></tr>
         <tr><td><b>Client-Server (Modular)</b></td><td>OS services provided by separate server processes; kernel just routes requests</td><td>Windows NT (partially)</td></tr>
       </table>
+      <div class="hin" style="margin-top:12px;">
+        <span class="tag">Hinglish Trick</span>
+        <p><b>M</b>onolithic = Sab ek bori mein (Fast/messy). <b>L</b>ayered = Pyaz ke chilke (Strict layers). <b>M</b>icrokernel = Sirf VIP kernel mein. <b>C</b>lient-Server = Order aur delivery (Modular).</p>
+      </div>
 
       <div class="svgbox">
         <svg viewBox="0 0 500 200" xmlns="http://www.w3.org/2000/svg">
@@ -168,6 +176,10 @@
         </svg>
         <p class="cap">Fig 2.2 — Process State Diagram: New → Ready → Running → (Waiting ⇄ Ready) → Terminated</p>
       </div>
+      <div class="hin">
+        <span class="tag">Hinglish Trick</span>
+        <p><b>"Neha Reads Romantic WattsPad Tales"</b><br>(<b>N</b>ew → <b>R</b>eady → <b>R</b>unning → <b>W</b>aiting → <b>T</b>erminated). <br><b>Tip:</b> CPU hamesha <i>Ready</i> se milta hai, <i>Waiting</i> se wapas <i>Ready</i> aana padta hai!</p>
+      </div>
 
       <h3 class="sub">Process Control Block (PCB) Fields <span class="imp m">Medium</span></h3>
       <div class="card">
@@ -197,6 +209,10 @@
         <tr><td>Best for</td><td>Large data transfer, same machine</td><td>Distributed systems, small messages</td></tr>
         <tr><td>Example</td><td>POSIX shared memory segments</td><td>Pipes, sockets, message queues</td></tr>
       </table>
+      <div class="hin" style="margin-top:12px;">
+        <span class="tag">Hinglish Trick</span>
+        <p><b>Shared Memory</b> = Roommate ke saath fridge (Fast, but ladai/sync hogi). <b>Message Passing</b> = Courier se bhejna (Safer, OS handles it, but Slower).</p>
+      </div>
 
       <h2 class="topic">6. Critical Section Problem <span class="imp h">High ⭐⭐⭐⭐⭐</span></h2>
       <div class="card def">
@@ -212,7 +228,11 @@
       </div>
       <div class="hin">
         <span class="tag">Hinglish</span>
-        <p>Critical section = wo code jahan shared data ko modify kiya jaata hai. Agar 2 processes ek saath isi section mein chale jaayen (bina coordination ke), to data corrupt ho sakta hai ("race condition"). Teeno conditions (mutual exclusion, progress, bounded waiting) ek "fair aur safe" solution define karti hain.</p>
+        <p>Critical section = wo code jahan shared data ko modify kiya jaata hai. Agar 2 processes ek saath isi section mein chale jaayen (bina coordination ke), to data corrupt ho sakta hai ("race condition").</p>
+      </div>
+      <div class="hin" style="margin-top:12px;">
+        <span class="tag">Hinglish Trick</span>
+        <p><b>"MPB"</b> (Madhya Pradesh Board)<br><b>M</b>utual Exclusion (Ek time pe ek), <b>P</b>rogress (Faltu block mat karo), <b>B</b>ounded Waiting (Life-time intezaar nahi).</p>
       </div>
 
       <h2 class="topic">7. Mutual Exclusion <span class="imp h">High ⭐⭐⭐</span></h2>
@@ -238,7 +258,11 @@ wait(S):           signal(S):
       </div>
       <div class="hin">
         <span class="tag">Hinglish</span>
-        <p>Semaphore ek "counter" hai. <b>wait() / P()</b> = resource use karne se pehle counter ghatao (agar counter 0 hai, to process wait karegi). <b>signal() / V()</b> = resource use karne ke baad counter badhao. Binary semaphore = simple lock (0/1). Counting semaphore = jaise parking lot mein "kitni spots khaali hain" track karna.</p>
+        <p>Semaphore ek "counter" hai. Binary semaphore = simple lock (0/1). Counting semaphore = jaise parking lot mein "kitni spots khaali hain" track karna.</p>
+      </div>
+      <div class="hin" style="margin-top:12px;">
+        <span class="tag">Hinglish Trick</span>
+        <p><b>Wait = P = Paas aao (Decrement)</b>, <b>Signal = V = Vapas jao (Increment)</b>.</p>
       </div>
 
       <h3 class="sub">Producer-Consumer Problem using Semaphores <span class="imp h">High ⭐⭐⭐⭐⭐ — classic RTU question</span></h3>
@@ -270,6 +294,10 @@ do {                          do {
         <tr><td><b>Priority Scheduling</b></td><td>Preemptive or Non-preemptive</td><td>Highest priority process runs first</td></tr>
         <tr><td><b>Round Robin (RR)</b></td><td>Preemptive</td><td>Each process gets a fixed time quantum in cyclic order</td></tr>
       </table>
+      <div class="hin" style="margin-top:12px;">
+        <span class="tag">Hinglish Trick</span>
+        <p><b>FCFS</b> = Always Non-Preemptive. <b>RR (Round Robin)</b> = Always Preemptive. <b>SJF/Priority</b> = Dono ho sakte hain (Agar 'Remaining Time' likha ho = Preemptive).</p>
+      </div>
 
       <div class="card example">
         <span class="tag">Full Worked Numerical — FCFS (classic RTU pattern)</span>
@@ -310,62 +338,12 @@ do {                          do {
         <div class="compare-card"><h4>Many-to-Many</h4><p>Many user threads multiplexed onto a smaller/equal number of kernel threads. Best of both — flexibility + parallelism.</p></div>
         <div class="compare-card"><h4>Benefits of Multithreading</h4><p>Responsiveness, resource sharing, economy (cheaper than processes), scalability on multi-core systems.</p></div>
       </div>
-
-      <h2 class="topic">🧠 Yaad Rakhne Ki Tricks <span class="imp h">Exam-Night Recalls 🔥</span></h2>
-
-      <h3 class="sub">1. Types of Operating Systems</h3>
       <div class="hin">
-        <span class="tag">Hinglish</span>
-        <p><b>Trick:</b> "<b>B</b>ad <b>M</b>onkeys <b>T</b>hrow <b>R</b>ocks <b>D</b>uring <b>N</b>ight <b>M</b>ovies" <br>(Batch, Multiprogramming, Time-sharing, Real-time, Distributed, Network, Mobile)<br><b>MCQ Tip:</b> Batch = No interaction, Multiprogramming = Max CPU, Time-sharing = Time quantum, Real-time = Strict deadlines.</p>
+        <span class="tag">Hinglish Trick</span>
+        <p><b>Many-to-One</b> = 1 counter, bheed bohot (Ek block toh sab block). <b>One-to-One</b> = Har aadmi ka servant (Fast but mehenga). <b>Many-to-Many</b> = Perfect balance (Jaise bank ke 3 counters for 10 people).</p>
       </div>
 
-      <h3 class="sub">2. Evolution of OS</h3>
-      <div class="hin">
-        <span class="tag">Hinglish</span>
-        <p><b>Trick:</b> "<b>S</b>ab <b>B</b>acche <b>M</b>ilkar <b>T</b>ime <b>P</b>e <b>D</b>inner <b>M</b>aangte hain" <br>(<b>S</b>erial → <b>B</b>atch → <b>M</b>ultiprogrammed → <b>T</b>ime-sharing → <b>P</b>C → <b>D</b>istributed → <b>M</b>odern)</p>
-      </div>
 
-      <h3 class="sub">3. OS Structures</h3>
-      <div class="hin">
-        <span class="tag">Hinglish</span>
-        <p><b>Trick:</b> <b>M</b>onolithic = Sab ek bori mein (Fast/messy). <b>L</b>ayered = Pyaz ke chilke (Strict layers). <b>M</b>icrokernel = Sirf VIP kernel mein. <b>C</b>lient-Server = Order aur delivery (Modular).</p>
-      </div>
-
-      <h3 class="sub">4. Process States</h3>
-      <div class="hin">
-        <span class="tag">Hinglish</span>
-        <p><b>Trick:</b> "<b>N</b>eha <b>R</b>eads <b>R</b>omantic <b>W</b>attsPad <b>T</b>ales" <br>(<b>N</b>ew → <b>R</b>eady → <b>R</b>unning → <b>W</b>aiting → <b>T</b>erminated). <br><b>Tip:</b> CPU hamesha <i>Ready</i> se milta hai, <i>Waiting</i> se wapas <i>Ready</i> aana padta hai!</p>
-      </div>
-
-      <h3 class="sub">5. Critical Section Conditions</h3>
-      <div class="hin">
-        <span class="tag">Hinglish</span>
-        <p><b>Trick:</b> <b>"MPB"</b> (Madhya Pradesh Board) <br><b>M</b>utual Exclusion (Ek time pe ek), <b>P</b>rogress (Faltu block mat karo), <b>B</b>ounded Waiting (Life-time intezaar nahi).</p>
-      </div>
-
-      <h3 class="sub">6. Semaphores (Wait/Signal)</h3>
-      <div class="hin">
-        <span class="tag">Hinglish</span>
-        <p><b>Trick:</b> <b>Wait = P = Paas aao (Decrement)</b>, <b>Signal = V = Vapas jao (Increment)</b>. <br>Binary = simple lock (0/1). Counting = parking spots counter (N) manga lo!</p>
-      </div>
-
-      <h3 class="sub">7. Scheduling Algorithms</h3>
-      <div class="hin">
-        <span class="tag">Hinglish</span>
-        <p><b>Trick:</b> <b>FCFS</b> = Always Non-Preemptive. <b>RR (Round Robin)</b> = Always Preemptive. <b>SJF/Priority</b> = Dono ho sakte hain (Agar 'Remaining Time' likha ho = Preemptive).</p>
-      </div>
-
-      <h3 class="sub">8. IPC Models</h3>
-      <div class="hin">
-        <span class="tag">Hinglish</span>
-        <p><b>Trick:</b> <b>Shared Memory</b> = Roommate ke saath fridge (Fast, but ladai/sync hogi). <b>Message Passing</b> = Courier se bhejna (Safer, OS handles it, but Slower).</p>
-      </div>
-
-      <h3 class="sub">9. Multithreading Models</h3>
-      <div class="hin">
-        <span class="tag">Hinglish</span>
-        <p><b>Trick:</b> <b>Many-to-One</b> = 1 counter, bheed bohot (Ek block toh sab block). <b>One-to-One</b> = Har aadmi ka servant (Fast but mehenga). <b>Many-to-Many</b> = Perfect balance (Jaise bank ke 3 counters for 10 people).</p>
-      </div>
 
       <!-- Q&A UNIT 2 -->
       <div class="qsection scroll-anchor" id="qa2">
