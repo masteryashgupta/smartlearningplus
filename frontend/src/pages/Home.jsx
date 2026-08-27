@@ -311,7 +311,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto space-y-8">
           <div className="text-center max-w-2xl mx-auto space-y-2">
             <div className="text-xs font-bold text-indigo-500 dark:text-indigo-400 uppercase tracking-wider">
-              Student Toolkit
+              Tools
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
               Built-in Productivity Tools
