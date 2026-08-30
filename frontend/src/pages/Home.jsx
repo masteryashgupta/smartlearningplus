@@ -306,6 +306,71 @@ export default function Home() {
         </div>
       </section>
 
+      {/* OFFICIAL DOCUMENTS & SYLLABUS SECTION */}
+      <section id="downloads" className="max-w-6xl mx-auto px-4 py-16 space-y-8 flex-1 border-t border-slate-200 dark:border-slate-800">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+          <div>
+            <div className="text-xs font-bold text-emerald-500 dark:text-emerald-400 uppercase tracking-wider mb-1">
+              Official Documents
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
+              RTU Scheme &amp; Syllabus PDFs
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+              Download the official teaching scheme and detailed syllabus for all 3rd Year subjects.
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Scheme Card */}
+          <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white/90 dark:bg-slate-900/60 p-6 flex flex-col md:flex-row md:items-center justify-between gap-6 transition-all hover:shadow-xl dark:hover:shadow-2xl dark:hover:shadow-none hover:border-slate-300 dark:hover:border-slate-700">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 shrink-0 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center text-2xl">
+                🗂️
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-base font-bold text-slate-900 dark:text-white">Teaching &amp; Examination Scheme</h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed max-w-sm">
+                  B.Tech CSE · 3rd Year – V Semester · Official RTU scheme with course codes, credits &amp; marks distribution.
+                </p>
+              </div>
+            </div>
+            <a
+              href="https://drive.google.com/file/d/1QrFGUTRRIEk2V4H6_XXJCw9vgBUVkZ35/view?usp=sharing"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="shrink-0 px-4 py-2 rounded-xl bg-slate-100 hover:bg-amber-500 hover:text-white dark:bg-slate-800 dark:hover:bg-amber-600 dark:text-slate-200 text-xs font-bold transition-colors flex items-center justify-center gap-2"
+            >
+              ⬇ Download PDF
+            </a>
+          </div>
+
+          {/* Syllabus Card */}
+          <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white/90 dark:bg-slate-900/60 p-6 flex flex-col md:flex-row md:items-center justify-between gap-6 transition-all hover:shadow-xl dark:hover:shadow-2xl dark:hover:shadow-none hover:border-slate-300 dark:hover:border-slate-700">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 shrink-0 rounded-xl bg-purple-500/10 text-purple-500 flex items-center justify-center text-2xl">
+                📘
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-base font-bold text-slate-900 dark:text-white">Full Syllabus — 3rd Year</h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed max-w-sm">
+                  Complete detailed syllabus document for all 3rd Year subjects, units &amp; topic breakdown as per RTU.
+                </p>
+              </div>
+            </div>
+            <a
+              href="https://drive.google.com/file/d/1pobfLjiwsL2clnoFelTSg6bseLGvdvTV/view?usp=sharing"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="shrink-0 px-4 py-2 rounded-xl bg-slate-100 hover:bg-purple-500 hover:text-white dark:bg-slate-800 dark:hover:bg-purple-600 dark:text-slate-200 text-xs font-bold transition-colors flex items-center justify-center gap-2"
+            >
+              ⬇ Download PDF
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* TOOLS & UTILITIES HUB SPOTLIGHT */}
       <section className="border-t border-slate-200 dark:border-slate-800 bg-slate-100/60 dark:bg-slate-900/30 py-16 px-4">
         <div className="max-w-6xl mx-auto space-y-8">
