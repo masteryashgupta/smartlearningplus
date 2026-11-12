@@ -36,16 +36,27 @@ pre{margin:0;padding:14px;overflow-x:auto;color:var(--code-text);font:14px/1.55 
 .note{border-left:3px solid var(--accent);padding:2px 0 2px 12px;color:var(--muted);margin:10px 0 0}
 .out{background:var(--bg);border:1px dashed var(--line);border-radius:8px;padding:10px 14px;font:14px/1.6 Consolas,monospace}
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 </head>
 <body>
 <main>
 <div class="dl-bar" style="display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 16px;margin-bottom:20px;flex-wrap:wrap;">
   <span style="font:600 13px 'Segoe UI',sans-serif;color:var(--muted);">📄 Advanced Java Lab · Practical File</span>
   <a id="dl-btn" href="#" download style="background:var(--accent);color:#fff;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">⬇ Download This File (.html)</a>
-  <a href="AJL_All_Experiments_Codes.zip" download="AJL_All_Experiments_Codes.zip" style="background:var(--ok);color:#fff;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">📦 Download All Codes (.zip)</a>
+  <button id="dl-codes-btn" onclick="downloadExpCodes(this)" style="background:var(--ok);color:#fff;border:0;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">⬇ Download Codes</button>
 </div>
-<script>(function(){var n=location.pathname.split('/').pop()||'experiment.html';var a=document.getElementById('dl-btn');a.href=n;a.download=n;})();</script>
+<script>(function(){
+  var n=location.pathname.split('/').pop()||'experiment.html';
+  var a=document.getElementById('dl-btn');
+  if(a){ a.href=n; a.download=n; }
+  var btn=document.getElementById('dl-codes-btn');
+  if(btn){
+    var count=0;
+    document.querySelectorAll('.block .bar span').forEach(function(s){
+      if(/^[^\s(]+\.[a-zA-Z]{1,5}/.test(s.textContent.trim())) count++;
+    });
+    btn.innerHTML = '⬇ Download Codes (' + count + ' ' + (count===1?'file':'files') + ')';
+  }
+})();</script>
 <h1>Experiment 2: Applet (college departments)</h1>
 <p class="aim">Show a list of college departments. The department you click appears in a text field.</p>
 <section>
@@ -232,14 +243,59 @@ document.querySelectorAll('.block').forEach(function(block){
 });
 </script>
 
+
 <script>
-function downloadAllCodes(btnEl){
-  var a = document.createElement('a');
-  a.href = 'AJL_All_Experiments_Codes.zip';
-  a.download = 'AJL_All_Experiments_Codes.zip';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+function downloadExpCodes(btn){
+  var codes = [];
+  document.querySelectorAll('.block').forEach(function(block){
+    var bar = block.querySelector('.bar');
+    var pre = block.querySelector('pre');
+    var labelSpan = bar ? bar.querySelector('span') : null;
+    if (labelSpan && pre) {
+      var raw = labelSpan.textContent.trim();
+      var m = raw.match(/^([^\s(]+\.[a-zA-Z]{1,5})/);
+      if (m) {
+        codes.push({ name: m[1], content: pre.textContent });
+      }
+    }
+  });
+
+  if (!codes.length) {
+    alert('No code files found on this page.');
+    return;
+  }
+
+  var origText = btn ? btn.innerHTML : '';
+  if (btn) {
+    btn.innerHTML = '⏳ Downloading ' + codes.length + ' ' + (codes.length===1?'file':'files') + '…';
+    btn.style.pointerEvents = 'none';
+  }
+
+  codes.forEach(function(item, idx){
+    setTimeout(function(){
+      var blob = new Blob([item.content], { type: 'text/plain;charset=utf-8' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = item.name;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(function(){
+        URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      }, 1000);
+
+      if (idx === codes.length - 1 && btn) {
+        setTimeout(function(){
+          btn.innerHTML = '✓ ' + codes.length + ' ' + (codes.length===1?'File':'Files') + ' Downloaded!';
+          setTimeout(function(){
+            btn.innerHTML = origText;
+            btn.style.pointerEvents = '';
+          }, 2500);
+        }, 500);
+      }
+    }, idx * 400);
+  });
 }
 </script>
 </body>
