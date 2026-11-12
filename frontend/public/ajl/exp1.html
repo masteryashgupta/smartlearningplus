@@ -36,12 +36,14 @@ pre{margin:0;padding:14px;overflow-x:auto;color:var(--code-text);font:14px/1.55 
 .note{border-left:3px solid var(--accent);padding:2px 0 2px 12px;color:var(--muted);margin:10px 0 0}
 .out{background:var(--bg);border:1px dashed var(--line);border-radius:8px;padding:10px 14px;font:14px/1.6 Consolas,monospace}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 </head>
 <body>
 <main>
 <div class="dl-bar" style="display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 16px;margin-bottom:20px;flex-wrap:wrap;">
   <span style="font:600 13px 'Segoe UI',sans-serif;color:var(--muted);">📄 Advanced Java Lab · Practical File</span>
   <a id="dl-btn" href="#" download style="background:var(--accent);color:#fff;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">⬇ Download This File</a>
+  <button onclick="downloadAllCodes(this)" style="background:var(--ok);color:#fff;border:0;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">📦 Download All Codes (.zip)</button>
 </div>
 <script>(function(){var n=location.pathname.split('/').pop()||'experiment.html';var a=document.getElementById('dl-btn');a.href=n;a.download=n;})();</script>
 
@@ -169,6 +171,10 @@ java CourseCheckbox</pre></div>
 document.querySelectorAll('.block').forEach(function(block){
   var btn = block.querySelector('.copy');
   var pre = block.querySelector('pre');
+  var bar = block.querySelector('.bar');
+  var labelSpan = bar ? bar.querySelector('span') : null;
+
+  // Copy button logic
   btn.addEventListener('click', function(){
     var text = pre.textContent;
     function done(){
@@ -192,6 +198,34 @@ document.querySelectorAll('.block').forEach(function(block){
       fallback();
     }
   });
+
+  // Download button for named code files only
+  if (labelSpan) {
+    var raw = labelSpan.textContent.trim();
+    var m = raw.match(/^([^\s(]+\.[a-zA-Z]{1,5})/);
+    if (m) {
+      var filename = m[1];
+      var dlBtn = document.createElement('button');
+      dlBtn.textContent = '⬇ Download';
+      dlBtn.className = 'copy';
+      dlBtn.style.marginLeft = '6px';
+      dlBtn.addEventListener('click', function(){
+        var text = pre.textContent;
+        var blob = new Blob([text], { type: 'text/plain' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function(){ URL.revokeObjectURL(url); document.body.removeChild(a); }, 500);
+        dlBtn.textContent = '✓ Saved';
+        dlBtn.classList.add('done');
+        setTimeout(function(){ dlBtn.textContent = '⬇ Download'; dlBtn.classList.remove('done'); }, 1800);
+      });
+      btn.parentNode.insertBefore(dlBtn, btn.nextSibling);
+    }
+  }
 });
 </script>
 </body>
