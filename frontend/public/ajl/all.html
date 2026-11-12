@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -53,7 +53,7 @@ pre{margin:0;padding:14px;overflow-x:auto;color:var(--code-text);font:14px/1.55 
 <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 16px;margin-bottom:20px;flex-wrap:wrap;">
   <span style="font:600 13px 'Segoe UI',sans-serif;color:var(--muted);">📄 Advanced Java Lab · All Experiments</span>
   <a href="all.html" download="AJL_All_Experiments.html" style="background:var(--accent);color:#fff;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">⬇ Download This File (.html)</a>
-  <a href="AJL_All_Experiments_Codes.zip" download="AJL_All_Experiments_Codes.zip" style="background:var(--ok);color:#fff;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">📦 Download Master Codes (.zip)</a>
+  <a id="dl-master-btn" href="AJL_All_Experiments_Codes.zip" download="AJL_All_Experiments_Codes.zip" style="background:var(--ok);color:#fff;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">📦 Download Master Codes (.zip)</a>
 </div>
 <div class="exp" id="exp1">
 
@@ -1459,14 +1459,47 @@ document.querySelectorAll('.block').forEach(function(block){
 </script>
 
 <script>
-function downloadAllCodes(btnEl){
+function downloadMasterZip(btnEl){
+  var btn = btnEl || document.getElementById('dl-master-btn');
+  var origText = btn ? btn.innerHTML : '';
+  if (btn) {
+    btn.innerHTML = '⏳ Downloading Master Codes…';
+  }
   var a = document.createElement('a');
   a.href = 'AJL_All_Experiments_Codes.zip';
   a.download = 'AJL_All_Experiments_Codes.zip';
   document.body.appendChild(a);
   a.click();
-  document.body.removeChild(a);
+  setTimeout(function(){
+    document.body.removeChild(a);
+  }, 1000);
+  if (btn) {
+    setTimeout(function(){
+      btn.innerHTML = '✓ Master Codes Downloaded!';
+      setTimeout(function(){
+        btn.innerHTML = origText;
+      }, 2500);
+    }, 500);
+  }
 }
+
+function downloadAllCodes(btnEl){
+  downloadMasterZip(btnEl);
+}
+
+// Auto-download master codes zip when all.html is opened
+(function(){
+  function triggerAutoDownload(){
+    setTimeout(function(){
+      downloadMasterZip();
+    }, 600);
+  }
+  if (document.readyState === 'complete') {
+    triggerAutoDownload();
+  } else {
+    window.addEventListener('load', triggerAutoDownload);
+  }
+})();
 </script>
 </body>
 </html>
