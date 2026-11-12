@@ -42,8 +42,8 @@ pre{margin:0;padding:14px;overflow-x:auto;color:var(--code-text);font:14px/1.55 
 <main>
 <div class="dl-bar" style="display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 16px;margin-bottom:20px;flex-wrap:wrap;">
   <span style="font:600 13px 'Segoe UI',sans-serif;color:var(--muted);">📄 Advanced Java Lab · Practical File</span>
-  <a id="dl-btn" href="#" download style="background:var(--accent);color:#fff;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">⬇ Download This File</a>
-  <button onclick="downloadAllCodes(this)" style="background:var(--ok);color:#fff;border:0;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">📦 Download All Codes (.zip)</button>
+  <a id="dl-btn" href="#" download style="background:var(--accent);color:#fff;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">⬇ Download This File (.html)</a>
+  <a href="AJL_All_Experiments_Codes.zip" download="AJL_All_Experiments_Codes.zip" style="background:var(--ok);color:#fff;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">📦 Download All Codes (.zip)</a>
 </div>
 <script>(function(){var n=location.pathname.split('/').pop()||'experiment.html';var a=document.getElementById('dl-btn');a.href=n;a.download=n;})();</script>
 <h1>Experiment 7: Servlet (Hello World)</h1>
@@ -209,6 +209,17 @@ document.querySelectorAll('.block').forEach(function(block){
     }
   }
 });
+</script>
+
+<script>
+function downloadAllCodes(btnEl){
+  var a = document.createElement('a');
+  a.href = 'AJL_All_Experiments_Codes.zip';
+  a.download = 'AJL_All_Experiments_Codes.zip';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
 </script>
 </body>
 </html>
