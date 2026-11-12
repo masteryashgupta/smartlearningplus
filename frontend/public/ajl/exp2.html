@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exp 2: Applet (college departments)</title>
+<style>
+:root{
+  --bg:#eef2f6; --card:#ffffff; --text:#16202e; --muted:#566377; --line:#d5dde7;
+  --accent:#0f6e8c; --code-bg:#1b2434; --code-text:#e6edf6; --code-bar:#26324a; --ok:#2f9e6b;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0f1520; --card:#171f2d; --text:#e6edf6; --muted:#93a0b4; --line:#2a3548;
+    --accent:#5cc0de; --code-bg:#0b101a; --code-text:#e6edf6; --code-bar:#1d2739; --ok:#5ed39a;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 "Segoe UI",system-ui,sans-serif}
+main{max-width:820px;margin:0 auto;padding:28px 16px 60px}
+h1{font-size:1.9rem;line-height:1.2;margin:0 0 6px}
+h2{font-size:1.2rem;margin:0 0 10px}
+.aim{color:var(--muted);margin:0 0 24px;max-width:62ch}
+section{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 18px 16px;margin-bottom:16px}
+p{margin:0 0 10px;max-width:70ch}
+ul{margin:0;padding-left:20px}
+li{margin-bottom:6px;max-width:70ch}
+.block{border-radius:8px;overflow:hidden;background:var(--code-bg);margin:10px 0}
+.bar{display:flex;justify-content:space-between;align-items:center;background:var(--code-bar);padding:6px 10px}
+.bar span{color:#9fb0c8;font:13px "Segoe UI",sans-serif}
+.copy{background:var(--accent);color:#fff;border:0;border-radius:6px;padding:5px 14px;font:600 13px "Segoe UI",sans-serif;cursor:pointer}
+.copy:hover{filter:brightness(1.1)}
+.copy:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.copy.done{background:var(--ok)}
+pre{margin:0;padding:14px;overflow-x:auto;color:var(--code-text);font:14px/1.55 Consolas,"Cascadia Mono",monospace}
+.note{border-left:3px solid var(--accent);padding:2px 0 2px 12px;color:var(--muted);margin:10px 0 0}
+.out{background:var(--bg);border:1px dashed var(--line);border-radius:8px;padding:10px 14px;font:14px/1.6 Consolas,monospace}
+</style>
+</head>
+<body>
+<main>
+<h1>Experiment 2: Applet (college departments)</h1>
+<p class="aim">Show a list of college departments. The department you click appears in a text field.</p>
+<section>
+<h2>Read this first</h2>
+<ul><li>The <b>real applet</b> (Version A) needs <b>JDK 8</b>, because appletviewer and java.applet were removed from newer JDKs. Your laptop has JDK 26, so Version A will not compile there.</li><li>The <b>Panel version</b> (Version B) runs on any JDK, including your laptop. It has the same logic, so use it to practise.</li><li>In the exam, check the lab PC first. If <code>java -version</code> shows 1.8, write Version A.</li></ul>
+</section>
+<section>
+<h2>Check the Java version</h2>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>java -version
+javac -version</pre></div>
+</section>
+<section>
+<h2>Version A: classic applet (JDK 8 only)</h2>
+<p>Click <b>Yes</b> when Notepad asks to create the file.</p>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>cd %USERPROFILE%\Desktop\ajl
+notepad DeptApplet.java</pre></div>
+<div class="block"><div class="bar"><span>DeptApplet.java</span><button class="copy">Copy</button></div>
+<pre>import java.applet.Applet;
+import java.awt.*;
+import java.awt.event.*;
+
+/* &lt;applet code="DeptApplet.class" width="350" height="250"&gt;&lt;/applet&gt; */
+
+public class DeptApplet extends Applet implements ItemListener {
+    List list;
+    TextField tf;
+
+    public void init() {
+        list = new List(5);
+        list.add("Computer Science");
+        list.add("Electronics");
+        list.add("Mechanical");
+        list.add("Civil");
+        list.add("Electrical");
+
+        tf = new TextField(25);
+
+        add(new Label("Select Department:"));
+        add(list);
+        add(new Label("You selected:"));
+        add(tf);
+
+        list.addItemListener(this);
+    }
+
+    public void itemStateChanged(ItemEvent e) {
+        tf.setText(list.getSelectedItem());
+    }
+}</pre></div>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>javac DeptApplet.java
+appletviewer DeptApplet.java</pre></div>
+<p class="note">The comment with the applet tag at the top is what appletviewer reads. Do not delete it. An applet has no main() method.</p>
+</section>
+<section>
+<h2>Version B: runs on any JDK (your laptop)</h2>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>cd %USERPROFILE%\Desktop\ajl
+notepad DeptPanel.java</pre></div>
+<div class="block"><div class="bar"><span>DeptPanel.java</span><button class="copy">Copy</button></div>
+<pre>import java.awt.*;
+import java.awt.event.*;
+
+public class DeptPanel extends Panel implements ItemListener {
+    List list;
+    TextField tf;
+
+    public void init() {
+        list = new List(5);
+        list.add("Computer Science");
+        list.add("Electronics");
+        list.add("Mechanical");
+        list.add("Civil");
+        list.add("Electrical");
+
+        tf = new TextField(25);
+
+        add(new Label("Select Department:"));
+        add(list);
+        add(new Label("You selected:"));
+        add(tf);
+
+        list.addItemListener(this);
+    }
+
+    public void itemStateChanged(ItemEvent e) {
+        tf.setText(list.getSelectedItem());
+    }
+
+    public static void main(String[] args) {
+        Frame f = new Frame("Departments");
+        DeptPanel p = new DeptPanel();
+        p.init();
+        f.add(p);
+        f.setSize(350, 250);
+        f.setVisible(true);
+        f.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                System.exit(0);
+            }
+        });
+    }
+}</pre></div>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>javac DeptPanel.java
+java DeptPanel</pre></div>
+<p>Expected result for both versions: a list of departments. Click one and its name appears in the text field.</p>
+<div class="out">You selected: Electronics</div>
+</section>
+<section>
+<h2>Applet lifecycle</h2>
+<ul><li><b>init()</b>: runs once when the applet loads. Create components here.</li><li><b>start()</b>: runs each time the applet becomes visible.</li><li><b>paint()</b>: runs whenever the display needs redrawing.</li><li><b>stop()</b>: runs when the user leaves the page.</li><li><b>destroy()</b>: runs once at the end to release resources.</li></ul>
+</section>
+<section>
+<h2>How it works</h2>
+<ul><li><b>extends Applet</b> makes the class an applet. It runs inside a browser or appletviewer, not on its own.</li><li><b>List</b> is the AWT list component. <b>list.getSelectedItem()</b> returns the clicked item.</li><li><b>addItemListener(this)</b> and <b>itemStateChanged()</b> follow the same event pattern as Experiment 1.</li><li>Version B swaps Applet for Panel and adds a main() so it can run as a normal program.</li></ul>
+</section>
+<section>
+<h2>Viva answers</h2>
+<ul><li><b>Applet vs application:</b> an applet runs inside a browser or appletviewer, has no main(), and has security restrictions such as no local file access. An application runs standalone with main().</li><li><b>Why are applets obsolete?</b> Browsers removed Java plugin support, and the Applet API was deprecated and then removed from the JDK.</li><li><b>Hierarchy:</b> Object, Component, Container, Panel, Applet.</li><li><b>init() vs start():</b> init() is called once on load. start() is called every time the applet becomes active again.</li><li><b>Passing parameters:</b> use the param tag in the applet tag, and read it with getParameter("name").</li></ul>
+</section>
+</main>
+<script>
+document.querySelectorAll('.block').forEach(function(block){
+  var btn = block.querySelector('.copy');
+  var pre = block.querySelector('pre');
+  btn.addEventListener('click', function(){
+    var text = pre.textContent;
+    function done(){
+      btn.textContent = 'Copied';
+      btn.classList.add('done');
+      setTimeout(function(){ btn.textContent = 'Copy'; btn.classList.remove('done'); }, 1500);
+    }
+    function fallback(){
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); done(); } catch (e) { btn.textContent = 'Press Ctrl+C'; }
+      document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(done, fallback);
+    } else {
+      fallback();
+    }
+  });
+});
+</script>
+</body>
+</html>

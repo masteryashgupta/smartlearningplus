@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exp 1: AWT checkboxes</title>
+<style>
+:root{
+  --bg:#eef2f6; --card:#ffffff; --text:#16202e; --muted:#566377; --line:#d5dde7;
+  --accent:#0f6e8c; --code-bg:#1b2434; --code-text:#e6edf6; --code-bar:#26324a; --ok:#2f9e6b;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0f1520; --card:#171f2d; --text:#e6edf6; --muted:#93a0b4; --line:#2a3548;
+    --accent:#5cc0de; --code-bg:#0b101a; --code-text:#e6edf6; --code-bar:#1d2739; --ok:#5ed39a;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 "Segoe UI",system-ui,sans-serif}
+main{max-width:820px;margin:0 auto;padding:28px 16px 60px}
+h1{font-size:1.9rem;line-height:1.2;margin:0 0 6px}
+h2{font-size:1.2rem;margin:0 0 10px}
+.aim{color:var(--muted);margin:0 0 24px;max-width:62ch}
+section{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 18px 16px;margin-bottom:16px}
+p{margin:0 0 10px;max-width:70ch}
+ul{margin:0;padding-left:20px}
+li{margin-bottom:6px;max-width:70ch}
+.block{border-radius:8px;overflow:hidden;background:var(--code-bg);margin:10px 0}
+.bar{display:flex;justify-content:space-between;align-items:center;background:var(--code-bar);padding:6px 10px}
+.bar span{color:#9fb0c8;font:13px "Segoe UI",sans-serif}
+.copy{background:var(--accent);color:#fff;border:0;border-radius:6px;padding:5px 14px;font:600 13px "Segoe UI",sans-serif;cursor:pointer}
+.copy:hover{filter:brightness(1.1)}
+.copy:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.copy.done{background:var(--ok)}
+pre{margin:0;padding:14px;overflow-x:auto;color:var(--code-text);font:14px/1.55 Consolas,"Cascadia Mono",monospace}
+.note{border-left:3px solid var(--accent);padding:2px 0 2px 12px;color:var(--muted);margin:10px 0 0}
+.out{background:var(--bg);border:1px dashed var(--line);border-radius:8px;padding:10px 14px;font:14px/1.6 Consolas,monospace}
+</style>
+</head>
+<body>
+<main>
+
+<h1>Experiment 1: AWT checkboxes</h1>
+<p class="aim">Show four course checkboxes (B.Tech, BCA, MCA, MBA). The ticked ones appear in a label below.</p>
+
+<section>
+<h2>Check Java is ready</h2>
+<p>Both commands must print a version. If <code>javac</code> is not recognised, the JDK is not on PATH.</p>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>java -version
+javac -version</pre></div>
+</section>
+
+<section>
+<h2>Step 1: Open your folder and create the file</h2>
+<p>Change the folder name if yours is different. Notepad asks to create a new file, so click <b>Yes</b>.</p>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>cd %USERPROFILE%\Desktop\ajl
+notepad CourseCheckbox.java</pre></div>
+<p class="note">Paste the code from Step 2, save with Ctrl+S, then close Notepad. Make sure the file is not saved as CourseCheckbox.java.txt.</p>
+</section>
+
+<section>
+<h2>Step 2: Code (CourseCheckbox.java)</h2>
+<div class="block"><div class="bar"><span>CourseCheckbox.java</span><button class="copy">Copy</button></div>
+<pre>import java.awt.*;
+import java.awt.event.*;
+
+public class CourseCheckbox extends Frame implements ItemListener {
+    Checkbox c1, c2, c3, c4;
+    Label l1;
+
+    CourseCheckbox() {
+        setTitle("Course Selection");
+        setLayout(new FlowLayout());
+
+        c1 = new Checkbox("B.Tech");
+        c2 = new Checkbox("BCA");
+        c3 = new Checkbox("MCA");
+        c4 = new Checkbox("MBA");
+        l1 = new Label("Selected: None                              ");
+
+        add(c1);
+        add(c2);
+        add(c3);
+        add(c4);
+        add(l1);
+
+        c1.addItemListener(this);
+        c2.addItemListener(this);
+        c3.addItemListener(this);
+        c4.addItemListener(this);
+
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                dispose();
+            }
+        });
+
+        setSize(350, 200);
+        setVisible(true);
+    }
+
+    public void itemStateChanged(ItemEvent e) {
+        String courses = "";
+        if (c1.getState()) courses += "B.Tech ";
+        if (c2.getState()) courses += "BCA ";
+        if (c3.getState()) courses += "MCA ";
+        if (c4.getState()) courses += "MBA ";
+
+        if (courses.equals("")) courses = "None";
+        l1.setText("Selected: " + courses);
+    }
+
+    public static void main(String[] args) {
+        new CourseCheckbox();
+    }
+}</pre></div>
+</section>
+
+<section>
+<h2>Step 3: Compile and run</h2>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>javac CourseCheckbox.java
+java CourseCheckbox</pre></div>
+<p>Expected result: a window with four checkboxes. Tick or untick any of them and the label updates.</p>
+<div class="out">Selected: B.Tech MCA</div>
+<p class="note">The file name must match the class name exactly: CourseCheckbox.java. If the window does not appear, check that setVisible(true) is in the code.</p>
+</section>
+
+<section>
+<h2>How it works</h2>
+<ul>
+<li><b>extends Frame</b> makes the class itself the window.</li>
+<li><b>implements ItemListener</b> lets the class handle checkbox events, so it must define itemStateChanged().</li>
+<li><b>addItemListener(this)</b> registers the class to be notified when a checkbox is ticked or unticked.</li>
+<li><b>getState()</b> returns true when a checkbox is ticked. The method rebuilds the text on every change.</li>
+<li><b>FlowLayout</b> places components left to right and wraps to the next row.</li>
+<li><b>WindowAdapter</b> is needed because AWT windows do not close on the X button by default.</li>
+</ul>
+</section>
+
+<section>
+<h2>Viva answers</h2>
+<ul>
+<li><b>What is AWT?</b> Abstract Window Toolkit, Java’s original GUI library in java.awt. Its components use native OS widgets, so it is heavyweight and platform-dependent.</li>
+<li><b>Hierarchy:</b> Object, Component, Container, Window, Frame.</li>
+<li><b>Component vs Container:</b> a Component is anything visible on screen. A Container is a component that can hold other components.</li>
+<li><b>Delegation event model:</b> an event source (the checkbox) sends events to registered listeners, and the listener handles them.</li>
+<li><b>Why WindowAdapter?</b> WindowListener has 7 methods. The adapter lets you override only the one you need.</li>
+</ul>
+</section>
+
+<section>
+<h2>Likely variations</h2>
+<ul>
+<li>Add a Submit button that shows the selection only when clicked.</li>
+<li>Replace the checkboxes with radio buttons using CheckboxGroup, so only one course can be selected.</li>
+</ul>
+</section>
+
+</main>
+<script>
+document.querySelectorAll('.block').forEach(function(block){
+  var btn = block.querySelector('.copy');
+  var pre = block.querySelector('pre');
+  btn.addEventListener('click', function(){
+    var text = pre.textContent;
+    function done(){
+      btn.textContent = 'Copied';
+      btn.classList.add('done');
+      setTimeout(function(){ btn.textContent = 'Copy'; btn.classList.remove('done'); }, 1500);
+    }
+    function fallback(){
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); done(); } catch (e) { btn.textContent = 'Press Ctrl+C'; }
+      document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(done, fallback);
+    } else {
+      fallback();
+    }
+  });
+});
+</script>
+</body>
+</html>

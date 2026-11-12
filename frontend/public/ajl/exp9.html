@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exp 9: JSP login form</title>
+<style>
+:root{
+  --bg:#eef2f6; --card:#ffffff; --text:#16202e; --muted:#566377; --line:#d5dde7;
+  --accent:#0f6e8c; --code-bg:#1b2434; --code-text:#e6edf6; --code-bar:#26324a; --ok:#2f9e6b;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0f1520; --card:#171f2d; --text:#e6edf6; --muted:#93a0b4; --line:#2a3548;
+    --accent:#5cc0de; --code-bg:#0b101a; --code-text:#e6edf6; --code-bar:#1d2739; --ok:#5ed39a;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 "Segoe UI",system-ui,sans-serif}
+main{max-width:820px;margin:0 auto;padding:28px 16px 60px}
+h1{font-size:1.9rem;line-height:1.2;margin:0 0 6px}
+h2{font-size:1.2rem;margin:0 0 10px}
+.aim{color:var(--muted);margin:0 0 24px;max-width:62ch}
+section{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 18px 16px;margin-bottom:16px}
+p{margin:0 0 10px;max-width:70ch}
+ul{margin:0;padding-left:20px}
+li{margin-bottom:6px;max-width:70ch}
+.block{border-radius:8px;overflow:hidden;background:var(--code-bg);margin:10px 0}
+.bar{display:flex;justify-content:space-between;align-items:center;background:var(--code-bar);padding:6px 10px}
+.bar span{color:#9fb0c8;font:13px "Segoe UI",sans-serif}
+.copy{background:var(--accent);color:#fff;border:0;border-radius:6px;padding:5px 14px;font:600 13px "Segoe UI",sans-serif;cursor:pointer}
+.copy:hover{filter:brightness(1.1)}
+.copy:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.copy.done{background:var(--ok)}
+pre{margin:0;padding:14px;overflow-x:auto;color:var(--code-text);font:14px/1.55 Consolas,"Cascadia Mono",monospace}
+.note{border-left:3px solid var(--accent);padding:2px 0 2px 12px;color:var(--muted);margin:10px 0 0}
+.out{background:var(--bg);border:1px dashed var(--line);border-radius:8px;padding:10px 14px;font:14px/1.6 Consolas,monospace}
+</style>
+</head>
+<body>
+<main>
+<h1>Experiment 9: JSP login form</h1>
+<p class="aim">Login with a static check (fixed username and password) and with a dynamic MySQL database.</p>
+<section>
+<h2>Before you start</h2>
+<ul><li>Tomcat 9 must be extracted (for example C:\apache-tomcat-9.0.123). JSP files need <b>no compiling</b>: put them in a folder under webapps.</li><li>If Tomcat is already running from an earlier experiment, you do not need to start it again. It picks up new folders by itself.</li></ul>
+</section>
+<section>
+<h2>Set the paths</h2>
+<p>Change both paths to match the lab PC. Find the JDK with <code>where javac</code>. Use the path that ends in \bin\javac.exe, without that ending, and ignore the Common Files\Oracle\Java\javapath line.</p>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>set JAVA_HOME=C:\Program Files\Java\jdk-26
+set TOMCAT=C:\apache-tomcat-9.0.123</pre></div>
+</section>
+<section>
+<h2>Part A: Static login. Create the folder and files</h2>
+<p>Click <b>Yes</b> when Notepad asks to create each file.</p>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>mkdir %TOMCAT%\webapps\LoginStatic
+notepad %TOMCAT%\webapps\LoginStatic\Index.html</pre></div>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>notepad %TOMCAT%\webapps\LoginStatic\Process.jsp</pre></div>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>notepad %TOMCAT%\webapps\LoginStatic\Welcome.jsp</pre></div>
+</section>
+<section>
+<h2>Part A: Code</h2>
+<div class="block"><div class="bar"><span>Index.html</span><button class="copy">Copy</button></div>
+<pre>&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Login&lt;/title&gt;
+&lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;form action="Process.jsp" method="post"&gt;
+    Username: &lt;input type="text" name="uname"&gt;&lt;br&gt;&lt;br&gt;
+    Password: &lt;input type="password" name="pass"&gt;&lt;br&gt;&lt;br&gt;
+    &lt;input type="submit" value="Login"&gt;
+&lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre></div>
+<div class="block"><div class="bar"><span>Process.jsp</span><button class="copy">Copy</button></div>
+<pre>&lt;%@page contentType="text/html" pageEncoding="UTF-8"%&gt;
+&lt;%
+String a = request.getParameter("uname");
+String b = request.getParameter("pass");
+if ("queue".equals(a) &amp;&amp; "queue".equals(b)) {
+    response.sendRedirect("Welcome.jsp");
+} else {
+    out.println("Invalid username or password. &lt;a href='Index.html'&gt;Try again&lt;/a&gt;");
+}
+%&gt;</pre></div>
+<div class="block"><div class="bar"><span>Welcome.jsp</span><button class="copy">Copy</button></div>
+<pre>&lt;%@page contentType="text/html" pageEncoding="UTF-8"%&gt;
+&lt;%
+out.println("Welcome to world of jsp");
+%&gt;</pre></div>
+<p class="note">The manual’s Process.jsp shows a blank page on a wrong login. This version adds an else branch with a message.</p>
+</section>
+<section>
+<h2>Start Tomcat</h2>
+<p>Skip this if Tomcat is already running. A new window opens; leave it open.</p>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>%TOMCAT%\bin\startup.bat</pre></div>
+</section>
+<section>
+<h2>Part A: Test it</h2>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>http://localhost:8080/LoginStatic/Index.html</pre></div>
+<p>Log in with username <b>queue</b> and password <b>queue</b>.</p>
+<div class="out">Welcome to world of jsp</div>
+</section>
+<section>
+<h2>Part B: Dynamic login. Database setup</h2>
+<p>Install MySQL and download the Connector/J jar (as in Experiment 4). Open MySQL, then run the SQL below.</p>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>mysql -u root -p</pre></div>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>CREATE DATABASE labdb;
+USE labdb;
+CREATE TABLE reg(name VARCHAR(50), pwd VARCHAR(50), email VARCHAR(80));
+exit</pre></div>
+</section>
+<section>
+<h2>Part B: Create the folder, jar and files</h2>
+<p>The jar must be in WEB-INF\lib. Change the jar name to match yours.</p>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>mkdir %TOMCAT%\webapps\LoginDB\WEB-INF\lib
+copy "%USERPROFILE%\Desktop\ajl\mysql-connector-j-8.4.0.jar" %TOMCAT%\webapps\LoginDB\WEB-INF\lib</pre></div>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>notepad %TOMCAT%\webapps\LoginDB\index.jsp</pre></div>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>notepad %TOMCAT%\webapps\LoginDB\servlet.jsp</pre></div>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>notepad %TOMCAT%\webapps\LoginDB\login.jsp</pre></div>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>notepad %TOMCAT%\webapps\LoginDB\wel.jsp</pre></div>
+</section>
+<section>
+<h2>Part B: Code</h2>
+<p>Change root123 in servlet.jsp and wel.jsp to your MySQL password.</p>
+<div class="block"><div class="bar"><span>index.jsp (register form)</span><button class="copy">Copy</button></div>
+<pre>&lt;%@page contentType="text/html" pageEncoding="UTF-8"%&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8"&gt;
+&lt;title&gt;Register&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;form action="servlet.jsp" method="post"&gt;
+    Enter your UserName: &lt;input type="text" name="name"&gt;&lt;br&gt;&lt;br&gt;
+    Enter your Password: &lt;input type="password" name="pas"&gt;&lt;br&gt;&lt;br&gt;
+    Enter your email: &lt;input type="email" name="email"&gt;&lt;br&gt;&lt;br&gt;
+    &lt;input type="submit" value="Register"&gt;
+&lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre></div>
+<div class="block"><div class="bar"><span>servlet.jsp (saves to the database)</span><button class="copy">Copy</button></div>
+<pre>&lt;%@page import="java.sql.*"%&gt;
+&lt;%@page contentType="text/html" pageEncoding="UTF-8"%&gt;
+&lt;%
+String name = request.getParameter("name");
+String pass = request.getParameter("pas");
+String email = request.getParameter("email");
+
+Class.forName("com.mysql.cj.jdbc.Driver");
+Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/labdb", "root", "root123");
+PreparedStatement ps = con.prepareStatement("insert into reg values(?,?,?)");
+ps.setString(1, name);
+ps.setString(2, pass);
+ps.setString(3, email);
+int i = ps.executeUpdate();
+if (i &gt; 0) {
+    response.sendRedirect("login.jsp");
+} else {
+    out.println("Try Again");
+}
+%&gt;</pre></div>
+<div class="block"><div class="bar"><span>login.jsp (login form)</span><button class="copy">Copy</button></div>
+<pre>&lt;%@page contentType="text/html" pageEncoding="UTF-8"%&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8"&gt;
+&lt;title&gt;Login&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;form action="wel.jsp" method="post"&gt;
+    Name: &lt;input type="text" name="name"&gt;&lt;br&gt;&lt;br&gt;
+    Password: &lt;input type="password" name="pas"&gt;&lt;br&gt;&lt;br&gt;
+    &lt;input type="submit" value="Login"&gt;
+&lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre></div>
+<div class="block"><div class="bar"><span>wel.jsp (checks the login)</span><button class="copy">Copy</button></div>
+<pre>&lt;%@page import="java.sql.*"%&gt;
+&lt;%@page contentType="text/html" pageEncoding="UTF-8"%&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8"&gt;
+&lt;title&gt;Welcome&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;%
+String name = request.getParameter("name");
+String pass = request.getParameter("pas");
+
+Class.forName("com.mysql.cj.jdbc.Driver");
+Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/labdb", "root", "root123");
+PreparedStatement ps = con.prepareStatement("select * from reg where name=? and pwd=?");
+ps.setString(1, name);
+ps.setString(2, pass);
+ResultSet rs = ps.executeQuery();
+if (rs.next()) {
+    out.println("&lt;h1&gt;Welcome : " + name + "&lt;/h1&gt;");
+} else {
+    out.println("&lt;h1&gt;Not Done&lt;/h1&gt;");
+}
+%&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre></div>
+<p class="note">The manual uses the old driver com.mysql.jdbc.Driver. Newer connectors need com.mysql.cj.jdbc.Driver, which is used here.</p>
+</section>
+<section>
+<h2>Part B: Restart Tomcat and test</h2>
+<p>Restart Tomcat so it loads the jar.</p>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>%TOMCAT%\bin\shutdown.bat
+%TOMCAT%\bin\startup.bat</pre></div>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>http://localhost:8080/LoginDB/index.jsp</pre></div>
+<p>Register a user. It redirects to the login page. Log in with the same name and password.</p>
+<div class="out">Welcome : rahul</div>
+</section>
+<section>
+<h2>When you finish</h2>
+<p>Stop Tomcat from the same Command Prompt.</p>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>%TOMCAT%\bin\shutdown.bat</pre></div>
+</section>
+<section>
+<h2>Common errors</h2>
+<ul><li><b>ClassNotFoundException com.mysql.cj.jdbc.Driver:</b> the jar is not in WEB-INF\lib, or Tomcat was not restarted.</li><li><b>Access denied for user root:</b> wrong password in servlet.jsp or wel.jsp.</li><li><b>Table reg doesn’t exist:</b> the CREATE TABLE step was skipped, or it was run in the wrong database.</li><li><b>404:</b> wrong folder name in the URL, or a file saved as .txt.</li></ul>
+</section>
+<section>
+<h2>How it works</h2>
+<ul><li>Static: Process.jsp compares the input with fixed values and redirects with <b>response.sendRedirect()</b> on a match.</li><li>Dynamic: servlet.jsp inserts the user into the <b>reg</b> table with a PreparedStatement. wel.jsp runs a SELECT and logs in if <b>rs.next()</b> finds a matching row.</li><li>The JDBC code is the same as Experiment 4, just inside <code>&lt;% %&gt;</code> scriptlets.</li></ul>
+</section>
+<section>
+<h2>Viva answers</h2>
+<ul><li><b>JSP life-cycle methods:</b> jspInit() once, _jspService() for every request, jspDestroy() once. Before that the page is translated into a servlet and compiled.</li><li><b>JSP comment syntax:</b> <code>&lt;%-- comment --%&gt;</code></li><li><b>Implicit objects:</b> request, response, out, session, application, config, pageContext, page, exception.</li><li><b>Handling exceptions:</b> use try-catch, or an error page with <code>errorPage</code> and <code>isErrorPage="true"</code>, or an error-page entry in web.xml.</li><li><b>Forwarding to a servlet:</b> <code>&lt;jsp:forward page="/MyServlet"/&gt;</code> or RequestDispatcher.forward().</li></ul>
+</section>
+</main>
+<script>
+document.querySelectorAll('.block').forEach(function(block){
+  var btn = block.querySelector('.copy');
+  var pre = block.querySelector('pre');
+  btn.addEventListener('click', function(){
+    var text = pre.textContent;
+    function done(){
+      btn.textContent = 'Copied';
+      btn.classList.add('done');
+      setTimeout(function(){ btn.textContent = 'Copy'; btn.classList.remove('done'); }, 1500);
+    }
+    function fallback(){
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); done(); } catch (e) { btn.textContent = 'Press Ctrl+C'; }
+      document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(done, fallback);
+    } else {
+      fallback();
+    }
+  });
+});
+</script>
+</body>
+</html>

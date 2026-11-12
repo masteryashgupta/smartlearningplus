@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exp 3: Swing components</title>
+<style>
+:root{
+  --bg:#eef2f6; --card:#ffffff; --text:#16202e; --muted:#566377; --line:#d5dde7;
+  --accent:#0f6e8c; --code-bg:#1b2434; --code-text:#e6edf6; --code-bar:#26324a; --ok:#2f9e6b;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0f1520; --card:#171f2d; --text:#e6edf6; --muted:#93a0b4; --line:#2a3548;
+    --accent:#5cc0de; --code-bg:#0b101a; --code-text:#e6edf6; --code-bar:#1d2739; --ok:#5ed39a;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 "Segoe UI",system-ui,sans-serif}
+main{max-width:820px;margin:0 auto;padding:28px 16px 60px}
+h1{font-size:1.9rem;line-height:1.2;margin:0 0 6px}
+h2{font-size:1.2rem;margin:0 0 10px}
+.aim{color:var(--muted);margin:0 0 24px;max-width:62ch}
+section{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 18px 16px;margin-bottom:16px}
+p{margin:0 0 10px;max-width:70ch}
+ul{margin:0;padding-left:20px}
+li{margin-bottom:6px;max-width:70ch}
+.block{border-radius:8px;overflow:hidden;background:var(--code-bg);margin:10px 0}
+.bar{display:flex;justify-content:space-between;align-items:center;background:var(--code-bar);padding:6px 10px}
+.bar span{color:#9fb0c8;font:13px "Segoe UI",sans-serif}
+.copy{background:var(--accent);color:#fff;border:0;border-radius:6px;padding:5px 14px;font:600 13px "Segoe UI",sans-serif;cursor:pointer}
+.copy:hover{filter:brightness(1.1)}
+.copy:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.copy.done{background:var(--ok)}
+pre{margin:0;padding:14px;overflow-x:auto;color:var(--code-text);font:14px/1.55 Consolas,"Cascadia Mono",monospace}
+.note{border-left:3px solid var(--accent);padding:2px 0 2px 12px;color:var(--muted);margin:10px 0 0}
+.out{background:var(--bg);border:1px dashed var(--line);border-radius:8px;padding:10px 14px;font:14px/1.6 Consolas,monospace}
+</style>
+</head>
+<body>
+<main>
+<h1>Experiment 3: Swing components</h1>
+<p class="aim">Build a window with a text field, button, toggle button, checkboxes and radio buttons.</p>
+<section>
+<h2>Check Java is ready</h2>
+<p>Both commands must print a version. If <code>javac</code> is not recognised, the JDK is not on PATH.</p>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>java -version
+javac -version</pre></div>
+</section>
+<section>
+<h2>Step 1: Open your folder and create the file</h2>
+<p>Notepad asks to create a new file, so click <b>Yes</b>.</p>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>cd %USERPROFILE%\Desktop\ajl
+notepad SwingComponents.java</pre></div>
+<p class="note">Paste the code from Step 2, save with Ctrl+S, then close Notepad. Make sure the file is not saved as .java.txt.</p>
+</section>
+<section>
+<h2>Step 2: Code (SwingComponents.java)</h2>
+<div class="block"><div class="bar"><span>SwingComponents.java</span><button class="copy">Copy</button></div>
+<pre>import javax.swing.*;
+import java.awt.event.*;
+
+public class SwingComponents extends JFrame implements ActionListener, ItemListener {
+    JTextField tf;
+    JButton btn;
+    JToggleButton toggle;
+    JCheckBox cb1, cb2, cb3;
+    JRadioButton rb1, rb2, rb3;
+    ButtonGroup bg;
+
+    public SwingComponents() {
+        setTitle("Swing Components Example");
+        setSize(500, 450);
+        setLayout(null);
+
+        JLabel l1 = new JLabel("Enter Your Name:");
+        l1.setBounds(30, 20, 120, 25);
+        add(l1);
+        tf = new JTextField();
+        tf.setBounds(160, 20, 200, 25);
+        add(tf);
+
+        btn = new JButton("Submit");
+        btn.setBounds(160, 60, 100, 30);
+        btn.addActionListener(this);
+        add(btn);
+
+        toggle = new JToggleButton("OFF");
+        toggle.setBounds(280, 60, 80, 30);
+        toggle.addItemListener(this);
+        add(toggle);
+
+        JLabel l2 = new JLabel("Languages:");
+        l2.setBounds(30, 120, 100, 25);
+        add(l2);
+        cb1 = new JCheckBox("C");
+        cb1.setBounds(160, 120, 80, 25);
+        cb2 = new JCheckBox("Java");
+        cb2.setBounds(160, 150, 80, 25);
+        cb3 = new JCheckBox("Python");
+        cb3.setBounds(160, 180, 100, 25);
+        add(cb1);
+        add(cb2);
+        add(cb3);
+
+        JLabel l3 = new JLabel("Gender:");
+        l3.setBounds(30, 240, 100, 25);
+        add(l3);
+        rb1 = new JRadioButton("Male");
+        rb1.setBounds(160, 240, 80, 25);
+        rb2 = new JRadioButton("Female");
+        rb2.setBounds(160, 270, 100, 25);
+        rb3 = new JRadioButton("Other");
+        rb3.setBounds(160, 300, 100, 25);
+        bg = new ButtonGroup();
+        bg.add(rb1);
+        bg.add(rb2);
+        bg.add(rb3);
+        add(rb1);
+        add(rb2);
+        add(rb3);
+
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        JOptionPane.showMessageDialog(this, "Welcome " + tf.getText());
+    }
+
+    public void itemStateChanged(ItemEvent e) {
+        if (toggle.isSelected())
+            toggle.setText("ON");
+        else
+            toggle.setText("OFF");
+    }
+
+    public static void main(String[] args) {
+        new SwingComponents();
+    }
+}</pre></div>
+</section>
+<section>
+<h2>Step 3: Compile and run</h2>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>javac SwingComponents.java
+java SwingComponents</pre></div>
+<p>Expected result: a form with a name field, a Submit button, an ON/OFF toggle, language checkboxes and gender radio buttons. Clicking Submit shows a popup.</p>
+<div class="out">Welcome Rahul</div>
+</section>
+<section>
+<h2>How it works</h2>
+<ul><li><b>JFrame</b> is the Swing window. Swing classes start with J and come from javax.swing.*. The listeners still come from java.awt.event.*.</li><li><b>setLayout(null)</b> with <b>setBounds(x, y, width, height)</b> places each component by pixel position.</li><li><b>setDefaultCloseOperation(EXIT_ON_CLOSE)</b> closes the program on the X button, so no WindowAdapter is needed.</li><li><b>ButtonGroup</b> makes the radio buttons mutually exclusive. Checkboxes have no group, so any combination works.</li><li><b>JButton</b> fires an ActionEvent (actionPerformed). <b>JToggleButton</b> fires an ItemEvent (itemStateChanged).</li><li><b>JOptionPane.showMessageDialog</b> shows the popup message.</li></ul>
+</section>
+<section>
+<h2>Viva answers</h2>
+<ul><li><b>AWT vs Swing:</b> AWT is heavyweight and platform-dependent. Swing is lightweight, pure Java and has richer components such as tables and trees.</li><li><b>Why lightweight?</b> Swing draws its own components, so it does not depend on native OS widgets.</li><li><b>Main components:</b> JLabel, JTextField, JButton, JToggleButton, JCheckBox, JRadioButton, JComboBox, JList, JTable, JTree. Containers: JFrame, JPanel, JDialog.</li><li><b>Button vs toggle button:</b> a JButton fires once per click. A JToggleButton stays pressed and holds an on/off state.</li><li><b>Hierarchy:</b> Component, Container, JComponent, AbstractButton, then JButton or JToggleButton. JCheckBox and JRadioButton extend JToggleButton.</li></ul>
+</section>
+<section>
+<h2>Likely variation</h2>
+<p>Make the Submit button also show the selected languages and gender in the popup.</p>
+</section>
+</main>
+<script>
+document.querySelectorAll('.block').forEach(function(block){
+  var btn = block.querySelector('.copy');
+  var pre = block.querySelector('pre');
+  btn.addEventListener('click', function(){
+    var text = pre.textContent;
+    function done(){
+      btn.textContent = 'Copied';
+      btn.classList.add('done');
+      setTimeout(function(){ btn.textContent = 'Copy'; btn.classList.remove('done'); }, 1500);
+    }
+    function fallback(){
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); done(); } catch (e) { btn.textContent = 'Press Ctrl+C'; }
+      document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(done, fallback);
+    } else {
+      fallback();
+    }
+  });
+});
+</script>
+</body>
+</html>

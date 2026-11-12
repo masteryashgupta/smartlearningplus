@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exp 6: RMI distributed calculator</title>
+<style>
+:root{
+  --bg:#eef2f6; --card:#ffffff; --text:#16202e; --muted:#566377; --line:#d5dde7;
+  --accent:#0f6e8c; --code-bg:#1b2434; --code-text:#e6edf6; --code-bar:#26324a; --ok:#2f9e6b;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0f1520; --card:#171f2d; --text:#e6edf6; --muted:#93a0b4; --line:#2a3548;
+    --accent:#5cc0de; --code-bg:#0b101a; --code-text:#e6edf6; --code-bar:#1d2739; --ok:#5ed39a;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 "Segoe UI",system-ui,sans-serif}
+main{max-width:820px;margin:0 auto;padding:28px 16px 60px}
+h1{font-size:1.9rem;line-height:1.2;margin:0 0 6px}
+h2{font-size:1.2rem;margin:0 0 10px}
+.aim{color:var(--muted);margin:0 0 24px;max-width:62ch}
+section{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 18px 16px;margin-bottom:16px}
+p{margin:0 0 10px;max-width:70ch}
+ul{margin:0;padding-left:20px}
+li{margin-bottom:6px;max-width:70ch}
+.block{border-radius:8px;overflow:hidden;background:var(--code-bg);margin:10px 0}
+.bar{display:flex;justify-content:space-between;align-items:center;background:var(--code-bar);padding:6px 10px}
+.bar span{color:#9fb0c8;font:13px "Segoe UI",sans-serif}
+.copy{background:var(--accent);color:#fff;border:0;border-radius:6px;padding:5px 14px;font:600 13px "Segoe UI",sans-serif;cursor:pointer}
+.copy:hover{filter:brightness(1.1)}
+.copy:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.copy.done{background:var(--ok)}
+pre{margin:0;padding:14px;overflow-x:auto;color:var(--code-text);font:14px/1.55 Consolas,"Cascadia Mono",monospace}
+.note{border-left:3px solid var(--accent);padding:2px 0 2px 12px;color:var(--muted);margin:10px 0 0}
+.out{background:var(--bg);border:1px dashed var(--line);border-radius:8px;padding:10px 14px;font:14px/1.6 Consolas,monospace}
+</style>
+</head>
+<body>
+<main>
+<h1>Experiment 6: RMI distributed calculator</h1>
+<p class="aim">The client sends an operator and two numbers. The server computes the result and sends it back.</p>
+<section>
+<h2>Check Java is ready</h2>
+<p>Both commands must print a version. If <code>javac</code> is not recognised, the JDK is not on PATH.</p>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>java -version
+javac -version</pre></div>
+</section>
+<section>
+<h2>Step 1: Make a folder and create the four files</h2>
+<p>Use a separate folder, because Server.java and Client.java also exist in the socket experiment. Click <b>Yes</b> when Notepad asks to create each file.</p>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>mkdir %USERPROFILE%\Desktop\ajl\rmi
+cd %USERPROFILE%\Desktop\ajl\rmi
+notepad Calculator.java</pre></div>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>notepad CalculatorImpl.java</pre></div>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>notepad Server.java</pre></div>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>notepad Client.java</pre></div>
+</section>
+<section>
+<h2>Step 2: Code</h2>
+<div class="block"><div class="bar"><span>Calculator.java</span><button class="copy">Copy</button></div>
+<pre>import java.rmi.*;
+
+public interface Calculator extends Remote {
+    double calculate(double a, double b, char op) throws RemoteException;
+}</pre></div>
+<div class="block"><div class="bar"><span>CalculatorImpl.java</span><button class="copy">Copy</button></div>
+<pre>import java.rmi.*;
+import java.rmi.server.*;
+
+public class CalculatorImpl extends UnicastRemoteObject implements Calculator {
+
+    public CalculatorImpl() throws RemoteException {
+        super();
+    }
+
+    public double calculate(double a, double b, char op) throws RemoteException {
+        switch (op) {
+            case '+':
+                return a + b;
+            case '-':
+                return a - b;
+            case '*':
+                return a * b;
+            case '/':
+                if (b != 0)
+                    return a / b;
+                else {
+                    System.out.println("Division by zero not possible.");
+                    return 0;
+                }
+            default:
+                System.out.println("Invalid Operator");
+                return 0;
+        }
+    }
+}</pre></div>
+<div class="block"><div class="bar"><span>Server.java</span><button class="copy">Copy</button></div>
+<pre>import java.rmi.*;
+import java.rmi.registry.*;
+
+public class Server {
+    public static void main(String args[]) {
+        try {
+            CalculatorImpl obj = new CalculatorImpl();
+            Registry registry = LocateRegistry.createRegistry(1099);
+            registry.rebind("CalculatorService", obj);
+            System.out.println("RMI Server Started...");
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+}</pre></div>
+<div class="block"><div class="bar"><span>Client.java</span><button class="copy">Copy</button></div>
+<pre>import java.rmi.registry.*;
+import java.util.Scanner;
+
+public class Client {
+    public static void main(String args[]) {
+        try {
+            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
+            Calculator obj = (Calculator) registry.lookup("CalculatorService");
+
+            Scanner sc = new Scanner(System.in);
+            System.out.print("Enter First Number : ");
+            double a = sc.nextDouble();
+            System.out.print("Enter Operator (+,-,*,/) : ");
+            char op = sc.next().charAt(0);
+            System.out.print("Enter Second Number : ");
+            double b = sc.nextDouble();
+
+            double result = obj.calculate(a, b, op);
+            System.out.println("Result = " + result);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+}</pre></div>
+</section>
+<section>
+<h2>Step 3: Compile and run in two windows</h2>
+<p><b>Window 1.</b> Compile everything and start the server. Leave it running.</p>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>cd %USERPROFILE%\Desktop\ajl\rmi
+javac *.java
+java Server</pre></div>
+<p><b>Window 2.</b> Start the client after the server prints its message.</p>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>cd %USERPROFILE%\Desktop\ajl\rmi
+java Client</pre></div>
+<div class="out">Enter First Number : 10<br>Enter Operator (+,-,*,/) : *<br>Enter Second Number : 5<br>Result = 50.0</div>
+<p class="note">Start the server first. You do not need rmic or rmiregistry, because the server creates the registry itself.</p>
+</section>
+<section>
+<h2>How it works</h2>
+<ul><li><b>Remote interface</b> (Calculator) extends Remote. Every method throws RemoteException.</li><li><b>Implementation</b> (CalculatorImpl) extends UnicastRemoteObject and holds the real logic.</li><li><b>Server</b> creates the object, starts the registry on port 1099 and registers it with rebind().</li><li><b>Client</b> looks the object up by name and receives a stub (proxy). Calling a method on the stub runs it on the server.</li><li>Flow: client, stub, network, server object, result back to the client.</li></ul>
+</section>
+<section>
+<h2>Viva answers</h2>
+<ul><li><b>RMI:</b> Remote Method Invocation. It lets a program call a method on an object in another JVM as if it were local.</li><li><b>Stub and skeleton:</b> the stub is the client-side proxy. The skeleton was the server-side helper in old versions and is now handled automatically.</li><li><b>RMI registry:</b> a naming service where servers register remote objects and clients look them up. Default port 1099.</li><li><b>Why extends Remote?</b> It marks the interface as callable from another JVM.</li><li><b>Why RemoteException?</b> Network calls can fail, so every remote method must declare it.</li><li><b>bind vs rebind:</b> bind throws an error if the name is already used. rebind replaces the old binding.</li><li><b>RMI vs sockets:</b> sockets send raw data over a protocol you design. RMI lets you call methods directly.</li></ul>
+</section>
+</main>
+<script>
+document.querySelectorAll('.block').forEach(function(block){
+  var btn = block.querySelector('.copy');
+  var pre = block.querySelector('pre');
+  btn.addEventListener('click', function(){
+    var text = pre.textContent;
+    function done(){
+      btn.textContent = 'Copied';
+      btn.classList.add('done');
+      setTimeout(function(){ btn.textContent = 'Copy'; btn.classList.remove('done'); }, 1500);
+    }
+    function fallback(){
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); done(); } catch (e) { btn.textContent = 'Press Ctrl+C'; }
+      document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(done, fallback);
+    } else {
+      fallback();
+    }
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exp 8: User registration</title>
+<style>
+:root{
+  --bg:#eef2f6; --card:#ffffff; --text:#16202e; --muted:#566377; --line:#d5dde7;
+  --accent:#0f6e8c; --code-bg:#1b2434; --code-text:#e6edf6; --code-bar:#26324a; --ok:#2f9e6b;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0f1520; --card:#171f2d; --text:#e6edf6; --muted:#93a0b4; --line:#2a3548;
+    --accent:#5cc0de; --code-bg:#0b101a; --code-text:#e6edf6; --code-bar:#1d2739; --ok:#5ed39a;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 "Segoe UI",system-ui,sans-serif}
+main{max-width:820px;margin:0 auto;padding:28px 16px 60px}
+h1{font-size:1.9rem;line-height:1.2;margin:0 0 6px}
+h2{font-size:1.2rem;margin:0 0 10px}
+.aim{color:var(--muted);margin:0 0 24px;max-width:62ch}
+section{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 18px 16px;margin-bottom:16px}
+p{margin:0 0 10px;max-width:70ch}
+ul{margin:0;padding-left:20px}
+li{margin-bottom:6px;max-width:70ch}
+.block{border-radius:8px;overflow:hidden;background:var(--code-bg);margin:10px 0}
+.bar{display:flex;justify-content:space-between;align-items:center;background:var(--code-bar);padding:6px 10px}
+.bar span{color:#9fb0c8;font:13px "Segoe UI",sans-serif}
+.copy{background:var(--accent);color:#fff;border:0;border-radius:6px;padding:5px 14px;font:600 13px "Segoe UI",sans-serif;cursor:pointer}
+.copy:hover{filter:brightness(1.1)}
+.copy:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.copy.done{background:var(--ok)}
+pre{margin:0;padding:14px;overflow-x:auto;color:var(--code-text);font:14px/1.55 Consolas,"Cascadia Mono",monospace}
+.note{border-left:3px solid var(--accent);padding:2px 0 2px 12px;color:var(--muted);margin:10px 0 0}
+.out{background:var(--bg);border:1px dashed var(--line);border-radius:8px;padding:10px 14px;font:14px/1.6 Consolas,monospace}
+</style>
+</head>
+<body>
+<main>
+<h1>Experiment 8: User registration</h1>
+<p class="aim">A registration form. When it is submitted, control transfers to a second page that shows the entered details.</p>
+<section>
+<h2>Before you start</h2>
+<ul><li>Tomcat 9 must be extracted (for example C:\apache-tomcat-9.0.123). JSP files need <b>no compiling</b>: put them in a folder under webapps.</li><li>If Tomcat is already running from an earlier experiment, you do not need to start it again. It picks up new folders by itself.</li></ul>
+</section>
+<section>
+<h2>Set the paths</h2>
+<p>Change both paths to match the lab PC. Find the JDK with <code>where javac</code>. Use the path that ends in \bin\javac.exe, without that ending, and ignore the Common Files\Oracle\Java\javapath line.</p>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>set JAVA_HOME=C:\Program Files\Java\jdk-26
+set TOMCAT=C:\apache-tomcat-9.0.123</pre></div>
+</section>
+<section>
+<h2>Step 1: Create the app folder and files</h2>
+<p>Click <b>Yes</b> when Notepad asks to create each file. Check that neither file is saved as .txt.</p>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>mkdir %TOMCAT%\webapps\Registration
+notepad %TOMCAT%\webapps\Registration\registration.html</pre></div>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>notepad %TOMCAT%\webapps\Registration\register.jsp</pre></div>
+</section>
+<section>
+<h2>Step 2: Code</h2>
+<div class="block"><div class="bar"><span>registration.html (the form)</span><button class="copy">Copy</button></div>
+<pre>&lt;html&gt;
+&lt;head&gt;&lt;title&gt;User Registration&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;h2&gt;User Registration&lt;/h2&gt;
+&lt;form action="register.jsp" method="post"&gt;
+    First Name: &lt;input type="text" name="fname"&gt;&lt;br&gt;&lt;br&gt;
+    Last Name: &lt;input type="text" name="lname"&gt;&lt;br&gt;&lt;br&gt;
+    User Name: &lt;input type="text" name="uname"&gt;&lt;br&gt;&lt;br&gt;
+    Email: &lt;input type="text" name="email"&gt;&lt;br&gt;&lt;br&gt;
+    Password: &lt;input type="password" name="pwd"&gt;&lt;br&gt;&lt;br&gt;
+    Confirm Password: &lt;input type="password" name="cpwd"&gt;&lt;br&gt;&lt;br&gt;
+    Address: &lt;textarea name="add" rows="3" cols="20"&gt;&lt;/textarea&gt;&lt;br&gt;&lt;br&gt;
+    &lt;input type="submit" value="Register"&gt;
+&lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre></div>
+<div class="block"><div class="bar"><span>register.jsp (the second page)</span><button class="copy">Copy</button></div>
+<pre>&lt;html&gt;
+&lt;head&gt;&lt;title&gt;Registration Details&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;p&gt;
+&lt;%
+String fname = request.getParameter("fname");
+String lname = request.getParameter("lname");
+String uname = request.getParameter("uname");
+String email = request.getParameter("email");
+String pwd = request.getParameter("pwd");
+String cpwd = request.getParameter("cpwd");
+String add = request.getParameter("add");
+
+out.print("First name is : " + fname + "&lt;br&gt;");
+out.print("Last name is : " + lname + "&lt;br&gt;");
+out.print("User name is : " + uname + "&lt;br&gt;");
+out.print("Email is : " + email + "&lt;br&gt;");
+out.print("Password is : " + pwd + "&lt;br&gt;");
+out.print("Confirm Password is : " + cpwd + "&lt;br&gt;");
+out.print("Address is : " + add + "&lt;br&gt;");
+%&gt;
+&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre></div>
+</section>
+<section>
+<h2>Start Tomcat</h2>
+<p>Skip this if Tomcat is already running. A new window opens; leave it open.</p>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>%TOMCAT%\bin\startup.bat</pre></div>
+</section>
+<section>
+<h2>Open the browser</h2>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>http://localhost:8080/Registration/registration.html</pre></div>
+<p>Fill the form and click Register. The browser moves to register.jsp and shows what you typed.</p>
+<div class="out">First name is : Rahul<br>Last name is : Sharma<br>User name is : rahul01<br>Email is : rahul@mail.com</div>
+</section>
+<section>
+<h2>If the examiner wants a servlet</h2>
+<p>The aim says servlet, but the manual uses JSP. As a backup, use a servlet for the second page. Change the form line to <code>action="register"</code>, then follow Experiment 7: put this web.xml in WEB-INF and compile into WEB-INF\classes.</p>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>mkdir %TOMCAT%\webapps\Registration\WEB-INF\classes
+notepad %TOMCAT%\webapps\Registration\WEB-INF\web.xml</pre></div>
+<div class="block"><div class="bar"><span>web.xml</span><button class="copy">Copy</button></div>
+<pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+         http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+         version="4.0"&gt;
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;RegisterServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;RegisterServlet&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;RegisterServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/register&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+&lt;/web-app&gt;</pre></div>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>cd %USERPROFILE%\Desktop
+notepad RegisterServlet.java</pre></div>
+<div class="block"><div class="bar"><span>RegisterServlet.java</span><button class="copy">Copy</button></div>
+<pre>import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+
+public class RegisterServlet extends HttpServlet {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+        out.println("&lt;html&gt;&lt;body&gt;");
+        out.println("First name is : " + request.getParameter("fname") + "&lt;br&gt;");
+        out.println("Last name is : " + request.getParameter("lname") + "&lt;br&gt;");
+        out.println("User name is : " + request.getParameter("uname") + "&lt;br&gt;");
+        out.println("Email is : " + request.getParameter("email") + "&lt;br&gt;");
+        out.println("Address is : " + request.getParameter("add") + "&lt;br&gt;");
+        out.println("&lt;/body&gt;&lt;/html&gt;");
+    }
+}</pre></div>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>javac -cp "%TOMCAT%\lib\servlet-api.jar" -d %TOMCAT%\webapps\Registration\WEB-INF\classes RegisterServlet.java</pre></div>
+<p class="note">After adding web.xml, run shutdown.bat and startup.bat so Tomcat loads it.</p>
+</section>
+<section>
+<h2>When you finish</h2>
+<p>Stop Tomcat from the same Command Prompt.</p>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>%TOMCAT%\bin\shutdown.bat</pre></div>
+</section>
+<section>
+<h2>How it works</h2>
+<ul><li>The form line <b>action="register.jsp"</b> is what transfers control to the second page.</li><li><b>method="post"</b> sends the data in the request body, not the URL.</li><li><b>request.getParameter("fname")</b> reads the form field whose name is fname. The names must match exactly.</li><li>In JSP, <b>request</b> and <b>out</b> are implicit objects, so you do not declare them.</li><li>Printing the password is only for the lab demo. A real application would never do that.</li></ul>
+</section>
+<section>
+<h2>Viva answers</h2>
+<ul><li><b>How is JSP better than servlet?</b> JSP is HTML with Java embedded, so pages are easier to write and need no manual compiling or web.xml mapping. The server converts it into a servlet.</li><li><b>How many objects of a servlet are created?</b> One instance. Each request is handled by a separate thread.</li><li><b>Servlet lifecycle:</b> init() once, service() for every request, destroy() once.</li><li><b>When is the servlet object created?</b> On the first request, or at server startup if load-on-startup is set.</li><li><b>GET vs POST:</b> GET puts data in the URL (visible, size-limited, bookmarkable). POST puts it in the body (hidden, no size limit, used for forms and passwords).</li></ul>
+</section>
+</main>
+<script>
+document.querySelectorAll('.block').forEach(function(block){
+  var btn = block.querySelector('.copy');
+  var pre = block.querySelector('pre');
+  btn.addEventListener('click', function(){
+    var text = pre.textContent;
+    function done(){
+      btn.textContent = 'Copied';
+      btn.classList.add('done');
+      setTimeout(function(){ btn.textContent = 'Copy'; btn.classList.remove('done'); }, 1500);
+    }
+    function fallback(){
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); done(); } catch (e) { btn.textContent = 'Press Ctrl+C'; }
+      document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(done, fallback);
+    } else {
+      fallback();
+    }
+  });
+});
+</script>
+</body>
+</html>

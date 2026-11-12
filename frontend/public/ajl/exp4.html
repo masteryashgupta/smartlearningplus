@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exp 4: JDBC CRUD</title>
+<style>
+:root{
+  --bg:#eef2f6; --card:#ffffff; --text:#16202e; --muted:#566377; --line:#d5dde7;
+  --accent:#0f6e8c; --code-bg:#1b2434; --code-text:#e6edf6; --code-bar:#26324a; --ok:#2f9e6b;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0f1520; --card:#171f2d; --text:#e6edf6; --muted:#93a0b4; --line:#2a3548;
+    --accent:#5cc0de; --code-bg:#0b101a; --code-text:#e6edf6; --code-bar:#1d2739; --ok:#5ed39a;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 "Segoe UI",system-ui,sans-serif}
+main{max-width:820px;margin:0 auto;padding:28px 16px 60px}
+h1{font-size:1.9rem;line-height:1.2;margin:0 0 6px}
+h2{font-size:1.2rem;margin:0 0 10px}
+.aim{color:var(--muted);margin:0 0 24px;max-width:62ch}
+section{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 18px 16px;margin-bottom:16px}
+p{margin:0 0 10px;max-width:70ch}
+ul{margin:0;padding-left:20px}
+li{margin-bottom:6px;max-width:70ch}
+.block{border-radius:8px;overflow:hidden;background:var(--code-bg);margin:10px 0}
+.bar{display:flex;justify-content:space-between;align-items:center;background:var(--code-bar);padding:6px 10px}
+.bar span{color:#9fb0c8;font:13px "Segoe UI",sans-serif}
+.copy{background:var(--accent);color:#fff;border:0;border-radius:6px;padding:5px 14px;font:600 13px "Segoe UI",sans-serif;cursor:pointer}
+.copy:hover{filter:brightness(1.1)}
+.copy:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.copy.done{background:var(--ok)}
+pre{margin:0;padding:14px;overflow-x:auto;color:var(--code-text);font:14px/1.55 Consolas,"Cascadia Mono",monospace}
+.note{border-left:3px solid var(--accent);padding:2px 0 2px 12px;color:var(--muted);margin:10px 0 0}
+.out{background:var(--bg);border:1px dashed var(--line);border-radius:8px;padding:10px 14px;font:14px/1.6 Consolas,monospace}
+</style>
+</head>
+<body>
+<main>
+<h1>Experiment 4: JDBC CRUD</h1>
+<p class="aim">Connect Java to MySQL and perform create, insert, update, select and delete on a Student table.</p>
+<section>
+<h2>Check Java is ready</h2>
+<p>Both commands must print a version. If <code>javac</code> is not recognised, the JDK is not on PATH.</p>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>java -version
+javac -version</pre></div>
+</section>
+<section>
+<h2>One-time setup</h2>
+<ul><li>Install <b>MySQL Server</b> and remember the root password.</li><li>Download <b>MySQL Connector/J</b> (platform independent ZIP) and extract the .jar file.</li><li>Copy the .jar into your <b>ajl</b> folder next to the .java file.</li></ul>
+<p>Create the database. Run this, enter your password, then run the second line at the mysql prompt.</p>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>mysql -u root -p</pre></div>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>CREATE DATABASE CollegeDB;
+exit</pre></div>
+</section>
+<section>
+<h2>Step 1: Open your folder and create the file</h2>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>cd %USERPROFILE%\Desktop\ajl
+notepad JDBCCRUD.java</pre></div>
+<p class="note">Paste the code from Step 2. Change the password in the code to your MySQL password.</p>
+</section>
+<section>
+<h2>Step 2: Code (JDBCCRUD.java)</h2>
+<div class="block"><div class="bar"><span>JDBCCRUD.java</span><button class="copy">Copy</button></div>
+<pre>import java.sql.*;
+
+public class JDBCCRUD {
+    public static void main(String[] args) {
+        String url = "jdbc:mysql://localhost:3306/CollegeDB";
+        String user = "root";
+        String password = "root123"; // change to your MySQL password
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection(url, user, password);
+            System.out.println("Database Connected Successfully...\n");
+
+            Statement stmt = con.createStatement();
+
+            String createTable = "CREATE TABLE IF NOT EXISTS Student ("
+                    + "id INT PRIMARY KEY, "
+                    + "name VARCHAR(50), "
+                    + "branch VARCHAR(30), "
+                    + "marks INT)";
+            stmt.executeUpdate(createTable);
+            System.out.println("Table Created Successfully.");
+
+            // INSERT
+            String insert = "INSERT INTO Student(id,name,branch,marks) VALUES(?,?,?,?)";
+            PreparedStatement ps = con.prepareStatement(insert);
+            ps.setInt(1, 101);
+            ps.setString(2, "Rahul");
+            ps.setString(3, "CSE");
+            ps.setInt(4, 85);
+            ps.executeUpdate();
+            System.out.println("Record Inserted Successfully.");
+
+            // UPDATE
+            String update = "UPDATE Student SET marks=? WHERE id=?";
+            PreparedStatement ps2 = con.prepareStatement(update);
+            ps2.setInt(1, 95);
+            ps2.setInt(2, 101);
+            ps2.executeUpdate();
+            System.out.println("Record Updated Successfully.");
+
+            // SELECT
+            ResultSet rs = stmt.executeQuery("SELECT * FROM Student");
+            System.out.println("\nStudent Records");
+            System.out.println("-------------------------------");
+            while (rs.next()) {
+                System.out.println("ID      : " + rs.getInt("id"));
+                System.out.println("Name    : " + rs.getString("name"));
+                System.out.println("Branch  : " + rs.getString("branch"));
+                System.out.println("Marks   : " + rs.getInt("marks"));
+                System.out.println("-------------------------------");
+            }
+
+            // DELETE
+            String delete = "DELETE FROM Student WHERE id=?";
+            PreparedStatement ps3 = con.prepareStatement(delete);
+            ps3.setInt(1, 101);
+            ps3.executeUpdate();
+            System.out.println("Record Deleted Successfully.");
+
+            rs.close();
+            ps.close();
+            ps2.close();
+            ps3.close();
+            stmt.close();
+            con.close();
+            System.out.println("\nConnection Closed.");
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+}</pre></div>
+</section>
+<section>
+<h2>Step 3: Compile and run</h2>
+<p>Replace the jar name with your actual file name. On Windows the separator in -cp is a semicolon.</p>
+<div class="block"><div class="bar"><span>Command Prompt</span><button class="copy">Copy</button></div>
+<pre>javac JDBCCRUD.java
+java -cp ".;mysql-connector-j-8.4.0.jar" JDBCCRUD</pre></div>
+<div class="out">Database Connected Successfully...<br>Table Created Successfully.<br>Record Inserted Successfully.<br>Record Updated Successfully.<br>ID : 101 / Name : Rahul / Branch : CSE / Marks : 95<br>Record Deleted Successfully.</div>
+</section>
+<section>
+<h2>Common errors</h2>
+<ul><li><b>ClassNotFoundException:</b> the jar is not in the -cp path.</li><li><b>Access denied for user root:</b> wrong password in the code.</li><li><b>Unknown database:</b> CREATE DATABASE CollegeDB was skipped.</li><li><b>Duplicate entry 101:</b> an earlier run stopped before the DELETE. Run DELETE FROM Student; in MySQL and rerun.</li></ul>
+</section>
+<section>
+<h2>How it works</h2>
+<ul><li>Five steps: load the driver, get a Connection, create a Statement, execute, close.</li><li><b>executeUpdate()</b> is for INSERT, UPDATE, DELETE and CREATE. It returns the number of rows affected.</li><li><b>executeQuery()</b> is for SELECT and returns a ResultSet. <b>rs.next()</b> moves to the next row.</li><li>Each <b>?</b> in a PreparedStatement is filled by position, starting from 1.</li></ul>
+</section>
+<section>
+<h2>Viva answers</h2>
+<ul><li><b>Statement vs PreparedStatement:</b> PreparedStatement is precompiled, faster when repeated, and prevents SQL injection.</li><li><b>Four driver types:</b> Type 1 JDBC-ODBC bridge, Type 2 Native API, Type 3 Network Protocol, Type 4 Thin (pure Java, used by MySQL).</li><li><b>ResultSet:</b> the rows returned by a query, read one at a time with a cursor.</li><li><b>execute() vs executeQuery() vs executeUpdate():</b> execute() runs any SQL and returns a boolean. The other two are as above.</li></ul>
+</section>
+</main>
+<script>
+document.querySelectorAll('.block').forEach(function(block){
+  var btn = block.querySelector('.copy');
+  var pre = block.querySelector('pre');
+  btn.addEventListener('click', function(){
+    var text = pre.textContent;
+    function done(){
+      btn.textContent = 'Copied';
+      btn.classList.add('done');
+      setTimeout(function(){ btn.textContent = 'Copy'; btn.classList.remove('done'); }, 1500);
+    }
+    function fallback(){
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); done(); } catch (e) { btn.textContent = 'Press Ctrl+C'; }
+      document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(done, fallback);
+    } else {
+      fallback();
+    }
+  });
+});
+</script>
+</body>
+</html>
