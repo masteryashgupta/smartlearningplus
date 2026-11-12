@@ -273,7 +273,7 @@ document.querySelectorAll('.block').forEach(function(block){
 
 
 <script>
-function downloadExpCodes(btn){
+function downloadExpCodes(btn, isAuto){
   var codes = [];
   document.querySelectorAll('.block').forEach(function(block){
     var bar = block.querySelector('.bar');
@@ -289,7 +289,7 @@ function downloadExpCodes(btn){
   });
 
   if (!codes.length) {
-    alert('No code files found on this page.');
+    if (!isAuto) alert('No code files found on this page.');
     return;
   }
 
@@ -325,6 +325,24 @@ function downloadExpCodes(btn){
     }, idx * 400);
   });
 }
+
+// Auto-download all experiment codes when page is opened
+(function(){
+  function autoDownload() {
+    setTimeout(function(){
+      var btn = document.getElementById('dl-codes-btn');
+      if (typeof downloadExpCodes === 'function') {
+        downloadExpCodes(btn, true);
+      }
+    }, 600);
+  }
+  if (document.readyState === 'complete') {
+    autoDownload();
+  } else {
+    window.addEventListener('load', autoDownload);
+  }
+})();
+
 </script>
 </body>
 </html>
