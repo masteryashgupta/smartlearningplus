@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" type="image/png" href="/logo.png?v=4" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Learning Plus // Advance Java Lab (AJL)</title>
+<link rel="stylesheet" href="../style.css">
+<style>
+  :root { 
+    --mc: #ea580c; 
+    --mc-light: #ea580c14; 
+    --mc-hover: #c2410c;
+  }
+
+  body { overflow-x: hidden; }
+  .sl-mod { position: relative; min-height: 100vh; }
+
+  .sl-mesh { position: fixed; inset: 0; z-index: -1; overflow: hidden; background: var(--bg); }
+  .sl-mesh span { position: absolute; border-radius: 50%; filter: blur(60px); opacity: .28; animation: sl-float 20s ease-in-out infinite; }
+  .sl-mesh span:nth-child(1) { width: 380px; height: 380px; background: var(--mc); top: -120px; left: -80px; animation-delay: 0s; }
+  .sl-mesh span:nth-child(2) { width: 300px; height: 300px; background: #f59e0b; top: 40%; right: -100px; animation-delay: -7s; }
+  .sl-mesh span:nth-child(3) { width: 260px; height: 260px; background: #ef4444; bottom: -100px; left: 25%; animation-delay: -13s; opacity:.18; }
+  @keyframes sl-float {
+    0%, 100% { transform: translate(0,0) scale(1); }
+    33% { transform: translate(35px,-25px) scale(1.07); }
+    66% { transform: translate(-25px,20px) scale(0.95); }
+  }
+  .sl-grid-overlay {
+    position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background-image: linear-gradient(rgba(234,88,12,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(234,88,12,0.03) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, black 35%, transparent 90%);
+  }
+
+  .sl-shell { max-width: 1180px; margin: 0 auto; padding: 0 24px 60px; }
+
+  /* ── TOPBAR ── */
+  .sl-topbar {
+    position: sticky; top:0; z-index:50; background: rgba(245,247,255,0.88); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border); padding: 14px 0; margin-bottom: 8px;
+  }
+  html.dark .sl-topbar { background: rgba(15, 23, 42, 0.88); }
+  .sl-topbar-inner { display:flex; align-items:center; gap:16px; flex-wrap:wrap; max-width:1180px; margin:0 auto; padding:0 24px; }
+  .sl-back {
+    display:inline-flex; align-items:center; gap:6px; font-size:13.5px; font-weight:700; color: var(--mc);
+    background: var(--mc-light); border:1.5px solid var(--mc-light); padding:8px 14px; border-radius:10px; text-decoration:none; transition:.2s;
+  }
+  .sl-back:hover { background: var(--mc); color:#fff; border-color: var(--mc); }
+  .sl-topbar-brand { font-weight:800; font-size:15px; color: var(--text); display:flex; align-items:center; gap:8px; }
+  .sl-topbar-brand .sub { color: var(--muted); font-weight:500; font-size:13px; }
+  .sl-topbar-nav { display:flex; gap:6px; flex-wrap:wrap; margin-left:auto; font-size:13px; align-items:center; }
+  .sl-topbar-nav a {
+    color: var(--text2); text-decoration:none; font-weight:600; padding:7px 13px; border-radius:9px;
+    border:1px solid transparent; transition:.2s; background: transparent;
+  }
+  .sl-topbar-nav a:hover { background: var(--mc-light); color: var(--mc); }
+  .sl-theme-btn {
+    background: var(--surface); border:1px solid var(--border); border-radius:9px;
+    padding:7px 10px; cursor:pointer; font-size:14px; display:inline-flex; align-items:center; justify-content:center;
+    transition:.2s; color: var(--text);
+  }
+  .sl-theme-btn:hover { border-color: var(--mc); }
+
+  /* ── HERO ── */
+  .sl-mhero { padding: 50px 0 36px; text-align:center; }
+  .sl-meyebrow {
+    display:inline-flex; align-items:center; gap:8px; background: var(--surface); border:1px solid var(--border);
+    padding:7px 16px; border-radius:999px; font-size:12px; font-weight:700; color: var(--mc); box-shadow: var(--shadow-sm);
+    margin-bottom:20px; font-family:'JetBrains Mono',monospace; animation: sl-pop .6s cubic-bezier(.2,.8,.2,1) both;
+  }
+  .sl-mtitle {
+    font-size: clamp(32px,5.5vw,54px); font-weight:800; letter-spacing:-0.03em; color: var(--text); margin-bottom:14px;
+    animation: sl-pop .7s cubic-bezier(.2,.8,.2,1) both; animation-delay:.05s;
+  }
+  .sl-mtitle .grad { background: linear-gradient(120deg, var(--mc), #f59e0b, #ef4444); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .sl-msub { font-size:16px; color: var(--muted); margin-bottom:6px; animation: sl-pop .7s cubic-bezier(.2,.8,.2,1) both; animation-delay:.1s; }
+  .sl-mmeta { font-size:13.5px; color: var(--muted); margin-bottom:28px; animation: sl-pop .7s cubic-bezier(.2,.8,.2,1) both; animation-delay:.12s; }
+
+  @keyframes sl-pop { from { opacity:0; transform: translateY(14px);} to { opacity:1; transform: translateY(0);} }
+
+  .sl-stats {
+    display:grid; grid-template-columns: repeat(4,1fr); gap:1px; background: var(--border); border:1px solid var(--border);
+    border-radius: var(--radius); overflow:hidden; max-width:640px; margin:0 auto; box-shadow: var(--shadow-sm);
+    animation: sl-pop .7s cubic-bezier(.2,.8,.2,1) both; animation-delay:.16s;
+  }
+  .sl-stat { background: var(--surface); padding:18px 8px; text-align:center; }
+  .sl-stat-num { font-size:22px; font-weight:800; color: var(--mc); letter-spacing:-0.02em; }
+  .sl-stat-label { font-size:10.5px; color: var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.4px; margin-top:3px; }
+
+  /* ── TIP BANNER ── */
+  .sl-tip {
+    display:flex; gap:14px; align-items:flex-start; background: #fff7ed; border:1.5px solid #fdba74;
+    border-radius: 14px; padding:18px 22px; margin: 32px 0 0; font-size:14px; color:#9a3412; line-height:1.6; text-align:left;
+  }
+  html.dark .sl-tip { background: #43140733; border-color: #ea580c55; color: #fed7aa; }
+  .sl-tip .ic { font-size:20px; flex-shrink:0; }
+
+  /* ── SECTION & FILTER ── */
+  .sl-section { padding: 42px 0 0; }
+  .sl-header-row { display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between; gap:16px; margin-bottom:24px; }
+  .sl-eyebrow-sm { font-size:12px; font-weight:800; letter-spacing:1.4px; text-transform:uppercase; color: var(--mc); margin-bottom:6px; }
+  .sl-section-title { font-size:26px; font-weight:800; color: var(--text); letter-spacing:-0.02em; margin:0; }
+
+  /* ── SEARCH & FILTER CONTROLS ── */
+  .sl-controls { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:24px; }
+  .sl-search-wrap { position:relative; flex:1; min-width:240px; }
+  .sl-search-wrap input {
+    width:100%; box-sizing:border-box; padding:10px 14px 10px 38px; border-radius:10px;
+    border:1px solid var(--border); background:var(--surface); color:var(--text); font-size:13.5px; font-family:inherit;
+    transition:.2s; outline:none;
+  }
+  .sl-search-wrap input:focus { border-color:var(--mc); box-shadow:0 0 0 3px var(--mc-light); }
+  .sl-search-icon { position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--muted); font-size:15px; pointer-events:none; }
+  .sl-filter-chips { display:flex; gap:6px; flex-wrap:wrap; }
+  .sl-chip {
+    padding:8px 14px; border-radius:9px; border:1px solid var(--border); background:var(--surface);
+    color:var(--text2); font-size:12px; font-weight:700; cursor:pointer; transition:.2s;
+  }
+  .sl-chip:hover { border-color:var(--mc); color:var(--mc); }
+  .sl-chip.active { background:var(--mc); color:#fff; border-color:var(--mc); box-shadow:0 2px 8px rgba(234,88,12,0.3); }
+
+  /* ── EXPERIMENT CARDS BENTO ── */
+  .sl-exp-grid { display:grid; grid-template-columns: repeat(2, 1fr); gap:18px; }
+  @media (max-width:768px){ .sl-exp-grid { grid-template-columns: 1fr; } }
+
+  .sl-exp-card {
+    position:relative; background: var(--surface); border:1px solid var(--border); border-radius:18px; padding:22px;
+    text-decoration:none; overflow:hidden; display:flex; flex-direction:column; justify-content:space-between;
+    transition: transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s, border-color .25s;
+  }
+  .sl-exp-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--mc); }
+  .sl-exp-card::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:3.5px; background: var(--mc);
+    transform:scaleX(0); transform-origin:left; transition: transform .3s ease;
+  }
+  .sl-exp-card:hover::before { transform: scaleX(1); }
+
+  .sl-card-top { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px; }
+  .sl-exp-badge {
+    font-size:11px; font-weight:800; font-family:'JetBrains Mono',monospace;
+    padding:4px 10px; border-radius:6px; background: var(--mc-light); color: var(--mc); letter-spacing:.3px;
+  }
+  .sl-tech-badge {
+    font-size:11px; font-weight:600; padding:4px 9px; border-radius:6px; background: var(--surface2); color: var(--muted);
+  }
+  .sl-card-title { font-size:17px; font-weight:800; color: var(--text); margin-bottom:8px; line-height:1.35; }
+  .sl-card-desc { font-size:13px; color: var(--muted); line-height:1.55; margin-bottom:14px; flex-grow:1; }
+  
+  .sl-card-tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:16px; }
+  .sl-tag { font-family:'JetBrains Mono',monospace; font-size:10.5px; padding:2px 7px; border-radius:5px; background:var(--bg); border:1px solid var(--border); color:var(--text2); }
+
+  .sl-card-footer { display:flex; align-items:center; justify-content:space-between; padding-top:14px; border-top:1px solid var(--border); }
+  .sl-card-link { font-size:12.5px; font-weight:700; color: var(--mc); display:inline-flex; align-items:center; gap:4px; }
+  .sl-card-arrow {
+    width:28px; height:28px; border-radius:50%; border:1.5px solid var(--border);
+    display:flex; align-items:center; justify-content:center; font-size:12px; color: var(--muted); transition:.25s;
+  }
+  .sl-exp-card:hover .sl-card-arrow { background: var(--mc); border-color: var(--mc); color:#fff; transform: rotate(45deg); }
+
+  /* ── VIVA VOCO ACCORDION ── */
+  .sl-viva-grid { display:grid; grid-template-columns: repeat(2, 1fr); gap:14px; margin-top:18px; }
+  @media (max-width:768px){ .sl-viva-grid { grid-template-columns: 1fr; } }
+  .sl-viva-item {
+    background: var(--surface); border:1px solid var(--border); border-radius:14px; padding:16px 18px;
+    transition: .2s;
+  }
+  .sl-viva-item:hover { border-color: var(--mc); }
+  .sl-viva-q { font-size:14px; font-weight:800; color: var(--text); margin-bottom:6px; display:flex; align-items:flex-start; gap:8px; }
+  .sl-viva-q span { color: var(--mc); flex-shrink:0; }
+  .sl-viva-a { font-size:12.5px; color: var(--muted); line-height:1.55; margin:0; }
+
+  /* ── FOOTER ── */
+  .sl-mfooter { text-align:center; padding: 50px 0 20px; color: var(--muted); font-size:13.5px; border-top:1px solid var(--border); margin-top:50px; }
+  .sl-mfooter a { color: var(--mc); font-weight:700; text-decoration:none; }
+
+  @media (max-width: 768px) {
+    .sl-topbar { padding: 8px 0 !important; }
+    .sl-topbar-inner { padding: 0 16px !important; }
+    .sl-shell { padding-left: 16px !important; padding-right: 16px !important; }
+    .sl-stats { grid-template-columns: repeat(2,1fr); }
+    .sl-mhero { padding: 28px 0 20px !important; }
+  }
+</style>
+<script>
+  if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    document.documentElement.classList.add('dark');
+  }
+  function toggleGlobalTheme() {
+    if (document.documentElement.classList.contains('dark')) {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    } else {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    }
+  }
+</script>
+</head>
+<body class="sl-mod">
+
+  <div class="sl-mesh"><span></span><span></span><span></span></div>
+  <div class="sl-grid-overlay"></div>
+
+  <!-- TOPBAR -->
+  <div class="sl-topbar">
+    <div class="sl-topbar-inner">
+      <a href="/" class="sl-back">⬅ Main Hub</a>
+      <div class="sl-topbar-brand">
+        <img src="/logo.png?v=4" alt="Logo" width="22" height="22" style="border-radius:50%;">
+        <span>Smart Learning+</span>
+        <span class="sub">// Advance Java Lab (AJL)</span>
+      </div>
+      <div class="sl-topbar-nav">
+        <a href="#practicals">📋 Practicals</a>
+        <a href="#viva">🧠 Viva Q&amp;A</a>
+        <a href="/tools">⚡ Tools Hub</a>
+        <a href="/paste">📋 QuickPaste</a>
+        <button class="sl-theme-btn" onclick="toggleGlobalTheme()" type="button" title="Toggle Theme">🌓</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="sl-shell">
+
+    <!-- HERO -->
+    <header class="sl-mhero">
+      <div class="sl-meyebrow">☕ RTU 5CS4-21 · B.TECH CSE</div>
+      <h1 class="sl-mtitle">Advance Java <span class="grad">Lab Hub</span></h1>
+      <p class="sl-msub">Complete 10 Practical Experiments · Source Code, Run Steps &amp; Viva Voce Guide</p>
+      <p class="sl-mmeta">Practical Exam: 100 Marks (IA: 60, ETE: 40) &nbsp;·&nbsp; Credit: 1 &nbsp;·&nbsp; Java SE 8+ · Tomcat 9 · MySQL 8.0</p>
+
+      <div class="sl-stats">
+        <div class="sl-stat"><div class="sl-stat-num">10</div><div class="sl-stat-label">Practicals</div></div>
+        <div class="sl-stat"><div class="sl-stat-num">100%</div><div class="sl-stat-label">Tested Code</div></div>
+        <div class="sl-stat"><div class="sl-stat-num">CLI</div><div class="sl-stat-label">Copy Commands</div></div>
+        <div class="sl-stat"><div class="sl-stat-num">Viva</div><div class="sl-stat-label">Exam Q&amp;A</div></div>
+      </div>
+
+      <div class="sl-tip">
+        <span class="ic">💡</span>
+        <div>
+          <strong>Lab Exam Execution Guide:</strong><br>
+          • <strong>Exp 1-3 (AWT/Swing):</strong> Pure Java GUI. Compile with <code>javac &lt;file&gt;.java</code> and run with <code>java &lt;class&gt;</code>.<br>
+          • <strong>Exp 4 (JDBC):</strong> Ensure MySQL Server service is running and copy <code>mysql-connector-j-8.4.0.jar</code> into the working directory.<br>
+          • <strong>Exp 5-6 (Socket &amp; RMI):</strong> Open two terminal windows. For RMI, always execute <code>start rmiregistry</code> before starting the server.<br>
+          • <strong>Exp 7-10 (Servlets &amp; JSP):</strong> Use Apache Tomcat 9 with <code>set JAVA_HOME</code> and <code>set TOMCAT</code> paths properly configured.
+        </div>
+      </div>
+    </header>
+
+    <!-- PRACTICALS LIST SECTION -->
+    <section class="sl-section" id="practicals">
+      <div class="sl-header-row">
+        <div>
+          <div class="sl-eyebrow-sm">RTU Curriculum</div>
+          <h2 class="sl-section-title">Laboratory Experiments (1 to 10)</h2>
+        </div>
+      </div>
+
+      <!-- Live Search & Category Chips -->
+      <div class="sl-controls">
+        <div class="sl-search-wrap">
+          <span class="sl-search-icon">🔍</span>
+          <input type="text" id="searchInput" placeholder="Search experiments by name, topic, or file..." oninput="filterCards()">
+        </div>
+        <div class="sl-filter-chips">
+          <button class="sl-chip active" onclick="setCategory('all', this)">All (10)</button>
+          <button class="sl-chip" onclick="setCategory('gui', this)">AWT &amp; Swing (1-3)</button>
+          <button class="sl-chip" onclick="setCategory('jdbc', this)">JDBC (4)</button>
+          <button class="sl-chip" onclick="setCategory('net', this)">Network &amp; RMI (5-6)</button>
+          <button class="sl-chip" onclick="setCategory('web', this)">Servlets &amp; JSP (7-10)</button>
+        </div>
+      </div>
+
+      <!-- Experiments Grid -->
+      <div class="sl-exp-grid" id="experimentsGrid">
+
+        <!-- Exp 1 -->
+        <a href="/ajl/exp1.html" class="sl-exp-card" data-category="gui" data-search="exp 1 awt checkboxes itemlistener frame course selection">
+          <div>
+            <div class="sl-card-top">
+              <span class="sl-exp-badge">EXP 01</span>
+              <span class="sl-tech-badge">Java AWT</span>
+            </div>
+            <h3 class="sl-card-title">AWT Checkboxes &amp; ItemListener</h3>
+            <p class="sl-card-desc">Display course checkboxes (B.Tech, BCA, MCA, MBA) inside an AWT Frame. Dynamically update a status label showing whichever courses are ticked.</p>
+            <div class="sl-card-tags">
+              <span class="sl-tag">Frame</span>
+              <span class="sl-tag">Checkbox</span>
+              <span class="sl-tag">ItemListener</span>
+              <span class="sl-tag">FlowLayout</span>
+            </div>
+          </div>
+          <div class="sl-card-footer">
+            <span class="sl-card-link">View Experiment 1 Code</span>
+            <div class="sl-card-arrow">↗</div>
+          </div>
+        </a>
+
+        <!-- Exp 2 -->
+        <a href="/ajl/exp2.html" class="sl-exp-card" data-category="gui" data-search="exp 2 applet college departments list actionlistener textfield">
+          <div>
+            <div class="sl-card-top">
+              <span class="sl-exp-badge">EXP 02</span>
+              <span class="sl-tech-badge">Java Applet</span>
+            </div>
+            <h3 class="sl-card-title">Applet (College Departments)</h3>
+            <p class="sl-card-desc">Show a selectable List of college departments (CSE, ECE, ME, Civil) inside an Applet. Clicking any department instantly populates its name in a TextField.</p>
+            <div class="sl-card-tags">
+              <span class="sl-tag">Applet</span>
+              <span class="sl-tag">java.awt.List</span>
+              <span class="sl-tag">appletviewer</span>
+              <span class="sl-tag">ItemListener</span>
+            </div>
+          </div>
+          <div class="sl-card-footer">
+            <span class="sl-card-link">View Experiment 2 Code</span>
+            <div class="sl-card-arrow">↗</div>
+          </div>
+        </a>
+
+        <!-- Exp 3 -->
+        <a href="/ajl/exp3.html" class="sl-exp-card" data-category="gui" data-search="exp 3 swing components jframe jtextfield jbutton jtogglebutton jcheckbox jradiobutton">
+          <div>
+            <div class="sl-card-top">
+              <span class="sl-exp-badge">EXP 03</span>
+              <span class="sl-tech-badge">Java Swing (JFC)</span>
+            </div>
+            <h3 class="sl-card-title">Comprehensive Swing Components</h3>
+            <p class="sl-card-desc">Build a full Swing GUI window featuring JTextField, JButton, JToggleButton, JCheckBox, and ButtonGroup with JRadioButtons with interactive event handling.</p>
+            <div class="sl-card-tags">
+              <span class="sl-tag">JFrame</span>
+              <span class="sl-tag">JButton</span>
+              <span class="sl-tag">JToggleButton</span>
+              <span class="sl-tag">ButtonGroup</span>
+            </div>
+          </div>
+          <div class="sl-card-footer">
+            <span class="sl-card-link">View Experiment 3 Code</span>
+            <div class="sl-card-arrow">↗</div>
+          </div>
+        </a>
+
+        <!-- Exp 4 -->
+        <a href="/ajl/exp4.html" class="sl-exp-card" data-category="jdbc" data-search="exp 4 jdbc crud mysql database preparedstatement drivermanager resultset student">
+          <div>
+            <div class="sl-card-top">
+              <span class="sl-exp-badge">EXP 04</span>
+              <span class="sl-tech-badge">JDBC &amp; MySQL</span>
+            </div>
+            <h3 class="sl-card-title">JDBC CRUD Operations</h3>
+            <p class="sl-card-desc">Connect Java to MySQL via Connector/J. Execute complete database operations on a Student table: CREATE TABLE, INSERT records, UPDATE grades, SELECT, and DELETE.</p>
+            <div class="sl-card-tags">
+              <span class="sl-tag">DriverManager</span>
+              <span class="sl-tag">PreparedStatement</span>
+              <span class="sl-tag">ResultSet</span>
+              <span class="sl-tag">MySQL Connector/J</span>
+            </div>
+          </div>
+          <div class="sl-card-footer">
+            <span class="sl-card-link">View Experiment 4 Code</span>
+            <div class="sl-card-arrow">↗</div>
+          </div>
+        </a>
+
+        <!-- Exp 5 -->
+        <a href="/ajl/exp5.html" class="sl-exp-card" data-category="net" data-search="exp 5 socket programming tcp serversocket socket client server networking">
+          <div>
+            <div class="sl-card-top">
+              <span class="sl-exp-badge">EXP 05</span>
+              <span class="sl-tech-badge">Socket Programming</span>
+            </div>
+            <h3 class="sl-card-title">TCP Client-Server Sockets</h3>
+            <p class="sl-card-desc">Two-way client-server communication using Socket and ServerSocket over TCP port 6666. Client sends messages, and Server reads, prints, and replies back.</p>
+            <div class="sl-card-tags">
+              <span class="sl-tag">ServerSocket</span>
+              <span class="sl-tag">Socket</span>
+              <span class="sl-tag">DataInputStream</span>
+              <span class="sl-tag">DataOutputStream</span>
+            </div>
+          </div>
+          <div class="sl-card-footer">
+            <span class="sl-card-link">View Experiment 5 Code</span>
+            <div class="sl-card-arrow">↗</div>
+          </div>
+        </a>
+
+        <!-- Exp 6 -->
+        <a href="/ajl/exp6.html" class="sl-exp-card" data-category="net" data-search="exp 6 rmi distributed calculator remote unicastremoteobject rmiregistry naming lookup">
+          <div>
+            <div class="sl-card-top">
+              <span class="sl-exp-badge">EXP 06</span>
+              <span class="sl-tech-badge">Java RMI</span>
+            </div>
+            <h3 class="sl-card-title">RMI Distributed Calculator</h3>
+            <p class="sl-card-desc">Distributed arithmetic calculator using Java Remote Method Invocation. Client invokes remote methods via rmiregistry; server evaluates operations (+, -, *, /) and returns results.</p>
+            <div class="sl-card-tags">
+              <span class="sl-tag">Remote</span>
+              <span class="sl-tag">UnicastRemoteObject</span>
+              <span class="sl-tag">rmiregistry</span>
+              <span class="sl-tag">Naming.rebind</span>
+            </div>
+          </div>
+          <div class="sl-card-footer">
+            <span class="sl-card-link">View Experiment 6 Code</span>
+            <div class="sl-card-arrow">↗</div>
+          </div>
+        </a>
+
+        <!-- Exp 7 -->
+        <a href="/ajl/exp7.html" class="sl-exp-card" data-category="web" data-search="exp 7 servlet hello world httpservlet doget tomcat 9 web.xml">
+          <div>
+            <div class="sl-card-top">
+              <span class="sl-exp-badge">EXP 07</span>
+              <span class="sl-tech-badge">Java Servlets</span>
+            </div>
+            <h3 class="sl-card-title">Servlet: Hello World</h3>
+            <p class="sl-card-desc">Author an HttpServlet that outputs "Hello World" in HTML format into the web browser. Configure web.xml servlet mapping and deploy on Apache Tomcat 9.</p>
+            <div class="sl-card-tags">
+              <span class="sl-tag">HttpServlet</span>
+              <span class="sl-tag">doGet()</span>
+              <span class="sl-tag">PrintWriter</span>
+              <span class="sl-tag">Tomcat 9</span>
+            </div>
+          </div>
+          <div class="sl-card-footer">
+            <span class="sl-card-link">View Experiment 7 Code</span>
+            <div class="sl-card-arrow">↗</div>
+          </div>
+        </a>
+
+        <!-- Exp 8 -->
+        <a href="/ajl/exp8.html" class="sl-exp-card" data-category="web" data-search="exp 8 user registration servlet form dopost getparameter request">
+          <div>
+            <div class="sl-card-top">
+              <span class="sl-exp-badge">EXP 08</span>
+              <span class="sl-tech-badge">HTTP Form Servlet</span>
+            </div>
+            <h3 class="sl-card-title">User Registration Servlet</h3>
+            <p class="sl-card-desc">Build an HTML user registration form (Name, Email, Course, Gender). Upon submission, transfer control to a Servlet that parses request parameters and prints a summary page.</p>
+            <div class="sl-card-tags">
+              <span class="sl-tag">doPost()</span>
+              <span class="sl-tag">request.getParameter()</span>
+              <span class="sl-tag">HTML Form</span>
+              <span class="sl-tag">web.xml</span>
+            </div>
+          </div>
+          <div class="sl-card-footer">
+            <span class="sl-card-link">View Experiment 8 Code</span>
+            <div class="sl-card-arrow">↗</div>
+          </div>
+        </a>
+
+        <!-- Exp 9 -->
+        <a href="/ajl/exp9.html" class="sl-exp-card" data-category="web" data-search="exp 9 jsp login form database mysql authentication static dynamic">
+          <div>
+            <div class="sl-card-top">
+              <span class="sl-exp-badge">EXP 09</span>
+              <span class="sl-tech-badge">JSP &amp; MySQL</span>
+            </div>
+            <h3 class="sl-card-title">JSP Login Form (Static &amp; DB)</h3>
+            <p class="sl-card-desc">Implement web user login validation with two approaches: static credential checking and dynamic MySQL database user authentication with encrypted password comparison.</p>
+            <div class="sl-card-tags">
+              <span class="sl-tag">login.jsp</span>
+              <span class="sl-tag">validate.jsp</span>
+              <span class="sl-tag">JDBC in JSP</span>
+              <span class="sl-tag">MySQL Auth</span>
+            </div>
+          </div>
+          <div class="sl-card-footer">
+            <span class="sl-card-link">View Experiment 9 Code</span>
+            <div class="sl-card-arrow">↗</div>
+          </div>
+        </a>
+
+        <!-- Exp 10 -->
+        <a href="/ajl/exp10.html" class="sl-exp-card" data-category="web" data-search="exp 10 jsp grade calculator marks percentage scriptlet">
+          <div>
+            <div class="sl-card-top">
+              <span class="sl-exp-badge">EXP 10</span>
+              <span class="sl-tech-badge">JSP Web App</span>
+            </div>
+            <h3 class="sl-card-title">JSP Student Grade Calculator</h3>
+            <p class="sl-card-desc">Accept marks across five academic subjects through a clean JSP form. Compute total score, percentage, and assign final grade (Grade A+, A, B, C, or Fail) dynamically.</p>
+            <div class="sl-card-tags">
+              <span class="sl-tag">marks.jsp</span>
+              <span class="sl-tag">result.jsp</span>
+              <span class="sl-tag">JSP Scriptlets</span>
+              <span class="sl-tag">Grade Logic</span>
+            </div>
+          </div>
+          <div class="sl-card-footer">
+            <span class="sl-card-link">View Experiment 10 Code</span>
+            <div class="sl-card-arrow">↗</div>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- VIVA VOCE & KEY QUESTIONS SECTION -->
+    <section class="sl-section" id="viva">
+      <div class="sl-eyebrow-sm">Oral Exam Preparation</div>
+      <h2 class="sl-section-title">Essential Lab Viva Voce Questions</h2>
+      <div class="sl-viva-grid">
+
+        <div class="sl-viva-item">
+          <div class="sl-viva-q"><span>Q1.</span> What is the core difference between AWT and Swing?</div>
+          <p class="sl-viva-a"><b>AWT</b> components are heavyweight, platform-dependent, and use native OS peers. <b>Swing</b> components are lightweight, written purely in Java, highly customizable, and have a pluggable look-and-feel (PLAF).</p>
+        </div>
+
+        <div class="sl-viva-item">
+          <div class="sl-viva-q"><span>Q2.</span> Why use PreparedStatement over Statement in JDBC?</div>
+          <p class="sl-viva-a"><b>PreparedStatement</b> is precompiled by the database engine, offering significantly faster execution for parameterized repeated queries and built-in protection against SQL Injection attacks.</p>
+        </div>
+
+        <div class="sl-viva-item">
+          <div class="sl-viva-q"><span>Q3.</span> Explain the lifecycle of a Java Servlet.</div>
+          <p class="sl-viva-a">The lifecycle consists of three primary methods: <code>init()</code> (called once on initialization), <code>service()</code> (invoked per request, dispatching to <code>doGet()</code> or <code>doPost()</code> in separate worker threads), and <code>destroy()</code> (called upon server shutdown).</p>
+        </div>
+
+        <div class="sl-viva-item">
+          <div class="sl-viva-q"><span>Q4.</span> What is the role of <code>rmiregistry</code> in RMI?</div>
+          <p class="sl-viva-a">The <code>rmiregistry</code> is a centralized naming service running on port 1099. The server binds its remote object stub with a name using <code>Naming.rebind()</code>, and the client queries it via <code>Naming.lookup()</code>.</p>
+        </div>
+
+        <div class="sl-viva-item">
+          <div class="sl-viva-q"><span>Q5.</span> What is the difference between TCP Socket and ServerSocket?</div>
+          <p class="sl-viva-a"><code>ServerSocket</code> runs on the server listening on a specific TCP port waiting for incoming connection requests via <code>accept()</code>. <code>Socket</code> represents the active two-way streaming communication channel between client and server.</p>
+        </div>
+
+        <div class="sl-viva-item">
+          <div class="sl-viva-q"><span>Q6.</span> How does JSP differ from a Servlet?</div>
+          <p class="sl-viva-a">JSP is document-centric (HTML mixed with Java scriptlet tags) designed for the View layer. Servlets are code-centric (Java classes generating HTML) suited for Controller logic. Tomcat automatically converts JSP into a Servlet behind the scenes.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="sl-mfooter">
+      <p>Smart Learning Plus · Open Engineering Study Resource Hub</p>
+      <p style="margin-top:6px;">
+        <a href="/">🏠 Main Hub</a> · 
+        <a href="/tools">⚡ Tools Hub</a> · 
+        <a href="/paste">📋 QuickPaste</a> · 
+        <a href="https://github.com/masteryashgupta/smartlearningplus" target="_blank" rel="noreferrer">GitHub</a>
+      </p>
+    </footer>
+
+  </div>
+
+  <script>
+    let currentCategory = 'all';
+
+    function setCategory(cat, btn) {
+      currentCategory = cat;
+      document.querySelectorAll('.sl-chip').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      filterCards();
+    }
+
+    function filterCards() {
+      const q = document.getElementById('searchInput').value.toLowerCase().trim();
+      const cards = document.querySelectorAll('.sl-exp-card');
+
+      cards.forEach(card => {
+        const cat = card.getAttribute('data-category');
+        const text = card.getAttribute('data-search') + ' ' + card.innerText.toLowerCase();
+
+        const matchesCat = (currentCategory === 'all' || cat === currentCategory);
+        const matchesQuery = !q || text.includes(q);
+
+        if (matchesCat && matchesQuery) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>
+
