@@ -42,19 +42,28 @@ pre{margin:0;padding:14px;overflow-x:auto;color:var(--code-text);font:14px/1.55 
 <div class="dl-bar" style="display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 16px;margin-bottom:20px;flex-wrap:wrap;">
   <span style="font:600 13px 'Segoe UI',sans-serif;color:var(--muted);">📄 Advanced Java Lab · Practical File</span>
   <a id="dl-btn" href="#" download style="background:var(--accent);color:#fff;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">⬇ Download This File (.html)</a>
-  <button id="dl-codes-btn" onclick="downloadExpCodes(this)" style="background:var(--ok);color:#fff;border:0;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">⬇ Download Codes</button>
+  <button id="dl-codes-btn" onclick="downloadExpCodes(this)" style="background:var(--ok);color:#fff;border:0;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">⬇ Download Codes (1 file)</button>
 </div>
 <script>(function(){
-  var n=location.pathname.split('/').pop()||'experiment.html';
-  var a=document.getElementById('dl-btn');
-  if(a){ a.href=n; a.download=n; }
-  var btn=document.getElementById('dl-codes-btn');
-  if(btn){
-    var count=0;
-    document.querySelectorAll('.block .bar span').forEach(function(s){
-      if(/^[^\s(]+\.[a-zA-Z]{1,5}/.test(s.textContent.trim())) count++;
-    });
-    btn.innerHTML = '⬇ Download Codes (' + count + ' ' + (count===1?'file':'files') + ')';
+  var n = location.pathname.split('/').pop() || 'experiment.html';
+  var a = document.getElementById('dl-btn');
+  if (a) { a.href = n; a.download = n; }
+  function updateCount() {
+    var btn = document.getElementById('dl-codes-btn');
+    if (btn) {
+      var count = 0;
+      document.querySelectorAll('.block .bar span').forEach(function(s){
+        if (/^[^\s(]+\.[a-zA-Z]{1,5}/.test(s.textContent.trim())) count++;
+      });
+      if (count > 0) {
+        btn.innerHTML = '⬇ Download Codes (' + count + ' ' + (count === 1 ? 'file' : 'files') + ')';
+      }
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', updateCount);
+  } else {
+    updateCount();
   }
 })();</script>
 <h1>Experiment 4: JDBC CRUD</h1>
