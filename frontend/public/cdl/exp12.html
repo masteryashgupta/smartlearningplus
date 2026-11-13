@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exp 12: YACC program to check strings of the form a^n b^n c^m d^m</title>
+<style>
+:root{--ok:#22a861;--bg:#f6f7f9;--ink:#1c2333;--mute:#5a6478;--line:#d8dce5;--acc:#1f4fd8;--code:#0f1b33;--codeink:#e6ecff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Georgia,serif}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+h1{font-size:1.9rem;line-height:1.2;margin:.2em 0}
+h2{font-size:1.2rem;margin:2em 0 .5em;border-bottom:2px solid var(--acc);padding-bottom:.2em}
+.meta{color:var(--mute);font-size:.95rem;margin:0}
+.aim{background:#fff;border-left:4px solid var(--acc);padding:12px 16px;margin:18px 0}
+.code{position:relative;margin:12px 0}
+pre{background:var(--code);color:var(--codeink);padding:16px;border-radius:6px;overflow-x:auto;font:14px/1.55 Consolas,Menlo,monospace;margin:0}
+button.copy,button.dl{position:absolute;top:8px;background:var(--acc);color:#fff;border:0;border-radius:4px;padding:5px 12px;font:14px sans-serif;cursor:pointer}
+button.copy{right:8px}
+button.dl{right:84px}
+.code pre{padding-top:44px}
+button:focus-visible{outline:3px solid #ffb703;outline-offset:2px}
+.qa{background:#fff;border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:6px;margin:10px 0;padding:10px 14px}
+.q{font-weight:bold;margin:0}
+.a{margin:.4em 0 0}
+li{margin:.3em 0}
+.note{background:#fff7e0;border:1px solid #ecd58a;border-radius:6px;padding:10px 14px}
+</style></head><body><main>
+<div class="dl-bar" style="display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 16px;margin-bottom:20px;flex-wrap:wrap;">
+  <span style="font:600 13px 'Segoe UI',sans-serif;color:var(--mute);">📄 Compiler Design Lab · Practical File</span>
+  <a id="dl-btn" href="#" download style="background:var(--acc);color:#fff;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">⬇ Download This File (.html)</a>
+  <button id="dl-codes-btn" onclick="downloadExpCodes(this)" style="background:var(--ok,#22a861);color:#fff;border:0;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">⬇ Download Codes (2 files)</button>
+</div>
+<script>(function(){
+  var n = location.pathname.split('/').pop() || 'exp12.html';
+  var a = document.getElementById('dl-btn');
+  if (a) { a.href = n; a.download = n; }
+})();</script>
+<p class="meta">Compiler Design Lab, 5CS4-22 (YACC with LEX, runs on Linux)</p>
+<h1>Experiment 12: YACC program to check strings of the form a^n b^n c^m d^m</h1>
+<div class="aim"><b>Aim:</b> Write a YACC program to check the validity of strings such as abcd and aabbcd using the grammar a^n b^n c^m d^m, where n, m &gt; 0.</div>
+<p class="note">The manual is inconsistent here. The syllabus asks for a^n b^n c^m d^m (n, m &gt; 0), but its experiment page shows a^n b^n (n &ge; 0), which is the same as Exp 10. This page follows the syllabus. If your teacher wants the a^n b^n version, use the Exp 10 files.</p>
+<h2>How to compile and run</h2>
+<p>YACC and LEX do not run in Turbo C++. Use Linux or WSL. Install once: <code>sudo apt install flex bison gcc</code>. Save the two files below in the same folder (<code>exp12.l</code> and <code>exp12.y</code>), then run the commands in this order. YACC must run first because the LEX file includes <code>y.tab.h</code>.</p><div class="code"><button class="copy">Copy</button><pre>yacc -d exp12.y
+lex exp12.l
+cc y.tab.c lex.yy.c
+./a.out</pre></div><p>Type a string and press Enter. The program prints the result and stops.</p>
+<h2>Source code</h2>
+<h3 style="margin:1.6em 0 .4em;font-size:1.05rem">Lexer: exp12.l</h3>
+<div class="code" data-file="exp12.l"><button class="dl">Download</button><button class="copy">Copy</button><pre>%{
+#include &quot;y.tab.h&quot;
+%}
+
+%%
+[aA]    { return A; }
+[bB]    { return B; }
+[cC]    { return C; }
+[dD]    { return D; }
+\n      { return NL; }
+.       { return yytext[0]; }
+%%
+
+int yywrap() { return 1; }</pre></div>
+<h3 style="margin:1.6em 0 .4em;font-size:1.05rem">Parser: exp12.y</h3>
+<div class="code" data-file="exp12.y"><button class="dl">Download</button><button class="copy">Copy</button><pre>%{
+#include&lt;stdio.h&gt;
+#include&lt;stdlib.h&gt;
+int yylex();
+int yyerror(char *msg);
+%}
+
+%token A B C D NL
+
+%%
+stmt : X Y NL    { printf(&quot;valid string\n&quot;); exit(0); }
+     ;
+
+X    : A X B
+     | A B
+     ;
+
+Y    : C Y D
+     | C D
+     ;
+%%
+
+int yyerror(char *msg)
+{
+    printf(&quot;invalid string\n&quot;);
+    exit(0);
+}
+
+int main()
+{
+    printf(&quot;enter the string\n&quot;);
+    yyparse();
+    return 0;
+}</pre></div>
+<h2>Output</h2>
+<div class="code"><button class="copy">Copy</button><pre>enter the string
+abcd
+valid string
+
+enter the string
+aabbcd
+valid string
+
+enter the string
+aabcd
+invalid string
+
+enter the string
+ab
+invalid string</pre></div>
+<h2>Explanation</h2>
+<ol>
+<li>The language has two independent halves. The first half, <code>a^n b^n</code>, is described by <code>X : A X B | A B</code>. The second half, <code>c^m d^m</code>, is described by <code>Y : C Y D | C D</code>.</li>
+<li>Because the base cases are <code>A B</code> and <code>C D</code> (not empty), n and m must be at least 1, as the syllabus requires.</li>
+<li>The start rule <code>stmt : X Y NL</code> needs an X part, then a Y part, then Enter. So <code>abcd</code> and <code>aabbcd</code> are valid, while <code>aabcd</code> (2 a's, 1 b) and <code>ab</code> (no c and d) are not.</li>
+<li>The LEX file returns a token for each of the letters a, b, c and d and for Enter, and passes anything else on to cause a syntax error.</li>
+</ol>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is the difference between this and Exp 10?</p><p class="a">Exp 10 checks one pair of matching groups (a^n b^n). This checks two independent pairs (a^n b^n followed by c^m d^m) with n, m at least 1.</p></div>
+<div class="qa"><p class="q">Why do we use two non-terminals X and Y?</p><p class="a">The a-b count and the c-d count are independent, so each gets its own rule.</p></div>
+<div class="qa"><p class="q">Why is the string aabcd invalid?</p><p class="a">It has 2 a's but 1 b, so the first half does not match a^n b^n.</p></div>
+<div class="qa"><p class="q">How is n > 0 enforced?</p><p class="a">The base rules <code>X : A B</code> and <code>Y : C D</code> require at least one pair.</p></div>
+<div class="qa"><p class="q">Is a^n b^n c^n a context-free language?</p><p class="a">No. Matching three groups needs a context-sensitive grammar. Here the groups are matched in pairs, which a stack can do.</p></div>
+<div class="qa"><p class="q">What is YACC?</p><p class="a">Yet Another Compiler Compiler: a tool that generates a parser in C from a context-free grammar.</p></div>
+<div class="qa"><p class="q">What is the structure of a YACC program?</p><p class="a">Declarations (<code>%{ %}</code>, <code>%token</code>), grammar rules between <code>%%</code> markers, and user C code.</p></div>
+<div class="qa"><p class="q">How do LEX and YACC work together?</p><p class="a">LEX reads characters and returns tokens. YACC calls <code>yylex()</code> to get tokens and checks that they follow the grammar.</p></div>
+<div class="qa"><p class="q">What is y.tab.h?</p><p class="a">A header file made by <code>yacc -d</code> that holds the token numbers (like <code>A</code>, <code>B</code>), so LEX and YACC agree on them.</p></div>
+<div class="qa"><p class="q">What does yyparse() do?</p><p class="a">It starts parsing. It returns 0 if the input is accepted and non-zero if there is a syntax error.</p></div>
+</main>
+<script>
+document.querySelectorAll('.code').forEach(function(b){
+var pre=b.querySelector('pre'),btn=b.querySelector('.copy'),f=b.getAttribute('data-file');
+btn.onclick=async function(){try{await navigator.clipboard.writeText(pre.innerText)}catch(e){var r=document.createRange();r.selectNodeContents(pre);var s=getSelection();s.removeAllRanges();s.addRange(r);document.execCommand('copy');s.removeAllRanges()}btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy'},1500)};
+var d=b.querySelector('.dl');
+if(d&&f){d.onclick=function(){var t=pre.innerText.replace(/\r?\n/g,'\r\n');var u=URL.createObjectURL(new Blob([t],{type:'text/plain'}));var a=document.createElement('a');a.href=u;a.download=f;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},1000)}}
+});
+</script>
+<script>
+function downloadExpCodes(btn, isAuto){
+  var codes = [];
+  document.querySelectorAll('.code[data-file]').forEach(function(block){
+    var f = block.getAttribute('data-file');
+    var pre = block.querySelector('pre');
+    if (f && pre) {
+      codes.push({ name: f, content: pre.innerText });
+    }
+  });
+  if (!codes.length) { if (!isAuto) alert('No code files found on this page.'); return; }
+  var origText = btn ? btn.innerHTML : '';
+  if (btn) {
+    btn.innerHTML = '⏳ Downloading ' + codes.length + ' ' + (codes.length===1?'file':'files') + '…';
+    btn.style.pointerEvents = 'none';
+  }
+  codes.forEach(function(item, idx){
+    setTimeout(function(){
+      var blob = new Blob([item.content], { type: 'text/plain;charset=utf-8' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url; a.download = item.name;
+      document.body.appendChild(a); a.click();
+      setTimeout(function(){ URL.revokeObjectURL(url); document.body.removeChild(a); }, 1000);
+      if (idx === codes.length - 1 && btn) {
+        setTimeout(function(){
+          btn.innerHTML = '✓ ' + codes.length + ' ' + (codes.length===1?'File':'Files') + ' Downloaded!';
+          setTimeout(function(){ btn.innerHTML = origText; btn.style.pointerEvents = ''; }, 2500);
+        }, 500);
+      }
+    }, idx * 400);
+  });
+}
+
+// Auto-download all experiment codes when page is opened
+(function(){
+  function autoDownload() {
+    setTimeout(function(){
+      var btn = document.getElementById('dl-codes-btn');
+      if (typeof downloadExpCodes === 'function') { downloadExpCodes(btn, true); }
+    }, 600);
+  }
+  if (document.readyState === 'complete') { autoDownload(); }
+  else { window.addEventListener('load', autoDownload); }
+})();
+</script>
+</body>
+</html>

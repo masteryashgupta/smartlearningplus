@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exp 7: LEX program to validate mobile number, URL, identifier, date and time</title>
+<style>
+:root{--ok:#22a861;--bg:#f6f7f9;--ink:#1c2333;--mute:#5a6478;--line:#d8dce5;--acc:#1f4fd8;--code:#0f1b33;--codeink:#e6ecff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Georgia,serif}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+h1{font-size:1.9rem;line-height:1.2;margin:.2em 0}
+h2{font-size:1.2rem;margin:2em 0 .5em;border-bottom:2px solid var(--acc);padding-bottom:.2em}
+.meta{color:var(--mute);font-size:.95rem;margin:0}
+.aim{background:#fff;border-left:4px solid var(--acc);padding:12px 16px;margin:18px 0}
+.code{position:relative;margin:12px 0}
+pre{background:var(--code);color:var(--codeink);padding:16px;border-radius:6px;overflow-x:auto;font:14px/1.55 Consolas,Menlo,monospace;margin:0}
+button.copy,button.dl{position:absolute;top:8px;background:var(--acc);color:#fff;border:0;border-radius:4px;padding:5px 12px;font:14px sans-serif;cursor:pointer}
+button.copy{right:8px}
+button.dl{right:84px}
+.code pre{padding-top:44px}
+button:focus-visible{outline:3px solid #ffb703;outline-offset:2px}
+.qa{background:#fff;border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:6px;margin:10px 0;padding:10px 14px}
+.q{font-weight:bold;margin:0}
+.a{margin:.4em 0 0}
+li{margin:.3em 0}
+.note{background:#fff7e0;border:1px solid #ecd58a;border-radius:6px;padding:10px 14px}
+</style></head><body><main>
+<div class="dl-bar" style="display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 16px;margin-bottom:20px;flex-wrap:wrap;">
+  <span style="font:600 13px 'Segoe UI',sans-serif;color:var(--mute);">📄 Compiler Design Lab · Practical File</span>
+  <a id="dl-btn" href="#" download style="background:var(--acc);color:#fff;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">⬇ Download This File (.html)</a>
+  <button id="dl-codes-btn" onclick="downloadExpCodes(this)" style="background:var(--ok,#22a861);color:#fff;border:0;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">⬇ Download Codes (6 files)</button>
+</div>
+<script>(function(){
+  var n = location.pathname.split('/').pop() || 'exp7.html';
+  var a = document.getElementById('dl-btn');
+  if (a) { a.href = n; a.download = n; }
+})();</script>
+<p class="meta">Compiler Design Lab, 5CS4-22 (LEX, runs on Linux)</p>
+<h1>Experiment 7: LEX program to validate mobile number, URL, identifier, date and time</h1>
+<div class="aim"><b>Aim:</b> Write a LEX program to identify a valid mobile number (and email id), URL, identifier, date (dd/mm/yyyy) and time (hh:mm:ss).</div>
+<p class="note">The manual's code for this experiment has errors (spaces inside the character classes, missing actions, no code for time). These programs are corrected and complete.</p>
+<h2>How to compile and run</h2>
+<p>LEX does not run in Turbo C++. Use Linux or WSL. Install once: <code>sudo apt install flex gcc</code>. Then, for a program saved as <code>exp7_mobile.l</code>:</p><div class="code"><button class="copy">Copy</button><pre>lex exp7_mobile.l
+cc lex.yy.c -lfl
+./a.out</pre></div><p>If <code>-lfl</code> gives an error, use <code>-ll</code>. Type your input and press Enter. Press <b>Ctrl+D</b> to finish.</p>
+<h2>Source code</h2>
+<h3 style="margin:1.6em 0 .4em;font-size:1.05rem">1. Valid mobile number</h3>
+<div class="code" data-file="exp7_mobile.l"><button class="dl">Download</button><button class="copy">Copy</button><pre>%{
+#include&lt;stdio.h&gt;
+%}
+%%
+^[6-9][0-9]{9}$    { printf(&quot;Valid mobile number\n&quot;); }
+^.+$                { printf(&quot;Invalid mobile number\n&quot;); }
+\n    ;
+%%
+int yywrap() { return 1; }
+
+int main()
+{
+    printf(&quot;Enter mobile number:\n&quot;);
+    yylex();
+    return 0;
+}</pre></div>
+<p class="meta">Output</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter mobile number:
+9876543210
+Valid mobile number
+0001112223
+Invalid mobile number</pre></div>
+<h3 style="margin:1.6em 0 .4em;font-size:1.05rem">1b. Valid email id</h3>
+<div class="code" data-file="exp7_email.l"><button class="dl">Download</button><button class="copy">Copy</button><pre>%{
+#include&lt;stdio.h&gt;
+%}
+%%
+^[a-zA-Z0-9._]+@[a-zA-Z0-9]+(\.[a-zA-Z]{2,})+$    { printf(&quot;Valid email\n&quot;); }
+^.+$                                            { printf(&quot;Invalid email\n&quot;); }
+\n    ;
+%%
+int yywrap() { return 1; }
+
+int main()
+{
+    printf(&quot;Enter email id:\n&quot;);
+    yylex();
+    return 0;
+}</pre></div>
+<p class="meta">Output</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter email id:
+csetanmayjain@gmail.com
+Valid email
+!23@43.com
+Invalid email</pre></div>
+<h3 style="margin:1.6em 0 .4em;font-size:1.05rem">2. Valid URL</h3>
+<div class="code" data-file="exp7_url.l"><button class="dl">Download</button><button class="copy">Copy</button><pre>%{
+#include&lt;stdio.h&gt;
+%}
+%%
+^(http|https|ftp)&quot;://&quot;[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)+(\/[a-zA-Z0-9._?=&amp;%-]*)*$    { printf(&quot;Valid URL\n&quot;); }
+^.+$                                                                  { printf(&quot;Invalid URL\n&quot;); }
+\n    ;
+%%
+int yywrap() { return 1; }
+
+int main()
+{
+    printf(&quot;Enter URL:\n&quot;);
+    yylex();
+    return 0;
+}</pre></div>
+<p class="meta">Output</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter URL:
+https://www.geeksforgeeks.org
+Valid URL
+geeksforgeeks
+Invalid URL</pre></div>
+<h3 style="margin:1.6em 0 .4em;font-size:1.05rem">3. Valid identifier</h3>
+<div class="code" data-file="exp7_identifier.l"><button class="dl">Download</button><button class="copy">Copy</button><pre>%{
+#include&lt;stdio.h&gt;
+%}
+%%
+^[a-zA-Z_][a-zA-Z0-9_]*$    { printf(&quot;Valid identifier\n&quot;); }
+^.+$                       { printf(&quot;Invalid identifier\n&quot;); }
+\n    ;
+%%
+int yywrap() { return 1; }
+
+int main()
+{
+    printf(&quot;Enter identifier:\n&quot;);
+    yylex();
+    return 0;
+}</pre></div>
+<p class="meta">Output</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter identifier:
+gfg
+Valid identifier
+123gfg
+Invalid identifier
+_gfg
+Valid identifier
+%abc
+Invalid identifier</pre></div>
+<h3 style="margin:1.6em 0 .4em;font-size:1.05rem">4. Valid date (dd/mm/yyyy)</h3>
+<div class="code" data-file="exp7_date.l"><button class="dl">Download</button><button class="copy">Copy</button><pre>%{
+#include&lt;stdio.h&gt;
+#include&lt;stdlib.h&gt;
+int leap(int y)
+{
+    return (y % 4 == 0 &amp;&amp; y % 100 != 0) || (y % 400 == 0);
+}
+%}
+D31   (0[1-9]|[12][0-9]|3[01])
+D30   (0[1-9]|[12][0-9]|30)
+D28   (0[1-9]|1[0-9]|2[0-8])
+M31   (0[13578]|1[02])
+M30   (0[469]|11)
+YEAR  [0-9]{4}
+
+%%
+^{D31}&quot;/&quot;{M31}&quot;/&quot;{YEAR}$    { printf(&quot;Valid date\n&quot;); }
+^{D30}&quot;/&quot;{M30}&quot;/&quot;{YEAR}$    { printf(&quot;Valid date\n&quot;); }
+^{D28}&quot;/02/&quot;{YEAR}$        { printf(&quot;Valid date\n&quot;); }
+^&quot;29/02/&quot;{YEAR}$           {
+    if(leap(atoi(yytext + 6)))
+        printf(&quot;Valid date\n&quot;);
+    else
+        printf(&quot;Invalid date (not a leap year)\n&quot;);
+}
+^.+$                        { printf(&quot;Invalid date\n&quot;); }
+\n    ;
+%%
+int yywrap() { return 1; }
+
+int main()
+{
+    printf(&quot;Enter date (dd/mm/yyyy):\n&quot;);
+    yylex();
+    return 0;
+}</pre></div>
+<p class="meta">Output</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter date (dd/mm/yyyy):
+02/05/2019
+Valid date
+05/20/2019
+Invalid date
+29/02/2023
+Invalid date (not a leap year)
+29/02/2024
+Valid date</pre></div>
+<h3 style="margin:1.6em 0 .4em;font-size:1.05rem">5. Valid time (hh:mm:ss)</h3>
+<div class="code" data-file="exp7_time.l"><button class="dl">Download</button><button class="copy">Copy</button><pre>%{
+#include&lt;stdio.h&gt;
+%}
+%%
+^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$    { printf(&quot;Valid time\n&quot;); }
+^.+$                                       { printf(&quot;Invalid time\n&quot;); }
+\n    ;
+%%
+int yywrap() { return 1; }
+
+int main()
+{
+    printf(&quot;Enter time (hh:mm:ss):\n&quot;);
+    yylex();
+    return 0;
+}</pre></div>
+<p class="meta">Output</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter time (hh:mm:ss):
+23:59:59
+Valid time
+24:00:00
+Invalid time
+12:60:00
+Invalid time</pre></div>
+<h2>Explanation</h2>
+<ol>
+<li>Each program has three parts separated by <code>%%</code>: definitions in <code>%{ %}</code>, rules (<code>pattern action</code>), and user code (<code>yywrap</code> and <code>main</code>).</li>
+<li><code>^</code> and <code>$</code> force the pattern to match the whole line, so an 11-digit number is not accepted just because its first 10 digits match.</li>
+<li>The second rule <code>^.+$</code> matches any line. LEX takes the longest match and, on a tie, the earlier rule. A valid input matches both rules with the same length, so the valid rule (listed first) wins. Anything else falls to the "Invalid" rule.</li>
+<li><code>[6-9][0-9]{9}</code> means one digit from 6 to 9 followed by exactly 9 digits. Indian mobile numbers start with 6, 7, 8 or 9.</li>
+<li>The date program uses named definitions (<code>D31</code>, <code>M30</code> and so on) to check that the day fits the month. 29/02 is checked in C code with <code>leap()</code>, and <code>yytext + 6</code> points to the year after "29/02/".</li>
+<li>The <code>/</code> is quoted as <code>"/"</code> because an unquoted <code>/</code> has a special meaning in LEX.</li>
+<li>The lone <code>\n</code> rule ignores the newline so it is not echoed on the screen.</li>
+</ol>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is LEX?</p><p class="a">A tool that generates a lexical analyzer (scanner) in C from regular expressions and actions.</p></div>
+<div class="qa"><p class="q">What is the structure of a LEX program?</p><p class="a">Definition section, rules section and user subroutine section, separated by <code>%%</code>.</p></div>
+<div class="qa"><p class="q">What do yylex(), yytext and yywrap() do?</p><p class="a"><code>yylex()</code> starts scanning, <code>yytext</code> holds the matched text, and <code>yywrap()</code> returning 1 tells LEX there is no more input.</p></div>
+<div class="qa"><p class="q">How does LEX choose between two matching rules?</p><p class="a">It picks the longest match. If both are the same length, the rule written first wins.</p></div>
+<div class="qa"><p class="q">Why do we use ^ and $ in the patterns?</p><p class="a">They anchor the pattern to the start and end of the line, so the whole input must match.</p></div>
+<div class="qa"><p class="q">What does [0-9]{10} mean?</p><p class="a">Exactly ten digits.</p></div>
+<div class="qa"><p class="q">What is the rule for a valid identifier?</p><p class="a">It starts with a letter or underscore and continues with letters, digits or underscores: <code>[a-zA-Z_][a-zA-Z0-9_]*</code>.</p></div>
+<div class="qa"><p class="q">How are leap years checked?</p><p class="a">A year is a leap year if divisible by 4 and not by 100, or divisible by 400.</p></div>
+<div class="qa"><p class="q">Why is "/" written in quotes in a LEX pattern?</p><p class="a">Unquoted, <code>/</code> is the trailing-context operator.</p></div>
+<div class="qa"><p class="q">How do you compile a LEX program?</p><p class="a"><code>lex file.l</code> creates <code>lex.yy.c</code>, then <code>cc lex.yy.c -lfl</code> builds it.</p></div>
+<div class="qa"><p class="q">What is a regular expression?</p><p class="a">A notation that describes a set of strings, used to define the patterns of tokens.</p></div>
+</main>
+<script>
+document.querySelectorAll('.code').forEach(function(b){
+var pre=b.querySelector('pre'),btn=b.querySelector('.copy'),f=b.getAttribute('data-file');
+btn.onclick=async function(){try{await navigator.clipboard.writeText(pre.innerText)}catch(e){var r=document.createRange();r.selectNodeContents(pre);var s=getSelection();s.removeAllRanges();s.addRange(r);document.execCommand('copy');s.removeAllRanges()}btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy'},1500)};
+var d=b.querySelector('.dl');
+if(d&&f){d.onclick=function(){var t=pre.innerText.replace(/\r?\n/g,'\r\n');var u=URL.createObjectURL(new Blob([t],{type:'text/plain'}));var a=document.createElement('a');a.href=u;a.download=f;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},1000)}}
+});
+</script>
+<script>
+function downloadExpCodes(btn, isAuto){
+  var codes = [];
+  document.querySelectorAll('.code[data-file]').forEach(function(block){
+    var f = block.getAttribute('data-file');
+    var pre = block.querySelector('pre');
+    if (f && pre) {
+      codes.push({ name: f, content: pre.innerText });
+    }
+  });
+  if (!codes.length) { if (!isAuto) alert('No code files found on this page.'); return; }
+  var origText = btn ? btn.innerHTML : '';
+  if (btn) {
+    btn.innerHTML = '⏳ Downloading ' + codes.length + ' ' + (codes.length===1?'file':'files') + '…';
+    btn.style.pointerEvents = 'none';
+  }
+  codes.forEach(function(item, idx){
+    setTimeout(function(){
+      var blob = new Blob([item.content], { type: 'text/plain;charset=utf-8' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url; a.download = item.name;
+      document.body.appendChild(a); a.click();
+      setTimeout(function(){ URL.revokeObjectURL(url); document.body.removeChild(a); }, 1000);
+      if (idx === codes.length - 1 && btn) {
+        setTimeout(function(){
+          btn.innerHTML = '✓ ' + codes.length + ' ' + (codes.length===1?'File':'Files') + ' Downloaded!';
+          setTimeout(function(){ btn.innerHTML = origText; btn.style.pointerEvents = ''; }, 2500);
+        }, 500);
+      }
+    }, idx * 400);
+  });
+}
+
+// Auto-download all experiment codes when page is opened
+(function(){
+  function autoDownload() {
+    setTimeout(function(){
+      var btn = document.getElementById('dl-codes-btn');
+      if (typeof downloadExpCodes === 'function') { downloadExpCodes(btn, true); }
+    }, 600);
+  }
+  if (document.readyState === 'complete') { autoDownload(); }
+  else { window.addEventListener('load', autoDownload); }
+})();
+</script>
+</body>
+</html>

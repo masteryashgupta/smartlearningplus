@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CDL – All Experiments</title>
+<style>
+:root{--bg:#f6f7f9;--ink:#1c2333;--mute:#5a6478;--line:#d8dce5;--acc:#1f4fd8;--code:#0f1b33;--codeink:#e6ecff;--ok:#22a861}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Georgia,serif}
+/* Top nav */
+.topnav{position:sticky;top:0;z-index:100;background:#0f1b33;display:flex;align-items:center;gap:0;overflow-x:auto;padding:0 8px;scrollbar-width:none}
+.topnav::-webkit-scrollbar{display:none}
+.tab-btn{background:none;border:none;color:#99aabb;padding:12px 14px;font:600 13px 'Segoe UI',sans-serif;cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;transition:.15s}
+.tab-btn:hover{color:#fff}
+.tab-btn.active{color:#fff;border-bottom-color:var(--acc)}
+/* dl-bar */
+.dl-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 16px;margin:16px 18px;flex-wrap:wrap}
+/* main content */
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+h1{font-size:1.9rem;line-height:1.2;margin:.2em 0}
+h2{font-size:1.2rem;margin:2em 0 .5em;border-bottom:2px solid var(--acc);padding-bottom:.2em}
+.meta{color:var(--mute);font-size:.95rem;margin:0}
+.aim{background:#fff;border-left:4px solid var(--acc);padding:12px 16px;margin:18px 0}
+.code{position:relative;margin:12px 0}
+pre{background:var(--code);color:var(--codeink);padding:16px;border-radius:6px;overflow-x:auto;font:14px/1.55 Consolas,Menlo,monospace;margin:0;white-space:pre-wrap}
+button.copy,button.dl{position:absolute;top:8px;background:var(--acc);color:#fff;border:0;border-radius:4px;padding:5px 12px;font:14px sans-serif;cursor:pointer}
+button.copy{right:8px}
+button.dl{right:84px}
+.code pre{padding-top:44px}
+button:focus-visible{outline:3px solid #ffb703;outline-offset:2px}
+.qa{background:#fff;border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:6px;margin:10px 0;padding:10px 14px}
+.q{font-weight:bold;margin:0}
+.a{margin:.4em 0 0}
+li{margin:.3em 0}
+.note{background:#fff7e0;border:1px solid #ecd58a;border-radius:6px;padding:10px 14px}
+.exp{display:none}
+.exp.show{display:block}
+</style></head><body>
+<nav class="topnav">
+<button class="tab-btn" data-n="1" onclick="showExp(1)" id="tab1">Exp 1</button>
+<button class="tab-btn" data-n="2" onclick="showExp(2)" id="tab2">Exp 2</button>
+<button class="tab-btn" data-n="3" onclick="showExp(3)" id="tab3">Exp 3</button>
+<button class="tab-btn" data-n="4" onclick="showExp(4)" id="tab4">Exp 4</button>
+<button class="tab-btn" data-n="5" onclick="showExp(5)" id="tab5">Exp 5</button>
+<button class="tab-btn" data-n="6" onclick="showExp(6)" id="tab6">Exp 6</button>
+<button class="tab-btn" data-n="7" onclick="showExp(7)" id="tab7">Exp 7</button>
+<button class="tab-btn" data-n="8" onclick="showExp(8)" id="tab8">Exp 8</button>
+<button class="tab-btn" data-n="9" onclick="showExp(9)" id="tab9">Exp 9</button>
+<button class="tab-btn" data-n="10" onclick="showExp(10)" id="tab10">Exp 10</button>
+<button class="tab-btn" data-n="11" onclick="showExp(11)" id="tab11">Exp 11</button>
+<button class="tab-btn" data-n="12" onclick="showExp(12)" id="tab12">Exp 12</button>
+<button class="tab-btn" data-n="13" onclick="showExp(13)" id="tab13">Exp 13</button>
+</nav>
+<div class="dl-bar">
+  <span style="font:600 13px 'Segoe UI',sans-serif;color:var(--mute);">📄 Compiler Design Lab · All Experiments</span>
+  <a id="dl-btn" href="all.html" download="all.html" style="background:var(--acc);color:#fff;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">⬇ Download This File (.html)</a>
+  <button id="dl-master-btn" onclick="downloadMasterZip(this)" style="background:var(--ok);color:#fff;border:0;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">📦 Download Master Codes (.zip)</button>
+</div>
+<main>
+
+<div class="exp" id="exp1">
+<p class="meta">Compiler Design Lab, 5CS4-22</p>
+<h1>Experiment 1: Introduction to the course</h1>
+<div class="aim"><b>Aim:</b> Objective, scope and outcome of the course.</div>
+<p>This experiment has no program. It is a theory write-up for your practical file. Copy the text below.</p>
+
+<h2>Write-up for the practical file</h2>
+<div class="code" data-file="exp1.txt"><button class="dl">Download</button><button class="copy">Copy</button><pre>Objective:
+- To explore the principles of a compiler.
+- To introduce the major concept areas of language translation and compiler design.
+- To enrich knowledge of the various phases of a compiler, code optimization techniques, machine code generation and use of the symbol table.
+- To extend knowledge of parsers by studying LL and LR parsers.
+
+Prerequisites: Knowledge of regular expressions, patterns, automata theory and compiler theory.
+
+Scope:
+- Experience of working with large data structures and complex interaction between algorithms.
+- Compiler writing is a basic element of programming language research. Many language researchers write compilers for the languages they design.
+- Many applications have properties similar to one or more phases of a compiler, so compiler expertise and tools can help an application programmer working on projects other than compilers.
+
+Outcomes:
+1. Apply the concept of a lexical analyzer using C/C++ and the FLEX tool.
+2. Analyze different types of parsing and allocation data structures.</pre></div>
+
+<h2>Phases of a compiler</h2>
+<p>A compiler translates source code into machine code in stages. The output of each phase is the input of the next.</p>
+<ol>
+<li><b>Lexical analysis:</b> reads characters and groups them into tokens (keywords, identifiers, operators). Exp 2 to 9 belong here.</li>
+<li><b>Syntax analysis:</b> checks tokens against the grammar and builds a parse tree. Exp 10 to 13 belong here.</li>
+<li><b>Semantic analysis:</b> checks meaning, such as type matching and declared variables.</li>
+<li><b>Intermediate code generation:</b> produces machine-independent code such as three-address code.</li>
+<li><b>Code optimization:</b> makes the intermediate code faster or smaller.</li>
+<li><b>Code generation:</b> produces the target machine code.</li>
+</ol>
+<p>The <b>symbol table</b> (Exp 6) and the <b>error handler</b> are used by every phase.</p>
+
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is a compiler?</p><p class="a">A program that translates a whole source program written in a high-level language into machine code (or another target language) and reports errors.</p></div>
+<div class="qa"><p class="q">Compiler vs interpreter?</p><p class="a">A compiler translates the whole program first and then runs the result. An interpreter translates and runs one statement at a time. Compiled programs usually run faster.</p></div>
+<div class="qa"><p class="q">Name the phases of a compiler.</p><p class="a">Lexical analysis, syntax analysis, semantic analysis, intermediate code generation, code optimization and code generation.</p></div>
+<div class="qa"><p class="q">What are front end and back end?</p><p class="a">The front end (lexical, syntax, semantic analysis, intermediate code) depends on the source language. The back end (optimization, code generation) depends on the target machine.</p></div>
+<div class="qa"><p class="q">What is a token, a lexeme and a pattern?</p><p class="a">A lexeme is the actual text, like <code>count</code>. A token is its category, like identifier. A pattern is the rule that describes the lexemes of a token.</p></div>
+<div class="qa"><p class="q">What is the role of the symbol table?</p><p class="a">It stores information about names (type, address, scope) and is used by all phases.</p></div>
+<div class="qa"><p class="q">What are LEX and YACC?</p><p class="a">LEX generates a lexical analyzer from regular expressions. YACC generates a parser from a grammar.</p></div>
+<div class="qa"><p class="q">What is the difference between LL and LR parsers?</p><p class="a">LL parsers are top-down: they read left to right and build a leftmost derivation. LR parsers are bottom-up: they read left to right and build a rightmost derivation in reverse. LR handles more grammars.</p></div>
+<div class="qa"><p class="q">What is a cross compiler?</p><p class="a">A compiler that runs on one machine but produces code for a different machine.</p></div>
+</div>
+
+<div class="exp" id="exp2">
+<p class="meta">Compiler Design Lab, 5CS4-22 (Turbo C++)</p>
+<h1>Experiment 2: Identify whether a string is a keyword</h1>
+<div class="aim"><b>Aim:</b> To identify whether a given string is a keyword or not.</div>
+
+<h2>Source code</h2>
+<div class="code" data-file="exp2.cpp"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include&lt;stdio.h&gt;
+#include&lt;conio.h&gt;
+#include&lt;string.h&gt;
+
+void main()
+{
+    char keyword[32][10] = {"auto","double","int","struct","break","else","long",
+                            "switch","case","enum","register","typedef","char",
+                            "extern","return","union","const","float","short",
+                            "unsigned","continue","for","signed","void","default",
+                            "goto","sizeof","volatile","do","if","static","while"};
+    char string[10];
+    int flag = 0, i;
+
+    clrscr();
+    printf("enter any string:");
+    gets(string);
+
+    for(i = 0; i &lt; 32; i++)
+    {
+        if(strcmp(string, keyword[i]) == 0)
+        {
+            flag = 1;
+        }
+    }
+
+    if(flag == 1)
+        printf("%s is a keyword", string);
+    else
+        printf("%s is not a keyword", string);
+
+    getch();
+}</pre></div>
+<p class="note">The manual spells <code>volatile</code> as "voltile". This version has it fixed, so <code>volatile</code> is now recognised.</p>
+
+<h2>Output</h2>
+<div class="code"><button class="copy">Copy</button><pre>enter any string:void
+void is a keyword
+
+enter any string:int
+int is a keyword
+
+enter any string:string
+string is not a keyword</pre></div>
+
+<h2>How to run in Turbo C++</h2>
+<ol>
+<li>Type or paste the code, then press <b>F2</b> to save as <code>EXP2.CPP</code>.</li>
+<li>Press <b>Alt+F9</b> to compile and <b>Ctrl+F9</b> to run.</li>
+<li>Press <b>Alt+F5</b> to see the output screen again.</li>
+</ol>
+
+<h2>Explanation</h2>
+<ol>
+<li><code>keyword[32][10]</code> is a 2D array holding the 32 C keywords, each up to 9 letters plus <code>'\0'</code>.</li>
+<li><code>gets(string)</code> reads the word typed by the user.</li>
+<li>The <code>for</code> loop compares the input with every keyword using <code>strcmp</code>, which returns 0 when two strings are equal.</li>
+<li>On a match, <code>flag</code> is set to 1. The flag remembers that a match was found.</li>
+<li>After the loop, the program prints whether the word is a keyword, based on <code>flag</code>.</li>
+</ol>
+
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is a keyword?</p><p class="a">A reserved word with a fixed meaning in the language, like <code>int</code> or <code>while</code>. It cannot be used as a variable name.</p></div>
+<div class="qa"><p class="q">Keyword vs identifier?</p><p class="a">Keywords are reserved by the language. Identifiers are names chosen by the programmer for variables, functions and so on.</p></div>
+<div class="qa"><p class="q">How many keywords are in C?</p><p class="a">32 in standard C89/C90, the set used in this program.</p></div>
+<div class="qa"><p class="q">What does strcmp return?</p><p class="a">0 if the strings are equal, a negative value if the first is smaller, and a positive value if the first is larger.</p></div>
+<div class="qa"><p class="q">Why can't we compare strings with ==?</p><p class="a">For arrays, <code>==</code> compares memory addresses, not the characters. <code>strcmp</code> compares the characters.</p></div>
+<div class="qa"><p class="q">What is the use of the flag variable?</p><p class="a">It records whether a match was found while the loop runs, so the result can be printed after the loop.</p></div>
+<div class="qa"><p class="q">Why is gets() unsafe?</p><p class="a">It does not check the size of the array, so a long input overflows the buffer. It was removed from C11. Here the array holds only 9 characters.</p></div>
+<div class="qa"><p class="q">Which compiler phase does this program belong to?</p><p class="a">Lexical analysis, which classifies words as keywords or identifiers.</p></div>
+<div class="qa"><p class="q">How can the search be made faster?</p><p class="a">Sort the keyword table and use binary search (Exp 3 does this), or use a hash table.</p></div>
+</div>
+
+<div class="exp" id="exp3">
+<p class="meta">Compiler Design Lab, 5CS4-22 (Turbo C++)</p>
+<h1>Experiment 3: Count total keywords in a file</h1>
+<div class="aim"><b>Aim:</b> Write a C program to count the total number of keywords in a file [taking file from user].</div>
+<h2>Source code</h2>
+<div class="code" data-file="exp3.cpp"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include&lt;stdio.h&gt;
+#include&lt;conio.h&gt;
+#include&lt;string.h&gt;
+#include&lt;ctype.h&gt;
+#include&lt;stdlib.h&gt;
+
+void main()
+{
+    char keyword[32][10] = {&quot;auto&quot;,&quot;double&quot;,&quot;int&quot;,&quot;struct&quot;,&quot;break&quot;,&quot;else&quot;,&quot;long&quot;,
+                            &quot;switch&quot;,&quot;case&quot;,&quot;enum&quot;,&quot;register&quot;,&quot;typedef&quot;,&quot;char&quot;,
+                            &quot;extern&quot;,&quot;return&quot;,&quot;union&quot;,&quot;const&quot;,&quot;float&quot;,&quot;short&quot;,
+                            &quot;unsigned&quot;,&quot;continue&quot;,&quot;for&quot;,&quot;signed&quot;,&quot;void&quot;,&quot;default&quot;,
+                            &quot;goto&quot;,&quot;sizeof&quot;,&quot;volatile&quot;,&quot;do&quot;,&quot;if&quot;,&quot;static&quot;,&quot;while&quot;};
+    char fname[30], word[20];
+    int c, i, j = 0, count = 0;
+    FILE *fp;
+
+    clrscr();
+    printf(&quot;Enter file name: &quot;);
+    gets(fname);
+
+    fp = fopen(fname, &quot;r&quot;);
+    if(fp == NULL)
+    {
+        printf(&quot;File not found&quot;);
+        getch();
+        exit(0);
+    }
+
+    while(1)
+    {
+        c = fgetc(fp);
+
+        if(isalpha(c))
+        {
+            word[j++] = c;
+        }
+        else
+        {
+            if(j &gt; 0)
+            {
+                word[j] = &#x27;\0&#x27;;
+                for(i = 0; i &lt; 32; i++)
+                {
+                    if(strcmp(word, keyword[i]) == 0)
+                    {
+                        count++;
+                        break;
+                    }
+                }
+                j = 0;
+            }
+            if(c == EOF)
+                break;
+        }
+    }
+
+    fclose(fp);
+    printf(&quot;Total keywords in file = %d&quot;, count);
+    getch();
+}</pre></div>
+<h2>Before you run</h2>
+<p>Create <code>test.txt</code> in the same folder as your program (the folder shown in Turbo C++'s File &gt; Open dialog) with this content:</p><pre style="background:#fff;color:#1c2333;border:1px solid #d8dce5;padding:12px">int a; float b;
+if(a&gt;b) return 0;</pre>
+<h2>Output</h2>
+<div class="code"><button class="copy">Copy</button><pre>Enter file name: test.txt
+Total keywords in file = 4</pre></div>
+<h2>Explanation</h2>
+<ol>
+<li><code>fopen(fname, "r")</code> opens the file for reading. It returns <code>NULL</code> if the file does not exist, and the program then exits.</li>
+<li><code>fgetc(fp)</code> reads one character at a time and returns <code>EOF</code> at the end of the file.</li>
+<li>While the characters are letters (<code>isalpha</code>), they are stored in <code>word[]</code>. Any other character (space, <code>;</code>, <code>(</code>, newline) ends the word.</li>
+<li>When a word ends, <code>'\0'</code> is added and the word is compared with all 32 keywords using <code>strcmp</code>. A match increases <code>count</code> and <code>break</code> stops the search.</li>
+<li><code>j = 0</code> starts the next word. At <code>EOF</code> the loop stops and the total is printed.</li>
+</ol>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">Why is c declared as int and not char?</p><p class="a"><code>EOF</code> is -1, which does not fit reliably in a <code>char</code>. <code>fgetc</code> returns an <code>int</code>, so the variable must be an <code>int</code>.</p></div>
+<div class="qa"><p class="q">What does fopen return on failure?</p><p class="a"><code>NULL</code>. Always check for it before reading.</p></div>
+<div class="qa"><p class="q">What do the modes "r", "w" and "a" mean?</p><p class="a">Read, write (overwrites the file) and append (adds at the end).</p></div>
+<div class="qa"><p class="q">Why is break used inside the keyword loop?</p><p class="a">Once a keyword matches there is no need to check the rest of the table.</p></div>
+<div class="qa"><p class="q">What does isalpha do?</p><p class="a">It returns true if the character is a letter (A to Z or a to z).</p></div>
+<div class="qa"><p class="q">What is the time cost per word here?</p><p class="a">Linear search, at most 32 comparisons per word. The manual uses a sorted table with binary search, about 5 comparisons.</p></div>
+<div class="qa"><p class="q">How does binary search work?</p><p class="a">On a sorted table, compare with the middle entry. If the word is smaller, search the left half, otherwise the right half, and repeat until found or the range is empty.</p></div>
+<div class="qa"><p class="q">What is a limitation of this program?</p><p class="a">A name like <code>int2</code> is read as <code>int</code> and counted, because digits end the word. A real lexer treats <code>int2</code> as one identifier.</p></div>
+<div class="qa"><p class="q">Which compiler phase is this?</p><p class="a">Lexical analysis: splitting text into words and classifying them.</p></div>
+</div>
+
+<div class="exp" id="exp4">
+<p class="meta">Compiler Design Lab, 5CS4-22 (Turbo C++)</p>
+<h1>Experiment 4: Count total operators in a string</h1>
+<div class="aim"><b>Aim:</b> Write a program to count the total number of operators (+, -, *, /) in the input.</div>
+<h2>Source code</h2>
+<div class="code" data-file="exp4.cpp"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include&lt;stdio.h&gt;
+#include&lt;conio.h&gt;
+
+void main()
+{
+    int count = 0, i;
+    char string[100];
+
+    clrscr();
+    printf(&quot;Enter your string :&quot;);
+    gets(string);
+
+    for(i = 0; string[i] != &#x27;\0&#x27;; i++)
+    {
+        if(string[i]==&#x27;+&#x27; || string[i]==&#x27;-&#x27; || string[i]==&#x27;*&#x27; || string[i]==&#x27;/&#x27;)
+        {
+            count++;
+        }
+    }
+
+    printf(&quot;Total Number of operators is : %d &quot;, count);
+    getch();
+}</pre></div>
+<p class="note">The manual's aim says "file", but its code reads a string. This version reads a string, like the manual's code.</p>
+<h2>Output</h2>
+<div class="code"><button class="copy">Copy</button><pre>Enter your string :a+b*c-d/e
+Total Number of operators is : 4</pre></div>
+<h2>Explanation</h2>
+<ol>
+<li><code>gets(string)</code> reads the whole line, including spaces. <code>scanf("%s")</code> would stop at the first space and miss operators after it.</li>
+<li>The <code>for</code> loop visits each character until the string terminator <code>'\0'</code>.</li>
+<li>The condition uses <code>||</code> (or), so a match with any one of the four operators counts.</li>
+<li><code>count++</code> adds one for each operator found. The total is printed at the end.</li>
+</ol>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is an operator?</p><p class="a">A symbol that performs an operation on operands, such as <code>+</code> or <code>*</code>.</p></div>
+<div class="qa"><p class="q">What is the difference between = and ==?</p><p class="a"><code>=</code> assigns a value. <code>==</code> compares two values.</p></div>
+<div class="qa"><p class="q">What does || mean?</p><p class="a">Logical OR: the condition is true if at least one side is true.</p></div>
+<div class="qa"><p class="q">Why use gets and not scanf("%s")?</p><p class="a"><code>scanf("%s")</code> stops reading at the first space, so the rest of the line is lost.</p></div>
+<div class="qa"><p class="q">How is the end of a string marked?</p><p class="a">By the null character <code>'\0'</code>.</p></div>
+<div class="qa"><p class="q">How would you read from a file instead?</p><p class="a">Open it with <code>fopen</code>, read with <code>fgetc</code> until <code>EOF</code>, and run the same <code>if</code> check on each character.</p></div>
+<div class="qa"><p class="q">What are the limitations?</p><p class="a"><code>++</code> counts as two operators, a <code>-</code> in a negative number is counted, and operators like <code>==</code> or <code>&amp;&amp;</code> are not recognised. A real lexer treats them as single tokens.</p></div>
+<div class="qa"><p class="q">Which compiler phase does this relate to?</p><p class="a">Lexical analysis: operators are one kind of token.</p></div>
+</div>
+
+<div class="exp" id="exp5">
+<p class="meta">Compiler Design Lab, 5CS4-22 (Turbo C++)</p>
+<h1>Experiment 5: Count occurrences of each character</h1>
+<div class="aim"><b>Aim:</b> Write a C program to count the total occurrence of each character (letter) in the input.</div>
+<h2>Source code</h2>
+<div class="code" data-file="exp5.cpp"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include&lt;stdio.h&gt;
+#include&lt;conio.h&gt;
+#include&lt;ctype.h&gt;
+
+void main()
+{
+    char string[100];
+    int count[26] = {0};
+    int c = 0;
+
+    clrscr();
+    printf(&quot;Enter a string\n&quot;);
+    gets(string);
+
+    while(string[c] != &#x27;\0&#x27;)
+    {
+        if(isalpha(string[c]))
+        {
+            count[tolower(string[c]) - &#x27;a&#x27;]++;
+        }
+        c++;
+    }
+
+    for(c = 0; c &lt; 26; c++)
+    {
+        if(count[c] &gt; 0)
+            printf(&quot;%c occurs %d times in the string.\n&quot;, c + &#x27;a&#x27;, count[c]);
+    }
+    getch();
+}</pre></div>
+<p class="note">The manual's aim says "file", but its code reads a string and counts lowercase letters only. This version reads a string and also counts uppercase letters.</p>
+<h2>Output</h2>
+<div class="code"><button class="copy">Copy</button><pre>Enter a string
+Hello World
+d occurs 1 times in the string.
+e occurs 1 times in the string.
+h occurs 1 times in the string.
+l occurs 3 times in the string.
+o occurs 2 times in the string.
+r occurs 1 times in the string.
+w occurs 1 times in the string.</pre></div>
+<h2>Explanation</h2>
+<ol>
+<li><code>count[26]</code> has one counter for each letter: <code>count[0]</code> for a, <code>count[1]</code> for b, and so on. All start at 0.</li>
+<li><code>gets</code> reads the line. The <code>while</code> loop walks through it until <code>'\0'</code>.</li>
+<li><code>isalpha</code> skips spaces, digits and symbols. <code>tolower</code> makes H and h count together.</li>
+<li>The key line is <code>count[tolower(string[c]) - 'a']++</code>. Letters are ASCII numbers (<code>'a'</code> is 97), so subtracting <code>'a'</code> gives the letter's position: a=0, b=1 ... z=25. That counter is increased by one.</li>
+<li>To print, <code>c + 'a'</code> converts the index back to a letter, and only letters with a count above 0 are shown.</li>
+</ol>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">Why is subtracting 'a' needed?</p><p class="a">It turns a letter into an array index from 0 to 25. Without it the index would be 97 or more.</p></div>
+<div class="qa"><p class="q">What is ASCII?</p><p class="a">A code that gives every character a number, for example <code>'a'</code> = 97 and <code>'A'</code> = 65.</p></div>
+<div class="qa"><p class="q">What does int count[26] = {0} do?</p><p class="a">It creates 26 integers and sets all of them to 0.</p></div>
+<div class="qa"><p class="q">Why use an array and not 26 variables?</p><p class="a">One index calculation replaces 26 separate <code>if</code> checks.</p></div>
+<div class="qa"><p class="q">How would you count every character, not just letters?</p><p class="a">Use <code>int count[256]</code> and <code>count[string[c]]++</code>.</p></div>
+<div class="qa"><p class="q">What does tolower do?</p><p class="a">It converts an uppercase letter to lowercase and leaves other characters unchanged.</p></div>
+<div class="qa"><p class="q">What is the time complexity?</p><p class="a">O(n) for n characters, since the string is scanned once.</p></div>
+<div class="qa"><p class="q">Which compiler phase does this relate to?</p><p class="a">Lexical analysis: it reads the input character by character.</p></div>
+</div>
+
+<div class="exp" id="exp6">
+<p class="meta">Compiler Design Lab, 5CS4-22 (Turbo C++)</p>
+<h1>Experiment 6: Symbol table: insert, delete and display</h1>
+<div class="aim"><b>Aim:</b> Write a C program to insert, delete and display the entries in a symbol table.</div>
+<h2>Source code</h2>
+<div class="code" data-file="exp6.cpp"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include&lt;stdio.h&gt;
+#include&lt;conio.h&gt;
+#include&lt;string.h&gt;
+
+struct SymbTab
+{
+    char label[10];
+    char symbol[10];
+    int addr;
+};
+
+struct SymbTab table[20];
+int size = 0;
+
+int Search(char lab[])
+{
+    int i;
+    for(i = 0; i &lt; size; i++)
+    {
+        if(strcmp(table[i].label, lab) == 0)
+            return i;
+    }
+    return -1;
+}
+
+void Insert()
+{
+    char l[10];
+    printf(&quot;\nEnter the label: &quot;);
+    scanf(&quot;%s&quot;, l);
+
+    if(Search(l) != -1)
+    {
+        printf(&quot;Label already exists, duplicate can&#x27;t be inserted\n&quot;);
+        return;
+    }
+    if(size == 20)
+    {
+        printf(&quot;Table is full\n&quot;);
+        return;
+    }
+
+    strcpy(table[size].label, l);
+    printf(&quot;Enter the symbol: &quot;);
+    scanf(&quot;%s&quot;, table[size].symbol);
+    printf(&quot;Enter the address: &quot;);
+    scanf(&quot;%d&quot;, &amp;table[size].addr);
+    size++;
+    printf(&quot;Label inserted\n&quot;);
+}
+
+void Display()
+{
+    int i;
+    printf(&quot;\nLABEL\tSYMBOL\tADDRESS\n&quot;);
+    for(i = 0; i &lt; size; i++)
+    {
+        printf(&quot;%s\t%s\t%d\n&quot;, table[i].label, table[i].symbol, table[i].addr);
+    }
+}
+
+void Delete()
+{
+    char l[10];
+    int pos, i;
+    printf(&quot;\nEnter the label to be deleted: &quot;);
+    scanf(&quot;%s&quot;, l);
+
+    pos = Search(l);
+    if(pos == -1)
+    {
+        printf(&quot;Label not found\n&quot;);
+        return;
+    }
+
+    for(i = pos; i &lt; size - 1; i++)
+        table[i] = table[i + 1];
+    size--;
+
+    printf(&quot;After deletion:\n&quot;);
+    Display();
+}
+
+void main()
+{
+    int op;
+    char la[10];
+
+    clrscr();
+    do
+    {
+        printf(&quot;\n\tSYMBOL TABLE IMPLEMENTATION\n&quot;);
+        printf(&quot;\n\t1.INSERT\n\t2.DISPLAY\n\t3.DELETE\n\t4.SEARCH\n\t5.END\n&quot;);
+        printf(&quot;\n\tEnter your option: &quot;);
+        scanf(&quot;%d&quot;, &amp;op);
+
+        switch(op)
+        {
+            case 1: Insert(); break;
+            case 2: Display(); break;
+            case 3: Delete(); break;
+            case 4:
+                printf(&quot;\nEnter the label to be searched: &quot;);
+                scanf(&quot;%s&quot;, la);
+                if(Search(la) != -1)
+                    printf(&quot;The label is present in the symbol table\n&quot;);
+                else
+                    printf(&quot;The label is not present in the symbol table\n&quot;);
+                break;
+            case 5: break;
+            default: printf(&quot;Wrong choice\n&quot;);
+        }
+    } while(op != 5);
+
+    getch();
+}</pre></div>
+<p class="note">The manual builds the table as a linked list. This version uses an array of structures to keep it shorter. It has the same menu and operations (the manual also has a Modify option).</p>
+<h2>Output</h2>
+<div class="code"><button class="copy">Copy</button><pre>Enter your option: 1
+Enter the label: a
+Enter the symbol: int
+Enter the address: 100
+Label inserted
+
+Enter your option: 1
+Enter the label: b
+Enter the symbol: float
+Enter the address: 104
+Label inserted
+
+Enter your option: 2
+LABEL   SYMBOL  ADDRESS
+a       int     100
+b       float   104
+
+Enter your option: 3
+Enter the label to be deleted: a
+After deletion:
+LABEL   SYMBOL  ADDRESS
+b       float   104</pre></div>
+<h2>Explanation</h2>
+<ol>
+<li>A symbol table stores information about every name in a program. Each row here has a <code>label</code> (name), a <code>symbol</code> (type) and an <code>addr</code> (address).</li>
+<li><code>table[20]</code> is an array of structures that holds the rows, and <code>size</code> counts how many rows are in use.</li>
+<li><b>Search</b> compares labels with <code>strcmp</code> and returns the row index, or -1 if the label is missing.</li>
+<li><b>Insert</b> first calls <code>Search</code> to reject duplicates, then fills <code>table[size]</code> and increases <code>size</code>.</li>
+<li><b>Display</b> prints rows 0 to <code>size-1</code>.</li>
+<li><b>Delete</b> finds the row, shifts every later row up by one (<code>table[i] = table[i+1]</code>), and decreases <code>size</code>.</li>
+<li><code>main</code> shows a menu in a <code>do-while</code> loop with a <code>switch</code>, and repeats until option 5.</li>
+</ol>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is a symbol table?</p><p class="a">A data structure the compiler uses to store information about identifiers, such as name, type, address and scope.</p></div>
+<div class="qa"><p class="q">Which phases use the symbol table?</p><p class="a">All of them: lexical, syntax and semantic analysis, and code generation.</p></div>
+<div class="qa"><p class="q">Which operations does a symbol table need?</p><p class="a">Insert, search (lookup), delete and display (and modify).</p></div>
+<div class="qa"><p class="q">Why check for duplicates before inserting?</p><p class="a">A name should be declared only once in a scope.</p></div>
+<div class="qa"><p class="q">Array vs linked list for a symbol table?</p><p class="a">An array has a fixed size and needs shifting on delete. A linked list grows as needed and deletion only changes pointers. The manual uses a linked list.</p></div>
+<div class="qa"><p class="q">How else can a symbol table be built?</p><p class="a">With a hash table, which gives very fast lookup, or a binary search tree.</p></div>
+<div class="qa"><p class="q">What is a structure?</p><p class="a">A user-defined type that groups different variables under one name.</p></div>
+<div class="qa"><p class="q">Why is the function called Delete and not delete?</p><p class="a"><code>delete</code> is a reserved keyword in C++, and Turbo C++ compiles <code>.CPP</code> files as C++.</p></div>
+<div class="qa"><p class="q">What does the break in a switch case do?</p><p class="a">It stops execution from falling through into the next case.</p></div>
+</div>
+
+<div class="exp" id="exp7">
+<p class="meta">Compiler Design Lab, 5CS4-22 (LEX, runs on Linux)</p>
+<h1>Experiment 7: LEX program to validate mobile number, URL, identifier, date and time</h1>
+<div class="aim"><b>Aim:</b> Write a LEX program to identify a valid mobile number (and email id), URL, identifier, date (dd/mm/yyyy) and time (hh:mm:ss).</div>
+<p class="note">The manual's code for this experiment has errors (spaces inside the character classes, missing actions, no code for time). These programs are corrected and complete.</p>
+<h2>How to compile and run</h2>
+<p>LEX does not run in Turbo C++. Use Linux or WSL. Install once: <code>sudo apt install flex gcc</code>. Then, for a program saved as <code>exp7_mobile.l</code>:</p><div class="code"><button class="copy">Copy</button><pre>lex exp7_mobile.l
+cc lex.yy.c -lfl
+./a.out</pre></div><p>If <code>-lfl</code> gives an error, use <code>-ll</code>. Type your input and press Enter. Press <b>Ctrl+D</b> to finish.</p>
+<h2>Source code</h2>
+<h3 style="margin:1.6em 0 .4em;font-size:1.05rem">1. Valid mobile number</h3>
+<div class="code" data-file="exp7_mobile.l"><button class="dl">Download</button><button class="copy">Copy</button><pre>%{
+#include&lt;stdio.h&gt;
+%}
+%%
+^[6-9][0-9]{9}$    { printf(&quot;Valid mobile number\n&quot;); }
+^.+$                { printf(&quot;Invalid mobile number\n&quot;); }
+\n    ;
+%%
+int yywrap() { return 1; }
+
+int main()
+{
+    printf(&quot;Enter mobile number:\n&quot;);
+    yylex();
+    return 0;
+}</pre></div>
+<p class="meta">Output</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter mobile number:
+9876543210
+Valid mobile number
+0001112223
+Invalid mobile number</pre></div>
+<h3 style="margin:1.6em 0 .4em;font-size:1.05rem">1b. Valid email id</h3>
+<div class="code" data-file="exp7_email.l"><button class="dl">Download</button><button class="copy">Copy</button><pre>%{
+#include&lt;stdio.h&gt;
+%}
+%%
+^[a-zA-Z0-9._]+@[a-zA-Z0-9]+(\.[a-zA-Z]{2,})+$    { printf(&quot;Valid email\n&quot;); }
+^.+$                                            { printf(&quot;Invalid email\n&quot;); }
+\n    ;
+%%
+int yywrap() { return 1; }
+
+int main()
+{
+    printf(&quot;Enter email id:\n&quot;);
+    yylex();
+    return 0;
+}</pre></div>
+<p class="meta">Output</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter email id:
+csetanmayjain@gmail.com
+Valid email
+!23@43.com
+Invalid email</pre></div>
+<h3 style="margin:1.6em 0 .4em;font-size:1.05rem">2. Valid URL</h3>
+<div class="code" data-file="exp7_url.l"><button class="dl">Download</button><button class="copy">Copy</button><pre>%{
+#include&lt;stdio.h&gt;
+%}
+%%
+^(http|https|ftp)&quot;://&quot;[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)+(\/[a-zA-Z0-9._?=&amp;%-]*)*$    { printf(&quot;Valid URL\n&quot;); }
+^.+$                                                                  { printf(&quot;Invalid URL\n&quot;); }
+\n    ;
+%%
+int yywrap() { return 1; }
+
+int main()
+{
+    printf(&quot;Enter URL:\n&quot;);
+    yylex();
+    return 0;
+}</pre></div>
+<p class="meta">Output</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter URL:
+https://www.geeksforgeeks.org
+Valid URL
+geeksforgeeks
+Invalid URL</pre></div>
+<h3 style="margin:1.6em 0 .4em;font-size:1.05rem">3. Valid identifier</h3>
+<div class="code" data-file="exp7_identifier.l"><button class="dl">Download</button><button class="copy">Copy</button><pre>%{
+#include&lt;stdio.h&gt;
+%}
+%%
+^[a-zA-Z_][a-zA-Z0-9_]*$    { printf(&quot;Valid identifier\n&quot;); }
+^.+$                       { printf(&quot;Invalid identifier\n&quot;); }
+\n    ;
+%%
+int yywrap() { return 1; }
+
+int main()
+{
+    printf(&quot;Enter identifier:\n&quot;);
+    yylex();
+    return 0;
+}</pre></div>
+<p class="meta">Output</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter identifier:
+gfg
+Valid identifier
+123gfg
+Invalid identifier
+_gfg
+Valid identifier
+%abc
+Invalid identifier</pre></div>
+<h3 style="margin:1.6em 0 .4em;font-size:1.05rem">4. Valid date (dd/mm/yyyy)</h3>
+<div class="code" data-file="exp7_date.l"><button class="dl">Download</button><button class="copy">Copy</button><pre>%{
+#include&lt;stdio.h&gt;
+#include&lt;stdlib.h&gt;
+int leap(int y)
+{
+    return (y % 4 == 0 &amp;&amp; y % 100 != 0) || (y % 400 == 0);
+}
+%}
+D31   (0[1-9]|[12][0-9]|3[01])
+D30   (0[1-9]|[12][0-9]|30)
+D28   (0[1-9]|1[0-9]|2[0-8])
+M31   (0[13578]|1[02])
+M30   (0[469]|11)
+YEAR  [0-9]{4}
+
+%%
+^{D31}&quot;/&quot;{M31}&quot;/&quot;{YEAR}$    { printf(&quot;Valid date\n&quot;); }
+^{D30}&quot;/&quot;{M30}&quot;/&quot;{YEAR}$    { printf(&quot;Valid date\n&quot;); }
+^{D28}&quot;/02/&quot;{YEAR}$        { printf(&quot;Valid date\n&quot;); }
+^&quot;29/02/&quot;{YEAR}$           {
+    if(leap(atoi(yytext + 6)))
+        printf(&quot;Valid date\n&quot;);
+    else
+        printf(&quot;Invalid date (not a leap year)\n&quot;);
+}
+^.+$                        { printf(&quot;Invalid date\n&quot;); }
+\n    ;
+%%
+int yywrap() { return 1; }
+
+int main()
+{
+    printf(&quot;Enter date (dd/mm/yyyy):\n&quot;);
+    yylex();
+    return 0;
+}</pre></div>
+<p class="meta">Output</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter date (dd/mm/yyyy):
+02/05/2019
+Valid date
+05/20/2019
+Invalid date
+29/02/2023
+Invalid date (not a leap year)
+29/02/2024
+Valid date</pre></div>
+<h3 style="margin:1.6em 0 .4em;font-size:1.05rem">5. Valid time (hh:mm:ss)</h3>
+<div class="code" data-file="exp7_time.l"><button class="dl">Download</button><button class="copy">Copy</button><pre>%{
+#include&lt;stdio.h&gt;
+%}
+%%
+^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$    { printf(&quot;Valid time\n&quot;); }
+^.+$                                       { printf(&quot;Invalid time\n&quot;); }
+\n    ;
+%%
+int yywrap() { return 1; }
+
+int main()
+{
+    printf(&quot;Enter time (hh:mm:ss):\n&quot;);
+    yylex();
+    return 0;
+}</pre></div>
+<p class="meta">Output</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter time (hh:mm:ss):
+23:59:59
+Valid time
+24:00:00
+Invalid time
+12:60:00
+Invalid time</pre></div>
+<h2>Explanation</h2>
+<ol>
+<li>Each program has three parts separated by <code>%%</code>: definitions in <code>%{ %}</code>, rules (<code>pattern action</code>), and user code (<code>yywrap</code> and <code>main</code>).</li>
+<li><code>^</code> and <code>$</code> force the pattern to match the whole line, so an 11-digit number is not accepted just because its first 10 digits match.</li>
+<li>The second rule <code>^.+$</code> matches any line. LEX takes the longest match and, on a tie, the earlier rule. A valid input matches both rules with the same length, so the valid rule (listed first) wins. Anything else falls to the "Invalid" rule.</li>
+<li><code>[6-9][0-9]{9}</code> means one digit from 6 to 9 followed by exactly 9 digits. Indian mobile numbers start with 6, 7, 8 or 9.</li>
+<li>The date program uses named definitions (<code>D31</code>, <code>M30</code> and so on) to check that the day fits the month. 29/02 is checked in C code with <code>leap()</code>, and <code>yytext + 6</code> points to the year after "29/02/".</li>
+<li>The <code>/</code> is quoted as <code>"/"</code> because an unquoted <code>/</code> has a special meaning in LEX.</li>
+<li>The lone <code>\n</code> rule ignores the newline so it is not echoed on the screen.</li>
+</ol>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is LEX?</p><p class="a">A tool that generates a lexical analyzer (scanner) in C from regular expressions and actions.</p></div>
+<div class="qa"><p class="q">What is the structure of a LEX program?</p><p class="a">Definition section, rules section and user subroutine section, separated by <code>%%</code>.</p></div>
+<div class="qa"><p class="q">What do yylex(), yytext and yywrap() do?</p><p class="a"><code>yylex()</code> starts scanning, <code>yytext</code> holds the matched text, and <code>yywrap()</code> returning 1 tells LEX there is no more input.</p></div>
+<div class="qa"><p class="q">How does LEX choose between two matching rules?</p><p class="a">It picks the longest match. If both are the same length, the rule written first wins.</p></div>
+<div class="qa"><p class="q">Why do we use ^ and $ in the patterns?</p><p class="a">They anchor the pattern to the start and end of the line, so the whole input must match.</p></div>
+<div class="qa"><p class="q">What does [0-9]{10} mean?</p><p class="a">Exactly ten digits.</p></div>
+<div class="qa"><p class="q">What is the rule for a valid identifier?</p><p class="a">It starts with a letter or underscore and continues with letters, digits or underscores: <code>[a-zA-Z_][a-zA-Z0-9_]*</code>.</p></div>
+<div class="qa"><p class="q">How are leap years checked?</p><p class="a">A year is a leap year if divisible by 4 and not by 100, or divisible by 400.</p></div>
+<div class="qa"><p class="q">Why is "/" written in quotes in a LEX pattern?</p><p class="a">Unquoted, <code>/</code> is the trailing-context operator.</p></div>
+<div class="qa"><p class="q">How do you compile a LEX program?</p><p class="a"><code>lex file.l</code> creates <code>lex.yy.c</code>, then <code>cc lex.yy.c -lfl</code> builds it.</p></div>
+<div class="qa"><p class="q">What is a regular expression?</p><p class="a">A notation that describes a set of strings, used to define the patterns of tokens.</p></div>
+</div>
+
+<div class="exp" id="exp8">
+<p class="meta">Compiler Design Lab, 5CS4-22 (LEX, runs on Linux)</p>
+<h1>Experiment 8: LEX program to count blank spaces, words and lines</h1>
+<div class="aim"><b>Aim:</b> Write a LEX program to count blank spaces, words and lines in a given file.</div>
+<p class="note">The manual's version also counts tabs and characters and has no word counter, and its <code>printf</code> lines are missing closing quotes. This version counts exactly what the aim asks: spaces, words and lines.</p>
+<h2>How to compile and run</h2>
+<p>LEX does not run in Turbo C++. Use Linux or WSL. Install once: <code>sudo apt install flex gcc</code>. Then, for a program saved as <code>exp8.l</code>:</p><div class="code"><button class="copy">Copy</button><pre>lex exp8.l
+cc lex.yy.c -lfl
+./a.out</pre></div><p>If <code>-lfl</code> gives an error, use <code>-ll</code>. Type your input and press Enter. Press <b>Ctrl+D</b> to finish.</p><p>Create <code>test.txt</code> in the same folder with two lines: <code>Geeks for Geeks</code> and <code>gfg gfg</code> (press Enter after the last line).</p>
+<h2>Source code</h2>
+<div class="code" data-file="exp8.l"><button class="dl">Download</button><button class="copy">Copy</button><pre>%{
+#include&lt;stdio.h&gt;
+int lc = 0, sc = 0, wc = 0;
+%}
+
+%%
+\n          { lc++; }
+[ ]         { sc++; }
+\t          ;
+[^ \t\n]+   { wc++; }
+%%
+
+int yywrap() { return 1; }
+
+int main()
+{
+    char fname[30];
+    printf(&quot;Enter file name: &quot;);
+    scanf(&quot;%s&quot;, fname);
+    yyin = fopen(fname, &quot;r&quot;);
+    if(yyin == NULL)
+    {
+        printf(&quot;File not found\n&quot;);
+        return 1;
+    }
+    yylex();
+    fclose(yyin);
+    printf(&quot;No. of lines  = %d\n&quot;, lc);
+    printf(&quot;No. of blank spaces = %d\n&quot;, sc);
+    printf(&quot;No. of words  = %d\n&quot;, wc);
+    return 0;
+}</pre></div>
+<p class="meta">Output</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter file name: test.txt
+No. of lines  = 2
+No. of blank spaces = 3
+No. of words  = 5</pre></div>
+<h2>Explanation</h2>
+<ol>
+<li>The program opens the file named by the user and points <code>yyin</code> (the input file used by LEX) to it. Without this, LEX reads the keyboard.</li>
+<li><code>\n</code> is a new line, so <code>lc++</code> counts lines. <code>[ ]</code> is one blank space, so <code>sc++</code> counts spaces.</li>
+<li><code>[^ \t\n]+</code> means one or more characters that are not space, tab or newline. That is a word, so <code>wc++</code> counts words. The longest-match rule makes it take the whole word at once.</li>
+<li>The tab rule has an empty action <code>;</code>, so tabs are skipped.</li>
+<li><code>yylex()</code> returns at the end of the file and <code>main</code> prints the totals.</li>
+</ol>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is yyin?</p><p class="a">The input file pointer of the LEX scanner. By default it is <code>stdin</code> (the keyboard).</p></div>
+<div class="qa"><p class="q">How does the program count words?</p><p class="a">Each maximal run of characters that are not space, tab or newline matches the word rule once.</p></div>
+<div class="qa"><p class="q">What does [^ \t\n] mean?</p><p class="a">Any single character except space, tab and newline. The <code>^</code> inside brackets means "not".</p></div>
+<div class="qa"><p class="q">What does the + do?</p><p class="a">It means one or more repetitions of the preceding pattern.</p></div>
+<div class="qa"><p class="q">Why is the longest match important here?</p><p class="a">It makes the scanner take a whole word as one match instead of one letter at a time.</p></div>
+<div class="qa"><p class="q">What does an empty action (;) mean?</p><p class="a">The pattern is matched and its text is discarded.</p></div>
+<div class="qa"><p class="q">Why does the last line need Enter?</p><p class="a">Lines are counted by newline characters, so a last line without a newline is not counted.</p></div>
+<div class="qa"><p class="q">How do you stop keyboard input?</p><p class="a">Press Ctrl+D. In this program the input comes from a file, so it stops at the end of the file.</p></div>
+</div>
+
+<div class="exp" id="exp9">
+<p class="meta">Compiler Design Lab, 5CS4-22 (LEX, runs on Linux)</p>
+<h1>Experiment 9: LEX program to count vowels and consonants in a C file</h1>
+<div class="aim"><b>Aim:</b> Write a LEX program to count the number of vowels and consonants in a C file.</div>
+<p class="note">The manual's <code>main</code> prints <code>vow</code> and <code>cons</code>, but its variables are named <code>vow_count</code> and <code>const_count</code>, so it does not compile. This version is fixed and reads a file.</p>
+<h2>How to compile and run</h2>
+<p>LEX does not run in Turbo C++. Use Linux or WSL. Install once: <code>sudo apt install flex gcc</code>. Then, for a program saved as <code>exp9.l</code>:</p><div class="code"><button class="copy">Copy</button><pre>lex exp9.l
+cc lex.yy.c -lfl
+./a.out</pre></div><p>If <code>-lfl</code> gives an error, use <code>-ll</code>. Type your input and press Enter. Press <b>Ctrl+D</b> to finish.</p><p>Create <code>test.c</code> in the same folder containing just <code>int main()</code>.</p>
+<h2>Source code</h2>
+<div class="code" data-file="exp9.l"><button class="dl">Download</button><button class="copy">Copy</button><pre>%{
+#include&lt;stdio.h&gt;
+int vow = 0, cons = 0;
+%}
+
+%%
+[aeiouAEIOU]    { vow++; }
+[a-zA-Z]        { cons++; }
+.|\n            ;
+%%
+
+int yywrap() { return 1; }
+
+int main()
+{
+    char fname[30];
+    printf(&quot;Enter file name: &quot;);
+    scanf(&quot;%s&quot;, fname);
+    yyin = fopen(fname, &quot;r&quot;);
+    if(yyin == NULL)
+    {
+        printf(&quot;File not found\n&quot;);
+        return 1;
+    }
+    yylex();
+    fclose(yyin);
+    printf(&quot;No. of vowels     = %d\n&quot;, vow);
+    printf(&quot;No. of consonants = %d\n&quot;, cons);
+    return 0;
+}</pre></div>
+<p class="meta">Output</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter file name: test.c
+No. of vowels     = 3
+No. of consonants = 4</pre></div>
+<h2>Explanation</h2>
+<ol>
+<li>The program reads the file given by the user through <code>yyin</code>.</li>
+<li><code>[aeiouAEIOU]</code> matches one vowel, so <code>vow++</code> counts it.</li>
+<li><code>[a-zA-Z]</code> matches any letter. A vowel matches both rules with the same length, and the earlier rule wins, so vowels never reach this rule. Only consonants are counted here.</li>
+<li><code>.|\n</code> matches any other character (digits, symbols, spaces, newlines) and throws it away.</li>
+<li>After <code>yylex()</code> finishes, <code>main</code> prints the two counts. In <code>int main()</code> the vowels are i, a, i and the consonants are n, t, m, n.</li>
+</ol>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is a vowel and a consonant for the program?</p><p class="a">Vowels are a, e, i, o, u in either case. Consonants are all other letters.</p></div>
+<div class="qa"><p class="q">Why are vowels not counted as consonants?</p><p class="a">Both rules match a vowel with the same length, and LEX uses the first rule listed.</p></div>
+<div class="qa"><p class="q">What does .|\n match?</p><p class="a">Any character: <code>.</code> is any character except newline, and <code>\n</code> adds the newline.</p></div>
+<div class="qa"><p class="q">Why do we need a catch-all rule?</p><p class="a">Without it, LEX copies unmatched input to the output (default action), which would clutter the result.</p></div>
+<div class="qa"><p class="q">What does [a-zA-Z] mean?</p><p class="a">Any one letter from a to z or A to Z.</p></div>
+<div class="qa"><p class="q">Does this program skip comments and keywords?</p><p class="a">No. Letters inside comments, strings and keywords are counted too. A real scanner would handle them as separate tokens.</p></div>
+<div class="qa"><p class="q">What is yywrap()?</p><p class="a">A function called at the end of the input. Returning 1 means stop.</p></div>
+<div class="qa"><p class="q">Where are the counters declared?</p><p class="a">In the definition section inside <code>%{ %}</code>, so they are global and available in the rules and in <code>main</code>.</p></div>
+</div>
+
+<div class="exp" id="exp10">
+<p class="meta">Compiler Design Lab, 5CS4-22 (YACC with LEX, runs on Linux)</p>
+<h1>Experiment 10: YACC program to recognize strings of the form a^n b^n</h1>
+<div class="aim"><b>Aim:</b> Write a YACC program to recognize strings such as ab, aabb and aaabbb using the grammar a^n b^n.</div>
+<p class="note">The manual's code is the same grammar for Exp 10 and Exp 12. Both are valid for n = 0 as well, so an empty line is accepted. Note that the strings "aaab" and "abbb" in the aim are not of the form a^n b^n, so they are rejected.</p>
+<h2>How to compile and run</h2>
+<p>YACC and LEX do not run in Turbo C++. Use Linux or WSL. Install once: <code>sudo apt install flex bison gcc</code>. Save the two files below in the same folder (<code>exp10.l</code> and <code>exp10.y</code>), then run the commands in this order. YACC must run first because the LEX file includes <code>y.tab.h</code>.</p><div class="code"><button class="copy">Copy</button><pre>yacc -d exp10.y
+lex exp10.l
+cc y.tab.c lex.yy.c
+./a.out</pre></div><p>Type a string and press Enter. The program prints the result and stops.</p>
+<h2>Source code</h2>
+<h3 style="margin:1.6em 0 .4em;font-size:1.05rem">Lexer: exp10.l</h3>
+<div class="code" data-file="exp10.l"><button class="dl">Download</button><button class="copy">Copy</button><pre>%{
+#include &quot;y.tab.h&quot;
+%}
+
+%%
+[aA]    { return A; }
+[bB]    { return B; }
+\n      { return NL; }
+.       { return yytext[0]; }
+%%
+
+int yywrap() { return 1; }</pre></div>
+<h3 style="margin:1.6em 0 .4em;font-size:1.05rem">Parser: exp10.y</h3>
+<div class="code" data-file="exp10.y"><button class="dl">Download</button><button class="copy">Copy</button><pre>%{
+#include&lt;stdio.h&gt;
+#include&lt;stdlib.h&gt;
+int yylex();
+int yyerror(char *msg);
+%}
+
+%token A B NL
+
+%%
+stmt : S NL    { printf(&quot;valid string\n&quot;); exit(0); }
+     ;
+
+S    : A S B
+     |
+     ;
+%%
+
+int yyerror(char *msg)
+{
+    printf(&quot;invalid string\n&quot;);
+    exit(0);
+}
+
+int main()
+{
+    printf(&quot;enter the string\n&quot;);
+    yyparse();
+    return 0;
+}</pre></div>
+<h2>Output</h2>
+<div class="code"><button class="copy">Copy</button><pre>enter the string
+ab
+valid string
+
+enter the string
+aabb
+valid string
+
+enter the string
+aab
+invalid string
+
+enter the string
+aaab
+invalid string</pre></div>
+<h2>Explanation</h2>
+<ol>
+<li>The grammar is <code>S : A S B | (empty)</code>. It says a valid string is an <code>a</code>, then a valid string, then a <code>b</code>, or nothing at all. This gives ab, aabb, aaabbb and so on, with equal numbers of a and b.</li>
+<li>The LEX file turns each letter into a token: <code>a</code> becomes <code>A</code>, <code>b</code> becomes <code>B</code> and Enter becomes <code>NL</code>. Any other character is passed on as it is, which causes a syntax error.</li>
+<li>The rule <code>stmt : S NL</code> accepts the whole line. If the parse succeeds, the action prints "valid string".</li>
+<li>If the tokens do not fit the grammar, YACC calls <code>yyerror</code>, which prints "invalid string".</li>
+<li><code>exit(0)</code> ends the program after the first result.</li>
+</ol>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is the language a^n b^n?</p><p class="a">Strings with n a's followed by exactly n b's, for example ab, aabb, aaabbb.</p></div>
+<div class="qa"><p class="q">Is aaab accepted? Why not?</p><p class="a">No. It has 3 a's but only 1 b, so the counts are not equal.</p></div>
+<div class="qa"><p class="q">Why can a regular expression not recognize a^n b^n?</p><p class="a">A finite automaton cannot count an unlimited n. A context-free grammar (a stack) can.</p></div>
+<div class="qa"><p class="q">What does the empty alternative in S do?</p><p class="a">It lets S match nothing, which ends the recursion and also makes the empty string valid (n = 0).</p></div>
+<div class="qa"><p class="q">What is a context-free grammar?</p><p class="a">A set of rules where the left side is a single non-terminal, such as <code>S : A S B</code>.</p></div>
+<div class="qa"><p class="q">What are terminals and non-terminals here?</p><p class="a">Terminals are the tokens A, B and NL. Non-terminals are S and stmt.</p></div>
+<div class="qa"><p class="q">What is YACC?</p><p class="a">Yet Another Compiler Compiler: a tool that generates a parser in C from a context-free grammar.</p></div>
+<div class="qa"><p class="q">What is the structure of a YACC program?</p><p class="a">Declarations (<code>%{ %}</code>, <code>%token</code>), grammar rules between <code>%%</code> markers, and user C code.</p></div>
+<div class="qa"><p class="q">How do LEX and YACC work together?</p><p class="a">LEX reads characters and returns tokens. YACC calls <code>yylex()</code> to get tokens and checks that they follow the grammar.</p></div>
+<div class="qa"><p class="q">What is y.tab.h?</p><p class="a">A header file made by <code>yacc -d</code> that holds the token numbers (like <code>A</code>, <code>B</code>), so LEX and YACC agree on them.</p></div>
+<div class="qa"><p class="q">What does yyparse() do?</p><p class="a">It starts parsing. It returns 0 if the input is accepted and non-zero if there is a syntax error.</p></div>
+<div class="qa"><p class="q">What is yyerror()?</p><p class="a">The function YACC calls when it finds a syntax error. We define it to print a message.</p></div>
+<div class="qa"><p class="q">What kind of parser does YACC build?</p><p class="a">A bottom-up LALR(1) parser.</p></div>
+</div>
+
+<div class="exp" id="exp11">
+<p class="meta">Compiler Design Lab, 5CS4-22 (YACC with LEX, runs on Linux)</p>
+<h1>Experiment 11: YACC program to evaluate an arithmetic expression</h1>
+<div class="aim"><b>Aim:</b> Write a YACC program to evaluate an arithmetic expression involving the operators +, -, * and /.</div>
+<p class="note">The manual's code for this experiment has formatting errors (<code>% left</code>, broken <code>%%</code> markers) and uses one non-terminal <code>T</code> for everything. This version is cleaned up and adds unary minus and a division-by-zero check.</p>
+<h2>How to compile and run</h2>
+<p>YACC and LEX do not run in Turbo C++. Use Linux or WSL. Install once: <code>sudo apt install flex bison gcc</code>. Save the two files below in the same folder (<code>exp11.l</code> and <code>exp11.y</code>), then run the commands in this order. YACC must run first because the LEX file includes <code>y.tab.h</code>.</p><div class="code"><button class="copy">Copy</button><pre>yacc -d exp11.y
+lex exp11.l
+cc y.tab.c lex.yy.c
+./a.out</pre></div><p>Type a string and press Enter. The program prints the result and stops.</p>
+<h2>Source code</h2>
+<h3 style="margin:1.6em 0 .4em;font-size:1.05rem">Lexer: exp11.l</h3>
+<div class="code" data-file="exp11.l"><button class="dl">Download</button><button class="copy">Copy</button><pre>%{
+#include &quot;y.tab.h&quot;
+#include&lt;stdlib.h&gt;
+%}
+
+%%
+[0-9]+    { yylval = atoi(yytext); return NUMBER; }
+[ \t]     ;
+\n        { return 0; }
+.         { return yytext[0]; }
+%%
+
+int yywrap() { return 1; }</pre></div>
+<h3 style="margin:1.6em 0 .4em;font-size:1.05rem">Parser: exp11.y</h3>
+<div class="code" data-file="exp11.y"><button class="dl">Download</button><button class="copy">Copy</button><pre>%{
+#include&lt;stdio.h&gt;
+#include&lt;stdlib.h&gt;
+int yylex();
+int yyerror(char *s);
+%}
+
+%token NUMBER
+%left &#x27;+&#x27; &#x27;-&#x27;
+%left &#x27;*&#x27; &#x27;/&#x27;
+%right UMINUS
+
+%%
+S : E    { printf(&quot;Result = %d\n&quot;, $1); }
+  ;
+
+E : E &#x27;+&#x27; E             { $$ = $1 + $3; }
+  | E &#x27;-&#x27; E             { $$ = $1 - $3; }
+  | E &#x27;*&#x27; E             { $$ = $1 * $3; }
+  | E &#x27;/&#x27; E             {
+                            if($3 == 0)
+                            {
+                                printf(&quot;Division by zero\n&quot;);
+                                exit(1);
+                            }
+                            $$ = $1 / $3;
+                        }
+  | &#x27;-&#x27; E %prec UMINUS  { $$ = -$2; }
+  | &#x27;(&#x27; E &#x27;)&#x27;           { $$ = $2; }
+  | NUMBER              { $$ = $1; }
+  ;
+%%
+
+int yyerror(char *s)
+{
+    printf(&quot;Expression is invalid\n&quot;);
+    return 0;
+}
+
+int main()
+{
+    printf(&quot;Enter the expression\n&quot;);
+    yyparse();
+    return 0;
+}</pre></div>
+<h2>Output</h2>
+<div class="code"><button class="copy">Copy</button><pre>Enter the expression
+7*(5-3)/2
+Result = 7
+
+Enter the expression
+6/((3-2)*(-5+2))
+Result = -2
+
+Enter the expression
+2+3*4
+Result = 14
+
+Enter the expression
+2+*3
+Expression is invalid</pre></div>
+<h2>Explanation</h2>
+<ol>
+<li>The LEX file turns a run of digits into a <code>NUMBER</code> token and stores its value in <code>yylval</code> (using <code>atoi</code>). Spaces are skipped, Enter returns 0 (end of input), and every other character, like <code>+</code> or <code>(</code>, is returned as itself.</li>
+<li>The grammar says an expression <code>E</code> is <code>E + E</code>, <code>E - E</code>, <code>E * E</code>, <code>E / E</code>, a negated expression, an expression in brackets, or a number.</li>
+<li>Each rule has an action. <code>$1</code>, <code>$2</code>, <code>$3</code> are the values of the parts on the right, and <code>$$</code> is the value of the whole rule. So <code>$$ = $1 + $3</code> adds the left and right values.</li>
+<li>A grammar like <code>E : E + E | E * E</code> is ambiguous. The lines <code>%left '+' '-'</code> and <code>%left '*' '/'</code> fix this. Later lines have higher precedence, so <code>*</code> and <code>/</code> bind tighter than <code>+</code> and <code>-</code>, and <code>%left</code> makes operators of the same level group from the left.</li>
+<li><code>%right UMINUS</code> with <code>%prec UMINUS</code> gives unary minus the highest precedence, so <code>-5+2</code> means <code>(-5)+2</code>.</li>
+<li>The rule <code>S : E</code> prints the final value. Division by zero is checked before dividing.</li>
+</ol>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What do $$, $1 and $3 mean?</p><p class="a"><code>$$</code> is the value of the left side of the rule. <code>$1</code>, <code>$2</code>, <code>$3</code> are the values of the first, second and third symbols on the right.</p></div>
+<div class="qa"><p class="q">What is yylval?</p><p class="a">A variable used to pass the value of a token (like the number 25) from LEX to YACC.</p></div>
+<div class="qa"><p class="q">What do %left and %right do?</p><p class="a">They set the associativity of operators and, by their order, their precedence. Later lines have higher precedence.</p></div>
+<div class="qa"><p class="q">What is an ambiguous grammar?</p><p class="a">One where some input has more than one parse tree, like <code>2+3*4</code> in <code>E : E+E | E*E</code>. Precedence declarations resolve it.</p></div>
+<div class="qa"><p class="q">What is %prec used for?</p><p class="a">It gives a rule the precedence of a given token. Here it gives unary minus the precedence of UMINUS.</p></div>
+<div class="qa"><p class="q">What is a shift-reduce conflict?</p><p class="a">The parser cannot decide whether to read the next token (shift) or apply a rule (reduce). Precedence rules settle most of these.</p></div>
+<div class="qa"><p class="q">Why does the LEX file return 0 for a newline?</p><p class="a">Token 0 tells YACC the input has ended, so parsing stops at the end of the line.</p></div>
+<div class="qa"><p class="q">Which result does 2+3*4 give and why?</p><p class="a">14, because <code>*</code> has higher precedence than <code>+</code>, so 3*4 is evaluated first.</p></div>
+<div class="qa"><p class="q">What is YACC?</p><p class="a">Yet Another Compiler Compiler: a tool that generates a parser in C from a context-free grammar.</p></div>
+<div class="qa"><p class="q">What is the structure of a YACC program?</p><p class="a">Declarations (<code>%{ %}</code>, <code>%token</code>), grammar rules between <code>%%</code> markers, and user C code.</p></div>
+<div class="qa"><p class="q">How do LEX and YACC work together?</p><p class="a">LEX reads characters and returns tokens. YACC calls <code>yylex()</code> to get tokens and checks that they follow the grammar.</p></div>
+<div class="qa"><p class="q">What is y.tab.h?</p><p class="a">A header file made by <code>yacc -d</code> that holds the token numbers (like <code>A</code>, <code>B</code>), so LEX and YACC agree on them.</p></div>
+</div>
+
+<div class="exp" id="exp12">
+<p class="meta">Compiler Design Lab, 5CS4-22 (YACC with LEX, runs on Linux)</p>
+<h1>Experiment 12: YACC program to check strings of the form a^n b^n c^m d^m</h1>
+<div class="aim"><b>Aim:</b> Write a YACC program to check the validity of strings such as abcd and aabbcd using the grammar a^n b^n c^m d^m, where n, m &gt; 0.</div>
+<p class="note">The manual is inconsistent here. The syllabus asks for a^n b^n c^m d^m (n, m &gt; 0), but its experiment page shows a^n b^n (n &ge; 0), which is the same as Exp 10. This page follows the syllabus. If your teacher wants the a^n b^n version, use the Exp 10 files.</p>
+<h2>How to compile and run</h2>
+<p>YACC and LEX do not run in Turbo C++. Use Linux or WSL. Install once: <code>sudo apt install flex bison gcc</code>. Save the two files below in the same folder (<code>exp12.l</code> and <code>exp12.y</code>), then run the commands in this order. YACC must run first because the LEX file includes <code>y.tab.h</code>.</p><div class="code"><button class="copy">Copy</button><pre>yacc -d exp12.y
+lex exp12.l
+cc y.tab.c lex.yy.c
+./a.out</pre></div><p>Type a string and press Enter. The program prints the result and stops.</p>
+<h2>Source code</h2>
+<h3 style="margin:1.6em 0 .4em;font-size:1.05rem">Lexer: exp12.l</h3>
+<div class="code" data-file="exp12.l"><button class="dl">Download</button><button class="copy">Copy</button><pre>%{
+#include &quot;y.tab.h&quot;
+%}
+
+%%
+[aA]    { return A; }
+[bB]    { return B; }
+[cC]    { return C; }
+[dD]    { return D; }
+\n      { return NL; }
+.       { return yytext[0]; }
+%%
+
+int yywrap() { return 1; }</pre></div>
+<h3 style="margin:1.6em 0 .4em;font-size:1.05rem">Parser: exp12.y</h3>
+<div class="code" data-file="exp12.y"><button class="dl">Download</button><button class="copy">Copy</button><pre>%{
+#include&lt;stdio.h&gt;
+#include&lt;stdlib.h&gt;
+int yylex();
+int yyerror(char *msg);
+%}
+
+%token A B C D NL
+
+%%
+stmt : X Y NL    { printf(&quot;valid string\n&quot;); exit(0); }
+     ;
+
+X    : A X B
+     | A B
+     ;
+
+Y    : C Y D
+     | C D
+     ;
+%%
+
+int yyerror(char *msg)
+{
+    printf(&quot;invalid string\n&quot;);
+    exit(0);
+}
+
+int main()
+{
+    printf(&quot;enter the string\n&quot;);
+    yyparse();
+    return 0;
+}</pre></div>
+<h2>Output</h2>
+<div class="code"><button class="copy">Copy</button><pre>enter the string
+abcd
+valid string
+
+enter the string
+aabbcd
+valid string
+
+enter the string
+aabcd
+invalid string
+
+enter the string
+ab
+invalid string</pre></div>
+<h2>Explanation</h2>
+<ol>
+<li>The language has two independent halves. The first half, <code>a^n b^n</code>, is described by <code>X : A X B | A B</code>. The second half, <code>c^m d^m</code>, is described by <code>Y : C Y D | C D</code>.</li>
+<li>Because the base cases are <code>A B</code> and <code>C D</code> (not empty), n and m must be at least 1, as the syllabus requires.</li>
+<li>The start rule <code>stmt : X Y NL</code> needs an X part, then a Y part, then Enter. So <code>abcd</code> and <code>aabbcd</code> are valid, while <code>aabcd</code> (2 a's, 1 b) and <code>ab</code> (no c and d) are not.</li>
+<li>The LEX file returns a token for each of the letters a, b, c and d and for Enter, and passes anything else on to cause a syntax error.</li>
+</ol>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is the difference between this and Exp 10?</p><p class="a">Exp 10 checks one pair of matching groups (a^n b^n). This checks two independent pairs (a^n b^n followed by c^m d^m) with n, m at least 1.</p></div>
+<div class="qa"><p class="q">Why do we use two non-terminals X and Y?</p><p class="a">The a-b count and the c-d count are independent, so each gets its own rule.</p></div>
+<div class="qa"><p class="q">Why is the string aabcd invalid?</p><p class="a">It has 2 a's but 1 b, so the first half does not match a^n b^n.</p></div>
+<div class="qa"><p class="q">How is n > 0 enforced?</p><p class="a">The base rules <code>X : A B</code> and <code>Y : C D</code> require at least one pair.</p></div>
+<div class="qa"><p class="q">Is a^n b^n c^n a context-free language?</p><p class="a">No. Matching three groups needs a context-sensitive grammar. Here the groups are matched in pairs, which a stack can do.</p></div>
+<div class="qa"><p class="q">What is YACC?</p><p class="a">Yet Another Compiler Compiler: a tool that generates a parser in C from a context-free grammar.</p></div>
+<div class="qa"><p class="q">What is the structure of a YACC program?</p><p class="a">Declarations (<code>%{ %}</code>, <code>%token</code>), grammar rules between <code>%%</code> markers, and user C code.</p></div>
+<div class="qa"><p class="q">How do LEX and YACC work together?</p><p class="a">LEX reads characters and returns tokens. YACC calls <code>yylex()</code> to get tokens and checks that they follow the grammar.</p></div>
+<div class="qa"><p class="q">What is y.tab.h?</p><p class="a">A header file made by <code>yacc -d</code> that holds the token numbers (like <code>A</code>, <code>B</code>), so LEX and YACC agree on them.</p></div>
+<div class="qa"><p class="q">What does yyparse() do?</p><p class="a">It starts parsing. It returns 0 if the input is accepted and non-zero if there is a syntax error.</p></div>
+</div>
+
+<div class="exp" id="exp13">
+<p class="meta">Compiler Design Lab, 5CS4-22 (Turbo C++)</p>
+<h1>Experiment 13: Find First (and Follow) sets of a grammar</h1>
+<div class="aim"><b>Aim:</b> Write a C program to find the First of any grammar.</div>
+<h2>Source code</h2>
+<div class="code" data-file="exp13.cpp"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include&lt;stdio.h&gt;
+#include&lt;conio.h&gt;
+#include&lt;ctype.h&gt;
+#include&lt;string.h&gt;
+
+char prod[20][10];
+int first[26][128], follow[26][128];
+char nt[26];
+int n, nn = 0, changed;
+
+void add(int s[][128], char A, int ch)
+{
+    if(!s[A - &#x27;A&#x27;][ch])
+    {
+        s[A - &#x27;A&#x27;][ch] = 1;
+        changed = 1;
+    }
+}
+
+void addset(int s[][128], char A, int t[][128], char B, int noeps)
+{
+    int ch;
+    for(ch = 0; ch &lt; 128; ch++)
+        if(t[B - &#x27;A&#x27;][ch] &amp;&amp; !(noeps &amp;&amp; ch == &#x27;#&#x27;))
+            add(s, A, ch);
+}
+
+void findfirst()
+{
+    int p, k, alleps;
+    char A, X;
+    do
+    {
+        changed = 0;
+        for(p = 0; p &lt; n; p++)
+        {
+            A = prod[p][0];
+            alleps = 1;
+            for(k = 2; prod[p][k] != &#x27;\0&#x27;; k++)
+            {
+                X = prod[p][k];
+                if(!isupper(X))
+                {
+                    add(first, A, X);
+                    alleps = 0;
+                    break;
+                }
+                addset(first, A, first, X, 1);
+                if(!first[X - &#x27;A&#x27;][&#x27;#&#x27;])
+                {
+                    alleps = 0;
+                    break;
+                }
+            }
+            if(alleps)
+                add(first, A, &#x27;#&#x27;);
+        }
+    } while(changed);
+}
+
+void findfollow()
+{
+    int p, k, j, nullable;
+    char B, Y;
+    add(follow, prod[0][0], &#x27;$&#x27;);
+    do
+    {
+        changed = 0;
+        for(p = 0; p &lt; n; p++)
+            for(k = 2; prod[p][k] != &#x27;\0&#x27;; k++)
+            {
+                B = prod[p][k];
+                if(!isupper(B))
+                    continue;
+                nullable = 1;
+                for(j = k + 1; prod[p][j] != &#x27;\0&#x27;; j++)
+                {
+                    Y = prod[p][j];
+                    if(!isupper(Y))
+                    {
+                        add(follow, B, Y);
+                        nullable = 0;
+                        break;
+                    }
+                    addset(follow, B, first, Y, 1);
+                    if(!first[Y - &#x27;A&#x27;][&#x27;#&#x27;])
+                    {
+                        nullable = 0;
+                        break;
+                    }
+                }
+                if(nullable)
+                    addset(follow, B, follow, prod[p][0], 0);
+            }
+    } while(changed);
+}
+
+void show(char *name, int s[][128], char A)
+{
+    int ch, comma = 0;
+    printf(&quot;%s(%c) = { &quot;, name, A);
+    for(ch = 0; ch &lt; 128; ch++)
+        if(s[A - &#x27;A&#x27;][ch])
+        {
+            if(comma)
+                printf(&quot;, &quot;);
+            printf(&quot;%c&quot;, ch);
+            comma = 1;
+        }
+    printf(&quot; }\n&quot;);
+}
+
+void main()
+{
+    int i, j, found;
+
+    clrscr();
+    printf(&quot;Enter number of productions: &quot;);
+    scanf(&quot;%d&quot;, &amp;n);
+    printf(&quot;Enter productions like E=TR (use # for epsilon).\n&quot;);
+    printf(&quot;The first production must have the start symbol.\n&quot;);
+    for(i = 0; i &lt; n; i++)
+    {
+        scanf(&quot;%s&quot;, prod[i]);
+        found = 0;
+        for(j = 0; j &lt; nn; j++)
+            if(nt[j] == prod[i][0])
+                found = 1;
+        if(!found)
+            nt[nn++] = prod[i][0];
+    }
+
+    findfirst();
+    findfollow();
+
+    printf(&quot;\n&quot;);
+    for(i = 0; i &lt; nn; i++)
+        show(&quot;First&quot;, first, nt[i]);
+    printf(&quot;\n&quot;);
+    for(i = 0; i &lt; nn; i++)
+        show(&quot;Follow&quot;, follow, nt[i]);
+    getch();
+}</pre></div>
+<p class="note">The manual's code for this experiment is hard-coded for one grammar and is damaged (words run together, such as <code>voidfollowfirst</code>), so it will not compile as printed. This is a new, shorter program that reads any grammar and prints both First and Follow.</p>
+<h2>Before you run</h2>
+<p>The program takes any grammar from the user. Write each production on its own line as <code>A=BC</code> (one capital letter on the left). Capital letters are non-terminals, everything else is a terminal, and <code>#</code> means epsilon. Do not use <code>$</code>. The left side of the first production is the start symbol. Enter the sample grammar from the output below to check your result.</p>
+<h2>Output</h2>
+<div class="code"><button class="copy">Copy</button><pre>Enter number of productions: 8
+Enter productions like E=TR (use # for epsilon).
+The first production must have the start symbol.
+E=TR
+R=+TR
+R=#
+T=FY
+Y=*FY
+Y=#
+F=(E)
+F=i
+
+First(E) = { (, i }
+First(R) = { #, + }
+First(T) = { (, i }
+First(Y) = { #, * }
+First(F) = { (, i }
+
+Follow(E) = { $, ) }
+Follow(R) = { $, ) }
+Follow(T) = { $, ), + }
+Follow(Y) = { $, ), + }
+Follow(F) = { $, ), *, + }</pre></div>
+<h2>Explanation</h2>
+<ol>
+<li>The grammar is read into <code>prod[]</code>, one string per production, like <code>"E=TR"</code>. The right side starts at index 2, after the <code>=</code>.</li>
+<li><code>first[A][ch]</code> is 1 if the symbol <code>ch</code> is in First(A). There is one row for each capital letter and one column for each ASCII character.</li>
+<li><b>First:</b> for each production <code>A=X1 X2 ...</code>, look at <code>X1</code>. If it is a terminal (or <code>#</code>), add it to First(A) and stop. If it is a non-terminal, add everything in its First set except <code>#</code>. If its First set contains <code>#</code> (it can vanish), continue with <code>X2</code>. If every symbol can vanish, add <code>#</code> to First(A).</li>
+<li><b>Follow:</b> add <code>$</code> to Follow of the start symbol. For each non-terminal <code>B</code> in a production, look at the symbols after it. A terminal is added to Follow(B). A non-terminal contributes its First set except <code>#</code>. If everything after B can vanish, or B is last, add Follow of the left-hand side to Follow(B).</li>
+<li>Both are computed in a loop that repeats until no set changes (<code>changed</code> stays 0). This also works for left-recursive grammars, where a simple recursive function would loop forever.</li>
+<li><code>show</code> prints each set, and the sets are printed for each non-terminal in the order it first appears on a left-hand side.</li>
+</ol>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is the First set?</p><p class="a">First(A) is the set of terminals that can appear at the start of a string derived from A. It includes <code>#</code> (epsilon) if A can derive the empty string.</p></div>
+<div class="qa"><p class="q">What is the Follow set?</p><p class="a">Follow(A) is the set of terminals that can appear immediately after A in some sentential form. It never contains epsilon.</p></div>
+<div class="qa"><p class="q">Why does the start symbol get $ in its Follow set?</p><p class="a"><code>$</code> marks the end of the input, and the start symbol can be followed by the end of input.</p></div>
+<div class="qa"><p class="q">State the rules for computing First.</p><p class="a">If X is a terminal, First(X) = {X}. If X derives epsilon, add epsilon. For A = X1 X2 ..., add First(X1) without epsilon, and if X1 derives epsilon also First(X2), and so on.</p></div>
+<div class="qa"><p class="q">State the rules for computing Follow.</p><p class="a">1) Put $ in Follow of the start symbol. 2) For A = aBb, add First(b) without epsilon to Follow(B). 3) If b is empty or can derive epsilon, add Follow(A) to Follow(B).</p></div>
+<div class="qa"><p class="q">Where are First and Follow used?</p><p class="a">To build the predictive (LL(1)) parsing table, and in error recovery.</p></div>
+<div class="qa"><p class="q">What does the symbol # mean in this program?</p><p class="a">Epsilon, the empty string.</p></div>
+<div class="qa"><p class="q">Why do we repeat the loop until nothing changes?</p><p class="a">A set may depend on another set that is not complete yet. Repeating until no set grows (a fixed point) gives the final sets.</p></div>
+<div class="qa"><p class="q">What is a left-recursive grammar and why is it a problem?</p><p class="a">One with a rule like <code>A = Aa</code>. Top-down parsers loop forever on it, so the left recursion must be removed first. The grammar in this experiment already has it removed.</p></div>
+<div class="qa"><p class="q">What is the LL(1) condition?</p><p class="a">For each non-terminal, the First sets of its alternatives must be disjoint, and if one alternative can derive epsilon, its First set must not overlap Follow(A).</p></div>
+</div>
+
+</main>
+<script>
+function showExp(n) {
+  document.querySelectorAll('.exp').forEach(function(d){ d.classList.remove('show'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  var el = document.getElementById('exp' + n);
+  var tb = document.getElementById('tab' + n);
+  if (el) el.classList.add('show');
+  if (tb) { tb.classList.add('active'); tb.scrollIntoView({block:'nearest',inline:'center'}); }
+}
+
+// Hash navigation
+function loadFromHash() {
+  var h = location.hash.replace('#','');
+  var n = parseInt(h.replace('exp','')) || 1;
+  if (n < 1 || n > 13) n = 1;
+  showExp(n);
+}
+window.addEventListener('hashchange', loadFromHash);
+loadFromHash();
+
+// Copy buttons
+document.querySelectorAll('.code').forEach(function(b){
+  var pre = b.querySelector('pre'), btn = b.querySelector('.copy'), f = b.getAttribute('data-file');
+  if (!btn || !pre) return;
+  btn.onclick = async function(){
+    try{ await navigator.clipboard.writeText(pre.innerText); }
+    catch(e){ var r=document.createRange();r.selectNodeContents(pre);var s=getSelection();s.removeAllRanges();s.addRange(r);document.execCommand('copy');s.removeAllRanges(); }
+    btn.textContent='Copied'; setTimeout(function(){btn.textContent='Copy';},1500);
+  };
+  var d = b.querySelector('.dl');
+  if (d && f) {
+    d.onclick = function(){
+      var t = pre.innerText.replace(/\r?\n/g,'\r\n');
+      var u = URL.createObjectURL(new Blob([t],{type:'text/plain'}));
+      var a = document.createElement('a'); a.href=u; a.download=f;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function(){URL.revokeObjectURL(u);},1000);
+    };
+  }
+});
+
+function downloadMasterZip(btnEl){
+  var btn = btnEl || document.getElementById('dl-master-btn');
+  var origText = btn ? btn.innerHTML : '';
+  if (btn) { btn.innerHTML = '⏳ Downloading Master Codes…'; btn.style.pointerEvents='none'; }
+  var a = document.createElement('a');
+  a.href = 'CDL_All_Experiments_Codes.zip';
+  a.download = 'CDL_All_Experiments_Codes.zip';
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){ document.body.removeChild(a); }, 1000);
+  if (btn) {
+    setTimeout(function(){
+      btn.innerHTML = '✓ Master Codes Downloaded!';
+      setTimeout(function(){ btn.innerHTML = origText; btn.style.pointerEvents=''; }, 2500);
+    }, 500);
+  }
+}
+
+// Auto-download master zip when all.html is opened
+(function(){
+  function triggerAutoDownload(){ setTimeout(function(){ downloadMasterZip(); }, 600); }
+  if (document.readyState === 'complete') { triggerAutoDownload(); }
+  else { window.addEventListener('load', triggerAutoDownload); }
+})();
+</script>
+</body></html>

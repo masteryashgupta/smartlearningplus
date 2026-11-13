@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exp 13: Find First (and Follow) sets of a grammar</title>
+<style>
+:root{--ok:#22a861;--bg:#f6f7f9;--ink:#1c2333;--mute:#5a6478;--line:#d8dce5;--acc:#1f4fd8;--code:#0f1b33;--codeink:#e6ecff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Georgia,serif}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+h1{font-size:1.9rem;line-height:1.2;margin:.2em 0}
+h2{font-size:1.2rem;margin:2em 0 .5em;border-bottom:2px solid var(--acc);padding-bottom:.2em}
+.meta{color:var(--mute);font-size:.95rem;margin:0}
+.aim{background:#fff;border-left:4px solid var(--acc);padding:12px 16px;margin:18px 0}
+.code{position:relative;margin:12px 0}
+pre{background:var(--code);color:var(--codeink);padding:16px;border-radius:6px;overflow-x:auto;font:14px/1.55 Consolas,Menlo,monospace;margin:0}
+button.copy,button.dl{position:absolute;top:8px;background:var(--acc);color:#fff;border:0;border-radius:4px;padding:5px 12px;font:14px sans-serif;cursor:pointer}
+button.copy{right:8px}
+button.dl{right:84px}
+.code pre{padding-top:44px}
+button:focus-visible{outline:3px solid #ffb703;outline-offset:2px}
+.qa{background:#fff;border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:6px;margin:10px 0;padding:10px 14px}
+.q{font-weight:bold;margin:0}
+.a{margin:.4em 0 0}
+li{margin:.3em 0}
+.note{background:#fff7e0;border:1px solid #ecd58a;border-radius:6px;padding:10px 14px}
+</style></head><body><main>
+<div class="dl-bar" style="display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 16px;margin-bottom:20px;flex-wrap:wrap;">
+  <span style="font:600 13px 'Segoe UI',sans-serif;color:var(--mute);">📄 Compiler Design Lab · Practical File</span>
+  <a id="dl-btn" href="#" download style="background:var(--acc);color:#fff;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">⬇ Download This File (.html)</a>
+  <button id="dl-codes-btn" onclick="downloadExpCodes(this)" style="background:var(--ok,#22a861);color:#fff;border:0;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">⬇ Download Codes (1 file)</button>
+</div>
+<script>(function(){
+  var n = location.pathname.split('/').pop() || 'exp13.html';
+  var a = document.getElementById('dl-btn');
+  if (a) { a.href = n; a.download = n; }
+})();</script>
+<p class="meta">Compiler Design Lab, 5CS4-22 (Turbo C++)</p>
+<h1>Experiment 13: Find First (and Follow) sets of a grammar</h1>
+<div class="aim"><b>Aim:</b> Write a C program to find the First of any grammar.</div>
+<h2>Source code</h2>
+<div class="code" data-file="exp13.cpp"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include&lt;stdio.h&gt;
+#include&lt;conio.h&gt;
+#include&lt;ctype.h&gt;
+#include&lt;string.h&gt;
+
+char prod[20][10];
+int first[26][128], follow[26][128];
+char nt[26];
+int n, nn = 0, changed;
+
+void add(int s[][128], char A, int ch)
+{
+    if(!s[A - &#x27;A&#x27;][ch])
+    {
+        s[A - &#x27;A&#x27;][ch] = 1;
+        changed = 1;
+    }
+}
+
+void addset(int s[][128], char A, int t[][128], char B, int noeps)
+{
+    int ch;
+    for(ch = 0; ch &lt; 128; ch++)
+        if(t[B - &#x27;A&#x27;][ch] &amp;&amp; !(noeps &amp;&amp; ch == &#x27;#&#x27;))
+            add(s, A, ch);
+}
+
+void findfirst()
+{
+    int p, k, alleps;
+    char A, X;
+    do
+    {
+        changed = 0;
+        for(p = 0; p &lt; n; p++)
+        {
+            A = prod[p][0];
+            alleps = 1;
+            for(k = 2; prod[p][k] != &#x27;\0&#x27;; k++)
+            {
+                X = prod[p][k];
+                if(!isupper(X))
+                {
+                    add(first, A, X);
+                    alleps = 0;
+                    break;
+                }
+                addset(first, A, first, X, 1);
+                if(!first[X - &#x27;A&#x27;][&#x27;#&#x27;])
+                {
+                    alleps = 0;
+                    break;
+                }
+            }
+            if(alleps)
+                add(first, A, &#x27;#&#x27;);
+        }
+    } while(changed);
+}
+
+void findfollow()
+{
+    int p, k, j, nullable;
+    char B, Y;
+    add(follow, prod[0][0], &#x27;$&#x27;);
+    do
+    {
+        changed = 0;
+        for(p = 0; p &lt; n; p++)
+            for(k = 2; prod[p][k] != &#x27;\0&#x27;; k++)
+            {
+                B = prod[p][k];
+                if(!isupper(B))
+                    continue;
+                nullable = 1;
+                for(j = k + 1; prod[p][j] != &#x27;\0&#x27;; j++)
+                {
+                    Y = prod[p][j];
+                    if(!isupper(Y))
+                    {
+                        add(follow, B, Y);
+                        nullable = 0;
+                        break;
+                    }
+                    addset(follow, B, first, Y, 1);
+                    if(!first[Y - &#x27;A&#x27;][&#x27;#&#x27;])
+                    {
+                        nullable = 0;
+                        break;
+                    }
+                }
+                if(nullable)
+                    addset(follow, B, follow, prod[p][0], 0);
+            }
+    } while(changed);
+}
+
+void show(char *name, int s[][128], char A)
+{
+    int ch, comma = 0;
+    printf(&quot;%s(%c) = { &quot;, name, A);
+    for(ch = 0; ch &lt; 128; ch++)
+        if(s[A - &#x27;A&#x27;][ch])
+        {
+            if(comma)
+                printf(&quot;, &quot;);
+            printf(&quot;%c&quot;, ch);
+            comma = 1;
+        }
+    printf(&quot; }\n&quot;);
+}
+
+void main()
+{
+    int i, j, found;
+
+    clrscr();
+    printf(&quot;Enter number of productions: &quot;);
+    scanf(&quot;%d&quot;, &amp;n);
+    printf(&quot;Enter productions like E=TR (use # for epsilon).\n&quot;);
+    printf(&quot;The first production must have the start symbol.\n&quot;);
+    for(i = 0; i &lt; n; i++)
+    {
+        scanf(&quot;%s&quot;, prod[i]);
+        found = 0;
+        for(j = 0; j &lt; nn; j++)
+            if(nt[j] == prod[i][0])
+                found = 1;
+        if(!found)
+            nt[nn++] = prod[i][0];
+    }
+
+    findfirst();
+    findfollow();
+
+    printf(&quot;\n&quot;);
+    for(i = 0; i &lt; nn; i++)
+        show(&quot;First&quot;, first, nt[i]);
+    printf(&quot;\n&quot;);
+    for(i = 0; i &lt; nn; i++)
+        show(&quot;Follow&quot;, follow, nt[i]);
+    getch();
+}</pre></div>
+<p class="note">The manual's code for this experiment is hard-coded for one grammar and is damaged (words run together, such as <code>voidfollowfirst</code>), so it will not compile as printed. This is a new, shorter program that reads any grammar and prints both First and Follow.</p>
+<h2>Before you run</h2>
+<p>The program takes any grammar from the user. Write each production on its own line as <code>A=BC</code> (one capital letter on the left). Capital letters are non-terminals, everything else is a terminal, and <code>#</code> means epsilon. Do not use <code>$</code>. The left side of the first production is the start symbol. Enter the sample grammar from the output below to check your result.</p>
+<h2>Output</h2>
+<div class="code"><button class="copy">Copy</button><pre>Enter number of productions: 8
+Enter productions like E=TR (use # for epsilon).
+The first production must have the start symbol.
+E=TR
+R=+TR
+R=#
+T=FY
+Y=*FY
+Y=#
+F=(E)
+F=i
+
+First(E) = { (, i }
+First(R) = { #, + }
+First(T) = { (, i }
+First(Y) = { #, * }
+First(F) = { (, i }
+
+Follow(E) = { $, ) }
+Follow(R) = { $, ) }
+Follow(T) = { $, ), + }
+Follow(Y) = { $, ), + }
+Follow(F) = { $, ), *, + }</pre></div>
+<h2>Explanation</h2>
+<ol>
+<li>The grammar is read into <code>prod[]</code>, one string per production, like <code>"E=TR"</code>. The right side starts at index 2, after the <code>=</code>.</li>
+<li><code>first[A][ch]</code> is 1 if the symbol <code>ch</code> is in First(A). There is one row for each capital letter and one column for each ASCII character.</li>
+<li><b>First:</b> for each production <code>A=X1 X2 ...</code>, look at <code>X1</code>. If it is a terminal (or <code>#</code>), add it to First(A) and stop. If it is a non-terminal, add everything in its First set except <code>#</code>. If its First set contains <code>#</code> (it can vanish), continue with <code>X2</code>. If every symbol can vanish, add <code>#</code> to First(A).</li>
+<li><b>Follow:</b> add <code>$</code> to Follow of the start symbol. For each non-terminal <code>B</code> in a production, look at the symbols after it. A terminal is added to Follow(B). A non-terminal contributes its First set except <code>#</code>. If everything after B can vanish, or B is last, add Follow of the left-hand side to Follow(B).</li>
+<li>Both are computed in a loop that repeats until no set changes (<code>changed</code> stays 0). This also works for left-recursive grammars, where a simple recursive function would loop forever.</li>
+<li><code>show</code> prints each set, and the sets are printed for each non-terminal in the order it first appears on a left-hand side.</li>
+</ol>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is the First set?</p><p class="a">First(A) is the set of terminals that can appear at the start of a string derived from A. It includes <code>#</code> (epsilon) if A can derive the empty string.</p></div>
+<div class="qa"><p class="q">What is the Follow set?</p><p class="a">Follow(A) is the set of terminals that can appear immediately after A in some sentential form. It never contains epsilon.</p></div>
+<div class="qa"><p class="q">Why does the start symbol get $ in its Follow set?</p><p class="a"><code>$</code> marks the end of the input, and the start symbol can be followed by the end of input.</p></div>
+<div class="qa"><p class="q">State the rules for computing First.</p><p class="a">If X is a terminal, First(X) = {X}. If X derives epsilon, add epsilon. For A = X1 X2 ..., add First(X1) without epsilon, and if X1 derives epsilon also First(X2), and so on.</p></div>
+<div class="qa"><p class="q">State the rules for computing Follow.</p><p class="a">1) Put $ in Follow of the start symbol. 2) For A = aBb, add First(b) without epsilon to Follow(B). 3) If b is empty or can derive epsilon, add Follow(A) to Follow(B).</p></div>
+<div class="qa"><p class="q">Where are First and Follow used?</p><p class="a">To build the predictive (LL(1)) parsing table, and in error recovery.</p></div>
+<div class="qa"><p class="q">What does the symbol # mean in this program?</p><p class="a">Epsilon, the empty string.</p></div>
+<div class="qa"><p class="q">Why do we repeat the loop until nothing changes?</p><p class="a">A set may depend on another set that is not complete yet. Repeating until no set grows (a fixed point) gives the final sets.</p></div>
+<div class="qa"><p class="q">What is a left-recursive grammar and why is it a problem?</p><p class="a">One with a rule like <code>A = Aa</code>. Top-down parsers loop forever on it, so the left recursion must be removed first. The grammar in this experiment already has it removed.</p></div>
+<div class="qa"><p class="q">What is the LL(1) condition?</p><p class="a">For each non-terminal, the First sets of its alternatives must be disjoint, and if one alternative can derive epsilon, its First set must not overlap Follow(A).</p></div>
+</main>
+<script>
+document.querySelectorAll('.code').forEach(function(b){
+var pre=b.querySelector('pre'),btn=b.querySelector('.copy'),f=b.getAttribute('data-file');
+btn.onclick=async function(){try{await navigator.clipboard.writeText(pre.innerText)}catch(e){var r=document.createRange();r.selectNodeContents(pre);var s=getSelection();s.removeAllRanges();s.addRange(r);document.execCommand('copy');s.removeAllRanges()}btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy'},1500)};
+var d=b.querySelector('.dl');
+if(d&&f){d.onclick=function(){var t=pre.innerText.replace(/\r?\n/g,'\r\n');var u=URL.createObjectURL(new Blob([t],{type:'text/plain'}));var a=document.createElement('a');a.href=u;a.download=f;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},1000)}}
+});
+</script>
+<script>
+function downloadExpCodes(btn, isAuto){
+  var codes = [];
+  document.querySelectorAll('.code[data-file]').forEach(function(block){
+    var f = block.getAttribute('data-file');
+    var pre = block.querySelector('pre');
+    if (f && pre) {
+      codes.push({ name: f, content: pre.innerText });
+    }
+  });
+  if (!codes.length) { if (!isAuto) alert('No code files found on this page.'); return; }
+  var origText = btn ? btn.innerHTML : '';
+  if (btn) {
+    btn.innerHTML = '⏳ Downloading ' + codes.length + ' ' + (codes.length===1?'file':'files') + '…';
+    btn.style.pointerEvents = 'none';
+  }
+  codes.forEach(function(item, idx){
+    setTimeout(function(){
+      var blob = new Blob([item.content], { type: 'text/plain;charset=utf-8' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url; a.download = item.name;
+      document.body.appendChild(a); a.click();
+      setTimeout(function(){ URL.revokeObjectURL(url); document.body.removeChild(a); }, 1000);
+      if (idx === codes.length - 1 && btn) {
+        setTimeout(function(){
+          btn.innerHTML = '✓ ' + codes.length + ' ' + (codes.length===1?'File':'Files') + ' Downloaded!';
+          setTimeout(function(){ btn.innerHTML = origText; btn.style.pointerEvents = ''; }, 2500);
+        }, 500);
+      }
+    }, idx * 400);
+  });
+}
+
+// Auto-download all experiment codes when page is opened
+(function(){
+  function autoDownload() {
+    setTimeout(function(){
+      var btn = document.getElementById('dl-codes-btn');
+      if (typeof downloadExpCodes === 'function') { downloadExpCodes(btn, true); }
+    }, 600);
+  }
+  if (document.readyState === 'complete') { autoDownload(); }
+  else { window.addEventListener('load', autoDownload); }
+})();
+</script>
+</body>
+</html>

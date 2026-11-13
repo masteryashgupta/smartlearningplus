@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exp 3: Count total keywords in a file</title>
+<style>
+:root{--ok:#22a861;--bg:#f6f7f9;--ink:#1c2333;--mute:#5a6478;--line:#d8dce5;--acc:#1f4fd8;--code:#0f1b33;--codeink:#e6ecff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Georgia,serif}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+h1{font-size:1.9rem;line-height:1.2;margin:.2em 0}
+h2{font-size:1.2rem;margin:2em 0 .5em;border-bottom:2px solid var(--acc);padding-bottom:.2em}
+.meta{color:var(--mute);font-size:.95rem;margin:0}
+.aim{background:#fff;border-left:4px solid var(--acc);padding:12px 16px;margin:18px 0}
+.code{position:relative;margin:12px 0}
+pre{background:var(--code);color:var(--codeink);padding:16px;border-radius:6px;overflow-x:auto;font:14px/1.55 Consolas,Menlo,monospace;margin:0}
+button.copy,button.dl{position:absolute;top:8px;background:var(--acc);color:#fff;border:0;border-radius:4px;padding:5px 12px;font:14px sans-serif;cursor:pointer}
+button.copy{right:8px}
+button.dl{right:84px}
+.code pre{padding-top:44px}
+button:focus-visible{outline:3px solid #ffb703;outline-offset:2px}
+.qa{background:#fff;border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:6px;margin:10px 0;padding:10px 14px}
+.q{font-weight:bold;margin:0}
+.a{margin:.4em 0 0}
+li{margin:.3em 0}
+.note{background:#fff7e0;border:1px solid #ecd58a;border-radius:6px;padding:10px 14px}
+</style></head><body><main>
+<div class="dl-bar" style="display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 16px;margin-bottom:20px;flex-wrap:wrap;">
+  <span style="font:600 13px 'Segoe UI',sans-serif;color:var(--mute);">📄 Compiler Design Lab · Practical File</span>
+  <a id="dl-btn" href="#" download style="background:var(--acc);color:#fff;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">⬇ Download This File (.html)</a>
+  <button id="dl-codes-btn" onclick="downloadExpCodes(this)" style="background:var(--ok,#22a861);color:#fff;border:0;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">⬇ Download Codes (1 file)</button>
+</div>
+<script>(function(){
+  var n = location.pathname.split('/').pop() || 'exp3.html';
+  var a = document.getElementById('dl-btn');
+  if (a) { a.href = n; a.download = n; }
+})();</script>
+<p class="meta">Compiler Design Lab, 5CS4-22 (Turbo C++)</p>
+<h1>Experiment 3: Count total keywords in a file</h1>
+<div class="aim"><b>Aim:</b> Write a C program to count the total number of keywords in a file [taking file from user].</div>
+<h2>Source code</h2>
+<div class="code" data-file="exp3.cpp"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include&lt;stdio.h&gt;
+#include&lt;conio.h&gt;
+#include&lt;string.h&gt;
+#include&lt;ctype.h&gt;
+#include&lt;stdlib.h&gt;
+
+void main()
+{
+    char keyword[32][10] = {&quot;auto&quot;,&quot;double&quot;,&quot;int&quot;,&quot;struct&quot;,&quot;break&quot;,&quot;else&quot;,&quot;long&quot;,
+                            &quot;switch&quot;,&quot;case&quot;,&quot;enum&quot;,&quot;register&quot;,&quot;typedef&quot;,&quot;char&quot;,
+                            &quot;extern&quot;,&quot;return&quot;,&quot;union&quot;,&quot;const&quot;,&quot;float&quot;,&quot;short&quot;,
+                            &quot;unsigned&quot;,&quot;continue&quot;,&quot;for&quot;,&quot;signed&quot;,&quot;void&quot;,&quot;default&quot;,
+                            &quot;goto&quot;,&quot;sizeof&quot;,&quot;volatile&quot;,&quot;do&quot;,&quot;if&quot;,&quot;static&quot;,&quot;while&quot;};
+    char fname[30], word[20];
+    int c, i, j = 0, count = 0;
+    FILE *fp;
+
+    clrscr();
+    printf(&quot;Enter file name: &quot;);
+    gets(fname);
+
+    fp = fopen(fname, &quot;r&quot;);
+    if(fp == NULL)
+    {
+        printf(&quot;File not found&quot;);
+        getch();
+        exit(0);
+    }
+
+    while(1)
+    {
+        c = fgetc(fp);
+
+        if(isalpha(c))
+        {
+            word[j++] = c;
+        }
+        else
+        {
+            if(j &gt; 0)
+            {
+                word[j] = &#x27;\0&#x27;;
+                for(i = 0; i &lt; 32; i++)
+                {
+                    if(strcmp(word, keyword[i]) == 0)
+                    {
+                        count++;
+                        break;
+                    }
+                }
+                j = 0;
+            }
+            if(c == EOF)
+                break;
+        }
+    }
+
+    fclose(fp);
+    printf(&quot;Total keywords in file = %d&quot;, count);
+    getch();
+}</pre></div>
+<h2>Before you run</h2>
+<p>Create <code>test.txt</code> in the same folder as your program (the folder shown in Turbo C++'s File &gt; Open dialog) with this content:</p><pre style="background:#fff;color:#1c2333;border:1px solid #d8dce5;padding:12px">int a; float b;
+if(a&gt;b) return 0;</pre>
+<h2>Output</h2>
+<div class="code"><button class="copy">Copy</button><pre>Enter file name: test.txt
+Total keywords in file = 4</pre></div>
+<h2>Explanation</h2>
+<ol>
+<li><code>fopen(fname, "r")</code> opens the file for reading. It returns <code>NULL</code> if the file does not exist, and the program then exits.</li>
+<li><code>fgetc(fp)</code> reads one character at a time and returns <code>EOF</code> at the end of the file.</li>
+<li>While the characters are letters (<code>isalpha</code>), they are stored in <code>word[]</code>. Any other character (space, <code>;</code>, <code>(</code>, newline) ends the word.</li>
+<li>When a word ends, <code>'\0'</code> is added and the word is compared with all 32 keywords using <code>strcmp</code>. A match increases <code>count</code> and <code>break</code> stops the search.</li>
+<li><code>j = 0</code> starts the next word. At <code>EOF</code> the loop stops and the total is printed.</li>
+</ol>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">Why is c declared as int and not char?</p><p class="a"><code>EOF</code> is -1, which does not fit reliably in a <code>char</code>. <code>fgetc</code> returns an <code>int</code>, so the variable must be an <code>int</code>.</p></div>
+<div class="qa"><p class="q">What does fopen return on failure?</p><p class="a"><code>NULL</code>. Always check for it before reading.</p></div>
+<div class="qa"><p class="q">What do the modes "r", "w" and "a" mean?</p><p class="a">Read, write (overwrites the file) and append (adds at the end).</p></div>
+<div class="qa"><p class="q">Why is break used inside the keyword loop?</p><p class="a">Once a keyword matches there is no need to check the rest of the table.</p></div>
+<div class="qa"><p class="q">What does isalpha do?</p><p class="a">It returns true if the character is a letter (A to Z or a to z).</p></div>
+<div class="qa"><p class="q">What is the time cost per word here?</p><p class="a">Linear search, at most 32 comparisons per word. The manual uses a sorted table with binary search, about 5 comparisons.</p></div>
+<div class="qa"><p class="q">How does binary search work?</p><p class="a">On a sorted table, compare with the middle entry. If the word is smaller, search the left half, otherwise the right half, and repeat until found or the range is empty.</p></div>
+<div class="qa"><p class="q">What is a limitation of this program?</p><p class="a">A name like <code>int2</code> is read as <code>int</code> and counted, because digits end the word. A real lexer treats <code>int2</code> as one identifier.</p></div>
+<div class="qa"><p class="q">Which compiler phase is this?</p><p class="a">Lexical analysis: splitting text into words and classifying them.</p></div>
+</main>
+<script>
+document.querySelectorAll('.code').forEach(function(b){
+var pre=b.querySelector('pre'),btn=b.querySelector('.copy'),f=b.getAttribute('data-file');
+btn.onclick=async function(){try{await navigator.clipboard.writeText(pre.innerText)}catch(e){var r=document.createRange();r.selectNodeContents(pre);var s=getSelection();s.removeAllRanges();s.addRange(r);document.execCommand('copy');s.removeAllRanges()}btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy'},1500)};
+var d=b.querySelector('.dl');
+if(d&&f){d.onclick=function(){var t=pre.innerText.replace(/\r?\n/g,'\r\n');var u=URL.createObjectURL(new Blob([t],{type:'text/plain'}));var a=document.createElement('a');a.href=u;a.download=f;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},1000)}}
+});
+</script>
+<script>
+function downloadExpCodes(btn, isAuto){
+  var codes = [];
+  document.querySelectorAll('.code[data-file]').forEach(function(block){
+    var f = block.getAttribute('data-file');
+    var pre = block.querySelector('pre');
+    if (f && pre) {
+      codes.push({ name: f, content: pre.innerText });
+    }
+  });
+  if (!codes.length) { if (!isAuto) alert('No code files found on this page.'); return; }
+  var origText = btn ? btn.innerHTML : '';
+  if (btn) {
+    btn.innerHTML = '⏳ Downloading ' + codes.length + ' ' + (codes.length===1?'file':'files') + '…';
+    btn.style.pointerEvents = 'none';
+  }
+  codes.forEach(function(item, idx){
+    setTimeout(function(){
+      var blob = new Blob([item.content], { type: 'text/plain;charset=utf-8' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url; a.download = item.name;
+      document.body.appendChild(a); a.click();
+      setTimeout(function(){ URL.revokeObjectURL(url); document.body.removeChild(a); }, 1000);
+      if (idx === codes.length - 1 && btn) {
+        setTimeout(function(){
+          btn.innerHTML = '✓ ' + codes.length + ' ' + (codes.length===1?'File':'Files') + ' Downloaded!';
+          setTimeout(function(){ btn.innerHTML = origText; btn.style.pointerEvents = ''; }, 2500);
+        }, 500);
+      }
+    }, idx * 400);
+  });
+}
+
+// Auto-download all experiment codes when page is opened
+(function(){
+  function autoDownload() {
+    setTimeout(function(){
+      var btn = document.getElementById('dl-codes-btn');
+      if (typeof downloadExpCodes === 'function') { downloadExpCodes(btn, true); }
+    }, 600);
+  }
+  if (document.readyState === 'complete') { autoDownload(); }
+  else { window.addEventListener('load', autoDownload); }
+})();
+</script>
+</body>
+</html>

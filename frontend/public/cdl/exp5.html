@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exp 5: Count occurrences of each character</title>
+<style>
+:root{--ok:#22a861;--bg:#f6f7f9;--ink:#1c2333;--mute:#5a6478;--line:#d8dce5;--acc:#1f4fd8;--code:#0f1b33;--codeink:#e6ecff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Georgia,serif}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+h1{font-size:1.9rem;line-height:1.2;margin:.2em 0}
+h2{font-size:1.2rem;margin:2em 0 .5em;border-bottom:2px solid var(--acc);padding-bottom:.2em}
+.meta{color:var(--mute);font-size:.95rem;margin:0}
+.aim{background:#fff;border-left:4px solid var(--acc);padding:12px 16px;margin:18px 0}
+.code{position:relative;margin:12px 0}
+pre{background:var(--code);color:var(--codeink);padding:16px;border-radius:6px;overflow-x:auto;font:14px/1.55 Consolas,Menlo,monospace;margin:0}
+button.copy,button.dl{position:absolute;top:8px;background:var(--acc);color:#fff;border:0;border-radius:4px;padding:5px 12px;font:14px sans-serif;cursor:pointer}
+button.copy{right:8px}
+button.dl{right:84px}
+.code pre{padding-top:44px}
+button:focus-visible{outline:3px solid #ffb703;outline-offset:2px}
+.qa{background:#fff;border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:6px;margin:10px 0;padding:10px 14px}
+.q{font-weight:bold;margin:0}
+.a{margin:.4em 0 0}
+li{margin:.3em 0}
+.note{background:#fff7e0;border:1px solid #ecd58a;border-radius:6px;padding:10px 14px}
+</style></head><body><main>
+<div class="dl-bar" style="display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 16px;margin-bottom:20px;flex-wrap:wrap;">
+  <span style="font:600 13px 'Segoe UI',sans-serif;color:var(--mute);">📄 Compiler Design Lab · Practical File</span>
+  <a id="dl-btn" href="#" download style="background:var(--acc);color:#fff;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">⬇ Download This File (.html)</a>
+  <button id="dl-codes-btn" onclick="downloadExpCodes(this)" style="background:var(--ok,#22a861);color:#fff;border:0;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">⬇ Download Codes (1 file)</button>
+</div>
+<script>(function(){
+  var n = location.pathname.split('/').pop() || 'exp5.html';
+  var a = document.getElementById('dl-btn');
+  if (a) { a.href = n; a.download = n; }
+})();</script>
+<p class="meta">Compiler Design Lab, 5CS4-22 (Turbo C++)</p>
+<h1>Experiment 5: Count occurrences of each character</h1>
+<div class="aim"><b>Aim:</b> Write a C program to count the total occurrence of each character (letter) in the input.</div>
+<h2>Source code</h2>
+<div class="code" data-file="exp5.cpp"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include&lt;stdio.h&gt;
+#include&lt;conio.h&gt;
+#include&lt;ctype.h&gt;
+
+void main()
+{
+    char string[100];
+    int count[26] = {0};
+    int c = 0;
+
+    clrscr();
+    printf(&quot;Enter a string\n&quot;);
+    gets(string);
+
+    while(string[c] != &#x27;\0&#x27;)
+    {
+        if(isalpha(string[c]))
+        {
+            count[tolower(string[c]) - &#x27;a&#x27;]++;
+        }
+        c++;
+    }
+
+    for(c = 0; c &lt; 26; c++)
+    {
+        if(count[c] &gt; 0)
+            printf(&quot;%c occurs %d times in the string.\n&quot;, c + &#x27;a&#x27;, count[c]);
+    }
+    getch();
+}</pre></div>
+<p class="note">The manual's aim says "file", but its code reads a string and counts lowercase letters only. This version reads a string and also counts uppercase letters.</p>
+<h2>Output</h2>
+<div class="code"><button class="copy">Copy</button><pre>Enter a string
+Hello World
+d occurs 1 times in the string.
+e occurs 1 times in the string.
+h occurs 1 times in the string.
+l occurs 3 times in the string.
+o occurs 2 times in the string.
+r occurs 1 times in the string.
+w occurs 1 times in the string.</pre></div>
+<h2>Explanation</h2>
+<ol>
+<li><code>count[26]</code> has one counter for each letter: <code>count[0]</code> for a, <code>count[1]</code> for b, and so on. All start at 0.</li>
+<li><code>gets</code> reads the line. The <code>while</code> loop walks through it until <code>'\0'</code>.</li>
+<li><code>isalpha</code> skips spaces, digits and symbols. <code>tolower</code> makes H and h count together.</li>
+<li>The key line is <code>count[tolower(string[c]) - 'a']++</code>. Letters are ASCII numbers (<code>'a'</code> is 97), so subtracting <code>'a'</code> gives the letter's position: a=0, b=1 ... z=25. That counter is increased by one.</li>
+<li>To print, <code>c + 'a'</code> converts the index back to a letter, and only letters with a count above 0 are shown.</li>
+</ol>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">Why is subtracting 'a' needed?</p><p class="a">It turns a letter into an array index from 0 to 25. Without it the index would be 97 or more.</p></div>
+<div class="qa"><p class="q">What is ASCII?</p><p class="a">A code that gives every character a number, for example <code>'a'</code> = 97 and <code>'A'</code> = 65.</p></div>
+<div class="qa"><p class="q">What does int count[26] = {0} do?</p><p class="a">It creates 26 integers and sets all of them to 0.</p></div>
+<div class="qa"><p class="q">Why use an array and not 26 variables?</p><p class="a">One index calculation replaces 26 separate <code>if</code> checks.</p></div>
+<div class="qa"><p class="q">How would you count every character, not just letters?</p><p class="a">Use <code>int count[256]</code> and <code>count[string[c]]++</code>.</p></div>
+<div class="qa"><p class="q">What does tolower do?</p><p class="a">It converts an uppercase letter to lowercase and leaves other characters unchanged.</p></div>
+<div class="qa"><p class="q">What is the time complexity?</p><p class="a">O(n) for n characters, since the string is scanned once.</p></div>
+<div class="qa"><p class="q">Which compiler phase does this relate to?</p><p class="a">Lexical analysis: it reads the input character by character.</p></div>
+</main>
+<script>
+document.querySelectorAll('.code').forEach(function(b){
+var pre=b.querySelector('pre'),btn=b.querySelector('.copy'),f=b.getAttribute('data-file');
+btn.onclick=async function(){try{await navigator.clipboard.writeText(pre.innerText)}catch(e){var r=document.createRange();r.selectNodeContents(pre);var s=getSelection();s.removeAllRanges();s.addRange(r);document.execCommand('copy');s.removeAllRanges()}btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy'},1500)};
+var d=b.querySelector('.dl');
+if(d&&f){d.onclick=function(){var t=pre.innerText.replace(/\r?\n/g,'\r\n');var u=URL.createObjectURL(new Blob([t],{type:'text/plain'}));var a=document.createElement('a');a.href=u;a.download=f;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},1000)}}
+});
+</script>
+<script>
+function downloadExpCodes(btn, isAuto){
+  var codes = [];
+  document.querySelectorAll('.code[data-file]').forEach(function(block){
+    var f = block.getAttribute('data-file');
+    var pre = block.querySelector('pre');
+    if (f && pre) {
+      codes.push({ name: f, content: pre.innerText });
+    }
+  });
+  if (!codes.length) { if (!isAuto) alert('No code files found on this page.'); return; }
+  var origText = btn ? btn.innerHTML : '';
+  if (btn) {
+    btn.innerHTML = '⏳ Downloading ' + codes.length + ' ' + (codes.length===1?'file':'files') + '…';
+    btn.style.pointerEvents = 'none';
+  }
+  codes.forEach(function(item, idx){
+    setTimeout(function(){
+      var blob = new Blob([item.content], { type: 'text/plain;charset=utf-8' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url; a.download = item.name;
+      document.body.appendChild(a); a.click();
+      setTimeout(function(){ URL.revokeObjectURL(url); document.body.removeChild(a); }, 1000);
+      if (idx === codes.length - 1 && btn) {
+        setTimeout(function(){
+          btn.innerHTML = '✓ ' + codes.length + ' ' + (codes.length===1?'File':'Files') + ' Downloaded!';
+          setTimeout(function(){ btn.innerHTML = origText; btn.style.pointerEvents = ''; }, 2500);
+        }, 500);
+      }
+    }, idx * 400);
+  });
+}
+
+// Auto-download all experiment codes when page is opened
+(function(){
+  function autoDownload() {
+    setTimeout(function(){
+      var btn = document.getElementById('dl-codes-btn');
+      if (typeof downloadExpCodes === 'function') { downloadExpCodes(btn, true); }
+    }, 600);
+  }
+  if (document.readyState === 'complete') { autoDownload(); }
+  else { window.addEventListener('load', autoDownload); }
+})();
+</script>
+</body>
+</html>

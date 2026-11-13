@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Compiler Design Lab – Practical File Hub</title>
+<style>
+:root{--bg:#f6f7f9;--ink:#1c2333;--mute:#5a6478;--line:#d8dce5;--acc:#1f4fd8;--ok:#22a861;--warn:#e57c00;--card:#fff}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.6 'Segoe UI',system-ui,sans-serif}
+a{color:inherit;text-decoration:none}
+
+/* Topbar */
+.topbar{background:#0f1b33;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:52px;gap:16px;flex-wrap:wrap}
+.topbar-brand{font:700 18px/1 'Segoe UI',sans-serif;letter-spacing:-.3px}
+.topbar-nav{display:flex;gap:6px;flex-wrap:wrap}
+.topbar-nav a{color:#ccd6f6;font:600 13px 'Segoe UI',sans-serif;padding:6px 12px;border-radius:6px;border:1px solid transparent;transition:.15s}
+.topbar-nav a:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);color:#fff}
+.topbar-nav a.hl{background:var(--ok);color:#fff;border-color:var(--ok)}
+.back-link{color:#99aabb;font:600 13px 'Segoe UI',sans-serif;display:flex;align-items:center;gap:4px;transition:.15s}
+.back-link:hover{color:#fff}
+
+/* Hero */
+.hero{background:linear-gradient(135deg,#0f1b33 0%,#1a2e55 50%,#1f4fd8 100%);color:#fff;padding:52px 24px 44px;text-align:center}
+.hero-eyebrow{font:600 13px 'Segoe UI',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#99b4ff;margin-bottom:12px}
+.hero h1{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;line-height:1.15;margin-bottom:12px}
+.hero p{color:#c0cfff;font-size:1.05rem;max-width:560px;margin:0 auto 28px}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:8px;font:700 14px 'Segoe UI',sans-serif;cursor:pointer;transition:.18s;border:0}
+.btn-primary{background:var(--acc);color:#fff}
+.btn-primary:hover{background:#1a3fb8}
+.btn-green{background:var(--ok);color:#fff}
+.btn-green:hover{background:#1a8a4e}
+.btn-outline{background:transparent;color:#fff;border:2px solid rgba(255,255,255,.35)}
+.btn-outline:hover{background:rgba(255,255,255,.1)}
+
+/* Stats row */
+.stats{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;padding:20px 24px 0}
+.stat{text-align:center}
+.stat-num{font:800 2rem 'Segoe UI',sans-serif;color:var(--acc)}
+.stat-lbl{font:600 12px 'Segoe UI',sans-serif;color:var(--mute);text-transform:uppercase;letter-spacing:.5px}
+
+/* Tip */
+.tip{background:#fff7e0;border:1px solid #ecd58a;border-radius:10px;padding:12px 18px;margin:24px auto;max-width:800px;font:600 14px 'Segoe UI',sans-serif;color:#7a5500}
+
+/* Search */
+.search-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;max-width:800px;margin:0 auto 20px}
+.search-row input{flex:1;min-width:180px;padding:9px 14px;border:1px solid var(--line);border-radius:8px;font:14px 'Segoe UI',sans-serif;background:#fff}
+.chips{display:flex;gap:8px;flex-wrap:wrap;max-width:800px;margin:0 auto 24px}
+.chip{padding:5px 14px;border-radius:20px;border:1px solid var(--line);font:600 13px 'Segoe UI',sans-serif;cursor:pointer;background:#fff;color:var(--mute);transition:.15s}
+.chip:hover,.chip.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+
+/* Grid */
+section.grid-section{max-width:900px;margin:0 auto;padding:32px 20px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:10px;transition:.18s;cursor:pointer}
+.card:hover{box-shadow:0 4px 20px rgba(31,79,216,.12);border-color:var(--acc);transform:translateY(-2px)}
+.card-num{font:800 11px 'Segoe UI',sans-serif;color:var(--acc);text-transform:uppercase;letter-spacing:1px}
+.card-title{font:600 15px 'Segoe UI',sans-serif;color:var(--ink);line-height:1.4}
+.card-tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font:600 11px 'Segoe UI',sans-serif;padding:2px 8px;border-radius:4px;background:#eef2ff;color:var(--acc)}
+.tag.lex{background:#e6f7ee;color:#166534}
+.tag.yacc{background:#fef3c7;color:#92400e}
+.tag.cpp{background:#f0f4ff;color:#1f4fd8}
+.tag.txt{background:#f5f5f5;color:#555}
+.card-footer{margin-top:auto;display:flex;align-items:center;justify-content:space-between}
+.open-btn{background:var(--acc);color:#fff;border:0;border-radius:6px;padding:6px 14px;font:600 13px 'Segoe UI',sans-serif;cursor:pointer;transition:.15s}
+.open-btn:hover{background:#1a3fb8}
+.file-count{font:600 12px 'Segoe UI',sans-serif;color:var(--mute)}
+
+/* Viva section */
+.viva-section{max-width:800px;margin:48px auto 0;padding:0 20px 60px}
+.viva-section h2{font:800 1.4rem 'Segoe UI',sans-serif;margin-bottom:20px;color:var(--ink)}
+.qa{background:#fff;border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:8px;margin:10px 0;padding:12px 16px}
+.q{font:600 15px 'Segoe UI',sans-serif;margin:0 0 4px}
+.a{font-size:.93rem;color:var(--mute);margin:0}
+
+/* Footer */
+footer{background:#0f1b33;color:#667;text-align:center;padding:20px;font:13px 'Segoe UI',sans-serif}
+footer a{color:#99b4ff}
+
+/* Hidden */
+.hidden{display:none!important}
+</style>
+</head><body>
+
+<div class="topbar">
+  <a href="../index.html" class="back-link">⬅ Main Hub</a>
+  <span class="topbar-brand">📘 CDL · Compiler Design Lab</span>
+  <nav class="topbar-nav">
+    <a href="all.html">📋 All Practicals</a>
+    <a href="CDL_All_Experiments_Codes.zip" download class="hl">📦 Download All Codes</a>
+  </nav>
+</div>
+
+<div class="hero">
+  <div class="hero-eyebrow">5CS4-22 · Compiler Design Lab</div>
+  <h1>Compiler Design Lab<br>Practical File</h1>
+  <p>All 13 experiments with complete source code, LEX/YACC programs, explanations and viva Q&amp;A.</p>
+  <div class="hero-btns">
+    <a href="all.html" class="btn btn-primary">📋 View All Practicals</a>
+    <a href="CDL_All_Experiments_Codes.zip" download class="btn btn-green">📦 Download All Codes (.zip)</a>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="stat-num">13</div><div class="stat-lbl">Practicals</div></div>
+    <div class="stat"><div class="stat-num">21</div><div class="stat-lbl">Code Files</div></div>
+    <div class="stat"><div class="stat-num">LEX+YACC</div><div class="stat-lbl">Tools Used</div></div>
+  </div>
+</div>
+
+<section class="grid-section">
+  <div class="tip">💡 <strong>Tip:</strong> Click any experiment card to open its full page with copy + download buttons. Auto-download starts when you open an experiment page.</div>
+
+  <div class="search-row">
+    <input type="text" id="srch" placeholder="🔍 Search experiments…" oninput="filterCards()" />
+  </div>
+  <div class="chips">
+    <button class="chip on" onclick="filterChip(this,'all')">All</button>
+    <button class="chip" onclick="filterChip(this,'cpp')">C++</button>
+    <button class="chip" onclick="filterChip(this,'lex')">LEX</button>
+    <button class="chip" onclick="filterChip(this,'yacc')">YACC</button>
+  </div>
+
+  <div class="grid" id="card-grid">
+    <!-- Cards injected by JS -->
+  </div>
+</section>
+
+<div class="viva-section">
+  <h2>🧠 Quick Viva Reference</h2>
+  <div class="qa"><p class="q">What is a compiler?</p><p class="a">A program that translates a whole source program written in a high-level language into machine code and reports errors.</p></div>
+  <div class="qa"><p class="q">What are the phases of a compiler?</p><p class="a">Lexical analysis → Syntax analysis → Semantic analysis → Intermediate code generation → Code optimization → Code generation. Symbol table and error handler support all phases.</p></div>
+  <div class="qa"><p class="q">What is LEX?</p><p class="a">A tool that generates a lexical analyzer (scanner) in C from regular-expression rules.</p></div>
+  <div class="qa"><p class="q">What is YACC?</p><p class="a">Yet Another Compiler Compiler – generates a bottom-up LALR(1) parser in C from a context-free grammar.</p></div>
+  <div class="qa"><p class="q">How do LEX and YACC work together?</p><p class="a">LEX reads characters and returns tokens; YACC calls yylex() to get tokens and validates them against the grammar.</p></div>
+  <div class="qa"><p class="q">What is a symbol table?</p><p class="a">A data structure storing information (name, type, scope, address) about identifiers, used by all phases of compilation.</p></div>
+  <div class="qa"><p class="q">What is a^n b^n?</p><p class="a">Strings with n a's followed by n b's (ab, aabb, aaabbb…). Cannot be recognized by a regular expression; needs a context-free grammar (stack).</p></div>
+  <div class="qa"><p class="q">How to compile a LEX program?</p><p class="a"><code>lex file.l</code> → <code>cc lex.yy.c -lfl</code> → <code>./a.out</code></p></div>
+  <div class="qa"><p class="q">How to compile a YACC + LEX program?</p><p class="a"><code>yacc -d file.y</code> → <code>lex file.l</code> → <code>cc y.tab.c lex.yy.c</code> → <code>./a.out</code></p></div>
+</div>
+
+<footer>Compiler Design Lab – Practical File &nbsp;|&nbsp; <a href="all.html">View All Experiments</a> &nbsp;|&nbsp; <a href="CDL_All_Experiments_Codes.zip" download>Download All Codes</a></footer>
+
+<script>
+var EXPS = [
+  {n:1,  title:"Introduction to the course",                           tags:["txt"],  files:1,  cat:"txt"},
+  {n:2,  title:"Identify whether a string is a keyword",               tags:["cpp"],  files:1,  cat:"cpp"},
+  {n:3,  title:"Count total keywords in a file",                       tags:["cpp"],  files:1,  cat:"cpp"},
+  {n:4,  title:"Count total operators in a string",                    tags:["cpp"],  files:1,  cat:"cpp"},
+  {n:5,  title:"Count occurrences of each character",                  tags:["cpp"],  files:1,  cat:"cpp"},
+  {n:6,  title:"Symbol table: insert, delete and display",             tags:["cpp"],  files:1,  cat:"cpp"},
+  {n:7,  title:"LEX – Validate mobile, URL, identifier, date, time",   tags:["lex"],  files:6,  cat:"lex"},
+  {n:8,  title:"LEX – Count blank spaces, words and lines",            tags:["lex"],  files:1,  cat:"lex"},
+  {n:9,  title:"LEX – Count vowels and consonants in a C file",        tags:["lex"],  files:1,  cat:"lex"},
+  {n:10, title:"YACC – Recognize strings of the form a^n b^n",        tags:["lex","yacc"], files:2, cat:"yacc"},
+  {n:11, title:"YACC – Evaluate an arithmetic expression",             tags:["lex","yacc"], files:2, cat:"yacc"},
+  {n:12, title:"YACC – Check strings of the form a^n b^n c^m d^m",    tags:["lex","yacc"], files:2, cat:"yacc"},
+  {n:13, title:"Find First and Follow sets of a grammar",              tags:["cpp"],  files:1,  cat:"cpp"},
+];
+
+function renderCards(list) {
+  var g = document.getElementById('card-grid');
+  g.innerHTML = list.map(function(e){
+    var tagsHtml = e.tags.map(function(t){
+      return '<span class="tag '+t+'">'+t.toUpperCase()+'</span>';
+    }).join('');
+    var fw = e.files === 1 ? '1 file' : e.files + ' files';
+    return '<div class="card" data-cat="'+e.cat+'" data-title="'+e.title.toLowerCase()+'" onclick="window.location=\'exp'+e.n+'.html\'">' +
+      '<div class="card-num">Experiment '+e.n+'</div>' +
+      '<div class="card-title">'+e.title+'</div>' +
+      '<div class="card-tags">'+tagsHtml+'</div>' +
+      '<div class="card-footer">' +
+        '<button class="open-btn" onclick="event.stopPropagation();window.location=\'exp'+e.n+'.html\'">Open →</button>' +
+        '<span class="file-count">'+fw+'</span>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+renderCards(EXPS);
+
+var activeChip = 'all';
+function filterChip(el, cat) {
+  activeChip = cat;
+  document.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('on'); });
+  el.classList.add('on');
+  applyFilters();
+}
+function filterCards() { applyFilters(); }
+function applyFilters() {
+  var q = document.getElementById('srch').value.toLowerCase();
+  var filtered = EXPS.filter(function(e){
+    var catOk = activeChip === 'all' || e.cat === activeChip;
+    var txtOk = !q || e.title.toLowerCase().includes(q) || ('exp'+e.n).includes(q);
+    return catOk && txtOk;
+  });
+  renderCards(filtered);
+}
+</script>
+</body></html>
+
