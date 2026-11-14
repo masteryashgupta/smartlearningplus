@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exp 6: Midpoint ellipse generation algorithm</title>
+<style>
+:root{--bg:#f6f7f9;--ink:#1c2333;--mute:#5a6478;--line:#d8dce5;--acc:#1f4fd8;--code:#0f1b33;--codeink:#e6ecff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Georgia,serif}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+h1{font-size:1.9rem;line-height:1.2;margin:.2em 0}
+h2{font-size:1.2rem;margin:2em 0 .5em;border-bottom:2px solid var(--acc);padding-bottom:.2em}
+.meta{color:var(--mute);font-size:.95rem;margin:0}
+.aim{background:#fff;border-left:4px solid var(--acc);padding:12px 16px;margin:18px 0}
+.code{position:relative;margin:12px 0}
+pre{background:var(--code);color:var(--codeink);padding:16px;border-radius:6px;overflow-x:auto;font:14px/1.55 Consolas,Menlo,monospace;margin:0}
+button.copy,button.dl{position:absolute;top:8px;background:var(--acc);color:#fff;border:0;border-radius:4px;padding:5px 12px;font:14px sans-serif;cursor:pointer}
+button.copy{right:8px}
+button.dl{right:84px}
+.code pre{padding-top:44px}
+button:focus-visible{outline:3px solid #ffb703;outline-offset:2px}
+.qa{background:#fff;border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:6px;margin:10px 0;padding:10px 14px}
+.q{font-weight:bold;margin:0}
+.a{margin:.4em 0 0}
+li{margin:.3em 0}
+.note{background:#fff7e0;border:1px solid #ecd58a;border-radius:6px;padding:10px 14px}
+</style></head><body><main>
+<p class="meta">Computer Graphics &amp; Multimedia Lab, 5CS4-21 (Turbo C++)</p>
+<h1>Experiment 6: Midpoint ellipse generation algorithm</h1>
+<div class="aim"><b>Aim:</b> To implement the midpoint ellipse generation algorithm for an ellipse with centre (x, y) and radii rx and ry.</div>
+<h2>Source code</h2>
+<div class="code" data-file="cgm_exp6.c"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include&lt;stdio.h&gt;
+#include&lt;conio.h&gt;
+#include&lt;stdlib.h&gt;
+#include&lt;graphics.h&gt;
+
+void plot4(int xc, int yc, int x, int y)
+{
+    putpixel(xc + x, yc + y, YELLOW);
+    putpixel(xc - x, yc + y, YELLOW);
+    putpixel(xc + x, yc - y, YELLOW);
+    putpixel(xc - x, yc - y, YELLOW);
+}
+
+void main()
+{
+    int gd = DETECT, gm, err;
+    int xc, yc, rx, ry, x, y;
+    double rx2, ry2, p;
+
+    clrscr();
+    printf(&quot;Enter centre (xc yc): &quot;);
+    scanf(&quot;%d%d&quot;, &amp;xc, &amp;yc);
+    printf(&quot;Enter radius along x (rx): &quot;);
+    scanf(&quot;%d&quot;, &amp;rx);
+    printf(&quot;Enter radius along y (ry): &quot;);
+    scanf(&quot;%d&quot;, &amp;ry);
+
+    initgraph(&amp;gd, &amp;gm, &quot;C:\\TURBOC3\\BGI&quot;);
+    err = graphresult();
+    if(err != grOk)
+    {
+        printf(&quot;Graphics error: %s&quot;, grapherrormsg(err));
+        getch();
+        exit(1);
+    }
+
+    rx2 = (double)rx * rx;
+    ry2 = (double)ry * ry;
+    x = 0;
+    y = ry;
+
+    /* Region 1: slope is less than 1 in magnitude */
+    p = ry2 - rx2 * ry + 0.25 * rx2;
+    while(ry2 * x &lt;= rx2 * y)
+    {
+        plot4(xc, yc, x, y);
+        x++;
+        if(p &lt; 0)
+        {
+            p = p + 2 * ry2 * x + ry2;
+        }
+        else
+        {
+            y--;
+            p = p + 2 * ry2 * x - 2 * rx2 * y + ry2;
+        }
+    }
+
+    /* Region 2: slope is greater than 1 in magnitude */
+    p = ry2 * (x + 0.5) * (x + 0.5) + rx2 * (y - 1) * (y - 1) - rx2 * ry2;
+    while(y &gt;= 0)
+    {
+        plot4(xc, yc, x, y);
+        y--;
+        if(p &gt; 0)
+        {
+            p = p + rx2 - 2 * rx2 * y;
+        }
+        else
+        {
+            x++;
+            p = p + 2 * ry2 * x - 2 * rx2 * y + rx2;
+        }
+    }
+
+    getch();
+    closegraph();
+}</pre></div>
+<p class="note">The manual's Exp 6 text asks for a major and minor axis length and always draws at (200, 200). This version asks for the centre and both radii.</p>
+<h2>Before you run</h2>
+<p>These programs open a graphics screen, so they need the Turbo C++ BGI driver files. Two things to check once:</p><ol><li><b>BGI path:</b> the code uses <code>"C:\\TURBOC3\\BGI"</code> (double backslashes are required in C). It must match the BGI folder of your Turbo C++ install, which holds files such as <code>EGAVGA.BGI</code>. If the program prints "Graphics error", correct this path.</li><li><b>Graphics library:</b> in Turbo C++ choose <b>Options &gt; Linker &gt; Libraries</b> and tick <b>Graphics library</b>. Without it you get "undefined symbol _initgraph" when linking.</li><li><b>File type:</b> save the file with the <code>.C</code> extension (for example <code>EXP4.C</code>) so Turbo C++ compiles it as a C program.</li></ol><p>Keep the whole ellipse inside the screen. For centre (320, 240), use rx up to 319 and ry up to 239.</p>
+<h2>Output</h2>
+<div class="code"><button class="copy">Copy</button><pre>Enter centre (xc yc): 320 240
+Enter radius along x (rx): 150
+Enter radius along y (ry): 80
+(a graphics window opens and a yellow ellipse, 300 pixels wide and 160 pixels tall, is drawn at the centre of the screen)
+Press any key to close it.</pre></div>
+<h2>Explanation</h2>
+<ol>
+<li><b>Idea:</b> An ellipse is symmetric in four quadrants, so only the first quadrant is calculated, starting at the top, (0, ry). <code>plot4</code> plots the 4 matching points around the centre.</li>
+<li>The first quadrant is split into two regions. In <b>Region 1</b> the curve is flat (slope less than 1 in magnitude), so x moves by one at every step and y sometimes goes down. In <b>Region 2</b> the curve is steep, so y moves by one at every step and x sometimes goes right.</li>
+<li>Region 1 ends when <code>ry&sup2;&middot;x</code> is no longer less than or equal to <code>rx&sup2;&middot;y</code>, which is where the slope reaches -1.</li>
+<li>Region 1 starts with <code>p = ry&sup2; - rx&sup2;&middot;ry + 0.25&middot;rx&sup2;</code>. If p is negative only x moves. Otherwise y also decreases. The update formulas are in the code.</li>
+<li>Region 2 starts with a new parameter calculated from the last point of Region 1, and runs while y is at least 0, so the curve ends on the x axis.</li>
+<li><code>double</code> is used for the parameters because the squares of large radii are bigger than a Turbo C <code>int</code> or <code>long</code> can hold.</li>
+<li>The manual's program has several faults (empty <code>else</code> blocks that skip the parameter update, a fixed centre at (200, 200), and bad path <code>"C:\\tc\\bgi::"</code>). This version follows the standard algorithm and takes the centre as input.</li>
+</ol>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">Explain the ellipse function.</p><p class="a">An ellipse centred at the origin is x&sup2;/rx&sup2; + y&sup2;/ry&sup2; = 1. The algorithm uses f(x, y) = ry&sup2;x&sup2; + rx&sup2;y&sup2; - rx&sup2;ry&sup2;, which is negative inside, zero on, and positive outside the ellipse.</p></div>
+<div class="qa"><p class="q">Explain the midpoint ellipse drawing algorithm.</p><p class="a">It draws one quadrant in two regions. In each region it tests the midpoint between two candidate pixels with the ellipse function and uses the sign of a decision parameter to pick the nearer pixel. The other three quadrants come by symmetry.</p></div>
+<div class="qa"><p class="q">What are the advantages of this algorithm?</p><p class="a">It uses only additions and multiplications in the loop (no square roots or trigonometry), it is fast, and it gives smooth ellipses with good accuracy.</p></div>
+<div class="qa"><p class="q">What are the disadvantages of this algorithm?</p><p class="a">It is more complicated than the circle algorithm because of the two regions, it needs squares of the radii (large numbers), and it draws only ellipses aligned to the axes.</p></div>
+<div class="qa"><p class="q">Write the properties of the midpoint ellipse algorithm.</p><p class="a">Uses 4-way symmetry, divides the quadrant into two regions at slope -1, works with a decision parameter updated incrementally, and plots the nearest pixel to the true ellipse at each step.</p></div>
+<div class="qa"><p class="q">Why are there two regions?</p><p class="a">Where the curve is flat, x is the fast direction. Where it is steep, y is the fast direction. We must step by one pixel along the fast direction so no pixel is missed.</p></div>
+<div class="qa"><p class="q">Where does Region 1 end?</p><p class="a">Where the slope of the curve becomes -1, that is when ry&sup2;&middot;x is greater than rx&sup2;&middot;y.</p></div>
+<div class="qa"><p class="q">Why 4-way symmetry for an ellipse and 8-way for a circle?</p><p class="a">A circle is also symmetric about the diagonals, but an ellipse is symmetric only about its two axes, so its quadrants are not symmetric to each other beyond that.</p></div>
+<div class="qa"><p class="q">What happens if rx equals ry?</p><p class="a">The shape becomes a circle with radius rx.</p></div>
+</main>
+<script>
+document.querySelectorAll('.code').forEach(function(b){
+var pre=b.querySelector('pre'),btn=b.querySelector('.copy'),f=b.getAttribute('data-file');
+btn.onclick=async function(){try{await navigator.clipboard.writeText(pre.innerText)}catch(e){var r=document.createRange();r.selectNodeContents(pre);var s=getSelection();s.removeAllRanges();s.addRange(r);document.execCommand('copy');s.removeAllRanges()}btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy'},1500)};
+var d=b.querySelector('.dl');
+if(d&&f){d.onclick=function(){var t=pre.innerText.replace(/\r?\n/g,'\r\n');var u=URL.createObjectURL(new Blob([t],{type:'text/plain'}));var a=document.createElement('a');a.href=u;a.download=f;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},1000)}}
+});
+</script></body></html>

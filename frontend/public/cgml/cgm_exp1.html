@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exp 1: Basic graphics: line, circle, ellipse, heart and smiley face</title>
+<style>
+:root{--bg:#f6f7f9;--ink:#1c2333;--mute:#5a6478;--line:#d8dce5;--acc:#1f4fd8;--code:#0f1b33;--codeink:#e6ecff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Georgia,serif}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+h1{font-size:1.9rem;line-height:1.2;margin:.2em 0}
+h2{font-size:1.2rem;margin:2em 0 .5em;border-bottom:2px solid var(--acc);padding-bottom:.2em}
+.meta{color:var(--mute);font-size:.95rem;margin:0}
+.aim{background:#fff;border-left:4px solid var(--acc);padding:12px 16px;margin:18px 0}
+.code{position:relative;margin:12px 0}
+pre{background:var(--code);color:var(--codeink);padding:16px;border-radius:6px;overflow-x:auto;font:14px/1.55 Consolas,Menlo,monospace;margin:0}
+button.copy,button.dl{position:absolute;top:8px;background:var(--acc);color:#fff;border:0;border-radius:4px;padding:5px 12px;font:14px sans-serif;cursor:pointer}
+button.copy{right:8px}
+button.dl{right:84px}
+.code pre{padding-top:44px}
+button:focus-visible{outline:3px solid #ffb703;outline-offset:2px}
+.qa{background:#fff;border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:6px;margin:10px 0;padding:10px 14px}
+.q{font-weight:bold;margin:0}
+.a{margin:.4em 0 0}
+li{margin:.3em 0}
+.note{background:#fff7e0;border:1px solid #ecd58a;border-radius:6px;padding:10px 14px}
+</style></head><body><main>
+<p class="meta">Computer Graphics &amp; Multimedia Lab, 5CS4-21 (Turbo C++)</p>
+<h1>Experiment 1: Basic graphics: line, circle, ellipse, heart and smiley face</h1>
+<div class="aim"><b>Aim:</b> To draw a line, circle, ellipse, heart and smiley face using graphics functions, and to see their attributes (colour, line style, thickness, fill).</div>
+<h2>Source code</h2>
+<div class="code" data-file="cgm_exp1.c"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include&lt;stdio.h&gt;
+#include&lt;conio.h&gt;
+#include&lt;stdlib.h&gt;
+#include&lt;graphics.h&gt;
+
+void main()
+{
+    int gd = DETECT, gm, err;
+    int x, y, r;
+
+    initgraph(&amp;gd, &amp;gm, &quot;C:\\TURBOC3\\BGI&quot;);
+    err = graphresult();
+    if(err != grOk)
+    {
+        printf(&quot;Graphics error: %s&quot;, grapherrormsg(err));
+        getch();
+        exit(1);
+    }
+
+    /* 1. Line: yellow, dashed, thick */
+    setcolor(YELLOW);
+    setlinestyle(DASHED_LINE, 0, THICK_WIDTH);
+    line(30, 150, 190, 70);
+    outtextxy(80, 190, &quot;Line&quot;);
+
+    /* back to a normal solid line for the other shapes */
+    setlinestyle(SOLID_LINE, 0, NORM_WIDTH);
+
+    /* 2. Circle: white outline, red fill */
+    setcolor(WHITE);
+    circle(320, 110, 50);
+    setfillstyle(SOLID_FILL, RED);
+    floodfill(320, 110, WHITE);
+    outtextxy(295, 190, &quot;Circle&quot;);
+
+    /* 3. Ellipse: green */
+    setcolor(GREEN);
+    ellipse(530, 110, 0, 360, 70, 40);
+    outtextxy(505, 190, &quot;Ellipse&quot;);
+
+    /* 4. Rectangle: cyan */
+    setcolor(CYAN);
+    rectangle(60, 260, 160, 340);
+    outtextxy(70, 400, &quot;Rectangle&quot;);
+
+    /* 5. Smiley face: yellow head, eyes, smile */
+    setcolor(YELLOW);
+    circle(320, 300, 45);
+    circle(305, 288, 5);
+    circle(335, 288, 5);
+    arc(320, 300, 200, 340, 25);
+    outtextxy(280, 400, &quot;Smiley face&quot;);
+
+    /* 6. Heart: two arcs and two lines */
+    setcolor(RED);
+    x = 530; y = 270; r = 25;
+    arc(x - r, y, 0, 180, r);
+    arc(x + r, y, 0, 180, r);
+    line(x - 2 * r, y, x, y + 3 * r);
+    line(x + 2 * r, y, x, y + 3 * r);
+    setfillstyle(SOLID_FILL, RED);
+    floodfill(x, y + 30, RED);
+    outtextxy(505, 400, &quot;Heart&quot;);
+
+    getch();
+    closegraph();
+}</pre></div>
+<p class="note">The manual's Exp 1 has separate programs for each shape (the heart program contains a stray name and drawing loop) and uses several different BGI paths. This one program draws everything, checks for graphics errors, and shows the attributes.</p>
+<h2>Before you run</h2>
+<p>These programs open a graphics screen, so they need the Turbo C++ BGI driver files. Two things to check once:</p><ol><li><b>BGI path:</b> the code uses <code>"C:\\TURBOC3\\BGI"</code> (double backslashes are required in C). It must match the BGI folder of your Turbo C++ install, which holds files such as <code>EGAVGA.BGI</code>. If the program prints "Graphics error", correct this path.</li><li><b>Graphics library:</b> in Turbo C++ choose <b>Options &gt; Linker &gt; Libraries</b> and tick <b>Graphics library</b>. Without it you get "undefined symbol _initgraph" when linking.</li><li><b>File type:</b> save the file with the <code>.C</code> extension (for example <code>EXP4.C</code>) so Turbo C++ compiles it as a C program.</li></ol>
+<h2>Output</h2>
+<div class="code"><button class="copy">Copy</button><pre>A 640 x 480 graphics window opens with six labelled shapes:
+  Top row:    a yellow dashed thick line, a red-filled circle, a green ellipse
+  Bottom row: a cyan rectangle, a yellow smiley face, a red filled heart
+Press any key to close it.</pre></div>
+<h2>Explanation</h2>
+<ol>
+<li><code>initgraph(&amp;gd, &amp;gm, path)</code> starts graphics mode. <code>DETECT</code> lets it pick the best driver. <code>graphresult()</code> checks that it worked.</li>
+<li><code>setcolor(c)</code> sets the drawing colour. <code>setlinestyle(style, 0, width)</code> sets the line style (<code>SOLID_LINE</code>, <code>DASHED_LINE</code>, <code>DOTTED_LINE</code>, <code>CENTER_LINE</code>) and thickness (<code>NORM_WIDTH</code> or <code>THICK_WIDTH</code>). These are the <b>attributes</b> of a line.</li>
+<li><code>line(x1, y1, x2, y2)</code> draws a line between two points. <code>circle(x, y, r)</code> needs the centre and radius. <code>ellipse(x, y, start, end, xr, yr)</code> needs the centre, start and end angles (0 to 360 for a full ellipse) and the two radii. <code>rectangle(left, top, right, bottom)</code> needs two opposite corners.</li>
+<li><code>setfillstyle(SOLID_FILL, RED)</code> chooses the fill pattern and colour. <code>floodfill(x, y, border)</code> fills the area around the point (x, y) up to the border colour, so the shape must be drawn in that border colour first.</li>
+<li><code>arc(x, y, start, end, r)</code> draws part of a circle. Angles are measured anticlockwise from the 3 o'clock position, so 270 degrees is the bottom. The smile is an arc from 200 to 340 degrees. The heart is two upper half-circles (0 to 180) joined by two lines to the bottom point.</li>
+<li><code>outtextxy(x, y, text)</code> prints a label at a screen position. <code>getch()</code> waits for a key and <code>closegraph()</code> returns to text mode.</li>
+</ol>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">How do you draw a rectangle in graphics mode?</p><p class="a"><code>rectangle(left, top, right, bottom)</code>. The first two values are the top-left corner and the last two are the bottom-right corner.</p></div>
+<div class="qa"><p class="q">What are the line attributes?</p><p class="a">Colour (<code>setcolor</code>), line style (solid, dotted, centre, dashed) and thickness (normal or thick), both set with <code>setlinestyle</code>.</p></div>
+<div class="qa"><p class="q">What are the ellipse attributes?</p><p class="a">Centre (x, y), start angle, end angle, x radius and y radius, plus the current colour and line style.</p></div>
+<div class="qa"><p class="q">What are the circle attributes?</p><p class="a">Centre (x, y) and radius, plus the current colour and line style. The inside is filled with <code>setfillstyle</code> and <code>floodfill</code>.</p></div>
+<div class="qa"><p class="q">Why is initgraph used?</p><p class="a">It initialises the graphics system by loading a graphics driver from disk and putting the screen into graphics mode. It also resets colours and settings to their defaults.</p></div>
+<div class="qa"><p class="q">What is the closegraph function?</p><p class="a">It shuts down the graphics system, frees the memory used by it and restores the screen to text mode.</p></div>
+<div class="qa"><p class="q">What is a pixel?</p><p class="a">The smallest addressable point of the screen. A picture is made of many pixels.</p></div>
+<div class="qa"><p class="q">What is the putpixel function?</p><p class="a"><code>putpixel(x, y, color)</code> plots one pixel at (x, y) in the given colour.</p></div>
+<div class="qa"><p class="q">How is setpixel used?</p><p class="a"><code>setpixel</code> is not a Turbo C function. It belongs to other graphics systems. In Turbo C the same job is done by <code>putpixel</code>.</p></div>
+<div class="qa"><p class="q">What is a picture element?</p><p class="a">Another name for a pixel (pix-el = picture element).</p></div>
+<div class="qa"><p class="q">What does DETECT do?</p><p class="a">It tells <code>initgraph</code> to detect the graphics card and choose the best driver and mode automatically.</p></div>
+<div class="qa"><p class="q">What does floodfill need?</p><p class="a">A point inside a closed shape, and the colour of the shape's border. The border must be closed or the colour leaks out.</p></div>
+</main>
+<script>
+document.querySelectorAll('.code').forEach(function(b){
+var pre=b.querySelector('pre'),btn=b.querySelector('.copy'),f=b.getAttribute('data-file');
+btn.onclick=async function(){try{await navigator.clipboard.writeText(pre.innerText)}catch(e){var r=document.createRange();r.selectNodeContents(pre);var s=getSelection();s.removeAllRanges();s.addRange(r);document.execCommand('copy');s.removeAllRanges()}btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy'},1500)};
+var d=b.querySelector('.dl');
+if(d&&f){d.onclick=function(){var t=pre.innerText.replace(/\r?\n/g,'\r\n');var u=URL.createObjectURL(new Blob([t],{type:'text/plain'}));var a=document.createElement('a');a.href=u;a.download=f;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},1000)}}
+});
+</script></body></html>

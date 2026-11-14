@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exp 2: Plot a pixel in different colours</title>
+<style>
+:root{--bg:#f6f7f9;--ink:#1c2333;--mute:#5a6478;--line:#d8dce5;--acc:#1f4fd8;--code:#0f1b33;--codeink:#e6ecff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Georgia,serif}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+h1{font-size:1.9rem;line-height:1.2;margin:.2em 0}
+h2{font-size:1.2rem;margin:2em 0 .5em;border-bottom:2px solid var(--acc);padding-bottom:.2em}
+.meta{color:var(--mute);font-size:.95rem;margin:0}
+.aim{background:#fff;border-left:4px solid var(--acc);padding:12px 16px;margin:18px 0}
+.code{position:relative;margin:12px 0}
+pre{background:var(--code);color:var(--codeink);padding:16px;border-radius:6px;overflow-x:auto;font:14px/1.55 Consolas,Menlo,monospace;margin:0}
+button.copy,button.dl{position:absolute;top:8px;background:var(--acc);color:#fff;border:0;border-radius:4px;padding:5px 12px;font:14px sans-serif;cursor:pointer}
+button.copy{right:8px}
+button.dl{right:84px}
+.code pre{padding-top:44px}
+button:focus-visible{outline:3px solid #ffb703;outline-offset:2px}
+.qa{background:#fff;border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:6px;margin:10px 0;padding:10px 14px}
+.q{font-weight:bold;margin:0}
+.a{margin:.4em 0 0}
+li{margin:.3em 0}
+.note{background:#fff7e0;border:1px solid #ecd58a;border-radius:6px;padding:10px 14px}
+</style></head><body><main>
+<p class="meta">Computer Graphics &amp; Multimedia Lab, 5CS4-21 (Turbo C++)</p>
+<h1>Experiment 2: Plot a pixel in different colours</h1>
+<div class="aim"><b>Aim:</b> To plot a point (pixel) on the screen in different colours using graphics functions.</div>
+<h2>Source code</h2>
+<div class="code" data-file="cgm_exp2.c"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include&lt;stdio.h&gt;
+#include&lt;conio.h&gt;
+#include&lt;stdlib.h&gt;
+#include&lt;graphics.h&gt;
+
+void main()
+{
+    int gd = DETECT, gm, err;
+    int c, x, y;
+    char msg[40];
+
+    initgraph(&amp;gd, &amp;gm, &quot;C:\\TURBOC3\\BGI&quot;);
+    err = graphresult();
+    if(err != grOk)
+    {
+        printf(&quot;Graphics error: %s&quot;, grapherrormsg(err));
+        getch();
+        exit(1);
+    }
+
+    /* the pixels from the manual */
+    putpixel(85, 35, GREEN);
+    putpixel(30, 40, RED);
+    putpixel(115, 50, YELLOW);
+    putpixel(135, 50, CYAN);
+    putpixel(45, 60, BLUE);
+    putpixel(20, 100, WHITE);
+    putpixel(200, 100, LIGHTBLUE);
+    putpixel(150, 100, LIGHTGREEN);
+    putpixel(200, 50, YELLOW);
+    putpixel(120, 70, RED);
+
+    /* a strip of pixels in every colour from 1 to 15 */
+    for(c = 1; c &lt;= 15; c++)
+    {
+        for(x = 0; x &lt; 30; x++)
+        {
+            for(y = 0; y &lt; 10; y++)
+            {
+                putpixel(100 + c * 30 + x, 200 + y, c);
+            }
+        }
+    }
+
+    outtextxy(100, 180, &quot;Pixels in colours 1 to 15&quot;);
+
+    /* read a pixel back with getpixel */
+    c = getpixel(85, 35);
+    sprintf(msg, &quot;Colour of pixel (85,35) = %d&quot;, c);
+    outtextxy(100, 300, msg);
+
+    getch();
+    closegraph();
+}</pre></div>
+<p class="note">The manual's Exp 2 plots only ten single pixels, which are hard to see, and has no viva questions. This version adds a visible colour strip, <code>getpixel</code>, and viva questions.</p>
+<h2>Before you run</h2>
+<p>These programs open a graphics screen, so they need the Turbo C++ BGI driver files. Two things to check once:</p><ol><li><b>BGI path:</b> the code uses <code>"C:\\TURBOC3\\BGI"</code> (double backslashes are required in C). It must match the BGI folder of your Turbo C++ install, which holds files such as <code>EGAVGA.BGI</code>. If the program prints "Graphics error", correct this path.</li><li><b>Graphics library:</b> in Turbo C++ choose <b>Options &gt; Linker &gt; Libraries</b> and tick <b>Graphics library</b>. Without it you get "undefined symbol _initgraph" when linking.</li><li><b>File type:</b> save the file with the <code>.C</code> extension (for example <code>EXP4.C</code>) so Turbo C++ compiles it as a C program.</li></ol>
+<h2>Output</h2>
+<div class="code"><button class="copy">Copy</button><pre>A graphics window opens. Ten small coloured dots appear near the top left, and below them a row of 15 coloured blocks (colours 1 to 15).
+Text shown: Pixels in colours 1 to 15
+Text shown: Colour of pixel (85,35) = 2
+Press any key to close it.</pre></div>
+<h2>Explanation</h2>
+<ol>
+<li><code>putpixel(x, y, color)</code> lights one pixel at column <b>x</b> and row <b>y</b>. (0, 0) is the top-left corner, x grows to the right and y grows downwards.</li>
+<li>The colour is a name like <code>GREEN</code> or a number from 0 to 15. <code>BLACK</code> is 0, <code>BLUE</code> 1, <code>GREEN</code> 2, <code>CYAN</code> 3, <code>RED</code> 4 and <code>WHITE</code> 15.</li>
+<li>A single pixel is tiny, so the program also plots a block of 30 x 10 pixels for each colour from 1 to 15. Colour 0 (black) would not show on the black background.</li>
+<li><code>getpixel(x, y)</code> reads the colour of a pixel. Reading (85, 35) returns 2, which is <code>GREEN</code>.</li>
+<li><code>sprintf</code> builds the message text in <code>msg</code>, and <code>outtextxy</code> prints it on the graphics screen. <code>printf</code> does not work well in graphics mode.</li>
+</ol>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is a pixel?</p><p class="a">The smallest point on the screen that can be set to a colour. The screen is a grid of pixels.</p></div>
+<div class="qa"><p class="q">What is the syntax of putpixel?</p><p class="a"><code>putpixel(int x, int y, int color)</code>.</p></div>
+<div class="qa"><p class="q">What does getpixel do?</p><p class="a">It returns the colour value of the pixel at (x, y).</p></div>
+<div class="qa"><p class="q">How many colours can be used in this mode?</p><p class="a">16 colours, numbered 0 (<code>BLACK</code>) to 15 (<code>WHITE</code>), in the usual 640 x 480 VGA mode.</p></div>
+<div class="qa"><p class="q">What is the screen resolution?</p><p class="a">The number of pixels across and down. The usual VGA mode here is 640 x 480. <code>getmaxx()</code> and <code>getmaxy()</code> return 639 and 479.</p></div>
+<div class="qa"><p class="q">Where is the origin (0, 0)?</p><p class="a">At the top-left corner of the screen. y increases downwards.</p></div>
+<div class="qa"><p class="q">Why do we use getch() before closegraph()?</p><p class="a">To keep the picture on the screen until a key is pressed. Without it the window closes at once.</p></div>
+<div class="qa"><p class="q">What is a frame buffer?</p><p class="a">The memory that holds the colour of every pixel. Plotting a pixel changes its value in the buffer, and the display shows the buffer.</p></div>
+</main>
+<script>
+document.querySelectorAll('.code').forEach(function(b){
+var pre=b.querySelector('pre'),btn=b.querySelector('.copy'),f=b.getAttribute('data-file');
+btn.onclick=async function(){try{await navigator.clipboard.writeText(pre.innerText)}catch(e){var r=document.createRange();r.selectNodeContents(pre);var s=getSelection();s.removeAllRanges();s.addRange(r);document.execCommand('copy');s.removeAllRanges()}btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy'},1500)};
+var d=b.querySelector('.dl');
+if(d&&f){d.onclick=function(){var t=pre.innerText.replace(/\r?\n/g,'\r\n');var u=URL.createObjectURL(new Blob([t],{type:'text/plain'}));var a=document.createElement('a');a.href=u;a.download=f;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},1000)}}
+});
+</script></body></html>

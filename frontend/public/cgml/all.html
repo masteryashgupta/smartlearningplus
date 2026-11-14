@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CGML – All Experiments (Computer Graphics &amp; Multimedia Lab)</title>
+<style>
+:root{--bg:#f6f7f9;--ink:#1c2333;--mute:#5a6478;--line:#d8dce5;--acc:#1f4fd8;--code:#0f1b33;--codeink:#e6ecff;--ok:#22a861}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Georgia,serif}
+a{color:var(--acc);text-decoration:underline}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.95rem;background:#fff}
+th,td{border:1px solid var(--line);padding:9px 12px;text-align:left}
+th{background:var(--bg);font-weight:bold}
+/* Top nav */
+.topnav{position:sticky;top:0;z-index:100;background:#0f1b33;display:flex;align-items:center;gap:0;overflow-x:auto;padding:0 8px;scrollbar-width:none}
+.topnav::-webkit-scrollbar{display:none}
+.tab-btn{background:none;border:none;color:#99aabb;padding:12px 14px;font:600 13px 'Segoe UI',sans-serif;cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;transition:.15s}
+.tab-btn:hover{color:#fff}
+.tab-btn.active{color:#fff;border-bottom-color:var(--acc)}
+/* dl-bar */
+.dl-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 16px;margin:16px 18px;flex-wrap:wrap}
+/* main content */
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+h1{font-size:1.9rem;line-height:1.2;margin:.2em 0}
+h2{font-size:1.2rem;margin:2em 0 .5em;border-bottom:2px solid var(--acc);padding-bottom:.2em}
+.meta{color:var(--mute);font-size:.95rem;margin:0}
+.aim{background:#fff;border-left:4px solid var(--acc);padding:12px 16px;margin:18px 0}
+.code{position:relative;margin:12px 0}
+pre{background:var(--code);color:var(--codeink);padding:16px;border-radius:6px;overflow-x:auto;font:14px/1.55 Consolas,Menlo,monospace;margin:0;white-space:pre-wrap}
+button.copy,button.dl{position:absolute;top:8px;background:var(--acc);color:#fff;border:0;border-radius:4px;padding:5px 12px;font:14px sans-serif;cursor:pointer}
+button.copy{right:8px}
+button.dl{right:84px}
+.code pre{padding-top:44px}
+button:focus-visible{outline:3px solid #ffb703;outline-offset:2px}
+.qa{background:#fff;border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:6px;margin:10px 0;padding:10px 14px}
+.q{font-weight:bold;margin:0}
+.a{margin:.4em 0 0}
+li{margin:.3em 0}
+.note{background:#fff7e0;border:1px solid #ecd58a;border-radius:6px;padding:10px 14px}
+.exp{display:none}
+.exp.show{display:block}
+</style></head><body>
+<nav class="topnav">
+<button class="tab-btn" data-n="1" onclick="showExp(1)" id="tab1">Exp 1</button>
+<button class="tab-btn" data-n="2" onclick="showExp(2)" id="tab2">Exp 2</button>
+<button class="tab-btn" data-n="3" onclick="showExp(3)" id="tab3">Exp 3</button>
+<button class="tab-btn" data-n="4" onclick="showExp(4)" id="tab4">Exp 4</button>
+<button class="tab-btn" data-n="5" onclick="showExp(5)" id="tab5">Exp 5</button>
+<button class="tab-btn" data-n="6" onclick="showExp(6)" id="tab6">Exp 6</button>
+<button class="tab-btn" data-n="7" onclick="showExp(7)" id="tab7" style="color:#22a861;font-weight:700">⚡ Setup Guide</button>
+</nav>
+<div class="dl-bar">
+  <span style="font:600 13px 'Segoe UI',sans-serif;color:var(--mute);">📄 Computer Graphics &amp; Multimedia Lab · All Experiments</span>
+  <a id="dl-btn" href="all.html" download="CGML_All_Experiments.html" style="background:var(--acc);color:#fff;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">⬇ Download This File (.html)</a>
+  <button id="dl-master-btn" onclick="downloadMasterZip(this)" style="background:var(--ok);color:#fff;border:0;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">📦 Download Master Codes (.zip)</button>
+</div>
+<main>
+
+<div class="exp" id="exp1">
+<p class="meta">Computer Graphics &amp; Multimedia Lab, 5CS4-21 (Turbo C++)</p>
+<h1>Experiment 1: Basic graphics: line, circle, ellipse, heart and smiley face</h1>
+<div class="aim"><b>Aim:</b> To draw a line, circle, ellipse, heart and smiley face using graphics functions, and to see their attributes (colour, line style, thickness, fill).</div>
+<h2>Source code</h2>
+<div class="code" data-file="cgm_exp1.c"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include&lt;stdio.h&gt;
+#include&lt;conio.h&gt;
+#include&lt;stdlib.h&gt;
+#include&lt;graphics.h&gt;
+
+void main()
+{
+    int gd = DETECT, gm, err;
+    int x, y, r;
+
+    initgraph(&amp;gd, &amp;gm, &quot;C:\\TURBOC3\\BGI&quot;);
+    err = graphresult();
+    if(err != grOk)
+    {
+        printf(&quot;Graphics error: %s&quot;, grapherrormsg(err));
+        getch();
+        exit(1);
+    }
+
+    /* 1. Line: yellow, dashed, thick */
+    setcolor(YELLOW);
+    setlinestyle(DASHED_LINE, 0, THICK_WIDTH);
+    line(30, 150, 190, 70);
+    outtextxy(80, 190, &quot;Line&quot;);
+
+    /* back to a normal solid line for the other shapes */
+    setlinestyle(SOLID_LINE, 0, NORM_WIDTH);
+
+    /* 2. Circle: white outline, red fill */
+    setcolor(WHITE);
+    circle(320, 110, 50);
+    setfillstyle(SOLID_FILL, RED);
+    floodfill(320, 110, WHITE);
+    outtextxy(295, 190, &quot;Circle&quot;);
+
+    /* 3. Ellipse: green */
+    setcolor(GREEN);
+    ellipse(530, 110, 0, 360, 70, 40);
+    outtextxy(505, 190, &quot;Ellipse&quot;);
+
+    /* 4. Rectangle: cyan */
+    setcolor(CYAN);
+    rectangle(60, 260, 160, 340);
+    outtextxy(70, 400, &quot;Rectangle&quot;);
+
+    /* 5. Smiley face: yellow head, eyes, smile */
+    setcolor(YELLOW);
+    circle(320, 300, 45);
+    circle(305, 288, 5);
+    circle(335, 288, 5);
+    arc(320, 300, 200, 340, 25);
+    outtextxy(280, 400, &quot;Smiley face&quot;);
+
+    /* 6. Heart: two arcs and two lines */
+    setcolor(RED);
+    x = 530; y = 270; r = 25;
+    arc(x - r, y, 0, 180, r);
+    arc(x + r, y, 0, 180, r);
+    line(x - 2 * r, y, x, y + 3 * r);
+    line(x + 2 * r, y, x, y + 3 * r);
+    setfillstyle(SOLID_FILL, RED);
+    floodfill(x, y + 30, RED);
+    outtextxy(505, 400, &quot;Heart&quot;);
+
+    getch();
+    closegraph();
+}</pre></div>
+<p class="note">The manual's Exp 1 has separate programs for each shape (the heart program contains a stray name and drawing loop) and uses several different BGI paths. This one program draws everything, checks for graphics errors, and shows the attributes.</p>
+<h2>Before you run</h2>
+<p>These programs open a graphics screen, so they need the Turbo C++ BGI driver files. Two things to check once:</p><ol><li><b>BGI path:</b> the code uses <code>"C:\\TURBOC3\\BGI"</code> (double backslashes are required in C). It must match the BGI folder of your Turbo C++ install, which holds files such as <code>EGAVGA.BGI</code>. If the program prints "Graphics error", correct this path.</li><li><b>Graphics library:</b> in Turbo C++ choose <b>Options &gt; Linker &gt; Libraries</b> and tick <b>Graphics library</b>. Without it you get "undefined symbol _initgraph" when linking.</li><li><b>File type:</b> save the file with the <code>.C</code> extension (for example <code>EXP4.C</code>) so Turbo C++ compiles it as a C program.</li></ol>
+<h2>Output</h2>
+<div class="code"><button class="copy">Copy</button><pre>A 640 x 480 graphics window opens with six labelled shapes:
+  Top row:    a yellow dashed thick line, a red-filled circle, a green ellipse
+  Bottom row: a cyan rectangle, a yellow smiley face, a red filled heart
+Press any key to close it.</pre></div>
+<h2>Explanation</h2>
+<ol>
+<li><code>initgraph(&amp;gd, &amp;gm, path)</code> starts graphics mode. <code>DETECT</code> lets it pick the best driver. <code>graphresult()</code> checks that it worked.</li>
+<li><code>setcolor(c)</code> sets the drawing colour. <code>setlinestyle(style, 0, width)</code> sets the line style (<code>SOLID_LINE</code>, <code>DASHED_LINE</code>, <code>DOTTED_LINE</code>, <code>CENTER_LINE</code>) and thickness (<code>NORM_WIDTH</code> or <code>THICK_WIDTH</code>). These are the <b>attributes</b> of a line.</li>
+<li><code>line(x1, y1, x2, y2)</code> draws a line between two points. <code>circle(x, y, r)</code> needs the centre and radius. <code>ellipse(x, y, start, end, xr, yr)</code> needs the centre, start and end angles (0 to 360 for a full ellipse) and the two radii. <code>rectangle(left, top, right, bottom)</code> needs two opposite corners.</li>
+<li><code>setfillstyle(SOLID_FILL, RED)</code> chooses the fill pattern and colour. <code>floodfill(x, y, border)</code> fills the area around the point (x, y) up to the border colour, so the shape must be drawn in that border colour first.</li>
+<li><code>arc(x, y, start, end, r)</code> draws part of a circle. Angles are measured anticlockwise from the 3 o'clock position, so 270 degrees is the bottom. The smile is an arc from 200 to 340 degrees. The heart is two upper half-circles (0 to 180) joined by two lines to the bottom point.</li>
+<li><code>outtextxy(x, y, text)</code> prints a label at a screen position. <code>getch()</code> waits for a key and <code>closegraph()</code> returns to text mode.</li>
+</ol>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">How do you draw a rectangle in graphics mode?</p><p class="a"><code>rectangle(left, top, right, bottom)</code>. The first two values are the top-left corner and the last two are the bottom-right corner.</p></div>
+<div class="qa"><p class="q">What are the line attributes?</p><p class="a">Colour (<code>setcolor</code>), line style (solid, dotted, centre, dashed) and thickness (normal or thick), both set with <code>setlinestyle</code>.</p></div>
+<div class="qa"><p class="q">What are the ellipse attributes?</p><p class="a">Centre (x, y), start angle, end angle, x radius and y radius, plus the current colour and line style.</p></div>
+<div class="qa"><p class="q">What are the circle attributes?</p><p class="a">Centre (x, y) and radius, plus the current colour and line style. The inside is filled with <code>setfillstyle</code> and <code>floodfill</code>.</p></div>
+<div class="qa"><p class="q">Why is initgraph used?</p><p class="a">It initialises the graphics system by loading a graphics driver from disk and putting the screen into graphics mode. It also resets colours and settings to their defaults.</p></div>
+<div class="qa"><p class="q">What is the closegraph function?</p><p class="a">It shuts down the graphics system, frees the memory used by it and restores the screen to text mode.</p></div>
+<div class="qa"><p class="q">What is a pixel?</p><p class="a">The smallest addressable point of the screen. A picture is made of many pixels.</p></div>
+<div class="qa"><p class="q">What is the putpixel function?</p><p class="a"><code>putpixel(x, y, color)</code> plots one pixel at (x, y) in the given colour.</p></div>
+<div class="qa"><p class="q">How is setpixel used?</p><p class="a"><code>setpixel</code> is not a Turbo C function. It belongs to other graphics systems. In Turbo C the same job is done by <code>putpixel</code>.</p></div>
+<div class="qa"><p class="q">What is a picture element?</p><p class="a">Another name for a pixel (pix-el = picture element).</p></div>
+<div class="qa"><p class="q">What does DETECT do?</p><p class="a">It tells <code>initgraph</code> to detect the graphics card and choose the best driver and mode automatically.</p></div>
+<div class="qa"><p class="q">What does floodfill need?</p><p class="a">A point inside a closed shape, and the colour of the shape's border. The border must be closed or the colour leaks out.</p></div>
+</div>
+
+<div class="exp" id="exp2">
+<p class="meta">Computer Graphics &amp; Multimedia Lab, 5CS4-21 (Turbo C++)</p>
+<h1>Experiment 2: Plot a pixel in different colours</h1>
+<div class="aim"><b>Aim:</b> To plot a point (pixel) on the screen in different colours using graphics functions.</div>
+<h2>Source code</h2>
+<div class="code" data-file="cgm_exp2.c"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include&lt;stdio.h&gt;
+#include&lt;conio.h&gt;
+#include&lt;stdlib.h&gt;
+#include&lt;graphics.h&gt;
+
+void main()
+{
+    int gd = DETECT, gm, err;
+    int c, x, y;
+    char msg[40];
+
+    initgraph(&amp;gd, &amp;gm, &quot;C:\\TURBOC3\\BGI&quot;);
+    err = graphresult();
+    if(err != grOk)
+    {
+        printf(&quot;Graphics error: %s&quot;, grapherrormsg(err));
+        getch();
+        exit(1);
+    }
+
+    /* the pixels from the manual */
+    putpixel(85, 35, GREEN);
+    putpixel(30, 40, RED);
+    putpixel(115, 50, YELLOW);
+    putpixel(135, 50, CYAN);
+    putpixel(45, 60, BLUE);
+    putpixel(20, 100, WHITE);
+    putpixel(200, 100, LIGHTBLUE);
+    putpixel(150, 100, LIGHTGREEN);
+    putpixel(200, 50, YELLOW);
+    putpixel(120, 70, RED);
+
+    /* a strip of pixels in every colour from 1 to 15 */
+    for(c = 1; c &lt;= 15; c++)
+    {
+        for(x = 0; x &lt; 30; x++)
+        {
+            for(y = 0; y &lt; 10; y++)
+            {
+                putpixel(100 + c * 30 + x, 200 + y, c);
+            }
+        }
+    }
+
+    outtextxy(100, 180, &quot;Pixels in colours 1 to 15&quot;);
+
+    /* read a pixel back with getpixel */
+    c = getpixel(85, 35);
+    sprintf(msg, &quot;Colour of pixel (85,35) = %d&quot;, c);
+    outtextxy(100, 300, msg);
+
+    getch();
+    closegraph();
+}</pre></div>
+<p class="note">The manual's Exp 2 plots only ten single pixels, which are hard to see, and has no viva questions. This version adds a visible colour strip, <code>getpixel</code>, and viva questions.</p>
+<h2>Before you run</h2>
+<p>These programs open a graphics screen, so they need the Turbo C++ BGI driver files. Two things to check once:</p><ol><li><b>BGI path:</b> the code uses <code>"C:\\TURBOC3\\BGI"</code> (double backslashes are required in C). It must match the BGI folder of your Turbo C++ install, which holds files such as <code>EGAVGA.BGI</code>. If the program prints "Graphics error", correct this path.</li><li><b>Graphics library:</b> in Turbo C++ choose <b>Options &gt; Linker &gt; Libraries</b> and tick <b>Graphics library</b>. Without it you get "undefined symbol _initgraph" when linking.</li><li><b>File type:</b> save the file with the <code>.C</code> extension (for example <code>EXP4.C</code>) so Turbo C++ compiles it as a C program.</li></ol>
+<h2>Output</h2>
+<div class="code"><button class="copy">Copy</button><pre>A graphics window opens. Ten small coloured dots appear near the top left, and below them a row of 15 coloured blocks (colours 1 to 15).
+Text shown: Pixels in colours 1 to 15
+Text shown: Colour of pixel (85,35) = 2
+Press any key to close it.</pre></div>
+<h2>Explanation</h2>
+<ol>
+<li><code>putpixel(x, y, color)</code> lights one pixel at column <b>x</b> and row <b>y</b>. (0, 0) is the top-left corner, x grows to the right and y grows downwards.</li>
+<li>The colour is a name like <code>GREEN</code> or a number from 0 to 15. <code>BLACK</code> is 0, <code>BLUE</code> 1, <code>GREEN</code> 2, <code>CYAN</code> 3, <code>RED</code> 4 and <code>WHITE</code> 15.</li>
+<li>A single pixel is tiny, so the program also plots a block of 30 x 10 pixels for each colour from 1 to 15. Colour 0 (black) would not show on the black background.</li>
+<li><code>getpixel(x, y)</code> reads the colour of a pixel. Reading (85, 35) returns 2, which is <code>GREEN</code>.</li>
+<li><code>sprintf</code> builds the message text in <code>msg</code>, and <code>outtextxy</code> prints it on the graphics screen. <code>printf</code> does not work well in graphics mode.</li>
+</ol>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is a pixel?</p><p class="a">The smallest point on the screen that can be set to a colour. The screen is a grid of pixels.</p></div>
+<div class="qa"><p class="q">What is the syntax of putpixel?</p><p class="a"><code>putpixel(int x, int y, int color)</code>.</p></div>
+<div class="qa"><p class="q">What does getpixel do?</p><p class="a">It returns the colour value of the pixel at (x, y).</p></div>
+<div class="qa"><p class="q">How many colours can be used in this mode?</p><p class="a">16 colours, numbered 0 (<code>BLACK</code>) to 15 (<code>WHITE</code>), in the usual 640 x 480 VGA mode.</p></div>
+<div class="qa"><p class="q">What is the screen resolution?</p><p class="a">The number of pixels across and down. The usual VGA mode here is 640 x 480. <code>getmaxx()</code> and <code>getmaxy()</code> return 639 and 479.</p></div>
+<div class="qa"><p class="q">Where is the origin (0, 0)?</p><p class="a">At the top-left corner of the screen. y increases downwards.</p></div>
+<div class="qa"><p class="q">Why do we use getch() before closegraph()?</p><p class="a">To keep the picture on the screen until a key is pressed. Without it the window closes at once.</p></div>
+<div class="qa"><p class="q">What is a frame buffer?</p><p class="a">The memory that holds the colour of every pixel. Plotting a pixel changes its value in the buffer, and the display shows the buffer.</p></div>
+</div>
+
+<div class="exp" id="exp3">
+<p class="meta">Computer Graphics &amp; Multimedia Lab, 5CS4-21 (Turbo C++)</p>
+<h1>Experiment 3: DDA line drawing algorithm</h1>
+<div class="aim"><b>Aim:</b> To implement the DDA algorithm for drawing a line segment between two given end points A (x1, y1) and B (x2, y2).</div>
+<h2>Source code</h2>
+<div class="code" data-file="cgm_exp3.c"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include&lt;stdio.h&gt;
+#include&lt;conio.h&gt;
+#include&lt;stdlib.h&gt;
+#include&lt;math.h&gt;
+#include&lt;graphics.h&gt;
+
+void main()
+{
+    int gd = DETECT, gm, err;
+    int x1, y1, x2, y2, dx, dy, steps, k;
+    float x, y, xinc, yinc;
+
+    clrscr();
+    printf(&quot;Enter first point (x1 y1): &quot;);
+    scanf(&quot;%d%d&quot;, &amp;x1, &amp;y1);
+    printf(&quot;Enter second point (x2 y2): &quot;);
+    scanf(&quot;%d%d&quot;, &amp;x2, &amp;y2);
+
+    initgraph(&amp;gd, &amp;gm, &quot;C:\\TURBOC3\\BGI&quot;);
+    err = graphresult();
+    if(err != grOk)
+    {
+        printf(&quot;Graphics error: %s&quot;, grapherrormsg(err));
+        getch();
+        exit(1);
+    }
+
+    dx = x2 - x1;
+    dy = y2 - y1;
+
+    if(abs(dx) &gt; abs(dy))
+        steps = abs(dx);
+    else
+        steps = abs(dy);
+
+    if(steps == 0)
+        steps = 1;
+
+    xinc = (float)dx / steps;
+    yinc = (float)dy / steps;
+
+    x = x1;
+    y = y1;
+
+    for(k = 0; k &lt;= steps; k++)
+    {
+        putpixel((int)(x + 0.5), (int)(y + 0.5), WHITE);
+        x = x + xinc;
+        y = y + yinc;
+    }
+
+    getch();
+    closegraph();
+}</pre></div>
+<p class="note">The manual's DDA program has a bug (integer <code>xi</code> and <code>yi</code>), calls <code>initgraph</code> before asking for input, and uses a bad path (<code>"C:\\tc\\bgi:"</code>). This version fixes all three.</p>
+<h2>Before you run</h2>
+<p>These programs open a graphics screen, so they need the Turbo C++ BGI driver files. Two things to check once:</p><ol><li><b>BGI path:</b> the code uses <code>"C:\\TURBOC3\\BGI"</code> (double backslashes are required in C). It must match the BGI folder of your Turbo C++ install, which holds files such as <code>EGAVGA.BGI</code>. If the program prints "Graphics error", correct this path.</li><li><b>Graphics library:</b> in Turbo C++ choose <b>Options &gt; Linker &gt; Libraries</b> and tick <b>Graphics library</b>. Without it you get "undefined symbol _initgraph" when linking.</li><li><b>File type:</b> save the file with the <code>.C</code> extension (for example <code>EXP4.C</code>) so Turbo C++ compiles it as a C program.</li></ol><p>Enter points inside the screen: x from 0 to 639 and y from 0 to 479.</p>
+<h2>Output</h2>
+<div class="code"><button class="copy">Copy</button><pre>Enter first point (x1 y1): 100 100
+Enter second point (x2 y2): 300 200
+(a graphics window opens and a white line is drawn from (100,100) to (300,200))
+Press any key to close it.</pre></div>
+<h2>Explanation</h2>
+<ol>
+<li><b>Idea:</b> A line is drawn as a series of pixels. DDA (Digital Differential Analyzer) walks from the first point to the last in small equal steps and plots a pixel at each step.</li>
+<li><code>dx = x2 - x1</code> and <code>dy = y2 - y1</code> are the changes along x and y.</li>
+<li><code>steps</code> is the larger of |dx| and |dy|. Using the larger one guarantees that the line moves by at most 1 pixel in each direction per step, so there are no gaps.</li>
+<li><code>xinc = dx / steps</code> and <code>yinc = dy / steps</code> are the amounts to add at every step. One of them is exactly 1 (or -1) and the other is the slope or a fraction.</li>
+<li>In the loop, add <code>xinc</code> and <code>yinc</code> to x and y, round them with <code>(int)(x + 0.5)</code>, and plot. The loop runs <code>steps + 1</code> times so both end points are plotted.</li>
+<li><b>Example:</b> from (2, 2) to (8, 5): dx = 6, dy = 3, steps = 6, xinc = 1, yinc = 0.5. The plotted points are (2,2), (3,3), (4,3), (5,4), (6,4), (7,5), (8,5).</li>
+<li>The manual declares <code>xi</code> and <code>yi</code> as <code>int</code>, so <code>dx/s</code> is integer division and any slanted line comes out wrong (for example 0.5 becomes 0). This version uses <code>float</code> and casts to avoid that.</li>
+</ol>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is the DDA algorithm?</p><p class="a">An incremental algorithm that draws a line by computing each next point from the previous one, adding a fixed step in x and y and rounding to the nearest pixel.</p></div>
+<div class="qa"><p class="q">What does DDA stand for?</p><p class="a">Digital Differential Analyzer.</p></div>
+<div class="qa"><p class="q">Differentiate DDA and Bresenham's line algorithm.</p><p class="a">DDA uses floating-point addition and rounding at every step. Bresenham's uses only integer addition and a decision parameter, so it is faster and more accurate (no rounding error build-up).</p></div>
+<div class="qa"><p class="q">Why is DDA more complex (slower) than Bresenham's?</p><p class="a">It needs floating-point arithmetic and rounding for every pixel, while Bresenham's uses only integer operations.</p></div>
+<div class="qa"><p class="q">Why is DDA called an incremental scan conversion algorithm?</p><p class="a">Because each point is obtained by adding an increment to the previous point instead of computing it from the line equation each time.</p></div>
+<div class="qa"><p class="q">What operations are performed in DDA?</p><p class="a">Compute dx and dy, find the number of steps, compute the increments, then repeat: add the increments, round, and plot.</p></div>
+<div class="qa"><p class="q">What is the line equation?</p><p class="a">y = mx + c, where m is the slope and c is the y-intercept.</p></div>
+<div class="qa"><p class="q">How is the slope calculated?</p><p class="a">m = dy / dx = (y2 - y1) / (x2 - x1).</p></div>
+<div class="qa"><p class="q">What is a refresh buffer?</p><p class="a">Also called the frame buffer: the memory that stores the colour of every pixel, which the display reads to refresh the screen.</p></div>
+<div class="qa"><p class="q">What is resolution?</p><p class="a">The number of pixels on the screen, given as columns x rows, for example 640 x 480.</p></div>
+<div class="qa"><p class="q">Why are the larger of |dx| and |dy| used as the number of steps?</p><p class="a">So that the line advances by one pixel along the major axis at each step and no pixel is skipped.</p></div>
+<div class="qa"><p class="q">What happens if both end points are the same?</p><p class="a">steps would be 0 and the division would fail, so the program sets steps to 1 and plots that one point.</p></div>
+</div>
+
+<div class="exp" id="exp4">
+<p class="meta">Computer Graphics &amp; Multimedia Lab, 5CS4-21 (Turbo C++)</p>
+<h1>Experiment 4: Bresenham&#x27;s line drawing algorithm</h1>
+<div class="aim"><b>Aim:</b> To implement Bresenham&#x27;s line drawing algorithm for drawing a line segment between two given end points A (x1, y1) and B (x2, y2).</div>
+<h2>Source code</h2>
+<div class="code" data-file="cgm_exp4.c"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include&lt;stdio.h&gt;
+#include&lt;conio.h&gt;
+#include&lt;stdlib.h&gt;
+#include&lt;graphics.h&gt;
+
+void bresenham(int x1, int y1, int x2, int y2)
+{
+    int dx, dy, sx, sy, x, y, p, i;
+
+    dx = abs(x2 - x1);
+    dy = abs(y2 - y1);
+    sx = (x2 &gt;= x1) ? 1 : -1;
+    sy = (y2 &gt;= y1) ? 1 : -1;
+    x = x1;
+    y = y1;
+    putpixel(x, y, WHITE);
+
+    if(dx &gt;= dy)
+    {
+        p = 2 * dy - dx;
+        for(i = 0; i &lt; dx; i++)
+        {
+            x = x + sx;
+            if(p &lt; 0)
+            {
+                p = p + 2 * dy;
+            }
+            else
+            {
+                y = y + sy;
+                p = p + 2 * (dy - dx);
+            }
+            putpixel(x, y, WHITE);
+        }
+    }
+    else
+    {
+        p = 2 * dx - dy;
+        for(i = 0; i &lt; dy; i++)
+        {
+            y = y + sy;
+            if(p &lt; 0)
+            {
+                p = p + 2 * dx;
+            }
+            else
+            {
+                x = x + sx;
+                p = p + 2 * (dx - dy);
+            }
+            putpixel(x, y, WHITE);
+        }
+    }
+}
+
+void main()
+{
+    int gd = DETECT, gm, err;
+    int x1, y1, x2, y2;
+
+    clrscr();
+    printf(&quot;Enter first point (x1 y1): &quot;);
+    scanf(&quot;%d%d&quot;, &amp;x1, &amp;y1);
+    printf(&quot;Enter second point (x2 y2): &quot;);
+    scanf(&quot;%d%d&quot;, &amp;x2, &amp;y2);
+
+    initgraph(&amp;gd, &amp;gm, &quot;C:\\TURBOC3\\BGI&quot;);
+    err = graphresult();
+    if(err != grOk)
+    {
+        printf(&quot;Graphics error: %s&quot;, grapherrormsg(err));
+        getch();
+        exit(1);
+    }
+
+    bresenham(x1, y1, x2, y2);
+
+    getch();
+    closegraph();
+}</pre></div>
+<p class="note">The manual's program works only when x1 is smaller than x2 and the slope is between 0 and 1, never calls <code>getch</code> or <code>closegraph</code>, and its result line says "Circle". This version draws lines in every direction.</p>
+<h2>Before you run</h2>
+<p>These programs open a graphics screen, so they need the Turbo C++ BGI driver files. Two things to check once:</p><ol><li><b>BGI path:</b> the code uses <code>"C:\\TURBOC3\\BGI"</code> (double backslashes are required in C). It must match the BGI folder of your Turbo C++ install, which holds files such as <code>EGAVGA.BGI</code>. If the program prints "Graphics error", correct this path.</li><li><b>Graphics library:</b> in Turbo C++ choose <b>Options &gt; Linker &gt; Libraries</b> and tick <b>Graphics library</b>. Without it you get "undefined symbol _initgraph" when linking.</li><li><b>File type:</b> save the file with the <code>.C</code> extension (for example <code>EXP4.C</code>) so Turbo C++ compiles it as a C program.</li></ol><p>Enter points inside the screen: x from 0 to 639 and y from 0 to 479.</p>
+<h2>Output</h2>
+<div class="code"><button class="copy">Copy</button><pre>Enter first point (x1 y1): 100 100
+Enter second point (x2 y2): 300 200
+(a graphics window opens and a white line is drawn from (100,100) to (300,200))
+Press any key to close it.</pre></div>
+<h2>Explanation</h2>
+<ol>
+<li><b>Idea:</b> At each step the line moves one pixel along x and either stays on the same row or goes up one row. The <b>decision parameter p</b> tells which of the two pixels is closer to the real line. Only integer additions are used.</li>
+<li><code>dx</code> and <code>dy</code> are the absolute differences. <code>sx</code> and <code>sy</code> are +1 or -1 and give the direction, so lines in every direction work (the manual's version only works when x1 is less than x2 and the slope is between 0 and 1).</li>
+<li><b>Main case (dx at least dy, slope up to 1):</b> start with <code>p = 2*dy - dx</code> and plot the first point.</li>
+<li>For each step x moves by one. If <code>p &lt; 0</code>, y stays the same and <code>p = p + 2*dy</code>. Otherwise y also moves by one and <code>p = p + 2*(dy - dx)</code>. Then the pixel is plotted.</li>
+<li>When the line is steeper (dy greater than dx), the same logic is used with the roles of x and y swapped (the <code>else</code> part).</li>
+<li><b>Example:</b> from (0,0) to (8,3): dx = 8, dy = 3, p starts at -2. The points are (0,0), (1,0), (2,1), (3,1), (4,2), (5,2), (6,2), (7,3), (8,3).</li>
+</ol>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">Differentiate DDA and Bresenham's line algorithm.</p><p class="a">DDA uses floating-point addition and rounding. Bresenham's uses only integer addition and a decision parameter, so it is faster and more accurate.</p></div>
+<div class="qa"><p class="q">Explain Bresenham's line drawing algorithm.</p><p class="a">It draws a line by moving one pixel in the major direction at each step and using a decision parameter to choose between the two nearest pixels. The parameter is updated with integer additions.</p></div>
+<div class="qa"><p class="q">What operations are performed in Bresenham's algorithm?</p><p class="a">Compute dx and dy, set p = 2dy - dx, then repeat: plot the pixel, move x, update p using integer addition, and move y when p is not negative.</p></div>
+<div class="qa"><p class="q">Why is Bresenham's more accurate than DDA?</p><p class="a">It uses only integers, so there is no rounding error that builds up along the line.</p></div>
+<div class="qa"><p class="q">Why is Bresenham's faster and more efficient?</p><p class="a">It avoids floating-point arithmetic, division and rounding inside the loop. Only additions and comparisons are used.</p></div>
+<div class="qa"><p class="q">What is a decision parameter?</p><p class="a">A value, p, that shows which of the two candidate pixels is closer to the actual line, so we can choose without calculating the exact y.</p></div>
+<div class="qa"><p class="q">How is the decision parameter calculated?</p><p class="a">The first value is p = 2dy - dx. After that, p = p + 2dy if p is negative, or p = p + 2(dy - dx) if p is not negative.</p></div>
+<div class="qa"><p class="q">What are the conditions for the decision parameter?</p><p class="a">If p &lt; 0 the next pixel is (x + 1, y). If p &gt;= 0 the next pixel is (x + 1, y + 1).</p></div>
+<div class="qa"><p class="q">List the advantages of Bresenham's algorithm.</p><p class="a">Integer arithmetic only, fast, accurate, easy to implement in hardware, and every point lies close to the true line.</p></div>
+<div class="qa"><p class="q">List the disadvantages of Bresenham's algorithm.</p><p class="a">It draws only straight lines in its basic form, it needs separate handling for different slopes and directions, and the lines look jagged (aliasing) because there is no anti-aliasing.</p></div>
+<div class="qa"><p class="q">What is the slope of a line?</p><p class="a">m = dy / dx. For slope between 0 and 1, x is the major direction.</p></div>
+</div>
+
+<div class="exp" id="exp5">
+<p class="meta">Computer Graphics &amp; Multimedia Lab, 5CS4-21 (Turbo C++)</p>
+<h1>Experiment 5: Midpoint circle generation algorithm</h1>
+<div class="aim"><b>Aim:</b> To implement the midpoint circle generation algorithm for a circle with centre (x, y) and radius r.</div>
+<h2>Source code</h2>
+<div class="code" data-file="cgm_exp5.c"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include&lt;stdio.h&gt;
+#include&lt;conio.h&gt;
+#include&lt;stdlib.h&gt;
+#include&lt;graphics.h&gt;
+
+void plot8(int a, int b, int x, int y)
+{
+    putpixel(a + x, b + y, RED);
+    putpixel(a - x, b + y, RED);
+    putpixel(a + x, b - y, RED);
+    putpixel(a - x, b - y, RED);
+    putpixel(a + y, b + x, RED);
+    putpixel(a - y, b + x, RED);
+    putpixel(a + y, b - x, RED);
+    putpixel(a - y, b - x, RED);
+}
+
+void main()
+{
+    int gd = DETECT, gm, err;
+    int a, b, r, x, y, p;
+
+    clrscr();
+    printf(&quot;Enter centre (a b): &quot;);
+    scanf(&quot;%d%d&quot;, &amp;a, &amp;b);
+    printf(&quot;Enter radius r: &quot;);
+    scanf(&quot;%d&quot;, &amp;r);
+
+    initgraph(&amp;gd, &amp;gm, &quot;C:\\TURBOC3\\BGI&quot;);
+    err = graphresult();
+    if(err != grOk)
+    {
+        printf(&quot;Graphics error: %s&quot;, grapherrormsg(err));
+        getch();
+        exit(1);
+    }
+
+    x = 0;
+    y = r;
+    p = 1 - r;
+
+    while(x &lt;= y)
+    {
+        plot8(a, b, x, y);
+        if(p &lt; 0)
+        {
+            p = p + 2 * x + 3;
+        }
+        else
+        {
+            p = p + 2 * (x - y) + 5;
+            y--;
+        }
+        x++;
+    }
+
+    getch();
+    closegraph();
+}</pre></div>
+<p class="note">The manual's Exp 5 has no viva questions. These were written for this page.</p>
+<h2>Before you run</h2>
+<p>These programs open a graphics screen, so they need the Turbo C++ BGI driver files. Two things to check once:</p><ol><li><b>BGI path:</b> the code uses <code>"C:\\TURBOC3\\BGI"</code> (double backslashes are required in C). It must match the BGI folder of your Turbo C++ install, which holds files such as <code>EGAVGA.BGI</code>. If the program prints "Graphics error", correct this path.</li><li><b>Graphics library:</b> in Turbo C++ choose <b>Options &gt; Linker &gt; Libraries</b> and tick <b>Graphics library</b>. Without it you get "undefined symbol _initgraph" when linking.</li><li><b>File type:</b> save the file with the <code>.C</code> extension (for example <code>EXP4.C</code>) so Turbo C++ compiles it as a C program.</li></ol><p>Keep the whole circle inside the screen. For centre (320, 240) the radius can be at most 239.</p>
+<h2>Output</h2>
+<div class="code"><button class="copy">Copy</button><pre>Enter centre (a b): 320 240
+Enter radius r: 100
+(a graphics window opens and a red circle of radius 100 is drawn at the centre of the screen)
+Press any key to close it.</pre></div>
+<h2>Explanation</h2>
+<ol>
+<li><b>Idea:</b> Start at the top of the circle, (0, r), and move along the arc one pixel at a time. At each step choose between two pixels using a decision parameter, with integer arithmetic only.</li>
+<li><b>8-way symmetry:</b> A circle has the same shape in all eight octants. So only the part where x goes from 0 to y (the first 45 degrees) is calculated, and <code>plot8</code> plots the 8 matching points around the centre (a, b) for every point.</li>
+<li>The starting decision parameter is <code>p = 1 - r</code>.</li>
+<li>At each step plot the points. If <code>p &lt; 0</code>, the midpoint is inside the circle, so y stays and <code>p = p + 2x + 3</code>. Otherwise y decreases by one and <code>p = p + 2(x - y) + 5</code>.</li>
+<li>Then x increases by one. The loop stops when x is greater than y, because the first octant is complete.</li>
+<li>The manual's program is written in C++ with a class and has several errors (<code>Void</code>, <code>! =</code>, <code>p=5/4)-r</code>, repeated <code>putpixel</code> lines that skip points). This version is plain C and follows the algorithm given in the manual.</li>
+</ol>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is the midpoint circle algorithm?</p><p class="a">An algorithm that draws a circle by calculating points in one octant and using symmetry for the rest, choosing each pixel with a decision parameter and integer arithmetic.</p></div>
+<div class="qa"><p class="q">What is the circle equation?</p><p class="a">x&sup2; + y&sup2; = r&sup2; for a circle with its centre at the origin. For centre (a, b): (x - a)&sup2; + (y - b)&sup2; = r&sup2;.</p></div>
+<div class="qa"><p class="q">Why do we use 8-way symmetry?</p><p class="a">A circle is symmetric about both axes and both diagonals. Calculating one octant and reflecting it gives all 8, so the work is about 8 times less.</p></div>
+<div class="qa"><p class="q">What is the initial value of the decision parameter?</p><p class="a">p0 = 1 - r (the simplified integer form of 5/4 - r).</p></div>
+<div class="qa"><p class="q">What are the update rules?</p><p class="a">If p &lt; 0: p = p + 2x + 3. Otherwise: p = p + 2(x - y) + 5 and y decreases by 1. In both cases x increases by 1.</p></div>
+<div class="qa"><p class="q">Why does the loop run only while x &lt;= y?</p><p class="a">After x passes y we have covered the first 45 degrees (one octant). The other octants are obtained by symmetry.</p></div>
+<div class="qa"><p class="q">How is it different from drawing a circle with the equation or with sin and cos?</p><p class="a">The equation needs a square root and the trigonometric method needs sin and cos, which are slow. The midpoint method uses only integer additions.</p></div>
+<div class="qa"><p class="q">What does the decision parameter tell us?</p><p class="a">Whether the midpoint between the two candidate pixels is inside or outside the circle, which tells us which pixel is closer.</p></div>
+<div class="qa"><p class="q">What is the difference between the midpoint and Bresenham's circle algorithm?</p><p class="a">They give almost the same result. Bresenham's uses a decision parameter based on distances to the circle, while the midpoint method tests the midpoint of the two candidate pixels.</p></div>
+</div>
+
+<div class="exp" id="exp6">
+<p class="meta">Computer Graphics &amp; Multimedia Lab, 5CS4-21 (Turbo C++)</p>
+<h1>Experiment 6: Midpoint ellipse generation algorithm</h1>
+<div class="aim"><b>Aim:</b> To implement the midpoint ellipse generation algorithm for an ellipse with centre (x, y) and radii rx and ry.</div>
+<h2>Source code</h2>
+<div class="code" data-file="cgm_exp6.c"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include&lt;stdio.h&gt;
+#include&lt;conio.h&gt;
+#include&lt;stdlib.h&gt;
+#include&lt;graphics.h&gt;
+
+void plot4(int xc, int yc, int x, int y)
+{
+    putpixel(xc + x, yc + y, YELLOW);
+    putpixel(xc - x, yc + y, YELLOW);
+    putpixel(xc + x, yc - y, YELLOW);
+    putpixel(xc - x, yc - y, YELLOW);
+}
+
+void main()
+{
+    int gd = DETECT, gm, err;
+    int xc, yc, rx, ry, x, y;
+    double rx2, ry2, p;
+
+    clrscr();
+    printf(&quot;Enter centre (xc yc): &quot;);
+    scanf(&quot;%d%d&quot;, &amp;xc, &amp;yc);
+    printf(&quot;Enter radius along x (rx): &quot;);
+    scanf(&quot;%d&quot;, &amp;rx);
+    printf(&quot;Enter radius along y (ry): &quot;);
+    scanf(&quot;%d&quot;, &amp;ry);
+
+    initgraph(&amp;gd, &amp;gm, &quot;C:\\TURBOC3\\BGI&quot;);
+    err = graphresult();
+    if(err != grOk)
+    {
+        printf(&quot;Graphics error: %s&quot;, grapherrormsg(err));
+        getch();
+        exit(1);
+    }
+
+    rx2 = (double)rx * rx;
+    ry2 = (double)ry * ry;
+    x = 0;
+    y = ry;
+
+    /* Region 1: slope is less than 1 in magnitude */
+    p = ry2 - rx2 * ry + 0.25 * rx2;
+    while(ry2 * x &lt;= rx2 * y)
+    {
+        plot4(xc, yc, x, y);
+        x++;
+        if(p &lt; 0)
+        {
+            p = p + 2 * ry2 * x + ry2;
+        }
+        else
+        {
+            y--;
+            p = p + 2 * ry2 * x - 2 * rx2 * y + ry2;
+        }
+    }
+
+    /* Region 2: slope is greater than 1 in magnitude */
+    p = ry2 * (x + 0.5) * (x + 0.5) + rx2 * (y - 1) * (y - 1) - rx2 * ry2;
+    while(y &gt;= 0)
+    {
+        plot4(xc, yc, x, y);
+        y--;
+        if(p &gt; 0)
+        {
+            p = p + rx2 - 2 * rx2 * y;
+        }
+        else
+        {
+            x++;
+            p = p + 2 * ry2 * x - 2 * rx2 * y + rx2;
+        }
+    }
+
+    getch();
+    closegraph();
+}</pre></div>
+<p class="note">The manual's Exp 6 text asks for a major and minor axis length and always draws at (200, 200). This version asks for the centre and both radii.</p>
+<h2>Before you run</h2>
+<p>These programs open a graphics screen, so they need the Turbo C++ BGI driver files. Two things to check once:</p><ol><li><b>BGI path:</b> the code uses <code>"C:\\TURBOC3\\BGI"</code> (double backslashes are required in C). It must match the BGI folder of your Turbo C++ install, which holds files such as <code>EGAVGA.BGI</code>. If the program prints "Graphics error", correct this path.</li><li><b>Graphics library:</b> in Turbo C++ choose <b>Options &gt; Linker &gt; Libraries</b> and tick <b>Graphics library</b>. Without it you get "undefined symbol _initgraph" when linking.</li><li><b>File type:</b> save the file with the <code>.C</code> extension (for example <code>EXP4.C</code>) so Turbo C++ compiles it as a C program.</li></ol><p>Keep the whole ellipse inside the screen. For centre (320, 240), use rx up to 319 and ry up to 239.</p>
+<h2>Output</h2>
+<div class="code"><button class="copy">Copy</button><pre>Enter centre (xc yc): 320 240
+Enter radius along x (rx): 150
+Enter radius along y (ry): 80
+(a graphics window opens and a yellow ellipse, 300 pixels wide and 160 pixels tall, is drawn at the centre of the screen)
+Press any key to close it.</pre></div>
+<h2>Explanation</h2>
+<ol>
+<li><b>Idea:</b> An ellipse is symmetric in four quadrants, so only the first quadrant is calculated, starting at the top, (0, ry). <code>plot4</code> plots the 4 matching points around the centre.</li>
+<li>The first quadrant is split into two regions. In <b>Region 1</b> the curve is flat (slope less than 1 in magnitude), so x moves by one at every step and y sometimes goes down. In <b>Region 2</b> the curve is steep, so y moves by one at every step and x sometimes goes right.</li>
+<li>Region 1 ends when <code>ry&sup2;&middot;x</code> is no longer less than or equal to <code>rx&sup2;&middot;y</code>, which is where the slope reaches -1.</li>
+<li>Region 1 starts with <code>p = ry&sup2; - rx&sup2;&middot;ry + 0.25&middot;rx&sup2;</code>. If p is negative only x moves. Otherwise y also decreases. The update formulas are in the code.</li>
+<li>Region 2 starts with a new parameter calculated from the last point of Region 1, and runs while y is at least 0, so the curve ends on the x axis.</li>
+<li><code>double</code> is used for the parameters because the squares of large radii are bigger than a Turbo C <code>int</code> or <code>long</code> can hold.</li>
+<li>The manual's program has several faults (empty <code>else</code> blocks that skip the parameter update, a fixed centre at (200, 200), and bad path <code>"C:\\tc\\bgi::"</code>). This version follows the standard algorithm and takes the centre as input.</li>
+</ol>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">Explain the ellipse function.</p><p class="a">An ellipse centred at the origin is x&sup2;/rx&sup2; + y&sup2;/ry&sup2; = 1. The algorithm uses f(x, y) = ry&sup2;x&sup2; + rx&sup2;y&sup2; - rx&sup2;ry&sup2;, which is negative inside, zero on, and positive outside the ellipse.</p></div>
+<div class="qa"><p class="q">Explain the midpoint ellipse drawing algorithm.</p><p class="a">It draws one quadrant in two regions. In each region it tests the midpoint between two candidate pixels with the ellipse function and uses the sign of a decision parameter to pick the nearer pixel. The other three quadrants come by symmetry.</p></div>
+<div class="qa"><p class="q">What are the advantages of this algorithm?</p><p class="a">It uses only additions and multiplications in the loop (no square roots or trigonometry), it is fast, and it gives smooth ellipses with good accuracy.</p></div>
+<div class="qa"><p class="q">What are the disadvantages of this algorithm?</p><p class="a">It is more complicated than the circle algorithm because of the two regions, it needs squares of the radii (large numbers), and it draws only ellipses aligned to the axes.</p></div>
+<div class="qa"><p class="q">Write the properties of the midpoint ellipse algorithm.</p><p class="a">Uses 4-way symmetry, divides the quadrant into two regions at slope -1, works with a decision parameter updated incrementally, and plots the nearest pixel to the true ellipse at each step.</p></div>
+<div class="qa"><p class="q">Why are there two regions?</p><p class="a">Where the curve is flat, x is the fast direction. Where it is steep, y is the fast direction. We must step by one pixel along the fast direction so no pixel is missed.</p></div>
+<div class="qa"><p class="q">Where does Region 1 end?</p><p class="a">Where the slope of the curve becomes -1, that is when ry&sup2;&middot;x is greater than rx&sup2;&middot;y.</p></div>
+<div class="qa"><p class="q">Why 4-way symmetry for an ellipse and 8-way for a circle?</p><p class="a">A circle is also symmetric about the diagonals, but an ellipse is symmetric only about its two axes, so its quadrants are not symmetric to each other beyond that.</p></div>
+<div class="qa"><p class="q">What happens if rx equals ry?</p><p class="a">The shape becomes a circle with radius rx.</p></div>
+</div>
+
+<div class="exp" id="exp7">
+
+<p class="meta">Computer Graphics &amp; Multimedia Lab, 5CS4-21 (Turbo C++)</p>
+<h1>⚡ Turbo C++ Setup &amp; Graphics Reference</h1>
+<div class="aim"><b>Guide:</b> Complete one-time setup, BGI configuration, common error resolutions, and summary of all experiments.</div>
+
+<h2>One-time Turbo C++ setup</h2>
+<ol>
+  <li><b>Install Turbo C++:</b> If using modern 64-bit Windows (Windows 10 / 11), use <b>Turbo C++ 3.2</b> with built-in DOSBox or install DOSBox independently.</li>
+  <li><b>Enable Graphics Library in Linker (Critical):</b>
+    <p>In Turbo C++, click the top menu: <b>Options &gt; Linker &gt; Libraries</b>.</p>
+    <p>Check the box for <b>[X] Graphics library</b>, then click OK. If this is not checked, linking will fail with <code>Undefined symbol _initgraph in module...</code>.</p>
+  </li>
+  <li><b>Check BGI Directory:</b>
+    <p>The graphics initialization line in all programs is:</p>
+    <div class="code"><button class="copy">Copy</button><pre>initgraph(&amp;gd, &amp;gm, "C:\TURBOC3\BGI");</pre></div>
+    <p>Ensure that <code>C:\TURBOC3\BGI</code> exists and contains <code>EGAVGA.BGI</code>. Double backslashes (<code>\</code>) are required in C strings.</p>
+  </li>
+  <li><b>Save as .C extension:</b> Save files with <code>.C</code> extension (e.g. <code>EXP1.C</code>), not <code>.CPP</code>.</li>
+  <li><b>Compile and Run:</b> Press <b>Ctrl + F9</b> to compile and run. Press any key to return to the editor when the drawing finishes.</li>
+</ol>
+
+<h2>Experiments quick reference table</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Exp</th>
+      <th>Topic / Aim</th>
+      <th>Key Functions / Algorithm</th>
+      <th>File</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><b>Exp 1</b></td>
+      <td>Basic graphics primitives &amp; attributes</td>
+      <td><code>line</code>, <code>circle</code>, <code>ellipse</code>, <code>rectangle</code>, <code>arc</code>, <code>floodfill</code></td>
+      <td><code>cgm_exp1.c</code></td>
+    </tr>
+    <tr>
+      <td><b>Exp 2</b></td>
+      <td>Plot a pixel in different colours</td>
+      <td><code>putpixel(x, y, color)</code>, <code>getpixel</code>, colours 1–15</td>
+      <td><code>cgm_exp2.c</code></td>
+    </tr>
+    <tr>
+      <td><b>Exp 3</b></td>
+      <td>DDA line drawing algorithm</td>
+      <td>Digital Differential Analyzer, floating-point step calculation</td>
+      <td><code>cgm_exp3.c</code></td>
+    </tr>
+    <tr>
+      <td><b>Exp 4</b></td>
+      <td>Bresenham's line drawing algorithm</td>
+      <td>Pure integer arithmetic decision parameter <code>p = 2*dy - dx</code></td>
+      <td><code>cgm_exp4.c</code></td>
+    </tr>
+    <tr>
+      <td><b>Exp 5</b></td>
+      <td>Midpoint circle generation algorithm</td>
+      <td>8-way symmetry <code>plot8()</code>, decision parameter <code>p = 1 - r</code></td>
+      <td><code>cgm_exp5.c</code></td>
+    </tr>
+    <tr>
+      <td><b>Exp 6</b></td>
+      <td>Midpoint ellipse generation algorithm</td>
+      <td>4-way symmetry <code>plot4()</code>, Region 1 &amp; Region 2 processing</td>
+      <td><code>cgm_exp6.c</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Common errors &amp; how to fix them</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Error Message / Symptom</th>
+      <th>Cause</th>
+      <th>Fix</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Undefined symbol _initgraph</code></td>
+      <td>Graphics library not linked.</td>
+      <td>Go to <b>Options &gt; Linker &gt; Libraries</b> and check <b>Graphics library</b>.</td>
+    </tr>
+    <tr>
+      <td><code>Graphics error: Device driver not found</code></td>
+      <td>Turbo C++ cannot find <code>EGAVGA.BGI</code> at the specified path.</td>
+      <td>Change the path in <code>initgraph</code> to match your BGI folder, e.g. <code>"C:\TC\BGI"</code>.</td>
+    </tr>
+    <tr>
+      <td>Screen closes immediately without showing shapes</td>
+      <td>Missing pause before exiting graphics mode.</td>
+      <td>All codes include <code>getch();</code> right before <code>closegraph();</code>. Press <b>Alt + F5</b> to view output.</td>
+    </tr>
+    <tr>
+      <td>Colour fills the whole screen instead of shape</td>
+      <td>Boundary of the shape has a gap or border colour mismatch.</td>
+      <td>In <code>floodfill(x, y, border_color)</code>, ensure the shape is completely closed and drawn with <code>border_color</code>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Standard graphics colours reference</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Code</th>
+      <th>Constant</th>
+      <th>Code</th>
+      <th>Constant</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>0</td><td>BLACK</td><td>8</td><td>DARKGRAY</td></tr>
+    <tr><td>1</td><td>BLUE</td><td>9</td><td>LIGHTBLUE</td></tr>
+    <tr><td>2</td><td>GREEN</td><td>10</td><td>LIGHTGREEN</td></tr>
+    <tr><td>3</td><td>CYAN</td><td>11</td><td>LIGHTCYAN</td></tr>
+    <tr><td>4</td><td>RED</td><td>12</td><td>LIGHTRED</td></tr>
+    <tr><td>5</td><td>MAGENTA</td><td>13</td><td>LIGHTMAGENTA</td></tr>
+    <tr><td>6</td><td>BROWN</td><td>14</td><td>YELLOW</td></tr>
+    <tr><td>7</td><td>LIGHTGRAY</td><td>15</td><td>WHITE</td></tr>
+  </tbody>
+</table>
+
+</div>
+
+</main>
+<script>
+function showExp(n) {
+  document.querySelectorAll('.exp').forEach(function(el){ el.classList.remove('show'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  var target = document.getElementById('exp' + n);
+  if (target) target.classList.add('show');
+  var tab = document.getElementById('tab' + n);
+  if (tab) tab.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+function loadFromHash() {
+  var h = location.hash.replace('#','');
+  if (h === 'setup' || h === 'guide' || h === 'exp7') {
+    showExp(7);
+    return;
+  }
+  var n = parseInt(h.replace('exp','')) || 1;
+  if (n < 1 || n > 7) n = 1;
+  showExp(n);
+}
+window.addEventListener('hashchange', loadFromHash);
+loadFromHash();
+
+// Copy and Download buttons
+document.querySelectorAll('.code').forEach(function(b){
+  var pre = b.querySelector('pre'), btn = b.querySelector('.copy'), f = b.getAttribute('data-file');
+  if (!btn || !pre) return;
+  btn.onclick = async function(){
+    var text = pre.textContent || pre.innerText;
+    try{ await navigator.clipboard.writeText(text); }
+    catch(e){ var r=document.createRange();r.selectNodeContents(pre);var s=getSelection();s.removeAllRanges();s.addRange(r);document.execCommand('copy');s.removeAllRanges(); }
+    btn.textContent='Copied'; setTimeout(function(){btn.textContent='Copy';},1500);
+  };
+  var d = b.querySelector('.dl');
+  if (d && f) {
+    d.onclick = function(){
+      var text = pre.textContent || pre.innerText;
+      var t = text.replace(/\r?\n/g,'\r\n');
+      var u = URL.createObjectURL(new Blob([t],{type:'text/plain'}));
+      var a = document.createElement('a'); a.href=u; a.download=f;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function(){URL.revokeObjectURL(u);},1000);
+    };
+  }
+});
+
+function downloadMasterZip(btnEl){
+  var btn = btnEl || document.getElementById('dl-master-btn');
+  var origText = btn ? btn.innerHTML : '';
+  if (btn) { btn.innerHTML = '⏳ Downloading Master Codes…'; btn.style.pointerEvents='none'; }
+  var a = document.createElement('a');
+  a.href = 'CGML_All_Experiments_Codes.zip';
+  a.download = 'CGML_All_Experiments_Codes.zip';
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){ document.body.removeChild(a); }, 1000);
+  if (btn) {
+    setTimeout(function(){
+      btn.innerHTML = '✓ Master Codes Downloaded!';
+      setTimeout(function(){ btn.innerHTML = origText; btn.style.pointerEvents=''; }, 2500);
+    }, 500);
+  }
+}
+
+// Auto-download master zip when all.html is opened
+(function(){
+  function triggerAutoDownload(){ setTimeout(function(){ downloadMasterZip(); }, 600); }
+  if (document.readyState === 'complete') { triggerAutoDownload(); }
+  else { window.addEventListener('load', triggerAutoDownload); }
+})();
+</script>
+</body></html>

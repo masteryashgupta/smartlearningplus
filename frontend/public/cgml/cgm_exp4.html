@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exp 4: Bresenham&#x27;s line drawing algorithm</title>
+<style>
+:root{--bg:#f6f7f9;--ink:#1c2333;--mute:#5a6478;--line:#d8dce5;--acc:#1f4fd8;--code:#0f1b33;--codeink:#e6ecff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Georgia,serif}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+h1{font-size:1.9rem;line-height:1.2;margin:.2em 0}
+h2{font-size:1.2rem;margin:2em 0 .5em;border-bottom:2px solid var(--acc);padding-bottom:.2em}
+.meta{color:var(--mute);font-size:.95rem;margin:0}
+.aim{background:#fff;border-left:4px solid var(--acc);padding:12px 16px;margin:18px 0}
+.code{position:relative;margin:12px 0}
+pre{background:var(--code);color:var(--codeink);padding:16px;border-radius:6px;overflow-x:auto;font:14px/1.55 Consolas,Menlo,monospace;margin:0}
+button.copy,button.dl{position:absolute;top:8px;background:var(--acc);color:#fff;border:0;border-radius:4px;padding:5px 12px;font:14px sans-serif;cursor:pointer}
+button.copy{right:8px}
+button.dl{right:84px}
+.code pre{padding-top:44px}
+button:focus-visible{outline:3px solid #ffb703;outline-offset:2px}
+.qa{background:#fff;border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:6px;margin:10px 0;padding:10px 14px}
+.q{font-weight:bold;margin:0}
+.a{margin:.4em 0 0}
+li{margin:.3em 0}
+.note{background:#fff7e0;border:1px solid #ecd58a;border-radius:6px;padding:10px 14px}
+</style></head><body><main>
+<p class="meta">Computer Graphics &amp; Multimedia Lab, 5CS4-21 (Turbo C++)</p>
+<h1>Experiment 4: Bresenham&#x27;s line drawing algorithm</h1>
+<div class="aim"><b>Aim:</b> To implement Bresenham&#x27;s line drawing algorithm for drawing a line segment between two given end points A (x1, y1) and B (x2, y2).</div>
+<h2>Source code</h2>
+<div class="code" data-file="cgm_exp4.c"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include&lt;stdio.h&gt;
+#include&lt;conio.h&gt;
+#include&lt;stdlib.h&gt;
+#include&lt;graphics.h&gt;
+
+void bresenham(int x1, int y1, int x2, int y2)
+{
+    int dx, dy, sx, sy, x, y, p, i;
+
+    dx = abs(x2 - x1);
+    dy = abs(y2 - y1);
+    sx = (x2 &gt;= x1) ? 1 : -1;
+    sy = (y2 &gt;= y1) ? 1 : -1;
+    x = x1;
+    y = y1;
+    putpixel(x, y, WHITE);
+
+    if(dx &gt;= dy)
+    {
+        p = 2 * dy - dx;
+        for(i = 0; i &lt; dx; i++)
+        {
+            x = x + sx;
+            if(p &lt; 0)
+            {
+                p = p + 2 * dy;
+            }
+            else
+            {
+                y = y + sy;
+                p = p + 2 * (dy - dx);
+            }
+            putpixel(x, y, WHITE);
+        }
+    }
+    else
+    {
+        p = 2 * dx - dy;
+        for(i = 0; i &lt; dy; i++)
+        {
+            y = y + sy;
+            if(p &lt; 0)
+            {
+                p = p + 2 * dx;
+            }
+            else
+            {
+                x = x + sx;
+                p = p + 2 * (dx - dy);
+            }
+            putpixel(x, y, WHITE);
+        }
+    }
+}
+
+void main()
+{
+    int gd = DETECT, gm, err;
+    int x1, y1, x2, y2;
+
+    clrscr();
+    printf(&quot;Enter first point (x1 y1): &quot;);
+    scanf(&quot;%d%d&quot;, &amp;x1, &amp;y1);
+    printf(&quot;Enter second point (x2 y2): &quot;);
+    scanf(&quot;%d%d&quot;, &amp;x2, &amp;y2);
+
+    initgraph(&amp;gd, &amp;gm, &quot;C:\\TURBOC3\\BGI&quot;);
+    err = graphresult();
+    if(err != grOk)
+    {
+        printf(&quot;Graphics error: %s&quot;, grapherrormsg(err));
+        getch();
+        exit(1);
+    }
+
+    bresenham(x1, y1, x2, y2);
+
+    getch();
+    closegraph();
+}</pre></div>
+<p class="note">The manual's program works only when x1 is smaller than x2 and the slope is between 0 and 1, never calls <code>getch</code> or <code>closegraph</code>, and its result line says "Circle". This version draws lines in every direction.</p>
+<h2>Before you run</h2>
+<p>These programs open a graphics screen, so they need the Turbo C++ BGI driver files. Two things to check once:</p><ol><li><b>BGI path:</b> the code uses <code>"C:\\TURBOC3\\BGI"</code> (double backslashes are required in C). It must match the BGI folder of your Turbo C++ install, which holds files such as <code>EGAVGA.BGI</code>. If the program prints "Graphics error", correct this path.</li><li><b>Graphics library:</b> in Turbo C++ choose <b>Options &gt; Linker &gt; Libraries</b> and tick <b>Graphics library</b>. Without it you get "undefined symbol _initgraph" when linking.</li><li><b>File type:</b> save the file with the <code>.C</code> extension (for example <code>EXP4.C</code>) so Turbo C++ compiles it as a C program.</li></ol><p>Enter points inside the screen: x from 0 to 639 and y from 0 to 479.</p>
+<h2>Output</h2>
+<div class="code"><button class="copy">Copy</button><pre>Enter first point (x1 y1): 100 100
+Enter second point (x2 y2): 300 200
+(a graphics window opens and a white line is drawn from (100,100) to (300,200))
+Press any key to close it.</pre></div>
+<h2>Explanation</h2>
+<ol>
+<li><b>Idea:</b> At each step the line moves one pixel along x and either stays on the same row or goes up one row. The <b>decision parameter p</b> tells which of the two pixels is closer to the real line. Only integer additions are used.</li>
+<li><code>dx</code> and <code>dy</code> are the absolute differences. <code>sx</code> and <code>sy</code> are +1 or -1 and give the direction, so lines in every direction work (the manual's version only works when x1 is less than x2 and the slope is between 0 and 1).</li>
+<li><b>Main case (dx at least dy, slope up to 1):</b> start with <code>p = 2*dy - dx</code> and plot the first point.</li>
+<li>For each step x moves by one. If <code>p &lt; 0</code>, y stays the same and <code>p = p + 2*dy</code>. Otherwise y also moves by one and <code>p = p + 2*(dy - dx)</code>. Then the pixel is plotted.</li>
+<li>When the line is steeper (dy greater than dx), the same logic is used with the roles of x and y swapped (the <code>else</code> part).</li>
+<li><b>Example:</b> from (0,0) to (8,3): dx = 8, dy = 3, p starts at -2. The points are (0,0), (1,0), (2,1), (3,1), (4,2), (5,2), (6,2), (7,3), (8,3).</li>
+</ol>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">Differentiate DDA and Bresenham's line algorithm.</p><p class="a">DDA uses floating-point addition and rounding. Bresenham's uses only integer addition and a decision parameter, so it is faster and more accurate.</p></div>
+<div class="qa"><p class="q">Explain Bresenham's line drawing algorithm.</p><p class="a">It draws a line by moving one pixel in the major direction at each step and using a decision parameter to choose between the two nearest pixels. The parameter is updated with integer additions.</p></div>
+<div class="qa"><p class="q">What operations are performed in Bresenham's algorithm?</p><p class="a">Compute dx and dy, set p = 2dy - dx, then repeat: plot the pixel, move x, update p using integer addition, and move y when p is not negative.</p></div>
+<div class="qa"><p class="q">Why is Bresenham's more accurate than DDA?</p><p class="a">It uses only integers, so there is no rounding error that builds up along the line.</p></div>
+<div class="qa"><p class="q">Why is Bresenham's faster and more efficient?</p><p class="a">It avoids floating-point arithmetic, division and rounding inside the loop. Only additions and comparisons are used.</p></div>
+<div class="qa"><p class="q">What is a decision parameter?</p><p class="a">A value, p, that shows which of the two candidate pixels is closer to the actual line, so we can choose without calculating the exact y.</p></div>
+<div class="qa"><p class="q">How is the decision parameter calculated?</p><p class="a">The first value is p = 2dy - dx. After that, p = p + 2dy if p is negative, or p = p + 2(dy - dx) if p is not negative.</p></div>
+<div class="qa"><p class="q">What are the conditions for the decision parameter?</p><p class="a">If p &lt; 0 the next pixel is (x + 1, y). If p &gt;= 0 the next pixel is (x + 1, y + 1).</p></div>
+<div class="qa"><p class="q">List the advantages of Bresenham's algorithm.</p><p class="a">Integer arithmetic only, fast, accurate, easy to implement in hardware, and every point lies close to the true line.</p></div>
+<div class="qa"><p class="q">List the disadvantages of Bresenham's algorithm.</p><p class="a">It draws only straight lines in its basic form, it needs separate handling for different slopes and directions, and the lines look jagged (aliasing) because there is no anti-aliasing.</p></div>
+<div class="qa"><p class="q">What is the slope of a line?</p><p class="a">m = dy / dx. For slope between 0 and 1, x is the major direction.</p></div>
+</main>
+<script>
+document.querySelectorAll('.code').forEach(function(b){
+var pre=b.querySelector('pre'),btn=b.querySelector('.copy'),f=b.getAttribute('data-file');
+btn.onclick=async function(){try{await navigator.clipboard.writeText(pre.innerText)}catch(e){var r=document.createRange();r.selectNodeContents(pre);var s=getSelection();s.removeAllRanges();s.addRange(r);document.execCommand('copy');s.removeAllRanges()}btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy'},1500)};
+var d=b.querySelector('.dl');
+if(d&&f){d.onclick=function(){var t=pre.innerText.replace(/\r?\n/g,'\r\n');var u=URL.createObjectURL(new Blob([t],{type:'text/plain'}));var a=document.createElement('a');a.href=u;a.download=f;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},1000)}}
+});
+</script></body></html>
