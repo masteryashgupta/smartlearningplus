@@ -6,6 +6,10 @@
 :root{--bg:#f6f7f9;--ink:#1c2333;--mute:#5a6478;--line:#d8dce5;--acc:#1f4fd8;--code:#0f1b33;--codeink:#e6ecff;--ok:#22a861}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Georgia,serif}
+a{color:var(--acc);text-decoration:underline}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.95rem;background:#fff}
+th,td{border:1px solid var(--line);padding:9px 12px;text-align:left}
+th{background:var(--bg);font-weight:bold}
 /* Top nav */
 .topnav{position:sticky;top:0;z-index:100;background:#0f1b33;display:flex;align-items:center;gap:0;overflow-x:auto;padding:0 8px;scrollbar-width:none}
 .topnav::-webkit-scrollbar{display:none}
@@ -700,14 +704,78 @@ b       float   104</pre></div>
 </div>
 
 <div class="exp" id="exp7">
-<p class="meta">Compiler Design Lab, 5CS4-22 (LEX, runs on Linux)</p>
+<p class="meta">Compiler Design Lab, 5CS4-22</p>
 <h1>Experiment 7: LEX program to validate mobile number, URL, identifier, date and time</h1>
 <div class="aim"><b>Aim:</b> Write a LEX program to identify a valid mobile number (and email id), URL, identifier, date (dd/mm/yyyy) and time (hh:mm:ss).</div>
 <p class="note">The manual's code for this experiment has errors (spaces inside the character classes, missing actions, no code for time). These programs are corrected and complete.</p>
-<h2>How to compile and run</h2>
-<p>LEX does not run in Turbo C++. Use Linux or WSL. Install once: <code>sudo apt install flex gcc</code>. Then, for a program saved as <code>exp7_mobile.l</code>:</p><div class="code"><button class="copy">Copy</button><pre>lex exp7_mobile.l
-cc lex.yy.c -lfl
-./a.out</pre></div><p>If <code>-lfl</code> gives an error, use <code>-ll</code>. Type your input and press Enter. Press <b>Ctrl+D</b> to finish.</p>
+<h2>Run on Windows (Flex)</h2>
+<h3>One-time setup</h3>
+<ol>
+<li>Download WinFlexBison from GitHub: <a href="https://github.com/lexxmark/winflexbison/releases" target="_blank" rel="noopener noreferrer">https://github.com/lexxmark/winflexbison/releases</a>. Download the asset named <code>win_flex_bison-2.5.25.zip</code> (Flex 2.6.4). Do not download the &quot;Source code&quot; files.</li>
+<li>Extract the zip into <code>C:\flex</code>. It contains <code>win_flex.exe</code> and <code>win_bison.exe</code>.</li>
+<li>A C compiler is needed. Check with: <code>gcc --version</code>. If it is not recognised, install MinGW-w64 (for example through MSYS2).</li>
+<li>Save the downloaded .l files and any input files (test.txt, test.c) in <code>C:\flex</code>. Open Command Prompt in that folder (click the File Explorer address bar, type cmd, press Enter).</li>
+</ol>
+
+<h3>What each command does</h3>
+<table>
+<thead>
+<tr><th>Step</th><th>Command</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td>Step 1</td><td><code>win_flex --wincompat FILE.l</code></td><td>Flex reads the rules and writes the C scanner lex.yy.c</td></tr>
+<tr><td>Step 2</td><td><code>gcc -w lex.yy.c -o NAME</code></td><td>gcc compiles lex.yy.c into NAME.exe (-w hides harmless warnings)</td></tr>
+<tr><td>Step 3</td><td><code>NAME</code></td><td>runs the program</td></tr>
+</tbody>
+</table>
+
+<h3>Notes</h3>
+<ul>
+<li>Press Ctrl+Z, then Enter to end keyboard input.</li>
+<li>Each run overwrites lex.yy.c, so run one program at a time.</li>
+<li>The warning &quot;fileno redefined&quot; is harmless.</li>
+<li>The input file for file versions must be in the same folder as the .exe.</li>
+</ul>
+
+<h3>Commands</h3>
+<p>Note: these programs keep reading lines, so several inputs can be tried in one run. Finish with Ctrl+Z, then Enter.</p>
+
+<h4 style="margin:1.4em 0 .3em">1. Mobile number validation</h4>
+<div class="code"><button class="copy">Copy</button><pre>win_flex --wincompat exp7_mobile.l
+gcc -w lex.yy.c -o exp7_mobile
+exp7_mobile</pre></div>
+<p>9876543210 -&gt; Valid mobile number; 0001112223 -&gt; Invalid mobile number</p>
+
+<h4 style="margin:1.4em 0 .3em">2. Email id validation</h4>
+<div class="code"><button class="copy">Copy</button><pre>win_flex --wincompat exp7_email.l
+gcc -w lex.yy.c -o exp7_email
+exp7_email</pre></div>
+<p>csetanmayjain@gmail.com -&gt; Valid email; !23@43.com -&gt; Invalid email</p>
+
+<h4 style="margin:1.4em 0 .3em">3. URL validation</h4>
+<div class="code"><button class="copy">Copy</button><pre>win_flex --wincompat exp7_url.l
+gcc -w lex.yy.c -o exp7_url
+exp7_url</pre></div>
+<p>https://www.geeksforgeeks.org -&gt; Valid URL; geeksforgeeks -&gt; Invalid URL</p>
+
+<h4 style="margin:1.4em 0 .3em">4. Identifier validation</h4>
+<div class="code"><button class="copy">Copy</button><pre>win_flex --wincompat exp7_identifier.l
+gcc -w lex.yy.c -o exp7_identifier
+exp7_identifier</pre></div>
+<p>_gfg -&gt; Valid identifier; 123gfg -&gt; Invalid identifier</p>
+
+<h4 style="margin:1.4em 0 .3em">5. Date validation</h4>
+<div class="code"><button class="copy">Copy</button><pre>win_flex --wincompat exp7_date.l
+gcc -w lex.yy.c -o exp7_date
+exp7_date</pre></div>
+<p>02/05/2019 -&gt; Valid date; 05/20/2019 -&gt; Invalid date; 29/02/2023 -&gt; Invalid date (not a leap year)</p>
+
+<h4 style="margin:1.4em 0 .3em">6. Time validation</h4>
+<div class="code"><button class="copy">Copy</button><pre>win_flex --wincompat exp7_time.l
+gcc -w lex.yy.c -o exp7_time
+exp7_time</pre></div>
+<p>23:59:59 -&gt; Valid time; 24:00:00 -&gt; Invalid time</p>
+
 <h2>Source code</h2>
 <h3 style="margin:1.6em 0 .4em;font-size:1.05rem">1. Valid mobile number</h3>
 <div class="code" data-file="exp7_mobile.l"><button class="dl">Download</button><button class="copy">Copy</button><pre>%{
@@ -897,19 +965,61 @@ Invalid time</pre></div>
 <div class="qa"><p class="q">What is the rule for a valid identifier?</p><p class="a">It starts with a letter or underscore and continues with letters, digits or underscores: <code>[a-zA-Z_][a-zA-Z0-9_]*</code>.</p></div>
 <div class="qa"><p class="q">How are leap years checked?</p><p class="a">A year is a leap year if divisible by 4 and not by 100, or divisible by 400.</p></div>
 <div class="qa"><p class="q">Why is "/" written in quotes in a LEX pattern?</p><p class="a">Unquoted, <code>/</code> is the trailing-context operator.</p></div>
-<div class="qa"><p class="q">How do you compile a LEX program?</p><p class="a"><code>lex file.l</code> creates <code>lex.yy.c</code>, then <code>cc lex.yy.c -lfl</code> builds it.</p></div>
+<div class="qa"><p class="q">How do you compile a LEX program?</p><p class="a"><code>win_flex --wincompat file.l</code> creates <code>lex.yy.c</code>, then <code>gcc -w lex.yy.c -o file</code> builds it.</p></div>
 <div class="qa"><p class="q">What is a regular expression?</p><p class="a">A notation that describes a set of strings, used to define the patterns of tokens.</p></div>
+<div class="qa"><p class="q">What does the win_flex (lex) command do?</p><p class="a">It reads the .l file and generates the C file lex.yy.c that contains the scanner function yylex().</p></div>
+<div class="qa"><p class="q">What is lex.yy.c?</p><p class="a">The C program generated by Flex from our rules. gcc compiles it into the executable.</p></div>
+<div class="qa"><p class="q">Why is --wincompat used?</p><p class="a">It makes the generated code compatible with Windows (it avoids the Unix-only unistd.h header).</p></div>
 </div>
 
 <div class="exp" id="exp8">
-<p class="meta">Compiler Design Lab, 5CS4-22 (LEX, runs on Linux)</p>
+<p class="meta">Compiler Design Lab, 5CS4-22</p>
 <h1>Experiment 8: LEX program to count blank spaces, words and lines</h1>
 <div class="aim"><b>Aim:</b> Write a LEX program to count blank spaces, words and lines in a given file.</div>
 <p class="note">The manual's version also counts tabs and characters and has no word counter, and its <code>printf</code> lines are missing closing quotes. This version counts exactly what the aim asks: spaces, words and lines.</p>
-<h2>How to compile and run</h2>
-<p>LEX does not run in Turbo C++. Use Linux or WSL. Install once: <code>sudo apt install flex gcc</code>. Then, for a program saved as <code>exp8.l</code>:</p><div class="code"><button class="copy">Copy</button><pre>lex exp8.l
-cc lex.yy.c -lfl
-./a.out</pre></div><p>If <code>-lfl</code> gives an error, use <code>-ll</code>. Type your input and press Enter. Press <b>Ctrl+D</b> to finish.</p><p>Create <code>test.txt</code> in the same folder with two lines: <code>Geeks for Geeks</code> and <code>gfg gfg</code> (press Enter after the last line).</p>
+<h2>Run on Windows (Flex)</h2>
+<h3>One-time setup</h3>
+<ol>
+<li>Download WinFlexBison from GitHub: <a href="https://github.com/lexxmark/winflexbison/releases" target="_blank" rel="noopener noreferrer">https://github.com/lexxmark/winflexbison/releases</a>. Download the asset named <code>win_flex_bison-2.5.25.zip</code> (Flex 2.6.4). Do not download the &quot;Source code&quot; files.</li>
+<li>Extract the zip into <code>C:\flex</code>. It contains <code>win_flex.exe</code> and <code>win_bison.exe</code>.</li>
+<li>A C compiler is needed. Check with: <code>gcc --version</code>. If it is not recognised, install MinGW-w64 (for example through MSYS2).</li>
+<li>Save the downloaded .l files and any input files (test.txt, test.c) in <code>C:\flex</code>. Open Command Prompt in that folder (click the File Explorer address bar, type cmd, press Enter).</li>
+</ol>
+
+<h3>What each command does</h3>
+<table>
+<thead>
+<tr><th>Step</th><th>Command</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td>Step 1</td><td><code>win_flex --wincompat FILE.l</code></td><td>Flex reads the rules and writes the C scanner lex.yy.c</td></tr>
+<tr><td>Step 2</td><td><code>gcc -w lex.yy.c -o NAME</code></td><td>gcc compiles lex.yy.c into NAME.exe (-w hides harmless warnings)</td></tr>
+<tr><td>Step 3</td><td><code>NAME</code></td><td>runs the program</td></tr>
+</tbody>
+</table>
+
+<h3>Notes</h3>
+<ul>
+<li>Press Ctrl+Z, then Enter to end keyboard input.</li>
+<li>Each run overwrites lex.yy.c, so run one program at a time.</li>
+<li>The warning &quot;fileno redefined&quot; is harmless.</li>
+<li>The input file for file versions must be in the same folder as the .exe.</li>
+</ul>
+
+<h3>Commands</h3>
+
+<h4 style="margin:1.4em 0 .3em">Version 1: reads from a file</h4>
+<div class="code"><button class="copy">Copy</button><pre>win_flex --wincompat exp8.l
+gcc -w lex.yy.c -o exp8
+exp8</pre></div>
+<p>First create C:\flex\test.txt with two lines, &quot;Geeks for Geeks&quot; and &quot;gfg gfg&quot; (press Enter after the last line). When asked for the file name, type test.txt. Expected: 2 lines, 3 blank spaces, 5 words.</p>
+
+<h4 style="margin:1.4em 0 .3em">Version 2: reads text typed at the keyboard</h4>
+<div class="code"><button class="copy">Copy</button><pre>win_flex --wincompat exp8_keyboard.l
+gcc -w lex.yy.c -o exp8_keyboard
+exp8_keyboard</pre></div>
+<p>Type &quot;Geeks for Geeks&quot;, Enter, &quot;gfg gfg&quot;, Enter, then Ctrl+Z and Enter. Expected: the same counts.</p>
+
 <h2>Source code: Version 1: reads from a file</h2>
 <div class="code" data-file="exp8.l"><button class="dl">Download</button><button class="copy">Copy</button><pre>%{
 #include&lt;stdio.h&gt;
@@ -949,7 +1059,7 @@ No. of lines  = 2
 No. of blank spaces = 3
 No. of words  = 5</pre></div>
 <h2>Source code: Version 2 (reads text typed at the keyboard)</h2>
-<p>Compile it the same way as above. There is no <code>yyin</code> or <code>fopen</code>, so LEX reads from the keyboard. Type your lines, then press <b>Ctrl+D</b> to end the input and see the counts.</p>
+<p>Compile it the same way as above. There is no <code>yyin</code> or <code>fopen</code>, so LEX reads from the keyboard. Type your lines, then press <b>Ctrl+Z, then Enter</b> to end the input and see the counts.</p>
 <div class="code" data-file="exp8_keyboard.l"><button class="dl">Download</button><button class="copy">Copy</button><pre>%{
 #include&lt;stdio.h&gt;
 int lc = 0, sc = 0, wc = 0;
@@ -966,7 +1076,7 @@ int yywrap() { return 1; }
 
 int main()
 {
-    printf(&quot;Enter text (press Ctrl+D on a new line to finish):\n&quot;);
+    printf(&quot;Enter text (press Ctrl+Z, then Enter on a new line to finish):\n&quot;);
     yylex();
     printf(&quot;No. of lines  = %d\n&quot;, lc);
     printf(&quot;No. of blank spaces = %d\n&quot;, sc);
@@ -974,10 +1084,10 @@ int main()
     return 0;
 }</pre></div>
 <p class="meta">Output</p>
-<div class="code"><button class="copy">Copy</button><pre>Enter text (press Ctrl+D on a new line to finish):
+<div class="code"><button class="copy">Copy</button><pre>Enter text (press Ctrl+Z, then Enter on a new line to finish):
 Geeks for Geeks
 gfg gfg
-(press Ctrl+D)
+(press Ctrl+Z, then Enter)
 No. of lines  = 2
 No. of blank spaces = 3
 No. of words  = 5</pre></div>
@@ -997,18 +1107,61 @@ No. of words  = 5</pre></div>
 <div class="qa"><p class="q">Why is the longest match important here?</p><p class="a">It makes the scanner take a whole word as one match instead of one letter at a time.</p></div>
 <div class="qa"><p class="q">What does an empty action (;) mean?</p><p class="a">The pattern is matched and its text is discarded.</p></div>
 <div class="qa"><p class="q">Why does the last line need Enter?</p><p class="a">Lines are counted by newline characters, so a last line without a newline is not counted.</p></div>
-<div class="qa"><p class="q">How do you stop keyboard input?</p><p class="a">Press Ctrl+D. In this program the input comes from a file, so it stops at the end of the file.</p></div>
+<div class="qa"><p class="q">How do you stop keyboard input?</p><p class="a">Press Ctrl+Z, then Enter. In this program the input comes from a file, so it stops at the end of the file.</p></div>
+<div class="qa"><p class="q">What does the win_flex (lex) command do?</p><p class="a">It reads the .l file and generates the C file lex.yy.c that contains the scanner function yylex().</p></div>
+<div class="qa"><p class="q">What is lex.yy.c?</p><p class="a">The C program generated by Flex from our rules. gcc compiles it into the executable.</p></div>
+<div class="qa"><p class="q">Why is --wincompat used?</p><p class="a">It makes the generated code compatible with Windows (it avoids the Unix-only unistd.h header).</p></div>
+<div class="qa"><p class="q">Why do we press Ctrl+Z to end input on Windows?</p><p class="a">Ctrl+Z sends the end-of-file signal in the Windows console. LEX stops reading when it sees end of file.</p></div>
 </div>
 
 <div class="exp" id="exp9">
-<p class="meta">Compiler Design Lab, 5CS4-22 (LEX, runs on Linux)</p>
+<p class="meta">Compiler Design Lab, 5CS4-22</p>
 <h1>Experiment 9: LEX program to count vowels and consonants in a C file</h1>
 <div class="aim"><b>Aim:</b> Write a LEX program to count the number of vowels and consonants in a C file.</div>
 <p class="note">The manual's <code>main</code> prints <code>vow</code> and <code>cons</code>, but its variables are named <code>vow_count</code> and <code>const_count</code>, so it does not compile. This version is fixed and reads a file.</p>
-<h2>How to compile and run</h2>
-<p>LEX does not run in Turbo C++. Use Linux or WSL. Install once: <code>sudo apt install flex gcc</code>. Then, for a program saved as <code>exp9.l</code>:</p><div class="code"><button class="copy">Copy</button><pre>lex exp9.l
-cc lex.yy.c -lfl
-./a.out</pre></div><p>If <code>-lfl</code> gives an error, use <code>-ll</code>. Type your input and press Enter. Press <b>Ctrl+D</b> to finish.</p><p>Create <code>test.c</code> in the same folder containing just <code>int main()</code>.</p>
+<h2>Run on Windows (Flex)</h2>
+<h3>One-time setup</h3>
+<ol>
+<li>Download WinFlexBison from GitHub: <a href="https://github.com/lexxmark/winflexbison/releases" target="_blank" rel="noopener noreferrer">https://github.com/lexxmark/winflexbison/releases</a>. Download the asset named <code>win_flex_bison-2.5.25.zip</code> (Flex 2.6.4). Do not download the &quot;Source code&quot; files.</li>
+<li>Extract the zip into <code>C:\flex</code>. It contains <code>win_flex.exe</code> and <code>win_bison.exe</code>.</li>
+<li>A C compiler is needed. Check with: <code>gcc --version</code>. If it is not recognised, install MinGW-w64 (for example through MSYS2).</li>
+<li>Save the downloaded .l files and any input files (test.txt, test.c) in <code>C:\flex</code>. Open Command Prompt in that folder (click the File Explorer address bar, type cmd, press Enter).</li>
+</ol>
+
+<h3>What each command does</h3>
+<table>
+<thead>
+<tr><th>Step</th><th>Command</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td>Step 1</td><td><code>win_flex --wincompat FILE.l</code></td><td>Flex reads the rules and writes the C scanner lex.yy.c</td></tr>
+<tr><td>Step 2</td><td><code>gcc -w lex.yy.c -o NAME</code></td><td>gcc compiles lex.yy.c into NAME.exe (-w hides harmless warnings)</td></tr>
+<tr><td>Step 3</td><td><code>NAME</code></td><td>runs the program</td></tr>
+</tbody>
+</table>
+
+<h3>Notes</h3>
+<ul>
+<li>Press Ctrl+Z, then Enter to end keyboard input.</li>
+<li>Each run overwrites lex.yy.c, so run one program at a time.</li>
+<li>The warning &quot;fileno redefined&quot; is harmless.</li>
+<li>The input file for file versions must be in the same folder as the .exe.</li>
+</ul>
+
+<h3>Commands</h3>
+
+<h4 style="margin:1.4em 0 .3em">Version 1: reads from a file</h4>
+<div class="code"><button class="copy">Copy</button><pre>win_flex --wincompat exp9.l
+gcc -w lex.yy.c -o exp9
+exp9</pre></div>
+<p>First create C:\flex\test.c containing: int main() When asked for the file name, type test.c. Expected: 3 vowels, 4 consonants.</p>
+
+<h4 style="margin:1.4em 0 .3em">Version 2: reads text typed at the keyboard</h4>
+<div class="code"><button class="copy">Copy</button><pre>win_flex --wincompat exp9_keyboard.l
+gcc -w lex.yy.c -o exp9_keyboard
+exp9_keyboard</pre></div>
+<p>Type &quot;int main()&quot;, Enter, then Ctrl+Z and Enter. Expected: the same counts.</p>
+
 <h2>Source code: Version 1: reads from a file</h2>
 <div class="code" data-file="exp9.l"><button class="dl">Download</button><button class="copy">Copy</button><pre>%{
 #include&lt;stdio.h&gt;
@@ -1045,7 +1198,7 @@ int main()
 No. of vowels     = 3
 No. of consonants = 4</pre></div>
 <h2>Source code: Version 2 (reads text typed at the keyboard)</h2>
-<p>Compile it the same way as above. There is no <code>yyin</code> or <code>fopen</code>, so LEX reads from the keyboard. Type your text, then press <b>Ctrl+D</b> to end the input and see the counts.</p>
+<p>Compile it the same way as above. There is no <code>yyin</code> or <code>fopen</code>, so LEX reads from the keyboard. Type your text, then press <b>Ctrl+Z, then Enter</b> to end the input and see the counts.</p>
 <div class="code" data-file="exp9_keyboard.l"><button class="dl">Download</button><button class="copy">Copy</button><pre>%{
 #include&lt;stdio.h&gt;
 int vow = 0, cons = 0;
@@ -1061,16 +1214,16 @@ int yywrap() { return 1; }
 
 int main()
 {
-    printf(&quot;Enter text (press Ctrl+D on a new line to finish):\n&quot;);
+    printf(&quot;Enter text (press Ctrl+Z, then Enter on a new line to finish):\n&quot;);
     yylex();
     printf(&quot;No. of vowels     = %d\n&quot;, vow);
     printf(&quot;No. of consonants = %d\n&quot;, cons);
     return 0;
 }</pre></div>
 <p class="meta">Output</p>
-<div class="code"><button class="copy">Copy</button><pre>Enter text (press Ctrl+D on a new line to finish):
+<div class="code"><button class="copy">Copy</button><pre>Enter text (press Ctrl+Z, then Enter on a new line to finish):
 int main()
-(press Ctrl+D)
+(press Ctrl+Z, then Enter)
 No. of vowels     = 3
 No. of consonants = 4</pre></div>
 <h2>Explanation</h2>
@@ -1090,6 +1243,10 @@ No. of consonants = 4</pre></div>
 <div class="qa"><p class="q">Does this program skip comments and keywords?</p><p class="a">No. Letters inside comments, strings and keywords are counted too. A real scanner would handle them as separate tokens.</p></div>
 <div class="qa"><p class="q">What is yywrap()?</p><p class="a">A function called at the end of the input. Returning 1 means stop.</p></div>
 <div class="qa"><p class="q">Where are the counters declared?</p><p class="a">In the definition section inside <code>%{ %}</code>, so they are global and available in the rules and in <code>main</code>.</p></div>
+<div class="qa"><p class="q">What does the win_flex (lex) command do?</p><p class="a">It reads the .l file and generates the C file lex.yy.c that contains the scanner function yylex().</p></div>
+<div class="qa"><p class="q">What is lex.yy.c?</p><p class="a">The C program generated by Flex from our rules. gcc compiles it into the executable.</p></div>
+<div class="qa"><p class="q">Why is --wincompat used?</p><p class="a">It makes the generated code compatible with Windows (it avoids the Unix-only unistd.h header).</p></div>
+<div class="qa"><p class="q">Why do we press Ctrl+Z to end input on Windows?</p><p class="a">Ctrl+Z sends the end-of-file signal in the Windows console. LEX stops reading when it sees end of file.</p></div>
 </div>
 
 <div class="exp" id="exp10">
