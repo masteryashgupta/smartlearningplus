@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CDL – All Experiments</title>
+<title>CDL – All Experiments &amp; Commands</title>
 <style>
 :root{--bg:#f6f7f9;--ink:#1c2333;--mute:#5a6478;--line:#d8dce5;--acc:#1f4fd8;--code:#0f1b33;--codeink:#e6ecff;--ok:#22a861}
 *{box-sizing:border-box}
@@ -53,10 +53,12 @@ li{margin:.3em 0}
 <button class="tab-btn" data-n="11" onclick="showExp(11)" id="tab11">Exp 11</button>
 <button class="tab-btn" data-n="12" onclick="showExp(12)" id="tab12">Exp 12</button>
 <button class="tab-btn" data-n="13" onclick="showExp(13)" id="tab13">Exp 13</button>
+<button class="tab-btn" data-n="14" onclick="showExp(14)" id="tab14" style="color:#22a861;font-weight:700">⚡ Commands</button>
 </nav>
 <div class="dl-bar">
   <span style="font:600 13px 'Segoe UI',sans-serif;color:var(--mute);">📄 Compiler Design Lab · All Experiments</span>
   <a id="dl-btn" href="all.html" download="all.html" style="background:var(--acc);color:#fff;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">⬇ Download This File (.html)</a>
+  <a id="dl-cmd-btn" href="ALL_COMMANDS.txt" download="ALL_COMMANDS.txt" style="background:#0f1b33;color:#fff;border:1px solid var(--line);border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">📄 All Commands (.txt)</a>
   <button id="dl-master-btn" onclick="downloadMasterZip(this)" style="background:var(--ok);color:#fff;border:0;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">📦 Download Master Codes (.zip)</button>
 </div>
 <main>
@@ -1851,6 +1853,218 @@ Follow(F) = { $, ), *, + }</pre></div>
 <div class="qa"><p class="q">What is the LL(1) condition?</p><p class="a">For each non-terminal, the First sets of its alternatives must be disjoint, and if one alternative can derive epsilon, its First set must not overlap Follow(A).</p></div>
 </div>
 
+<div class="exp" id="exp14">
+<h1>Compiler Design Lab – All Commands</h1>
+<p class="meta">Complete reference for GCC, WinFlexBison (Flex &amp; Bison), LEX &amp; YACC on Windows and Linux</p>
+<div class="aim"><b>Guide:</b> All compile, build, run and troubleshooting commands in one place. Copy or download below.</div>
+<div class="code" data-file="ALL_COMMANDS.txt">
+<button class="dl">Download</button>
+<button class="copy">Copy</button>
+<pre>COMPILER DESIGN LAB - ALL COMMANDS (GCC, FLEX, LEX, YACC)
+Lines starting with # are notes. Type only the command lines.
+
+
+==================================================
+PART 1: INSTALL GCC ON WINDOWS (MSYS2)
+==================================================
+
+# Step 1: Download the installer from https://www.msys2.org and install to C:\msys64
+# Step 2: Open &quot;MSYS2 UCRT64&quot; from the Start menu and run:
+
+pacman -S mingw-w64-ucrt-x86_64-gcc
+
+# Step 3: Add this folder to PATH (Environment Variables &gt; Path &gt; Edit &gt; New):
+
+C:\msys64\ucrt64\bin
+
+# Step 4: Close all Command Prompt windows, open a new one, and check:
+
+gcc --version
+
+
+==================================================
+PART 2: DOWNLOAD FLEX AND BISON ON WINDOWS (GitHub)
+==================================================
+
+# Step 1: Open https://github.com/lexxmark/winflexbison/releases
+# Step 2: Download the file named win_flex_bison-2.5.25.zip
+#         (do NOT download the &quot;Source code&quot; files)
+# Step 3: Extract the zip into C:\flex
+#         It contains win_flex.exe and win_bison.exe
+# Step 4: Save all your .l and .y files and input files (test.txt, test.c) in C:\flex
+# Step 5: Open Command Prompt in that folder
+#         (click the File Explorer address bar, type cmd, press Enter)
+# Step 6: Check that the tools work:
+
+win_flex --version
+win_bison --version
+
+
+==================================================
+PART 3: RUN A NORMAL C PROGRAM WITH GCC
+==================================================
+
+# Replace hello with your file name
+
+gcc hello.c -o hello
+hello
+
+# Note: Turbo C++ programs (Exp 2 to 6) use conio.h, clrscr() and getch().
+
+
+==================================================
+PART 3B: MINIMAL CHANGE TO RUN TURBO C++ PROGRAMS (Exp 2 to 6) WITH GCC
+==================================================
+
+# Add these two lines right after the #include lines. Change nothing else.
+
+#include&lt;stdlib.h&gt;
+#define clrscr() system(&quot;cls&quot;)
+
+# getch() works as it is, because MinGW&#x27;s conio.h has it.
+# Warnings about void main() and gets() can be ignored.
+# Save the file as .c (NOT .cpp), or void main() becomes an error.
+
+gcc exp2.c -o exp2
+exp2
+
+# If you get an error that gets is not declared, compile with:
+
+gcc -std=gnu99 exp2.c -o exp2
+
+# On Linux/WSL, conio.h does not exist: delete the conio.h include and the getch() lines instead.
+
+
+==================================================
+PART 4: RUN LEX PROGRAMS (Exp 7, 8, 9) ON WINDOWS
+==================================================
+
+# Pattern: win_flex --wincompat FILE.l  -&gt;  gcc -w lex.yy.c -o NAME  -&gt;  NAME
+# Press Ctrl+Z, then Enter to end keyboard input.
+# Run one program at a time (each run overwrites lex.yy.c).
+
+# ---- Exp 7: Mobile number ----
+win_flex --wincompat exp7_mobile.l
+gcc -w lex.yy.c -o exp7_mobile
+exp7_mobile
+
+# ---- Exp 7: Email id ----
+win_flex --wincompat exp7_email.l
+gcc -w lex.yy.c -o exp7_email
+exp7_email
+
+# ---- Exp 7: URL ----
+win_flex --wincompat exp7_url.l
+gcc -w lex.yy.c -o exp7_url
+exp7_url
+
+# ---- Exp 7: Identifier ----
+win_flex --wincompat exp7_identifier.l
+gcc -w lex.yy.c -o exp7_identifier
+exp7_identifier
+
+# ---- Exp 7: Date ----
+win_flex --wincompat exp7_date.l
+gcc -w lex.yy.c -o exp7_date
+exp7_date
+
+# ---- Exp 7: Time ----
+win_flex --wincompat exp7_time.l
+gcc -w lex.yy.c -o exp7_time
+exp7_time
+
+# ---- Exp 8: Count spaces, words, lines (from file) ----
+# Create test.txt first with two lines: &quot;Geeks for Geeks&quot; and &quot;gfg gfg&quot;
+win_flex --wincompat exp8.l
+gcc -w lex.yy.c -o exp8
+exp8
+
+# ---- Exp 8: keyboard version ----
+win_flex --wincompat exp8_keyboard.l
+gcc -w lex.yy.c -o exp8_keyboard
+exp8_keyboard
+
+# ---- Exp 9: Count vowels and consonants (from file) ----
+# Create test.c first containing: int main()
+win_flex --wincompat exp9.l
+gcc -w lex.yy.c -o exp9
+exp9
+
+# ---- Exp 9: keyboard version ----
+win_flex --wincompat exp9_keyboard.l
+gcc -w lex.yy.c -o exp9_keyboard
+exp9_keyboard
+
+
+==================================================
+PART 5: RUN YACC PROGRAMS (Exp 10, 11, 12) ON WINDOWS
+==================================================
+
+# IMPORTANT: bison must run FIRST, because the .l file includes y.tab.h
+# Pattern: win_bison -y -d FILE.y -&gt; win_flex --wincompat FILE.l -&gt; gcc -w y.tab.c lex.yy.c -o NAME -&gt; NAME
+# (This Windows version is adapted from the Linux commands on the website.)
+
+# ---- Exp 10: a^n b^n ----
+win_bison -y -d exp10.y
+win_flex --wincompat exp10.l
+gcc -w y.tab.c lex.yy.c -o exp10
+exp10
+
+# ---- Exp 11: Arithmetic expression ----
+win_bison -y -d exp11.y
+win_flex --wincompat exp11.l
+gcc -w y.tab.c lex.yy.c -o exp11
+exp11
+
+# ---- Exp 12: a^n b^n c^m d^m ----
+win_bison -y -d exp12.y
+win_flex --wincompat exp12.l
+gcc -w y.tab.c lex.yy.c -o exp12
+exp12
+
+
+==================================================
+PART 6: LINUX / WSL VERSION (as given on the website)
+==================================================
+
+# Install once:
+
+sudo apt install flex bison gcc
+
+# Run LEX program (example):
+
+lex exp8.l
+cc lex.yy.c
+./a.out
+
+# Run YACC program (Exp 10, 11, 12) - yacc must run first:
+
+yacc -d exp10.y
+lex exp10.l
+cc y.tab.c lex.yy.c
+./a.out
+
+# For Exp 11, use exp11.y / exp11.l. For Exp 12, use exp12.y / exp12.l.
+
+
+==================================================
+QUICK FIXES
+==================================================
+
+# &quot;gcc is not recognised&quot;        -&gt; PATH entry is wrong. Recheck C:\msys64\ucrt64\bin and reopen Command Prompt.
+# &quot;win_flex is not recognised&quot;   -&gt; Run the command from C:\flex or add C:\flex to PATH.
+# &quot;y.tab.h not found&quot;            -&gt; Run win_bison -y -d first, before win_flex.
+# Warning &quot;fileno redefined&quot;     -&gt; Harmless, ignore it.
+# Input file not found           -&gt; Keep test.txt / test.c in the same folder as the .exe.
+
+# Test strings:
+#   Exp 10: ab, aabb -&gt; valid string ; aab, aaab -&gt; invalid string
+#   Exp 11: 2+3*4 -&gt; Result = 14
+#   Exp 12: abcd, aabbcd -&gt; valid string ; aabcd, ab -&gt; invalid string
+</pre>
+</div>
+</div>
+
 </main>
 <script>
 function showExp(n) {
@@ -1865,8 +2079,12 @@ function showExp(n) {
 // Hash navigation
 function loadFromHash() {
   var h = location.hash.replace('#','');
+  if (h === 'commands' || h === 'cmd' || h === 'exp14') {
+    showExp(14);
+    return;
+  }
   var n = parseInt(h.replace('exp','')) || 1;
-  if (n < 1 || n > 13) n = 1;
+  if (n < 1 || n > 14) n = 1;
   showExp(n);
 }
 window.addEventListener('hashchange', loadFromHash);
