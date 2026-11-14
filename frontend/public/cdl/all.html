@@ -1250,15 +1250,46 @@ No. of consonants = 4</pre></div>
 </div>
 
 <div class="exp" id="exp10">
-<p class="meta">Compiler Design Lab, 5CS4-22 (YACC with LEX, runs on Linux)</p>
+<p class="meta">Compiler Design Lab, 5CS4-22</p>
 <h1>Experiment 10: YACC program to recognize strings of the form a^n b^n</h1>
 <div class="aim"><b>Aim:</b> Write a YACC program to recognize strings such as ab, aabb and aaabbb using the grammar a^n b^n.</div>
 <p class="note">The manual's code is the same grammar for Exp 10 and Exp 12. Both are valid for n = 0 as well, so an empty line is accepted. Note that the strings "aaab" and "abbb" in the aim are not of the form a^n b^n, so they are rejected.</p>
-<h2>How to compile and run</h2>
-<p>YACC and LEX do not run in Turbo C++. Use Linux or WSL. Install once: <code>sudo apt install flex bison gcc</code>. Save the two files below in the same folder (<code>exp10.l</code> and <code>exp10.y</code>), then run the commands in this order. YACC must run first because the LEX file includes <code>y.tab.h</code>.</p><div class="code"><button class="copy">Copy</button><pre>yacc -d exp10.y
-lex exp10.l
-cc y.tab.c lex.yy.c
-./a.out</pre></div><p>Type a string and press Enter. The program prints the result and stops.</p>
+<h2>Run on Windows (Bison and Flex)</h2>
+<h3>One-time setup</h3>
+<ol>
+<li>Download WinFlexBison from GitHub: <a href="https://github.com/lexxmark/winflexbison/releases" target="_blank" rel="noopener noreferrer">https://github.com/lexxmark/winflexbison/releases</a>. Download the asset named <code>win_flex_bison-2.5.25.zip</code>. Do not download the &quot;Source code&quot; files.</li>
+<li>Extract the zip into <code>C:\flex</code>. It contains <code>win_flex.exe</code> and <code>win_bison.exe</code>.</li>
+<li>A C compiler is needed. Check with: <code>gcc --version</code>. If it is not recognised, install MinGW-w64 (for example through MSYS2).</li>
+<li>Save the downloaded files (<code>exp10.l</code> and <code>exp10.y</code>) in <code>C:\flex</code>. Open Command Prompt in that folder (click the File Explorer address bar, type cmd, press Enter).</li>
+</ol>
+
+<h3>What each command does</h3>
+<table>
+<thead>
+<tr><th>Step</th><th>Command</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td>Step 1</td><td><code>win_bison -y -d exp10.y</code></td><td>Bison reads the grammar and produces y.tab.c and y.tab.h (-y enables YACC mode, -d writes token definitions header)</td></tr>
+<tr><td>Step 2</td><td><code>win_flex --wincompat exp10.l</code></td><td>Flex reads the lexer rules and writes the C scanner lex.yy.c (uses y.tab.h)</td></tr>
+<tr><td>Step 3</td><td><code>gcc -w y.tab.c lex.yy.c -o exp10</code></td><td>gcc compiles both generated C files into exp10.exe (-w hides harmless warnings)</td></tr>
+<tr><td>Step 4</td><td><code>exp10</code></td><td>runs the compiled executable</td></tr>
+</tbody>
+</table>
+
+<h3>Notes</h3>
+<ul>
+<li>win_bison must be run before win_flex because the LEX file includes y.tab.h.</li>
+<li>Each run overwrites y.tab.c, y.tab.h and lex.yy.c, so run one program at a time.</li>
+<li>The warning &quot;fileno redefined&quot; is harmless.</li>
+</ul>
+
+<h3>Commands</h3>
+<div class="code"><button class="copy">Copy</button><pre>win_bison -y -d exp10.y
+win_flex --wincompat exp10.l
+gcc -w y.tab.c lex.yy.c -o exp10
+exp10</pre></div>
+<p>Type a string and press Enter. Expected: ab or aabb -&gt; valid string; aaab -&gt; invalid string.</p>
+
 <h2>Source code</h2>
 <h3 style="margin:1.6em 0 .4em;font-size:1.05rem">Lexer: exp10.l</h3>
 <div class="code" data-file="exp10.l"><button class="dl">Download</button><button class="copy">Copy</button><pre>%{
@@ -1338,22 +1369,56 @@ invalid string</pre></div>
 <div class="qa"><p class="q">What is YACC?</p><p class="a">Yet Another Compiler Compiler: a tool that generates a parser in C from a context-free grammar.</p></div>
 <div class="qa"><p class="q">What is the structure of a YACC program?</p><p class="a">Declarations (<code>%{ %}</code>, <code>%token</code>), grammar rules between <code>%%</code> markers, and user C code.</p></div>
 <div class="qa"><p class="q">How do LEX and YACC work together?</p><p class="a">LEX reads characters and returns tokens. YACC calls <code>yylex()</code> to get tokens and checks that they follow the grammar.</p></div>
-<div class="qa"><p class="q">What is y.tab.h?</p><p class="a">A header file made by <code>yacc -d</code> that holds the token numbers (like <code>A</code>, <code>B</code>), so LEX and YACC agree on them.</p></div>
+<div class="qa"><p class="q">What is y.tab.h?</p><p class="a">A header file made by <code>win_bison -y -d</code> that holds the token numbers (like <code>A</code>, <code>B</code>), so LEX and YACC agree on them.</p></div>
 <div class="qa"><p class="q">What does yyparse() do?</p><p class="a">It starts parsing. It returns 0 if the input is accepted and non-zero if there is a syntax error.</p></div>
 <div class="qa"><p class="q">What is yyerror()?</p><p class="a">The function YACC calls when it finds a syntax error. We define it to print a message.</p></div>
 <div class="qa"><p class="q">What kind of parser does YACC build?</p><p class="a">A bottom-up LALR(1) parser.</p></div>
+<div class="qa"><p class="q">What does the win_bison -y -d command do?</p><p class="a">It reads the YACC grammar file (.y) and generates the parser source y.tab.c and header y.tab.h with token definitions.</p></div>
+<div class="qa"><p class="q">Why must win_bison run before win_flex?</p><p class="a">The LEX file includes y.tab.h to access the token numbers defined by YACC, so the header must exist first.</p></div>
+<div class="qa"><p class="q">What does win_flex --wincompat do?</p><p class="a">It generates the C scanner lex.yy.c from the .l file while avoiding Unix-only headers like unistd.h for Windows compatibility.</p></div>
 </div>
 
 <div class="exp" id="exp11">
-<p class="meta">Compiler Design Lab, 5CS4-22 (YACC with LEX, runs on Linux)</p>
+<p class="meta">Compiler Design Lab, 5CS4-22</p>
 <h1>Experiment 11: YACC program to evaluate an arithmetic expression</h1>
 <div class="aim"><b>Aim:</b> Write a YACC program to evaluate an arithmetic expression involving the operators +, -, * and /.</div>
 <p class="note">The manual's code for this experiment has formatting errors (<code>% left</code>, broken <code>%%</code> markers) and uses one non-terminal <code>T</code> for everything. This version is cleaned up and adds unary minus and a division-by-zero check.</p>
-<h2>How to compile and run</h2>
-<p>YACC and LEX do not run in Turbo C++. Use Linux or WSL. Install once: <code>sudo apt install flex bison gcc</code>. Save the two files below in the same folder (<code>exp11.l</code> and <code>exp11.y</code>), then run the commands in this order. YACC must run first because the LEX file includes <code>y.tab.h</code>.</p><div class="code"><button class="copy">Copy</button><pre>yacc -d exp11.y
-lex exp11.l
-cc y.tab.c lex.yy.c
-./a.out</pre></div><p>Type a string and press Enter. The program prints the result and stops.</p>
+<h2>Run on Windows (Bison and Flex)</h2>
+<h3>One-time setup</h3>
+<ol>
+<li>Download WinFlexBison from GitHub: <a href="https://github.com/lexxmark/winflexbison/releases" target="_blank" rel="noopener noreferrer">https://github.com/lexxmark/winflexbison/releases</a>. Download the asset named <code>win_flex_bison-2.5.25.zip</code>. Do not download the &quot;Source code&quot; files.</li>
+<li>Extract the zip into <code>C:\flex</code>. It contains <code>win_flex.exe</code> and <code>win_bison.exe</code>.</li>
+<li>A C compiler is needed. Check with: <code>gcc --version</code>. If it is not recognised, install MinGW-w64 (for example through MSYS2).</li>
+<li>Save the downloaded files (<code>exp11.l</code> and <code>exp11.y</code>) in <code>C:\flex</code>. Open Command Prompt in that folder (click the File Explorer address bar, type cmd, press Enter).</li>
+</ol>
+
+<h3>What each command does</h3>
+<table>
+<thead>
+<tr><th>Step</th><th>Command</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td>Step 1</td><td><code>win_bison -y -d exp11.y</code></td><td>Bison reads the grammar and produces y.tab.c and y.tab.h (-y enables YACC mode, -d writes token definitions header)</td></tr>
+<tr><td>Step 2</td><td><code>win_flex --wincompat exp11.l</code></td><td>Flex reads the lexer rules and writes the C scanner lex.yy.c (uses y.tab.h)</td></tr>
+<tr><td>Step 3</td><td><code>gcc -w y.tab.c lex.yy.c -o exp11</code></td><td>gcc compiles both generated C files into exp11.exe (-w hides harmless warnings)</td></tr>
+<tr><td>Step 4</td><td><code>exp11</code></td><td>runs the compiled executable</td></tr>
+</tbody>
+</table>
+
+<h3>Notes</h3>
+<ul>
+<li>win_bison must be run before win_flex because the LEX file includes y.tab.h.</li>
+<li>Each run overwrites y.tab.c, y.tab.h and lex.yy.c, so run one program at a time.</li>
+<li>The warning &quot;fileno redefined&quot; is harmless.</li>
+</ul>
+
+<h3>Commands</h3>
+<div class="code"><button class="copy">Copy</button><pre>win_bison -y -d exp11.y
+win_flex --wincompat exp11.l
+gcc -w y.tab.c lex.yy.c -o exp11
+exp11</pre></div>
+<p>Type an arithmetic expression and press Enter. Expected: 2+3*4 -&gt; Result = 14; 7*(5-3)/2 -&gt; Result = 7; 2+*3 -&gt; Expression is invalid.</p>
+
 <h2>Source code</h2>
 <h3 style="margin:1.6em 0 .4em;font-size:1.05rem">Lexer: exp11.l</h3>
 <div class="code" data-file="exp11.l"><button class="dl">Download</button><button class="copy">Copy</button><pre>%{
@@ -1452,19 +1517,53 @@ Expression is invalid</pre></div>
 <div class="qa"><p class="q">What is YACC?</p><p class="a">Yet Another Compiler Compiler: a tool that generates a parser in C from a context-free grammar.</p></div>
 <div class="qa"><p class="q">What is the structure of a YACC program?</p><p class="a">Declarations (<code>%{ %}</code>, <code>%token</code>), grammar rules between <code>%%</code> markers, and user C code.</p></div>
 <div class="qa"><p class="q">How do LEX and YACC work together?</p><p class="a">LEX reads characters and returns tokens. YACC calls <code>yylex()</code> to get tokens and checks that they follow the grammar.</p></div>
-<div class="qa"><p class="q">What is y.tab.h?</p><p class="a">A header file made by <code>yacc -d</code> that holds the token numbers (like <code>A</code>, <code>B</code>), so LEX and YACC agree on them.</p></div>
+<div class="qa"><p class="q">What is y.tab.h?</p><p class="a">A header file made by <code>win_bison -y -d</code> that holds the token numbers (like <code>A</code>, <code>B</code>), so LEX and YACC agree on them.</p></div>
+<div class="qa"><p class="q">What does the win_bison -y -d command do?</p><p class="a">It reads the YACC grammar file (.y) and generates the parser source y.tab.c and header y.tab.h with token definitions.</p></div>
+<div class="qa"><p class="q">Why must win_bison run before win_flex?</p><p class="a">The LEX file includes y.tab.h to access the token numbers defined by YACC, so the header must exist first.</p></div>
+<div class="qa"><p class="q">What does win_flex --wincompat do?</p><p class="a">It generates the C scanner lex.yy.c from the .l file while avoiding Unix-only headers like unistd.h for Windows compatibility.</p></div>
 </div>
 
 <div class="exp" id="exp12">
-<p class="meta">Compiler Design Lab, 5CS4-22 (YACC with LEX, runs on Linux)</p>
+<p class="meta">Compiler Design Lab, 5CS4-22</p>
 <h1>Experiment 12: YACC program to check strings of the form a^n b^n c^m d^m</h1>
 <div class="aim"><b>Aim:</b> Write a YACC program to check the validity of strings such as abcd and aabbcd using the grammar a^n b^n c^m d^m, where n, m &gt; 0.</div>
 <p class="note">The manual is inconsistent here. The syllabus asks for a^n b^n c^m d^m (n, m &gt; 0), but its experiment page shows a^n b^n (n &ge; 0), which is the same as Exp 10. This page follows the syllabus. If your teacher wants the a^n b^n version, use the Exp 10 files.</p>
-<h2>How to compile and run</h2>
-<p>YACC and LEX do not run in Turbo C++. Use Linux or WSL. Install once: <code>sudo apt install flex bison gcc</code>. Save the two files below in the same folder (<code>exp12.l</code> and <code>exp12.y</code>), then run the commands in this order. YACC must run first because the LEX file includes <code>y.tab.h</code>.</p><div class="code"><button class="copy">Copy</button><pre>yacc -d exp12.y
-lex exp12.l
-cc y.tab.c lex.yy.c
-./a.out</pre></div><p>Type a string and press Enter. The program prints the result and stops.</p>
+<h2>Run on Windows (Bison and Flex)</h2>
+<h3>One-time setup</h3>
+<ol>
+<li>Download WinFlexBison from GitHub: <a href="https://github.com/lexxmark/winflexbison/releases" target="_blank" rel="noopener noreferrer">https://github.com/lexxmark/winflexbison/releases</a>. Download the asset named <code>win_flex_bison-2.5.25.zip</code>. Do not download the &quot;Source code&quot; files.</li>
+<li>Extract the zip into <code>C:\flex</code>. It contains <code>win_flex.exe</code> and <code>win_bison.exe</code>.</li>
+<li>A C compiler is needed. Check with: <code>gcc --version</code>. If it is not recognised, install MinGW-w64 (for example through MSYS2).</li>
+<li>Save the downloaded files (<code>exp12.l</code> and <code>exp12.y</code>) in <code>C:\flex</code>. Open Command Prompt in that folder (click the File Explorer address bar, type cmd, press Enter).</li>
+</ol>
+
+<h3>What each command does</h3>
+<table>
+<thead>
+<tr><th>Step</th><th>Command</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td>Step 1</td><td><code>win_bison -y -d exp12.y</code></td><td>Bison reads the grammar and produces y.tab.c and y.tab.h (-y enables YACC mode, -d writes token definitions header)</td></tr>
+<tr><td>Step 2</td><td><code>win_flex --wincompat exp12.l</code></td><td>Flex reads the lexer rules and writes the C scanner lex.yy.c (uses y.tab.h)</td></tr>
+<tr><td>Step 3</td><td><code>gcc -w y.tab.c lex.yy.c -o exp12</code></td><td>gcc compiles both generated C files into exp12.exe (-w hides harmless warnings)</td></tr>
+<tr><td>Step 4</td><td><code>exp12</code></td><td>runs the compiled executable</td></tr>
+</tbody>
+</table>
+
+<h3>Notes</h3>
+<ul>
+<li>win_bison must be run before win_flex because the LEX file includes y.tab.h.</li>
+<li>Each run overwrites y.tab.c, y.tab.h and lex.yy.c, so run one program at a time.</li>
+<li>The warning &quot;fileno redefined&quot; is harmless.</li>
+</ul>
+
+<h3>Commands</h3>
+<div class="code"><button class="copy">Copy</button><pre>win_bison -y -d exp12.y
+win_flex --wincompat exp12.l
+gcc -w y.tab.c lex.yy.c -o exp12
+exp12</pre></div>
+<p>Type a string and press Enter. Expected: abcd or aabbcd -&gt; valid string; aabcd or ab -&gt; invalid string.</p>
+
 <h2>Source code</h2>
 <h3 style="margin:1.6em 0 .4em;font-size:1.05rem">Lexer: exp12.l</h3>
 <div class="code" data-file="exp12.l"><button class="dl">Download</button><button class="copy">Copy</button><pre>%{
@@ -1548,8 +1647,11 @@ invalid string</pre></div>
 <div class="qa"><p class="q">What is YACC?</p><p class="a">Yet Another Compiler Compiler: a tool that generates a parser in C from a context-free grammar.</p></div>
 <div class="qa"><p class="q">What is the structure of a YACC program?</p><p class="a">Declarations (<code>%{ %}</code>, <code>%token</code>), grammar rules between <code>%%</code> markers, and user C code.</p></div>
 <div class="qa"><p class="q">How do LEX and YACC work together?</p><p class="a">LEX reads characters and returns tokens. YACC calls <code>yylex()</code> to get tokens and checks that they follow the grammar.</p></div>
-<div class="qa"><p class="q">What is y.tab.h?</p><p class="a">A header file made by <code>yacc -d</code> that holds the token numbers (like <code>A</code>, <code>B</code>), so LEX and YACC agree on them.</p></div>
+<div class="qa"><p class="q">What is y.tab.h?</p><p class="a">A header file made by <code>win_bison -y -d</code> that holds the token numbers (like <code>A</code>, <code>B</code>), so LEX and YACC agree on them.</p></div>
 <div class="qa"><p class="q">What does yyparse() do?</p><p class="a">It starts parsing. It returns 0 if the input is accepted and non-zero if there is a syntax error.</p></div>
+<div class="qa"><p class="q">What does the win_bison -y -d command do?</p><p class="a">It reads the YACC grammar file (.y) and generates the parser source y.tab.c and header y.tab.h with token definitions.</p></div>
+<div class="qa"><p class="q">Why must win_bison run before win_flex?</p><p class="a">The LEX file includes y.tab.h to access the token numbers defined by YACC, so the header must exist first.</p></div>
+<div class="qa"><p class="q">What does win_flex --wincompat do?</p><p class="a">It generates the C scanner lex.yy.c from the .l file while avoiding Unix-only headers like unistd.h for Windows compatibility.</p></div>
 </div>
 
 <div class="exp" id="exp13">
