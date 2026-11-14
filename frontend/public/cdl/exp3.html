@@ -27,7 +27,7 @@ li{margin:.3em 0}
 <div class="dl-bar" style="display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 16px;margin-bottom:20px;flex-wrap:wrap;">
   <span style="font:600 13px 'Segoe UI',sans-serif;color:var(--mute);">📄 Compiler Design Lab · Practical File</span>
   <a id="dl-btn" href="#" download style="background:var(--acc);color:#fff;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">⬇ Download This File (.html)</a>
-  <button id="dl-codes-btn" onclick="downloadExpCodes(this)" style="background:var(--ok,#22a861);color:#fff;border:0;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">⬇ Download Codes (1 file)</button>
+  <button id="dl-codes-btn" onclick="downloadExpCodes(this)" style="background:var(--ok,#22a861);color:#fff;border:0;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">⬇ Download Codes (2 files)</button>
 </div>
 <script>(function(){
   var n = location.pathname.split('/').pop() || 'exp3.html';
@@ -37,7 +37,7 @@ li{margin:.3em 0}
 <p class="meta">Compiler Design Lab, 5CS4-22 (Turbo C++)</p>
 <h1>Experiment 3: Count total keywords in a file</h1>
 <div class="aim"><b>Aim:</b> Write a C program to count the total number of keywords in a file [taking file from user].</div>
-<h2>Source code</h2>
+<h2>Source code: Version 1: reads from a file</h2>
 <div class="code" data-file="exp3.cpp"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include&lt;stdio.h&gt;
 #include&lt;conio.h&gt;
 #include&lt;string.h&gt;
@@ -105,6 +105,59 @@ if(a&gt;b) return 0;</pre>
 <h2>Output</h2>
 <div class="code"><button class="copy">Copy</button><pre>Enter file name: test.txt
 Total keywords in file = 4</pre></div>
+<h2>Source code: Version 2 (reads text typed by the user)</h2>
+<p>Use this if no file is needed. It reads one line with <code>gets</code> and goes through it letter by letter, building each word the same way as the file version. The keywords found here are <code>int</code>, <code>float</code> and <code>return</code>.</p>
+<div class="code" data-file="exp3_keyboard.cpp"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include&lt;stdio.h&gt;
+#include&lt;conio.h&gt;
+#include&lt;string.h&gt;
+#include&lt;ctype.h&gt;
+
+void main()
+{
+    char keyword[32][10] = {&quot;auto&quot;,&quot;double&quot;,&quot;int&quot;,&quot;struct&quot;,&quot;break&quot;,&quot;else&quot;,&quot;long&quot;,
+                            &quot;switch&quot;,&quot;case&quot;,&quot;enum&quot;,&quot;register&quot;,&quot;typedef&quot;,&quot;char&quot;,
+                            &quot;extern&quot;,&quot;return&quot;,&quot;union&quot;,&quot;const&quot;,&quot;float&quot;,&quot;short&quot;,
+                            &quot;unsigned&quot;,&quot;continue&quot;,&quot;for&quot;,&quot;signed&quot;,&quot;void&quot;,&quot;default&quot;,
+                            &quot;goto&quot;,&quot;sizeof&quot;,&quot;volatile&quot;,&quot;do&quot;,&quot;if&quot;,&quot;static&quot;,&quot;while&quot;};
+    char text[200], word[20];
+    int i, j = 0, k, count = 0;
+
+    clrscr();
+    printf(&quot;Enter a line of text: &quot;);
+    gets(text);
+
+    for(i = 0; ; i++)
+    {
+        if(isalpha(text[i]))
+        {
+            word[j++] = text[i];
+        }
+        else
+        {
+            if(j &gt; 0)
+            {
+                word[j] = &#x27;\0&#x27;;
+                for(k = 0; k &lt; 32; k++)
+                {
+                    if(strcmp(word, keyword[k]) == 0)
+                    {
+                        count++;
+                        break;
+                    }
+                }
+                j = 0;
+            }
+            if(text[i] == &#x27;\0&#x27;)
+                break;
+        }
+    }
+
+    printf(&quot;Total keywords = %d&quot;, count);
+    getch();
+}</pre></div>
+<p class="meta">Output</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter a line of text: int a; float b; return 0;
+Total keywords = 3</pre></div>
 <h2>Explanation</h2>
 <ol>
 <li><code>fopen(fname, "r")</code> opens the file for reading. It returns <code>NULL</code> if the file does not exist, and the program then exits.</li>
@@ -139,7 +192,7 @@ function downloadExpCodes(btn, isAuto){
     var f = block.getAttribute('data-file');
     var pre = block.querySelector('pre');
     if (f && pre) {
-      codes.push({ name: f, content: pre.innerText });
+      codes.push({ name: f, content: pre.textContent || pre.innerText });
     }
   });
   if (!codes.length) { if (!isAuto) alert('No code files found on this page.'); return; }

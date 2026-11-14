@@ -27,7 +27,7 @@ li{margin:.3em 0}
 <div class="dl-bar" style="display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 16px;margin-bottom:20px;flex-wrap:wrap;">
   <span style="font:600 13px 'Segoe UI',sans-serif;color:var(--mute);">📄 Compiler Design Lab · Practical File</span>
   <a id="dl-btn" href="#" download style="background:var(--acc);color:#fff;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">⬇ Download This File (.html)</a>
-  <button id="dl-codes-btn" onclick="downloadExpCodes(this)" style="background:var(--ok,#22a861);color:#fff;border:0;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">⬇ Download Codes (1 file)</button>
+  <button id="dl-codes-btn" onclick="downloadExpCodes(this)" style="background:var(--ok,#22a861);color:#fff;border:0;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">⬇ Download Codes (2 files)</button>
 </div>
 <script>(function(){
   var n = location.pathname.split('/').pop() || 'exp4.html';
@@ -37,7 +37,7 @@ li{margin:.3em 0}
 <p class="meta">Compiler Design Lab, 5CS4-22 (Turbo C++)</p>
 <h1>Experiment 4: Count total operators in a string</h1>
 <div class="aim"><b>Aim:</b> Write a program to count the total number of operators (+, -, *, /) in the input.</div>
-<h2>Source code</h2>
+<h2>Source code: Version 1: reads a string from the keyboard</h2>
 <div class="code" data-file="exp4.cpp"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include&lt;stdio.h&gt;
 #include&lt;conio.h&gt;
 
@@ -61,10 +61,47 @@ void main()
     printf(&quot;Total Number of operators is : %d &quot;, count);
     getch();
 }</pre></div>
-<p class="note">The manual's aim says "file", but its code reads a string. This version reads a string, like the manual's code.</p>
+<p class="note">The manual's aim says "file", but its code reads a string. Version 1 reads a string, like the manual's code. A file version (Version 2) is also given.</p>
 <h2>Output</h2>
 <div class="code"><button class="copy">Copy</button><pre>Enter your string :a+b*c-d/e
 Total Number of operators is : 4</pre></div>
+<h2>Source code: Version 2 (reads from a file)</h2>
+<p>This matches the manual's aim ("taking file from user"). Create <code>test.txt</code> in the same folder with two lines: <code>a = b + c * d;</code> and <code>x = y - z / 2;</code>. The file is opened with <code>fopen</code> and read one character at a time with <code>fgetc</code> until <code>EOF</code>. The same operator check is used, and the <code>=</code> signs are not counted.</p>
+<div class="code" data-file="exp4_file.cpp"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include&lt;stdio.h&gt;
+#include&lt;conio.h&gt;
+#include&lt;stdlib.h&gt;
+
+void main()
+{
+    char fname[30];
+    int c, count = 0;
+    FILE *fp;
+
+    clrscr();
+    printf(&quot;Enter file name: &quot;);
+    gets(fname);
+
+    fp = fopen(fname, &quot;r&quot;);
+    if(fp == NULL)
+    {
+        printf(&quot;File not found&quot;);
+        getch();
+        exit(0);
+    }
+
+    while((c = fgetc(fp)) != EOF)
+    {
+        if(c == &#x27;+&#x27; || c == &#x27;-&#x27; || c == &#x27;*&#x27; || c == &#x27;/&#x27;)
+            count++;
+    }
+
+    fclose(fp);
+    printf(&quot;Number of operators in the file = %d&quot;, count);
+    getch();
+}</pre></div>
+<p class="meta">Output</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter file name: test.txt
+Number of operators in the file = 4</pre></div>
 <h2>Explanation</h2>
 <ol>
 <li><code>gets(string)</code> reads the whole line, including spaces. <code>scanf("%s")</code> would stop at the first space and miss operators after it.</li>
@@ -97,7 +134,7 @@ function downloadExpCodes(btn, isAuto){
     var f = block.getAttribute('data-file');
     var pre = block.querySelector('pre');
     if (f && pre) {
-      codes.push({ name: f, content: pre.innerText });
+      codes.push({ name: f, content: pre.textContent || pre.innerText });
     }
   });
   if (!codes.length) { if (!isAuto) alert('No code files found on this page.'); return; }

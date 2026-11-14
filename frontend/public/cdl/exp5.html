@@ -27,7 +27,7 @@ li{margin:.3em 0}
 <div class="dl-bar" style="display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 16px;margin-bottom:20px;flex-wrap:wrap;">
   <span style="font:600 13px 'Segoe UI',sans-serif;color:var(--mute);">📄 Compiler Design Lab · Practical File</span>
   <a id="dl-btn" href="#" download style="background:var(--acc);color:#fff;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">⬇ Download This File (.html)</a>
-  <button id="dl-codes-btn" onclick="downloadExpCodes(this)" style="background:var(--ok,#22a861);color:#fff;border:0;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">⬇ Download Codes (1 file)</button>
+  <button id="dl-codes-btn" onclick="downloadExpCodes(this)" style="background:var(--ok,#22a861);color:#fff;border:0;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">⬇ Download Codes (2 files)</button>
 </div>
 <script>(function(){
   var n = location.pathname.split('/').pop() || 'exp5.html';
@@ -37,7 +37,7 @@ li{margin:.3em 0}
 <p class="meta">Compiler Design Lab, 5CS4-22 (Turbo C++)</p>
 <h1>Experiment 5: Count occurrences of each character</h1>
 <div class="aim"><b>Aim:</b> Write a C program to count the total occurrence of each character (letter) in the input.</div>
-<h2>Source code</h2>
+<h2>Source code: Version 1: reads a string from the keyboard</h2>
 <div class="code" data-file="exp5.cpp"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include&lt;stdio.h&gt;
 #include&lt;conio.h&gt;
 #include&lt;ctype.h&gt;
@@ -68,7 +68,7 @@ void main()
     }
     getch();
 }</pre></div>
-<p class="note">The manual's aim says "file", but its code reads a string and counts lowercase letters only. This version reads a string and also counts uppercase letters.</p>
+<p class="note">The manual's aim says "file", but its code reads a string and counts lowercase letters only. This version reads a string and also counts uppercase letters. A file version (Version 2) is also given.</p>
 <h2>Output</h2>
 <div class="code"><button class="copy">Copy</button><pre>Enter a string
 Hello World
@@ -79,6 +79,57 @@ l occurs 3 times in the string.
 o occurs 2 times in the string.
 r occurs 1 times in the string.
 w occurs 1 times in the string.</pre></div>
+<h2>Source code: Version 2 (reads from a file)</h2>
+<p>This matches the manual's aim ("given file"). Create <code>test.txt</code> in the same folder containing <code>hello world</code>. The counting trick is the same as before, but the characters come from <code>fgetc</code> instead of a string, and the loop stops at <code>EOF</code>.</p>
+<div class="code" data-file="exp5_file.cpp"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include&lt;stdio.h&gt;
+#include&lt;conio.h&gt;
+#include&lt;ctype.h&gt;
+#include&lt;stdlib.h&gt;
+
+void main()
+{
+    char fname[30];
+    int count[26] = {0};
+    int c, i;
+    FILE *fp;
+
+    clrscr();
+    printf(&quot;Enter file name: &quot;);
+    gets(fname);
+
+    fp = fopen(fname, &quot;r&quot;);
+    if(fp == NULL)
+    {
+        printf(&quot;File not found&quot;);
+        getch();
+        exit(0);
+    }
+
+    while((c = fgetc(fp)) != EOF)
+    {
+        if(isalpha(c))
+        {
+            count[tolower(c) - &#x27;a&#x27;]++;
+        }
+    }
+    fclose(fp);
+
+    for(i = 0; i &lt; 26; i++)
+    {
+        if(count[i] &gt; 0)
+            printf(&quot;%c occurs %d times\n&quot;, i + &#x27;a&#x27;, count[i]);
+    }
+    getch();
+}</pre></div>
+<p class="meta">Output</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter file name: test.txt
+d occurs 1 times
+e occurs 1 times
+h occurs 1 times
+l occurs 3 times
+o occurs 2 times
+r occurs 1 times
+w occurs 1 times</pre></div>
 <h2>Explanation</h2>
 <ol>
 <li><code>count[26]</code> has one counter for each letter: <code>count[0]</code> for a, <code>count[1]</code> for b, and so on. All start at 0.</li>
@@ -112,7 +163,7 @@ function downloadExpCodes(btn, isAuto){
     var f = block.getAttribute('data-file');
     var pre = block.querySelector('pre');
     if (f && pre) {
-      codes.push({ name: f, content: pre.innerText });
+      codes.push({ name: f, content: pre.textContent || pre.innerText });
     }
   });
   if (!codes.length) { if (!isAuto) alert('No code files found on this page.'); return; }

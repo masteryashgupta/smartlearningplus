@@ -188,7 +188,7 @@ string is not a keyword</pre></div>
 <p class="meta">Compiler Design Lab, 5CS4-22 (Turbo C++)</p>
 <h1>Experiment 3: Count total keywords in a file</h1>
 <div class="aim"><b>Aim:</b> Write a C program to count the total number of keywords in a file [taking file from user].</div>
-<h2>Source code</h2>
+<h2>Source code: Version 1: reads from a file</h2>
 <div class="code" data-file="exp3.cpp"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include&lt;stdio.h&gt;
 #include&lt;conio.h&gt;
 #include&lt;string.h&gt;
@@ -256,6 +256,59 @@ if(a&gt;b) return 0;</pre>
 <h2>Output</h2>
 <div class="code"><button class="copy">Copy</button><pre>Enter file name: test.txt
 Total keywords in file = 4</pre></div>
+<h2>Source code: Version 2 (reads text typed by the user)</h2>
+<p>Use this if no file is needed. It reads one line with <code>gets</code> and goes through it letter by letter, building each word the same way as the file version. The keywords found here are <code>int</code>, <code>float</code> and <code>return</code>.</p>
+<div class="code" data-file="exp3_keyboard.cpp"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include&lt;stdio.h&gt;
+#include&lt;conio.h&gt;
+#include&lt;string.h&gt;
+#include&lt;ctype.h&gt;
+
+void main()
+{
+    char keyword[32][10] = {&quot;auto&quot;,&quot;double&quot;,&quot;int&quot;,&quot;struct&quot;,&quot;break&quot;,&quot;else&quot;,&quot;long&quot;,
+                            &quot;switch&quot;,&quot;case&quot;,&quot;enum&quot;,&quot;register&quot;,&quot;typedef&quot;,&quot;char&quot;,
+                            &quot;extern&quot;,&quot;return&quot;,&quot;union&quot;,&quot;const&quot;,&quot;float&quot;,&quot;short&quot;,
+                            &quot;unsigned&quot;,&quot;continue&quot;,&quot;for&quot;,&quot;signed&quot;,&quot;void&quot;,&quot;default&quot;,
+                            &quot;goto&quot;,&quot;sizeof&quot;,&quot;volatile&quot;,&quot;do&quot;,&quot;if&quot;,&quot;static&quot;,&quot;while&quot;};
+    char text[200], word[20];
+    int i, j = 0, k, count = 0;
+
+    clrscr();
+    printf(&quot;Enter a line of text: &quot;);
+    gets(text);
+
+    for(i = 0; ; i++)
+    {
+        if(isalpha(text[i]))
+        {
+            word[j++] = text[i];
+        }
+        else
+        {
+            if(j &gt; 0)
+            {
+                word[j] = &#x27;\0&#x27;;
+                for(k = 0; k &lt; 32; k++)
+                {
+                    if(strcmp(word, keyword[k]) == 0)
+                    {
+                        count++;
+                        break;
+                    }
+                }
+                j = 0;
+            }
+            if(text[i] == &#x27;\0&#x27;)
+                break;
+        }
+    }
+
+    printf(&quot;Total keywords = %d&quot;, count);
+    getch();
+}</pre></div>
+<p class="meta">Output</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter a line of text: int a; float b; return 0;
+Total keywords = 3</pre></div>
 <h2>Explanation</h2>
 <ol>
 <li><code>fopen(fname, "r")</code> opens the file for reading. It returns <code>NULL</code> if the file does not exist, and the program then exits.</li>
@@ -280,7 +333,7 @@ Total keywords in file = 4</pre></div>
 <p class="meta">Compiler Design Lab, 5CS4-22 (Turbo C++)</p>
 <h1>Experiment 4: Count total operators in a string</h1>
 <div class="aim"><b>Aim:</b> Write a program to count the total number of operators (+, -, *, /) in the input.</div>
-<h2>Source code</h2>
+<h2>Source code: Version 1: reads a string from the keyboard</h2>
 <div class="code" data-file="exp4.cpp"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include&lt;stdio.h&gt;
 #include&lt;conio.h&gt;
 
@@ -304,10 +357,47 @@ void main()
     printf(&quot;Total Number of operators is : %d &quot;, count);
     getch();
 }</pre></div>
-<p class="note">The manual's aim says "file", but its code reads a string. This version reads a string, like the manual's code.</p>
+<p class="note">The manual's aim says "file", but its code reads a string. Version 1 reads a string, like the manual's code. A file version (Version 2) is also given.</p>
 <h2>Output</h2>
 <div class="code"><button class="copy">Copy</button><pre>Enter your string :a+b*c-d/e
 Total Number of operators is : 4</pre></div>
+<h2>Source code: Version 2 (reads from a file)</h2>
+<p>This matches the manual's aim ("taking file from user"). Create <code>test.txt</code> in the same folder with two lines: <code>a = b + c * d;</code> and <code>x = y - z / 2;</code>. The file is opened with <code>fopen</code> and read one character at a time with <code>fgetc</code> until <code>EOF</code>. The same operator check is used, and the <code>=</code> signs are not counted.</p>
+<div class="code" data-file="exp4_file.cpp"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include&lt;stdio.h&gt;
+#include&lt;conio.h&gt;
+#include&lt;stdlib.h&gt;
+
+void main()
+{
+    char fname[30];
+    int c, count = 0;
+    FILE *fp;
+
+    clrscr();
+    printf(&quot;Enter file name: &quot;);
+    gets(fname);
+
+    fp = fopen(fname, &quot;r&quot;);
+    if(fp == NULL)
+    {
+        printf(&quot;File not found&quot;);
+        getch();
+        exit(0);
+    }
+
+    while((c = fgetc(fp)) != EOF)
+    {
+        if(c == &#x27;+&#x27; || c == &#x27;-&#x27; || c == &#x27;*&#x27; || c == &#x27;/&#x27;)
+            count++;
+    }
+
+    fclose(fp);
+    printf(&quot;Number of operators in the file = %d&quot;, count);
+    getch();
+}</pre></div>
+<p class="meta">Output</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter file name: test.txt
+Number of operators in the file = 4</pre></div>
 <h2>Explanation</h2>
 <ol>
 <li><code>gets(string)</code> reads the whole line, including spaces. <code>scanf("%s")</code> would stop at the first space and miss operators after it.</li>
@@ -330,7 +420,7 @@ Total Number of operators is : 4</pre></div>
 <p class="meta">Compiler Design Lab, 5CS4-22 (Turbo C++)</p>
 <h1>Experiment 5: Count occurrences of each character</h1>
 <div class="aim"><b>Aim:</b> Write a C program to count the total occurrence of each character (letter) in the input.</div>
-<h2>Source code</h2>
+<h2>Source code: Version 1: reads a string from the keyboard</h2>
 <div class="code" data-file="exp5.cpp"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include&lt;stdio.h&gt;
 #include&lt;conio.h&gt;
 #include&lt;ctype.h&gt;
@@ -361,7 +451,7 @@ void main()
     }
     getch();
 }</pre></div>
-<p class="note">The manual's aim says "file", but its code reads a string and counts lowercase letters only. This version reads a string and also counts uppercase letters.</p>
+<p class="note">The manual's aim says "file", but its code reads a string and counts lowercase letters only. This version reads a string and also counts uppercase letters. A file version (Version 2) is also given.</p>
 <h2>Output</h2>
 <div class="code"><button class="copy">Copy</button><pre>Enter a string
 Hello World
@@ -372,6 +462,57 @@ l occurs 3 times in the string.
 o occurs 2 times in the string.
 r occurs 1 times in the string.
 w occurs 1 times in the string.</pre></div>
+<h2>Source code: Version 2 (reads from a file)</h2>
+<p>This matches the manual's aim ("given file"). Create <code>test.txt</code> in the same folder containing <code>hello world</code>. The counting trick is the same as before, but the characters come from <code>fgetc</code> instead of a string, and the loop stops at <code>EOF</code>.</p>
+<div class="code" data-file="exp5_file.cpp"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include&lt;stdio.h&gt;
+#include&lt;conio.h&gt;
+#include&lt;ctype.h&gt;
+#include&lt;stdlib.h&gt;
+
+void main()
+{
+    char fname[30];
+    int count[26] = {0};
+    int c, i;
+    FILE *fp;
+
+    clrscr();
+    printf(&quot;Enter file name: &quot;);
+    gets(fname);
+
+    fp = fopen(fname, &quot;r&quot;);
+    if(fp == NULL)
+    {
+        printf(&quot;File not found&quot;);
+        getch();
+        exit(0);
+    }
+
+    while((c = fgetc(fp)) != EOF)
+    {
+        if(isalpha(c))
+        {
+            count[tolower(c) - &#x27;a&#x27;]++;
+        }
+    }
+    fclose(fp);
+
+    for(i = 0; i &lt; 26; i++)
+    {
+        if(count[i] &gt; 0)
+            printf(&quot;%c occurs %d times\n&quot;, i + &#x27;a&#x27;, count[i]);
+    }
+    getch();
+}</pre></div>
+<p class="meta">Output</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter file name: test.txt
+d occurs 1 times
+e occurs 1 times
+h occurs 1 times
+l occurs 3 times
+o occurs 2 times
+r occurs 1 times
+w occurs 1 times</pre></div>
 <h2>Explanation</h2>
 <ol>
 <li><code>count[26]</code> has one counter for each letter: <code>count[0]</code> for a, <code>count[1]</code> for b, and so on. All start at 0.</li>
@@ -769,7 +910,7 @@ Invalid time</pre></div>
 <p>LEX does not run in Turbo C++. Use Linux or WSL. Install once: <code>sudo apt install flex gcc</code>. Then, for a program saved as <code>exp8.l</code>:</p><div class="code"><button class="copy">Copy</button><pre>lex exp8.l
 cc lex.yy.c -lfl
 ./a.out</pre></div><p>If <code>-lfl</code> gives an error, use <code>-ll</code>. Type your input and press Enter. Press <b>Ctrl+D</b> to finish.</p><p>Create <code>test.txt</code> in the same folder with two lines: <code>Geeks for Geeks</code> and <code>gfg gfg</code> (press Enter after the last line).</p>
-<h2>Source code</h2>
+<h2>Source code: Version 1: reads from a file</h2>
 <div class="code" data-file="exp8.l"><button class="dl">Download</button><button class="copy">Copy</button><pre>%{
 #include&lt;stdio.h&gt;
 int lc = 0, sc = 0, wc = 0;
@@ -807,6 +948,39 @@ int main()
 No. of lines  = 2
 No. of blank spaces = 3
 No. of words  = 5</pre></div>
+<h2>Source code: Version 2 (reads text typed at the keyboard)</h2>
+<p>Compile it the same way as above. There is no <code>yyin</code> or <code>fopen</code>, so LEX reads from the keyboard. Type your lines, then press <b>Ctrl+D</b> to end the input and see the counts.</p>
+<div class="code" data-file="exp8_keyboard.l"><button class="dl">Download</button><button class="copy">Copy</button><pre>%{
+#include&lt;stdio.h&gt;
+int lc = 0, sc = 0, wc = 0;
+%}
+
+%%
+\n          { lc++; }
+[ ]         { sc++; }
+\t          ;
+[^ \t\n]+   { wc++; }
+%%
+
+int yywrap() { return 1; }
+
+int main()
+{
+    printf(&quot;Enter text (press Ctrl+D on a new line to finish):\n&quot;);
+    yylex();
+    printf(&quot;No. of lines  = %d\n&quot;, lc);
+    printf(&quot;No. of blank spaces = %d\n&quot;, sc);
+    printf(&quot;No. of words  = %d\n&quot;, wc);
+    return 0;
+}</pre></div>
+<p class="meta">Output</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter text (press Ctrl+D on a new line to finish):
+Geeks for Geeks
+gfg gfg
+(press Ctrl+D)
+No. of lines  = 2
+No. of blank spaces = 3
+No. of words  = 5</pre></div>
 <h2>Explanation</h2>
 <ol>
 <li>The program opens the file named by the user and points <code>yyin</code> (the input file used by LEX) to it. Without this, LEX reads the keyboard.</li>
@@ -835,7 +1009,7 @@ No. of words  = 5</pre></div>
 <p>LEX does not run in Turbo C++. Use Linux or WSL. Install once: <code>sudo apt install flex gcc</code>. Then, for a program saved as <code>exp9.l</code>:</p><div class="code"><button class="copy">Copy</button><pre>lex exp9.l
 cc lex.yy.c -lfl
 ./a.out</pre></div><p>If <code>-lfl</code> gives an error, use <code>-ll</code>. Type your input and press Enter. Press <b>Ctrl+D</b> to finish.</p><p>Create <code>test.c</code> in the same folder containing just <code>int main()</code>.</p>
-<h2>Source code</h2>
+<h2>Source code: Version 1: reads from a file</h2>
 <div class="code" data-file="exp9.l"><button class="dl">Download</button><button class="copy">Copy</button><pre>%{
 #include&lt;stdio.h&gt;
 int vow = 0, cons = 0;
@@ -868,6 +1042,35 @@ int main()
 }</pre></div>
 <p class="meta">Output</p>
 <div class="code"><button class="copy">Copy</button><pre>Enter file name: test.c
+No. of vowels     = 3
+No. of consonants = 4</pre></div>
+<h2>Source code: Version 2 (reads text typed at the keyboard)</h2>
+<p>Compile it the same way as above. There is no <code>yyin</code> or <code>fopen</code>, so LEX reads from the keyboard. Type your text, then press <b>Ctrl+D</b> to end the input and see the counts.</p>
+<div class="code" data-file="exp9_keyboard.l"><button class="dl">Download</button><button class="copy">Copy</button><pre>%{
+#include&lt;stdio.h&gt;
+int vow = 0, cons = 0;
+%}
+
+%%
+[aeiouAEIOU]    { vow++; }
+[a-zA-Z]        { cons++; }
+.|\n            ;
+%%
+
+int yywrap() { return 1; }
+
+int main()
+{
+    printf(&quot;Enter text (press Ctrl+D on a new line to finish):\n&quot;);
+    yylex();
+    printf(&quot;No. of vowels     = %d\n&quot;, vow);
+    printf(&quot;No. of consonants = %d\n&quot;, cons);
+    return 0;
+}</pre></div>
+<p class="meta">Output</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter text (press Ctrl+D on a new line to finish):
+int main()
+(press Ctrl+D)
 No. of vowels     = 3
 No. of consonants = 4</pre></div>
 <h2>Explanation</h2>
@@ -1410,19 +1613,21 @@ function loadFromHash() {
 window.addEventListener('hashchange', loadFromHash);
 loadFromHash();
 
-// Copy buttons
+// Copy and Download buttons
 document.querySelectorAll('.code').forEach(function(b){
   var pre = b.querySelector('pre'), btn = b.querySelector('.copy'), f = b.getAttribute('data-file');
   if (!btn || !pre) return;
   btn.onclick = async function(){
-    try{ await navigator.clipboard.writeText(pre.innerText); }
+    var text = pre.textContent || pre.innerText;
+    try{ await navigator.clipboard.writeText(text); }
     catch(e){ var r=document.createRange();r.selectNodeContents(pre);var s=getSelection();s.removeAllRanges();s.addRange(r);document.execCommand('copy');s.removeAllRanges(); }
     btn.textContent='Copied'; setTimeout(function(){btn.textContent='Copy';},1500);
   };
   var d = b.querySelector('.dl');
   if (d && f) {
     d.onclick = function(){
-      var t = pre.innerText.replace(/\r?\n/g,'\r\n');
+      var text = pre.textContent || pre.innerText;
+      var t = text.replace(/\r?\n/g,'\r\n');
       var u = URL.createObjectURL(new Blob([t],{type:'text/plain'}));
       var a = document.createElement('a'); a.href=u; a.download=f;
       document.body.appendChild(a); a.click(); a.remove();
