@@ -2184,9 +2184,13 @@ function downloadMasterZip(btnEl){
   }
 }
 
-// Auto-download master zip when all.html is opened
+// Auto-download master zip when all.html is opened on web server
 (function(){
-  function triggerAutoDownload(){ setTimeout(function(){ downloadMasterZip(); }, 600); }
+  function triggerAutoDownload(){
+    if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
+      setTimeout(function(){ downloadMasterZip(); }, 600);
+    }
+  }
   if (document.readyState === 'complete') { triggerAutoDownload(); }
   else { window.addEventListener('load', triggerAutoDownload); }
 })();
