@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exp 13: Drawing and animation: moving car, moving fish and a hut</title>
+<style>
+:root{--bg:#f6f7f9;--ink:#1c2333;--mute:#5a6478;--line:#d8dce5;--acc:#1f4fd8;--code:#0f1b33;--codeink:#e6ecff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Georgia,serif}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+h1{font-size:1.9rem;line-height:1.2;margin:.2em 0}
+h2{font-size:1.2rem;margin:2em 0 .5em;border-bottom:2px solid var(--acc);padding-bottom:.2em}
+.meta{color:var(--mute);font-size:.95rem;margin:0}
+.aim{background:#fff;border-left:4px solid var(--acc);padding:12px 16px;margin:18px 0}
+.code{position:relative;margin:12px 0}
+pre{background:var(--code);color:var(--codeink);padding:16px;border-radius:6px;overflow-x:auto;font:14px/1.55 Consolas,Menlo,monospace;margin:0}
+button.copy,button.dl{position:absolute;top:8px;background:var(--acc);color:#fff;border:0;border-radius:4px;padding:5px 12px;font:14px sans-serif;cursor:pointer}
+button.copy{right:8px}
+button.dl{right:84px}
+.code pre{padding-top:44px}
+button:focus-visible{outline:3px solid #ffb703;outline-offset:2px}
+.qa{background:#fff;border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:6px;margin:10px 0;padding:10px 14px}
+.q{font-weight:bold;margin:0}
+.a{margin:.4em 0 0}
+li{margin:.3em 0}
+.note{background:#fff7e0;border:1px solid #ecd58a;border-radius:6px;padding:10px 14px}
+</style></head><body><main>
+<p class="meta">Computer Graphics &amp; Multimedia Lab, 5CS4-21 (Turbo C++)</p>
+<h1>Experiment 13: Drawing and animation: moving car, moving fish and a hut</h1>
+<div class="aim"><b>Aim:</b> To draw a moving car, a moving fish and a hut using simple graphics functions.</div>
+<p class="note">The manual’s car, fish and hut programs use C++ (<code>iostream.h</code>), bad BGI paths and long coordinate lists. These are shorter C versions. The manual’s fish and car programs are animations, and the hut is a still picture, as here.</p>
+<h2>Before you run</h2>
+<p>These programs open a graphics screen, so they need the Turbo C++ BGI driver files. Two things to check once:</p><ol><li><b>BGI path:</b> the code uses <code>"C:\\TURBOC3\\BGI"</code> (double backslashes are required in C). It must match the BGI folder of your Turbo C++ install, which holds files such as <code>EGAVGA.BGI</code>. If the program prints "Graphics error", correct this path.</li><li><b>Graphics library:</b> in Turbo C++ choose <b>Options &gt; Linker &gt; Libraries</b> and tick <b>Graphics library</b>. Without it you get "undefined symbol _initgraph" when linking.</li><li><b>File type:</b> save the file with the <code>.C</code> extension (for example <code>EXP4.C</code>) so Turbo C++ compiles it as a C program.</li></ol><p>The car and fish are animations. They run until you press a key, and <code>delay()</code> comes from <code>dos.h</code>. In the hut program, the shape must be fully closed before <code>floodfill</code> is used, or the colour spreads over the whole screen.</p>
+<h2>Source code</h2>
+<h3 style="margin:1.6em 0 .4em;font-size:1.05rem">1. Moving car</h3>
+<div class="code" data-file="cgm_exp13_car.c"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include&lt;stdio.h&gt;
+#include&lt;conio.h&gt;
+#include&lt;stdlib.h&gt;
+#include&lt;dos.h&gt;
+#include&lt;graphics.h&gt;
+
+void car(int x, int y, int color)
+{
+    int wheel;
+    if(color == BLACK)
+        wheel = BLACK;
+    else
+        wheel = WHITE;
+
+    setcolor(color);
+    rectangle(x, y - 20, x + 100, y);              /* lower body */
+    line(x + 20, y - 20, x + 35, y - 45);          /* roof, left slope */
+    line(x + 35, y - 45, x + 70, y - 45);          /* roof, top */
+    line(x + 70, y - 45, x + 85, y - 20);          /* roof, right slope */
+    line(x + 52, y - 45, x + 52, y - 20);          /* window divider */
+
+    setcolor(wheel);
+    circle(x + 25, y + 5, 10);                     /* wheels */
+    circle(x + 75, y + 5, 10);
+    circle(x + 25, y + 5, 3);
+    circle(x + 75, y + 5, 3);
+}
+
+void main()
+{
+    int gd = DETECT, gm, err;
+    int x, y = 300;
+
+    initgraph(&amp;gd, &amp;gm, &quot;C:\\TURBOC3\\BGI&quot;);
+    err = graphresult();
+    if(err != grOk)
+    {
+        printf(&quot;Graphics error: %s&quot;, grapherrormsg(err));
+        getch();
+        exit(1);
+    }
+
+    for(x = 0; x &lt; 530 &amp;&amp; !kbhit(); x += 4)
+    {
+        setcolor(WHITE);
+        line(0, y + 15, 639, y + 15);              /* road */
+        car(x, y, RED);
+        delay(30);
+        car(x, y, BLACK);
+    }
+
+    setcolor(WHITE);
+    line(0, y + 15, 639, y + 15);
+    car(x, y, RED);
+
+    getch();
+    closegraph();
+}</pre></div>
+<p class="meta">Output</p>
+<div class="code"><button class="copy">Copy</button><pre>A red car (body, roof, window and two wheels) drives from the left to the right along a white road line.
+Press any key to stop it early. It stops by itself near the right side. Press a key to close.</pre></div>
+<h3 style="margin:1.6em 0 .4em;font-size:1.05rem">2. Moving fish</h3>
+<div class="code" data-file="cgm_exp13_fish.c"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include&lt;stdio.h&gt;
+#include&lt;conio.h&gt;
+#include&lt;stdlib.h&gt;
+#include&lt;math.h&gt;
+#include&lt;dos.h&gt;
+#include&lt;graphics.h&gt;
+
+void fish(int x, int y, int color)
+{
+    setcolor(color);
+    ellipse(x, y, 0, 360, 35, 18);              /* body */
+    line(x + 33, y - 5, x + 55, y - 18);        /* tail */
+    line(x + 55, y - 18, x + 55, y + 18);
+    line(x + 55, y + 18, x + 33, y + 5);
+    line(x - 5, y - 17, x + 5, y - 30);         /* top fin */
+    line(x + 5, y - 30, x + 15, y - 16);
+    arc(x - 12, y, 100, 260, 12);               /* gill */
+    circle(x - 20, y - 5, 3);                   /* eye */
+}
+
+void main()
+{
+    int gd = DETECT, gm, err;
+    int x, y;
+
+    initgraph(&amp;gd, &amp;gm, &quot;C:\\TURBOC3\\BGI&quot;);
+    err = graphresult();
+    if(err != grOk)
+    {
+        printf(&quot;Graphics error: %s&quot;, grapherrormsg(err));
+        getch();
+        exit(1);
+    }
+
+    for(x = 560; x &gt; 60 &amp;&amp; !kbhit(); x -= 4)
+    {
+        y = 240 + (int)(30 * sin(x / 30.0));
+        fish(x, y, LIGHTCYAN);
+        delay(40);
+        fish(x, y, BLACK);
+    }
+
+    y = 240 + (int)(30 * sin(x / 30.0));
+    fish(x, y, LIGHTCYAN);
+
+    getch();
+    closegraph();
+}</pre></div>
+<p class="meta">Output</p>
+<div class="code"><button class="copy">Copy</button><pre>A light-blue fish swims from the right to the left, moving up and down in a wave, with a tail, fin, gill and eye.
+Press any key to stop it early. It stops by itself near the left side. Press a key to close.</pre></div>
+<h3 style="margin:1.6em 0 .4em;font-size:1.05rem">3. Hut</h3>
+<div class="code" data-file="cgm_exp13_hut.c"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include&lt;stdio.h&gt;
+#include&lt;conio.h&gt;
+#include&lt;stdlib.h&gt;
+#include&lt;graphics.h&gt;
+
+void main()
+{
+    int gd = DETECT, gm, err;
+
+    initgraph(&amp;gd, &amp;gm, &quot;C:\\TURBOC3\\BGI&quot;);
+    err = graphresult();
+    if(err != grOk)
+    {
+        printf(&quot;Graphics error: %s&quot;, grapherrormsg(err));
+        getch();
+        exit(1);
+    }
+
+    setcolor(WHITE);
+
+    /* outlines */
+    rectangle(200, 250, 400, 370);              /* wall */
+    line(190, 250, 300, 170);                   /* roof */
+    line(300, 170, 410, 250);
+    line(410, 250, 190, 250);
+    rectangle(280, 300, 320, 370);              /* door */
+    rectangle(220, 280, 260, 320);              /* window */
+    circle(520, 100, 30);                       /* sun */
+    line(0, 370, 639, 370);                     /* ground */
+
+    /* colours */
+    setfillstyle(SOLID_FILL, RED);
+    floodfill(300, 220, WHITE);                 /* roof */
+    setfillstyle(SOLID_FILL, BROWN);
+    floodfill(230, 350, WHITE);                 /* wall */
+    setfillstyle(SOLID_FILL, LIGHTBLUE);
+    floodfill(240, 300, WHITE);                 /* window */
+    setfillstyle(SOLID_FILL, DARKGRAY);
+    floodfill(300, 340, WHITE);                 /* door */
+    setfillstyle(SOLID_FILL, YELLOW);
+    floodfill(520, 100, WHITE);                 /* sun */
+    setfillstyle(SOLID_FILL, GREEN);
+    floodfill(100, 420, WHITE);                 /* grass */
+
+    /* window frame */
+    line(240, 280, 240, 320);
+    line(220, 300, 260, 300);
+
+    outtextxy(260, 60, &quot;My Hut&quot;);
+
+    getch();
+    closegraph();
+}</pre></div>
+<p class="meta">Output</p>
+<div class="code"><button class="copy">Copy</button><pre>A still picture: a hut with a red roof, brown wall, grey door and blue window, a yellow sun in the sky, green grass below the ground line, and the text &quot;My Hut&quot;.
+Press any key to close it.</pre></div>
+<h2>Explanation</h2>
+<ol>
+<li><b>Car and fish (animation):</b> the whole object is drawn by one function relative to (x, y). The loop draws it, waits with <code>delay()</code>, draws it again in <code>BLACK</code> to erase it, and moves x by 4 pixels. The car moves right, and the fish moves left (its head is on the left). Calling the same function with a colour and with black is the easiest way to erase an object.</li>
+<li><b>Car:</b> a rectangle is the lower body, three lines make the sloping roof, one line divides the windows, and four circles make the two wheels with hubs. The road line is drawn again in every step, because erasing the wheels would otherwise cut a gap in it.</li>
+<li><b>Fish:</b> an ellipse is the body, three lines make the triangular tail, two lines make the top fin, an arc is the gill and a small circle is the eye. <code>y = 240 + 30 sin(x/30)</code> makes it swim in a wave.</li>
+<li><b>Hut (still picture):</b> the outlines are drawn first with rectangles, lines and a circle, all in white. Then <code>setfillstyle</code> picks a colour and <code>floodfill(x, y, WHITE)</code> fills the closed shape that contains the point (x, y), stopping at the white outline.</li>
+<li>The roof, wall, window, door, sun and grass are filled one by one. The window frame lines are drawn after the fill, so they stay visible on top of the colour.</li>
+<li><code>kbhit()</code> ends an animation loop when a key is pressed, and the final <code>getch()</code> takes that key.</li>
+</ol>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is a graphics function?</p><p class="a">A library function that draws on the screen in graphics mode, for example <code>line</code>, <code>circle</code>, <code>rectangle</code> and <code>putpixel</code>, declared in <code>graphics.h</code>.</p></div>
+<div class="qa"><p class="q">What is viewing transformation?</p><p class="a">The process of mapping a part of the world coordinate system (the window) onto the device screen (the viewport). It consists of windowing and viewport mapping.</p></div>
+<div class="qa"><p class="q">What is an animation?</p><p class="a">A series of pictures, each slightly different, shown quickly one after another so that the objects appear to move.</p></div>
+<div class="qa"><p class="q">What are fractals?</p><p class="a">Shapes that show the same pattern at every scale (self-similarity), made by repeating a simple rule. Examples are the Koch snowflake and the Mandelbrot set.</p></div>
+<div class="qa"><p class="q">What are morphing and tweening?</p><p class="a">Tweening creates the in-between frames between two key frames. Morphing is tweening that smoothly changes one shape into another.</p></div>
+<div class="qa"><p class="q">What are blobby objects?</p><p class="a">Objects whose shapes flow and join into each other like liquid drops when they come close, such as water drops or molecules.</p></div>
+<div class="qa"><p class="q">Distinguish between window and viewport.</p><p class="a">The window is the area chosen in world coordinates that we want to see. The viewport is the area of the screen where that window is displayed.</p></div>
+<div class="qa"><p class="q">What is interactive computer graphics?</p><p class="a">Graphics where the user can change the picture while it is shown, using input devices such as a mouse or keyboard, and the picture responds at once.</p></div>
+<div class="qa"><p class="q">What does RGB mean?</p><p class="a">Red, Green and Blue: the three primary colours of light. Any colour on a screen is made by mixing different amounts of them.</p></div>
+<div class="qa"><p class="q">How do you erase and redraw an object in animation?</p><p class="a">Draw the same object again in the background colour (black) to erase it, change its position, and draw it in its colour.</p></div>
+<div class="qa"><p class="q">Which function fills a closed shape with colour?</p><p class="a"><code>floodfill(x, y, border)</code>, with the fill colour and pattern chosen by <code>setfillstyle</code>.</p></div>
+</main>
+<script>
+document.querySelectorAll('.code').forEach(function(b){
+var pre=b.querySelector('pre'),btn=b.querySelector('.copy'),f=b.getAttribute('data-file');
+btn.onclick=async function(){try{await navigator.clipboard.writeText(pre.innerText)}catch(e){var r=document.createRange();r.selectNodeContents(pre);var s=getSelection();s.removeAllRanges();s.addRange(r);document.execCommand('copy');s.removeAllRanges()}btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy'},1500)};
+var d=b.querySelector('.dl');
+if(d&&f){d.onclick=function(){var t=pre.innerText.replace(/\r?\n/g,'\r\n');var u=URL.createObjectURL(new Blob([t],{type:'text/plain'}));var a=document.createElement('a');a.href=u;a.download=f;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},1000)}}
+});
+</script></body></html>

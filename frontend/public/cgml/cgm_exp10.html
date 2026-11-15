@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exp 10: Cohen-Sutherland line clipping algorithm</title>
+<style>
+:root{--bg:#f6f7f9;--ink:#1c2333;--mute:#5a6478;--line:#d8dce5;--acc:#1f4fd8;--code:#0f1b33;--codeink:#e6ecff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Georgia,serif}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+h1{font-size:1.9rem;line-height:1.2;margin:.2em 0}
+h2{font-size:1.2rem;margin:2em 0 .5em;border-bottom:2px solid var(--acc);padding-bottom:.2em}
+.meta{color:var(--mute);font-size:.95rem;margin:0}
+.aim{background:#fff;border-left:4px solid var(--acc);padding:12px 16px;margin:18px 0}
+.code{position:relative;margin:12px 0}
+pre{background:var(--code);color:var(--codeink);padding:16px;border-radius:6px;overflow-x:auto;font:14px/1.55 Consolas,Menlo,monospace;margin:0}
+button.copy,button.dl{position:absolute;top:8px;background:var(--acc);color:#fff;border:0;border-radius:4px;padding:5px 12px;font:14px sans-serif;cursor:pointer}
+button.copy{right:8px}
+button.dl{right:84px}
+.code pre{padding-top:44px}
+button:focus-visible{outline:3px solid #ffb703;outline-offset:2px}
+.qa{background:#fff;border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:6px;margin:10px 0;padding:10px 14px}
+.q{font-weight:bold;margin:0}
+.a{margin:.4em 0 0}
+li{margin:.3em 0}
+.note{background:#fff7e0;border:1px solid #ecd58a;border-radius:6px;padding:10px 14px}
+</style></head><body><main>
+<p class="meta">Computer Graphics &amp; Multimedia Lab, 5CS4-21 (Turbo C++)</p>
+<h1>Experiment 10: Cohen-Sutherland line clipping algorithm</h1>
+<div class="aim"><b>Aim:</b> To implement the Cohen-Sutherland 2D line clipping algorithm.</div>
+<h2>Source code</h2>
+<div class="code" data-file="cgm_exp10.c"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include&lt;stdio.h&gt;
+#include&lt;conio.h&gt;
+#include&lt;stdlib.h&gt;
+#include&lt;graphics.h&gt;
+
+#define RC_TOP 8
+#define RC_BOTTOM 4
+#define RC_RIGHT 2
+#define RC_LEFT 1
+
+int xmin, ymin, xmax, ymax;
+
+int code(float x, float y)
+{
+    int c = 0;
+    if(y &lt; ymin) c = c | RC_TOP;
+    if(y &gt; ymax) c = c | RC_BOTTOM;
+    if(x &gt; xmax) c = c | RC_RIGHT;
+    if(x &lt; xmin) c = c | RC_LEFT;
+    return c;
+}
+
+void main()
+{
+    int gd = DETECT, gm, err;
+    int ox1, oy1, ox2, oy2, c1, c2, outc, accept = 0;
+    float x1, y1, x2, y2, x, y;
+
+    clrscr();
+    printf(&quot;Enter window corners xmin ymin xmax ymax: &quot;);
+    scanf(&quot;%d%d%d%d&quot;, &amp;xmin, &amp;ymin, &amp;xmax, &amp;ymax);
+    printf(&quot;Enter line end points x1 y1 x2 y2: &quot;);
+    scanf(&quot;%d%d%d%d&quot;, &amp;ox1, &amp;oy1, &amp;ox2, &amp;oy2);
+
+    x1 = ox1; y1 = oy1;
+    x2 = ox2; y2 = oy2;
+    c1 = code(x1, y1);
+    c2 = code(x2, y2);
+
+    while(1)
+    {
+        if((c1 | c2) == 0)
+        {
+            accept = 1;
+            break;
+        }
+        if((c1 &amp; c2) != 0)
+            break;
+
+        if(c1 != 0)
+            outc = c1;
+        else
+            outc = c2;
+
+        if(outc &amp; RC_TOP)
+        {
+            x = x1 + (x2 - x1) * (ymin - y1) / (y2 - y1);
+            y = ymin;
+        }
+        else if(outc &amp; RC_BOTTOM)
+        {
+            x = x1 + (x2 - x1) * (ymax - y1) / (y2 - y1);
+            y = ymax;
+        }
+        else if(outc &amp; RC_RIGHT)
+        {
+            y = y1 + (y2 - y1) * (xmax - x1) / (x2 - x1);
+            x = xmax;
+        }
+        else
+        {
+            y = y1 + (y2 - y1) * (xmin - x1) / (x2 - x1);
+            x = xmin;
+        }
+
+        if(outc == c1)
+        {
+            x1 = x; y1 = y;
+            c1 = code(x1, y1);
+        }
+        else
+        {
+            x2 = x; y2 = y;
+            c2 = code(x2, y2);
+        }
+    }
+
+    initgraph(&amp;gd, &amp;gm, &quot;C:\\TURBOC3\\BGI&quot;);
+    err = graphresult();
+    if(err != grOk)
+    {
+        printf(&quot;Graphics error: %s&quot;, grapherrormsg(err));
+        getch();
+        exit(1);
+    }
+
+    /* before clipping */
+    setcolor(WHITE);
+    rectangle(xmin, ymin, xmax, ymax);
+    setcolor(RED);
+    line(ox1, oy1, ox2, oy2);
+    outtextxy(10, 10, &quot;Before clipping (press a key)&quot;);
+    getch();
+
+    /* after clipping */
+    cleardevice();
+    setcolor(WHITE);
+    rectangle(xmin, ymin, xmax, ymax);
+    if(accept)
+    {
+        setcolor(GREEN);
+        line((int)(x1 + 0.5), (int)(y1 + 0.5), (int)(x2 + 0.5), (int)(y2 + 0.5));
+    }
+    outtextxy(10, 10, &quot;After clipping (press a key)&quot;);
+    getch();
+    closegraph();
+}</pre></div>
+<p class="note">The region codes here use screen coordinates (y grows downwards), so "top" is the smaller y. The manual’s algorithm lists the same four tests using ymax and ymin.</p>
+<h2>Before you run</h2>
+<p>These programs open a graphics screen, so they need the Turbo C++ BGI driver files. Two things to check once:</p><ol><li><b>BGI path:</b> the code uses <code>"C:\\TURBOC3\\BGI"</code> (double backslashes are required in C). It must match the BGI folder of your Turbo C++ install, which holds files such as <code>EGAVGA.BGI</code>. If the program prints "Graphics error", correct this path.</li><li><b>Graphics library:</b> in Turbo C++ choose <b>Options &gt; Linker &gt; Libraries</b> and tick <b>Graphics library</b>. Without it you get "undefined symbol _initgraph" when linking.</li><li><b>File type:</b> save the file with the <code>.C</code> extension (for example <code>EXP4.C</code>) so Turbo C++ compiles it as a C program.</li></ol><p>Enter points as screen pixels: x from 0 to 639 and y from 0 to 479. y grows downwards, so "top" means the smaller y value. Give xmin &lt; xmax and ymin &lt; ymax.</p>
+<h2>Output</h2>
+<div class="code"><button class="copy">Copy</button><pre>Enter window corners xmin ymin xmax ymax: 100 100 300 200
+Enter line end points x1 y1 x2 y2: 50 50 350 250
+(first screen: the white window with the whole red line crossing it)
+(after a key press: only the part inside the window is left, a green line from (125,100) to (275,200))
+Press any key to close it.</pre></div>
+<h2>Explanation</h2>
+<ol>
+<li><b>Idea:</b> Only the part of a line that lies inside a rectangular window should be drawn. Every end point gets a 4-bit <b>region code</b> that says where it is compared to the window.</li>
+<li><b>Region code bits:</b> top = 8 if y is above the window (y &lt; ymin), bottom = 4 if y &gt; ymax, right = 2 if x &gt; xmax, left = 1 if x &lt; xmin. A point inside the window has code 0. A corner outside has two bits set, for example top-left is 8 + 1 = 9.</li>
+<li><b>Trivial accept:</b> if both codes are 0 (<code>(c1 | c2) == 0</code>), the whole line is inside and is drawn as it is.</li>
+<li><b>Trivial reject:</b> if the bitwise AND of the codes is not 0 (<code>c1 &amp; c2</code>), both end points are on the same outside side, so the line cannot enter the window and is discarded.</li>
+<li><b>Otherwise (clipping candidate):</b> pick an end point that is outside, find where the line meets the window edge it is beyond (top, bottom, right or left), and replace that end point by the intersection. Then recompute its code and repeat from the start.</li>
+<li><b>Intersection formulas:</b> with the top or bottom edge, <code>x = x1 + (x2 - x1) * (edge_y - y1) / (y2 - y1)</code>. With the right or left edge, <code>y = y1 + (y2 - y1) * (edge_x - x1) / (x2 - x1)</code>.</li>
+<li><b>Example:</b> window (100,100) to (300,200) and line (50,50) to (350,250). The codes are 9 (top-left) and 6 (bottom-right). Their AND is 0, so the line is a candidate. Cut at the top edge: (125, 100). Cut at the bottom edge: (275, 200). Both new codes are 0, so the line (125,100) to (275,200) is drawn.</li>
+<li>The program shows the original line in red, then clears the screen and shows the clipped line in green.</li>
+</ol>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is line clipping?</p><p class="a">Removing the part of a line that lies outside a given window (clipping region) and keeping only the visible part.</p></div>
+<div class="qa"><p class="q">Explain the Cohen-Sutherland line clipping algorithm.</p><p class="a">It gives each end point a 4-bit region code. Lines that are fully inside are accepted, lines fully outside on one side are rejected, and the others are cut at a window edge repeatedly until they are accepted or rejected.</p></div>
+<div class="qa"><p class="q">Give an example of line clipping.</p><p class="a">For window (100,100)-(300,200), the line (50,150)-(350,150) is clipped to (100,150)-(300,150). The two outside ends are cut at the left and right edges.</p></div>
+<div class="qa"><p class="q">What are the steps of line clipping?</p><p class="a">1) Compute the region code of both end points. 2) If both are 0, accept. 3) If their AND is not 0, reject. 4) Otherwise cut the line at a window edge for an outside end point, update that end point and its code, and go back to step 2.</p></div>
+<div class="qa"><p class="q">Which is the best line clipping algorithm?</p><p class="a">Cohen-Sutherland is simple and fast when most lines are clearly inside or outside. Liang-Barsky is generally faster because it works with parametric equations and needs fewer intersection calculations.</p></div>
+<div class="qa"><p class="q">What is the condition for a line to be a clipping candidate?</p><p class="a">The AND of the region codes of its end points is 0 and the OR is not 0. That means it is not fully inside and not fully on one outside side, so it may cross the window.</p></div>
+<div class="qa"><p class="q">Why is clipping used in graphics?</p><p class="a">To draw only what is visible in the window, which saves time and memory and stops drawing outside the screen or viewport.</p></div>
+<div class="qa"><p class="q">How many methods of text clipping are there?</p><p class="a">Three: all-or-none string clipping, all-or-none character clipping and component (character part) clipping.</p></div>
+<div class="qa"><p class="q">What are the three types of clipping?</p><p class="a">Point clipping, line clipping and polygon clipping (also curve and text clipping).</p></div>
+<div class="qa"><p class="q">Why do we need clipping?</p><p class="a">Objects can be larger than the display window. Clipping removes the invisible parts so only the part in the window is processed and shown.</p></div>
+</main>
+<script>
+document.querySelectorAll('.code').forEach(function(b){
+var pre=b.querySelector('pre'),btn=b.querySelector('.copy'),f=b.getAttribute('data-file');
+btn.onclick=async function(){try{await navigator.clipboard.writeText(pre.innerText)}catch(e){var r=document.createRange();r.selectNodeContents(pre);var s=getSelection();s.removeAllRanges();s.addRange(r);document.execCommand('copy');s.removeAllRanges()}btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy'},1500)};
+var d=b.querySelector('.dl');
+if(d&&f){d.onclick=function(){var t=pre.innerText.replace(/\r?\n/g,'\r\n');var u=URL.createObjectURL(new Blob([t],{type:'text/plain'}));var a=document.createElement('a');a.href=u;a.download=f;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},1000)}}
+});
+</script></body></html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exp 14: Polygon fill algorithm (scan-line)</title>
+<style>
+:root{--bg:#f6f7f9;--ink:#1c2333;--mute:#5a6478;--line:#d8dce5;--acc:#1f4fd8;--code:#0f1b33;--codeink:#e6ecff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Georgia,serif}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+h1{font-size:1.9rem;line-height:1.2;margin:.2em 0}
+h2{font-size:1.2rem;margin:2em 0 .5em;border-bottom:2px solid var(--acc);padding-bottom:.2em}
+.meta{color:var(--mute);font-size:.95rem;margin:0}
+.aim{background:#fff;border-left:4px solid var(--acc);padding:12px 16px;margin:18px 0}
+.code{position:relative;margin:12px 0}
+pre{background:var(--code);color:var(--codeink);padding:16px;border-radius:6px;overflow-x:auto;font:14px/1.55 Consolas,Menlo,monospace;margin:0}
+button.copy,button.dl{position:absolute;top:8px;background:var(--acc);color:#fff;border:0;border-radius:4px;padding:5px 12px;font:14px sans-serif;cursor:pointer}
+button.copy{right:8px}
+button.dl{right:84px}
+.code pre{padding-top:44px}
+button:focus-visible{outline:3px solid #ffb703;outline-offset:2px}
+.qa{background:#fff;border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:6px;margin:10px 0;padding:10px 14px}
+.q{font-weight:bold;margin:0}
+.a{margin:.4em 0 0}
+li{margin:.3em 0}
+.note{background:#fff7e0;border:1px solid #ecd58a;border-radius:6px;padding:10px 14px}
+</style></head><body><main>
+<p class="meta">Computer Graphics &amp; Multimedia Lab, 5CS4-21 (Turbo C++)</p>
+<h1>Experiment 14: Polygon fill algorithm (scan-line)</h1>
+<div class="aim"><b>Aim:</b> To implement the polygon fill algorithm.</div>
+<h2>Source code</h2>
+<div class="code" data-file="cgm_exp14.c"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include&lt;stdio.h&gt;
+#include&lt;conio.h&gt;
+#include&lt;stdlib.h&gt;
+#include&lt;graphics.h&gt;
+
+void main()
+{
+    int gd = DETECT, gm, err;
+    int n, i, j, k, y, ymin, ymax, cnt, x1, y1, x2, y2, col, tmp;
+    int px[10], py[10];
+    float xi[10], t;
+
+    clrscr();
+    printf(&quot;Enter number of vertices (3 to 10): &quot;);
+    scanf(&quot;%d&quot;, &amp;n);
+    if(n &lt; 3 || n &gt; 10)
+    {
+        printf(&quot;Number of vertices must be 3 to 10&quot;);
+        getch();
+        exit(0);
+    }
+    printf(&quot;Enter the vertices (x y), one per line, in order:\n&quot;);
+    for(i = 0; i &lt; n; i++)
+        scanf(&quot;%d%d&quot;, &amp;px[i], &amp;py[i]);
+    printf(&quot;Enter fill colour (1 to 14): &quot;);
+    scanf(&quot;%d&quot;, &amp;col);
+
+    ymin = py[0];
+    ymax = py[0];
+    for(i = 1; i &lt; n; i++)
+    {
+        if(py[i] &lt; ymin) ymin = py[i];
+        if(py[i] &gt; ymax) ymax = py[i];
+    }
+
+    initgraph(&amp;gd, &amp;gm, &quot;C:\\TURBOC3\\BGI&quot;);
+    err = graphresult();
+    if(err != grOk)
+    {
+        printf(&quot;Graphics error: %s&quot;, grapherrormsg(err));
+        getch();
+        exit(1);
+    }
+
+    setcolor(col);
+    for(y = ymin; y &lt;= ymax; y++)
+    {
+        cnt = 0;
+        for(i = 0; i &lt; n; i++)
+        {
+            j = (i + 1) % n;
+            x1 = px[i]; y1 = py[i];
+            x2 = px[j]; y2 = py[j];
+            if(y1 == y2)
+                continue;
+            if(y1 &gt; y2)
+            {
+                tmp = x1; x1 = x2; x2 = tmp;
+                tmp = y1; y1 = y2; y2 = tmp;
+            }
+            if(y &gt;= y1 &amp;&amp; y &lt; y2)
+            {
+                xi[cnt] = x1 + (float)(y - y1) * (x2 - x1) / (y2 - y1);
+                cnt++;
+            }
+        }
+
+        for(i = 0; i &lt; cnt - 1; i++)
+            for(k = 0; k &lt; cnt - 1 - i; k++)
+                if(xi[k] &gt; xi[k + 1])
+                {
+                    t = xi[k];
+                    xi[k] = xi[k + 1];
+                    xi[k + 1] = t;
+                }
+
+        for(k = 0; k + 1 &lt; cnt; k += 2)
+            line((int)(xi[k] + 0.5), y, (int)(xi[k + 1] + 0.5), y);
+    }
+
+    setcolor(WHITE);
+    for(i = 0; i &lt; n; i++)
+    {
+        j = (i + 1) % n;
+        line(px[i], py[i], px[j], py[j]);
+    }
+
+    getch();
+    closegraph();
+}</pre></div>
+<p class="note">The manual’s program draws a fixed polygon with <code>drawpoly</code> and fills it with a short loop that works only for that one shape. Its viva questions are about polygon clipping, not filling. This version takes any polygon, fills it with the scan-line method, and adds fill-related questions (the clipping questions are kept at the end).</p>
+<h2>Before you run</h2>
+<p>These programs open a graphics screen, so they need the Turbo C++ BGI driver files. Two things to check once:</p><ol><li><b>BGI path:</b> the code uses <code>"C:\\TURBOC3\\BGI"</code> (double backslashes are required in C). It must match the BGI folder of your Turbo C++ install, which holds files such as <code>EGAVGA.BGI</code>. If the program prints "Graphics error", correct this path.</li><li><b>Graphics library:</b> in Turbo C++ choose <b>Options &gt; Linker &gt; Libraries</b> and tick <b>Graphics library</b>. Without it you get "undefined symbol _initgraph" when linking.</li><li><b>File type:</b> save the file with the <code>.C</code> extension (for example <code>EXP4.C</code>) so Turbo C++ compiles it as a C program.</li></ol><p>Enter the vertices in order around the polygon (clockwise or anticlockwise), with x from 0 to 639 and y from 0 to 479. The polygon may be concave, like the example.</p>
+<h2>Output</h2>
+<div class="code"><button class="copy">Copy</button><pre>Enter number of vertices (3 to 10): 5
+Enter the vertices (x y), one per line, in order:
+100 100
+150 150
+200 100
+200 200
+100 200
+Enter fill colour (1 to 14): 4
+(a graphics window opens with a white outline of the polygon and its inside filled with red; the small notch at the top stays empty)
+Press any key to close it.</pre></div>
+<h2>Explanation</h2>
+<ol>
+<li><b>Idea (scan-line fill):</b> go through the polygon one horizontal line (scan line) at a time. On each line, find where it crosses the polygon edges, sort the crossings from left to right, and fill between the 1st and 2nd, the 3rd and 4th, and so on. The pixels between crossing 2 and crossing 3 are outside the polygon, so they are left empty.</li>
+<li><b>Finding the crossings:</b> for every edge from (x1, y1) to (x2, y2) with y1 less than y2, the scan line y crosses it when <code>y1 &lt;= y &lt; y2</code>, at <code>x = x1 + (y - y1)(x2 - x1)/(y2 - y1)</code>. Horizontal edges are skipped.</li>
+<li><b>Why y &lt; y2 and not y &lt;= y2:</b> a vertex shared by two edges must be counted once, not twice, or the pairs would be mixed up. Counting only the lower end of each edge does this. The outline is drawn afterwards, so the bottom row is still covered.</li>
+<li><b>Example:</b> for the polygon (100,100), (150,150), (200,100), (200,200), (100,200) at y = 120 the crossings are x = 100, 120, 180 and 200. The program fills 100 to 120 and 180 to 200, and leaves 120 to 180 empty because that is the notch.</li>
+<li>Each filled span is a horizontal <code>line()</code> in the chosen colour. After all the scan lines, the outline is drawn in white.</li>
+<li>Each of the (at most 10) edges gives at most one crossing per scan line, so <code>xi[10]</code> is big enough. A small bubble sort puts the crossings in order.</li>
+</ol>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is polygon filling?</p><p class="a">Colouring all the pixels inside a polygon. The two main methods are scan-line fill and seed fill (flood fill and boundary fill).</p></div>
+<div class="qa"><p class="q">Explain the scan-line polygon fill algorithm.</p><p class="a">For each scan line from the lowest to the highest y of the polygon, find the intersections with the edges, sort them by x, and draw lines between pairs of intersections.</p></div>
+<div class="qa"><p class="q">What is the even-odd rule?</p><p class="a">A point is inside the polygon if a line from it crosses an odd number of edges. In scan-line fill this means filling between the 1st and 2nd crossing, then the 3rd and 4th, and so on.</p></div>
+<div class="qa"><p class="q">How are vertices handled?</p><p class="a">By counting an edge only for y1 &lt;= y &lt; y2, so a vertex shared by two edges is counted once and horizontal edges are ignored. Otherwise the crossings would not pair up correctly.</p></div>
+<div class="qa"><p class="q">Does it work for concave polygons?</p><p class="a">Yes. The even-odd pairing leaves the notches empty. Seed fill methods may need more care for such shapes.</p></div>
+<div class="qa"><p class="q">What are the edge table and active edge table?</p><p class="a">An edge table lists the edges sorted by their lowest y. The active edge table holds only the edges crossed by the current scan line. They make the method faster for large polygons. This program simply tests all edges for each line.</p></div>
+<div class="qa"><p class="q">What is scan-line coherence?</p><p class="a">The idea that neighbouring scan lines cross almost the same edges, with the crossing x changing by a constant 1/slope, so results can be updated instead of recalculated.</p></div>
+<div class="qa"><p class="q">Difference between scan-line fill and seed fill?</p><p class="a">Scan-line fill uses the polygon’s edges and needs no starting point. Seed fill starts at a point inside and spreads to neighbouring pixels until it reaches a boundary.</p></div>
+<div class="qa"><p class="q">Which clipping algorithm is used for polygon clipping? (from the manual)</p><p class="a">The Sutherland-Hodgman algorithm. It clips the polygon against one window edge at a time.</p></div>
+<div class="qa"><p class="q">How do you clip a polygon? (from the manual)</p><p class="a">Take each edge of the window in turn, keep the polygon vertices on the inside, and add the intersection points where polygon edges cross that window edge. The output polygon of one step is the input of the next.</p></div>
+<div class="qa"><p class="q">What is the primary use of clipping in computer graphics? (from the manual)</p><p class="a">To remove the parts of objects that lie outside the viewing window so they are not drawn.</p></div>
+</main>
+<script>
+document.querySelectorAll('.code').forEach(function(b){
+var pre=b.querySelector('pre'),btn=b.querySelector('.copy'),f=b.getAttribute('data-file');
+btn.onclick=async function(){try{await navigator.clipboard.writeText(pre.innerText)}catch(e){var r=document.createRange();r.selectNodeContents(pre);var s=getSelection();s.removeAllRanges();s.addRange(r);document.execCommand('copy');s.removeAllRanges()}btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy'},1500)};
+var d=b.querySelector('.dl');
+if(d&&f){d.onclick=function(){var t=pre.innerText.replace(/\r?\n/g,'\r\n');var u=URL.createObjectURL(new Blob([t],{type:'text/plain'}));var a=document.createElement('a');a.href=u;a.download=f;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},1000)}}
+});
+</script></body></html>

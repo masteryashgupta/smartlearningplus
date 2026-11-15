@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exp 15: Bezier curve</title>
+<style>
+:root{--bg:#f6f7f9;--ink:#1c2333;--mute:#5a6478;--line:#d8dce5;--acc:#1f4fd8;--code:#0f1b33;--codeink:#e6ecff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Georgia,serif}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+h1{font-size:1.9rem;line-height:1.2;margin:.2em 0}
+h2{font-size:1.2rem;margin:2em 0 .5em;border-bottom:2px solid var(--acc);padding-bottom:.2em}
+.meta{color:var(--mute);font-size:.95rem;margin:0}
+.aim{background:#fff;border-left:4px solid var(--acc);padding:12px 16px;margin:18px 0}
+.code{position:relative;margin:12px 0}
+pre{background:var(--code);color:var(--codeink);padding:16px;border-radius:6px;overflow-x:auto;font:14px/1.55 Consolas,Menlo,monospace;margin:0}
+button.copy,button.dl{position:absolute;top:8px;background:var(--acc);color:#fff;border:0;border-radius:4px;padding:5px 12px;font:14px sans-serif;cursor:pointer}
+button.copy{right:8px}
+button.dl{right:84px}
+.code pre{padding-top:44px}
+button:focus-visible{outline:3px solid #ffb703;outline-offset:2px}
+.qa{background:#fff;border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:6px;margin:10px 0;padding:10px 14px}
+.q{font-weight:bold;margin:0}
+.a{margin:.4em 0 0}
+li{margin:.3em 0}
+.note{background:#fff7e0;border:1px solid #ecd58a;border-radius:6px;padding:10px 14px}
+</style></head><body><main>
+<p class="meta">Computer Graphics &amp; Multimedia Lab, 5CS4-21 (Turbo C++)</p>
+<h1>Experiment 15: Bezier curve</h1>
+<div class="aim"><b>Aim:</b> To draw a Bezier curve.</div>
+<h2>Source code</h2>
+<div class="code" data-file="cgm_exp15.c"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include&lt;stdio.h&gt;
+#include&lt;conio.h&gt;
+#include&lt;stdlib.h&gt;
+#include&lt;graphics.h&gt;
+
+void main()
+{
+    int gd = DETECT, gm, err;
+    int x[4], y[4], i, k;
+    double t, u, a, b, c, d, bx, by;
+
+    clrscr();
+    printf(&quot;Enter the 4 control points (x y), one per line:\n&quot;);
+    for(i = 0; i &lt; 4; i++)
+        scanf(&quot;%d%d&quot;, &amp;x[i], &amp;y[i]);
+
+    initgraph(&amp;gd, &amp;gm, &quot;C:\\TURBOC3\\BGI&quot;);
+    err = graphresult();
+    if(err != grOk)
+    {
+        printf(&quot;Graphics error: %s&quot;, grapherrormsg(err));
+        getch();
+        exit(1);
+    }
+
+    /* control polygon and control points */
+    setcolor(DARKGRAY);
+    for(i = 0; i &lt; 3; i++)
+        line(x[i], y[i], x[i + 1], y[i + 1]);
+    setcolor(LIGHTGREEN);
+    for(i = 0; i &lt; 4; i++)
+        circle(x[i], y[i], 4);
+
+    /* the cubic Bezier curve */
+    for(k = 0; k &lt;= 1000; k++)
+    {
+        t = k / 1000.0;
+        u = 1 - t;
+        a = u * u * u;
+        b = 3 * t * u * u;
+        c = 3 * t * t * u;
+        d = t * t * t;
+        bx = a * x[0] + b * x[1] + c * x[2] + d * x[3];
+        by = a * y[0] + b * y[1] + c * y[2] + d * y[3];
+        putpixel((int)(bx + 0.5), (int)(by + 0.5), YELLOW);
+    }
+
+    outtextxy(10, 10, &quot;Bezier curve (yellow), control points (green)&quot;);
+
+    getch();
+    closegraph();
+}</pre></div>
+<p class="note">The manual’s version uses double values and adds 0.001 to t in a loop. This version uses an integer counter, draws the control polygon and points too, and checks for graphics errors.</p>
+<h2>Before you run</h2>
+<p>These programs open a graphics screen, so they need the Turbo C++ BGI driver files. Two things to check once:</p><ol><li><b>BGI path:</b> the code uses <code>"C:\\TURBOC3\\BGI"</code> (double backslashes are required in C). It must match the BGI folder of your Turbo C++ install, which holds files such as <code>EGAVGA.BGI</code>. If the program prints "Graphics error", correct this path.</li><li><b>Graphics library:</b> in Turbo C++ choose <b>Options &gt; Linker &gt; Libraries</b> and tick <b>Graphics library</b>. Without it you get "undefined symbol _initgraph" when linking.</li><li><b>File type:</b> save the file with the <code>.C</code> extension (for example <code>EXP4.C</code>) so Turbo C++ compiles it as a C program.</li></ol><p>Enter 4 control points inside the screen (x from 0 to 639, y from 0 to 479).</p>
+<h2>Output</h2>
+<div class="code"><button class="copy">Copy</button><pre>Enter the 4 control points (x y), one per line:
+100 400
+150 100
+450 100
+500 400
+(a graphics window opens: a dark grey polygon joins the four control points, which are marked by small green circles, and a smooth yellow curve starts at the first point, bends towards the two middle points, and ends at the last point)
+Press any key to close it.</pre></div>
+<h2>Explanation</h2>
+<ol>
+<li><b>Idea:</b> A Bezier curve is shaped by <b>control points</b>. This program uses 4 points, P0, P1, P2 and P3, which gives a <b>cubic</b> curve. It starts at P0, ends at P3, and is pulled towards P1 and P2 without usually touching them.</li>
+<li><b>Formula:</b> for t from 0 to 1, <code>B(t) = (1-t)&sup3;P0 + 3t(1-t)&sup2;P1 + 3t&sup2;(1-t)P2 + t&sup3;P3</code>. The four weights are the <b>Bernstein polynomials</b>, and they always add up to 1.</li>
+<li>In the code <code>u = 1 - t</code>, and <code>a, b, c, d</code> are the four weights. <code>bx</code> and <code>by</code> are the weighted sums of the x and y coordinates.</li>
+<li>The loop runs <code>k</code> from 0 to 1000 and sets <code>t = k / 1000.0</code>. Using an integer counter avoids the rounding error of adding 0.001 to a decimal value 1000 times. 1001 points are close enough together to look like a continuous curve.</li>
+<li><code>putpixel</code> plots each point, rounded to the nearest pixel. The control polygon (grey lines) and control points (green circles) are drawn first so you can see how they shape the curve.</li>
+<li><b>Example:</b> for the points (100,400), (150,100), (450,100), (500,400), at t = 0.5 the point is <code>(P0 + 3P1 + 3P2 + P3) / 8</code> = (300, 175), which lies on the curve.</li>
+</ol>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is a Bezier curve?</p><p class="a">A smooth curve defined by a set of control points, using a parameter t from 0 to 1. It is widely used in drawing programs, fonts and animation.</p></div>
+<div class="qa"><p class="q">What are the types of Bezier curve?</p><p class="a">By the number of control points: linear (2 points, a straight line), quadratic (3 points), cubic (4 points) and higher-order curves. A curve with n + 1 control points has degree n.</p></div>
+<div class="qa"><p class="q">List the properties of a Bezier curve.</p><p class="a">It passes through the first and last control points. The tangent at the ends points along the first and last segment of the control polygon. It always lies inside the convex hull of its control points. It is smooth and its shape changes smoothly when a control point is moved. The weights sum to 1.</p></div>
+<div class="qa"><p class="q">What is a cubic Bezier curve?</p><p class="a">A curve with 4 control points, with the formula B(t) = (1-t)&sup3;P0 + 3t(1-t)&sup2;P1 + 3t&sup2;(1-t)P2 + t&sup3;P3.</p></div>
+<div class="qa"><p class="q">What is a quadratic Bezier curve?</p><p class="a">A curve with 3 control points: B(t) = (1-t)&sup2;P0 + 2t(1-t)P1 + t&sup2;P2.</p></div>
+<div class="qa"><p class="q">How can a closed Bezier curve be generated?</p><p class="a">By making the last control point equal to the first one, so the curve ends where it started.</p></div>
+<div class="qa"><p class="q">What are control points?</p><p class="a">The points that define the shape of the curve. The curve does not have to pass through all of them, but it is pulled towards them.</p></div>
+<div class="qa"><p class="q">What is a parametric curve?</p><p class="a">A curve in which x and y are each given by a function of a parameter, here t, instead of by an equation connecting x and y.</p></div>
+<div class="qa"><p class="q">What is a curve?</p><p class="a">A continuous line that is not straight everywhere. In graphics it is drawn as many small points or very short line segments.</p></div>
+<div class="qa"><p class="q">What are the types of curves?</p><p class="a">Parametric curves (Bezier, B-spline, Hermite), implicit curves (such as the circle x² + y² = r²) and explicit curves (y = f(x)).</p></div>
+<div class="qa"><p class="q">Why is it called a cubic curve?</p><p class="a">Because the highest power of t in the formula is 3.</p></div>
+</main>
+<script>
+document.querySelectorAll('.code').forEach(function(b){
+var pre=b.querySelector('pre'),btn=b.querySelector('.copy'),f=b.getAttribute('data-file');
+btn.onclick=async function(){try{await navigator.clipboard.writeText(pre.innerText)}catch(e){var r=document.createRange();r.selectNodeContents(pre);var s=getSelection();s.removeAllRanges();s.addRange(r);document.execCommand('copy');s.removeAllRanges()}btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy'},1500)};
+var d=b.querySelector('.dl');
+if(d&&f){d.onclick=function(){var t=pre.innerText.replace(/\r?\n/g,'\r\n');var u=URL.createObjectURL(new Blob([t],{type:'text/plain'}));var a=document.createElement('a');a.href=u;a.download=f;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},1000)}}
+});
+</script></body></html>
