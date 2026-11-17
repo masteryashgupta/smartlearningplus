@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AOA Exp 6: Strassen&#x27;s Matrix Multiplication</title>
+<style>
+:root{--bg:#f6f7f9;--ink:#1c2333;--mute:#5a6478;--line:#d8dce5;--acc:#1f4fd8;--code:#0f1b33;--codeink:#e6ecff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Georgia,serif}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+h1{font-size:1.9rem;line-height:1.2;margin:.2em 0}
+h2{font-size:1.2rem;margin:2em 0 .5em;border-bottom:2px solid var(--acc);padding-bottom:.2em}
+.meta{color:var(--mute);font-size:.95rem;margin:0}
+.aim{background:#fff;border-left:4px solid var(--acc);padding:12px 16px;margin:18px 0}
+.code{position:relative;margin:12px 0}
+pre{background:var(--code);color:var(--codeink);padding:16px;border-radius:6px;overflow-x:auto;font:14px/1.55 Consolas,Menlo,monospace;margin:0}
+button.copy,button.dl{position:absolute;top:8px;background:var(--acc);color:#fff;border:0;border-radius:4px;padding:5px 12px;font:14px sans-serif;cursor:pointer}
+button.copy{right:8px}
+button.dl{right:84px}
+.code pre{padding-top:44px}
+button:focus-visible{outline:3px solid #ffb703;outline-offset:2px}
+.qa{background:#fff;border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:6px;margin:10px 0;padding:10px 14px}
+.q{font-weight:bold;margin:0}
+.a{margin:.4em 0 0}
+li{margin:.3em 0}
+.note{background:#fff7e0;border:1px solid #ecd58a;border-radius:6px;padding:10px 14px}
+</style></head><body><main>
+<p class="meta">Analysis of Algorithms Lab</p>
+<h1>Experiment 6: Strassen&#x27;s Matrix Multiplication</h1>
+<div class="aim"><b>Aim:</b> Compute two 2 by 2 matrix multiplication to find multiplication matrix using Strassen&#x27;s Matrix Multiplication.</div>
+<h2>Source code</h2>
+<p>This is the program from the lab manual, unchanged. Compile it with <code>gcc aoa_exp6.c -o exp6</code> and run <code>./exp6</code> (on Windows with MinGW, <code>exp6</code>).</p>
+<div class="code" data-file="aoa_exp6.c"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;time.h&gt;
+int main()
+{
+    int A[2][2], B[2][2], C[2][2];
+    int M1, M2, M3, M4, M5, M6, M7;
+    int i, j;
+    clock_t start, end;
+    double cpu_time_used;
+    printf(&quot;Enter elements of 2x2 Matrix A:\n&quot;);
+    for(i = 0; i &lt; 2; i++)
+    for(j = 0; j &lt; 2; j++)
+    scanf(&quot;%d&quot;, &amp;A[i][j]);
+    printf(&quot;Enter elements of 2x2 Matrix B:\n&quot;);
+    for(i = 0; i &lt; 2; i++)
+    for(j = 0; j &lt; 2; j++)
+    scanf(&quot;%d&quot;, &amp;B[i][j]);
+    // Start timing
+    start = clock();
+    // Strassen&#x27;s 7 multiplications
+    M1 = (A[0][0] + A[1][1]) * (B[0][0] + B[1][1]);
+    M2 = (A[1][0] + A[1][1]) * B[0][0];
+    M3 = A[0][0] * (B[0][1] - B[1][1]);
+    M4 = A[1][1] * (B[1][0] - B[0][0]);
+    M5 = (A[0][0] + A[0][1]) * B[1][1];
+    M6 = (A[1][0] - A[0][0]) * (B[0][0] + B[0][1]);
+    M7 = (A[0][1] - A[1][1]) * (B[1][0] + B[1][1]);
+    // Result matrix using M1..M7
+    C[0][0] = M1 + M4 - M5 + M7;
+    C[0][1] = M3 + M5;
+    C[1][0] = M2 + M4;
+    C[1][1] = M1 - M2 + M3 + M6;
+    // End timing
+    end = clock();
+    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf(&quot;\nMatrix A:\n&quot;);
+    for(i = 0; i &lt; 2; i++)
+    {
+        for(j = 0; j &lt; 2; j++)
+        printf(&quot;%d &quot;, A[i][j]);
+        printf(&quot;\n&quot;);
+    }
+    printf(&quot;\nMatrix B:\n&quot;);
+    for(i = 0; i &lt; 2; i++)
+    {
+        for(j = 0; j &lt; 2; j++)
+        printf(&quot;%d &quot;, B[i][j]);
+        printf(&quot;\n&quot;);
+    }
+    printf(&quot;\nResultant Matrix C (A x B) using Strassen&#x27;s Method:\n&quot;);
+    for(i = 0; i &lt; 2; i++)
+    {
+        for(j = 0; j &lt; 2; j++)
+        printf(&quot;%d &quot;, C[i][j]);
+        printf(&quot;\n&quot;);
+    }
+    printf(&quot;\nTime Required = %f seconds\n&quot;, cpu_time_used);
+    return 0;
+}</pre></div>
+<h2>Sample output</h2>
+<p>This is a real run of the program above (the text after each prompt is what was typed). The time differs on every run.</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter elements of 2x2 Matrix A:
+1
+2
+3
+4
+Enter elements of 2x2 Matrix B:
+5
+6
+7
+8
+
+Matrix A:
+1 2 
+3 4 
+
+Matrix B:
+5 6 
+7 8 
+
+Resultant Matrix C (A x B) using Strassen&#x27;s Method:
+19 22 
+43 50 
+
+Time Required = 0.000001 seconds</pre></div>
+<h2>Explanation (from the manual)</h2>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Concept</h3>
+<p>Given two 2×2 matrices A and B, the goal is to compute A×B. The conventional (&quot;school&quot;) method needs 8 multiplications (2 multiplications per output cell, across 4 cells). Strassen devised a clever technique that needs only 7 multiplications — one fewer. For a tiny 2×2 case the saving is not noticeable, but for very large matrices (e.g. 1000×1000, applied recursively as used in AI/ML systems), this technique meaningfully reduces computation time.</p>
+<p>The trick: combine elements of A and B into 7 &quot;helper values&quot; (M1 through M7), then obtain every cell of the result purely through addition/subtraction of these helper values — instead of multiplying separately for every output cell.</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Worked Example</h3>
+<div class="code"><button class="copy">Copy</button><pre>  A = [[1, 2], [3, 4]],  B = [[5, 6], [7, 8]]
+  M1 = (A00+A11)×(B00+B11) = (1+4)×(5+8) = 5×13 = 65
+  M2 = (A10+A11)×B00 = (3+4)×5 = 35
+  M3 = A00×(B01−B11) = 1×(6−8) = −2
+  M4 = A11×(B10−B00) = 4×(7−5) = 8
+  M5 = (A00+A01)×B11 = (1+2)×8 = 24
+  M6 = (A10−A00)×(B00+B01) = 2×11 = 22
+  M7 = (A01−A11)×(B10+B11) = −2×15 = −30
+
+  C00 = M1+M4−M5+M7 = 65+8−24−30 = 19
+  C01 = M3+M5 = −2+24 = 22
+  C10 = M2+M4 = 35+8 = 43
+  C11 = M1−M2+M3+M6 = 65−35−2+22 = 50
+
+  Result:  C  =  [[19,  22],  [43,  50]]  —  exactly  the  same  as  conventional  multiplication
+  (1×5+2×7=19, and so on), just computed with one fewer multiplication.</pre></div>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Time Complexity</h3>
+<p>Conventional matrix multiplication takes O(n³) for large matrices. Strassen&#x27;s method improves this to roughly O(n2.807). This difference is invisible on a tiny 2×2 matrix, but on very large matrices it saves real computation time.</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">What the Program Does</h3>
+<ol>
+<li>The user enters all elements of matrices A and B (2×2 each, 4 numbers per matrix).</li>
+<li>The program computes the seven M-values described above.</li>
+<li>The final result matrix C is built from those values.</li>
+<li>A, B, and the result C are all printed.</li>
+<li>The time taken (in seconds) is displayed.</li>
+</ol>
+<p>In short: compute 7 clever helper values (M1–M7), then combine them directly to get the result, without multiplying separately for each output cell.</p>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is Strassen’s Matrix Multiplication?</p><p class="a">A divide-and-conquer method that multiplies two matrices using 7 multiplications instead of 8 for a 2 × 2 block.</p></div>
+<div class="qa"><p class="q">What is its time complexity?</p><p class="a">About O(n^2.807) (n to the power log₂7), better than O(n³) of the ordinary method.</p></div>
+<div class="qa"><p class="q">Write the recurrence of Strassen’s algorithm.</p><p class="a">T(n) = 7T(n/2) + O(n²).</p></div>
+<div class="qa"><p class="q">What are the seven values M1 to M7?</p><p class="a">M1 = (A00+A11)(B00+B11), M2 = (A10+A11)B00, M3 = A00(B01−B11), M4 = A11(B10−B00), M5 = (A00+A01)B11, M6 = (A10−A00)(B00+B01), M7 = (A01−A11)(B10+B11).</p></div>
+<div class="qa"><p class="q">How is the result built from M1 to M7?</p><p class="a">C00 = M1+M4−M5+M7, C01 = M3+M5, C10 = M2+M4, C11 = M1−M2+M3+M6.</p></div>
+<div class="qa"><p class="q">Why is Strassen’s method not used for small matrices?</p><p class="a">It does more additions and has extra overhead, so it only pays off for large matrices.</p></div>
+<div class="qa"><p class="q">What if the matrix size is not a power of 2?</p><p class="a">The matrices are padded with zeros up to the next power of 2.</p></div>
+<div class="qa"><p class="q">Which design technique does it use?</p><p class="a">Divide and conquer.</p></div>
+</main>
+<script>
+document.querySelectorAll('.code').forEach(function(b){
+var pre=b.querySelector('pre'),btn=b.querySelector('.copy'),f=b.getAttribute('data-file');
+btn.onclick=async function(){try{await navigator.clipboard.writeText(pre.innerText)}catch(e){var r=document.createRange();r.selectNodeContents(pre);var s=getSelection();s.removeAllRanges();s.addRange(r);document.execCommand('copy');s.removeAllRanges()}btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy'},1500)};
+var d=b.querySelector('.dl');
+if(d&&f){d.onclick=function(){var t=pre.innerText.replace(/\r?\n/g,'\r\n');var u=URL.createObjectURL(new Blob([t],{type:'text/plain'}));var a=document.createElement('a');a.href=u;a.download=f;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},1000)}}
+});
+</script></body></html>

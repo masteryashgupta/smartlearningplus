@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AOA Exp 13: N-Queen&#x27;s Problem using Backtracking</title>
+<style>
+:root{--bg:#f6f7f9;--ink:#1c2333;--mute:#5a6478;--line:#d8dce5;--acc:#1f4fd8;--code:#0f1b33;--codeink:#e6ecff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Georgia,serif}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+h1{font-size:1.9rem;line-height:1.2;margin:.2em 0}
+h2{font-size:1.2rem;margin:2em 0 .5em;border-bottom:2px solid var(--acc);padding-bottom:.2em}
+.meta{color:var(--mute);font-size:.95rem;margin:0}
+.aim{background:#fff;border-left:4px solid var(--acc);padding:12px 16px;margin:18px 0}
+.code{position:relative;margin:12px 0}
+pre{background:var(--code);color:var(--codeink);padding:16px;border-radius:6px;overflow-x:auto;font:14px/1.55 Consolas,Menlo,monospace;margin:0}
+button.copy,button.dl{position:absolute;top:8px;background:var(--acc);color:#fff;border:0;border-radius:4px;padding:5px 12px;font:14px sans-serif;cursor:pointer}
+button.copy{right:8px}
+button.dl{right:84px}
+.code pre{padding-top:44px}
+button:focus-visible{outline:3px solid #ffb703;outline-offset:2px}
+.qa{background:#fff;border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:6px;margin:10px 0;padding:10px 14px}
+.q{font-weight:bold;margin:0}
+.a{margin:.4em 0 0}
+li{margin:.3em 0}
+.note{background:#fff7e0;border:1px solid #ecd58a;border-radius:6px;padding:10px 14px}
+</style></head><body><main>
+<p class="meta">Analysis of Algorithms Lab</p>
+<h1>Experiment 13: N-Queen&#x27;s Problem using Backtracking</h1>
+<div class="aim"><b>Aim:</b> Implement N Queen&#x27;s problem using Back Tracking.</div>
+<h2>Source code</h2>
+<p>This is the program from the lab manual, unchanged. Compile it with <code>gcc aoa_exp13.c -o exp13</code> and run <code>./exp13</code> (on Windows with MinGW, <code>exp13</code>).</p>
+<div class="code" data-file="aoa_exp13.c"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;time.h&gt;
+int board[20];
+int n;
+int solutionCount = 0;
+// Check if it is safe to place a queen at board[row] = col
+int isSafe(int row, int col)
+{
+    int i;
+    for(i = 0; i &lt; row; i++)
+    {
+        if(board[i] == col || abs(board[i] - col) == abs(i - row))
+        return 0;
+    }
+    return 1;
+}
+// Print one solution
+void printSolution()
+{
+    int i, j;
+    solutionCount++;
+    printf(&quot;\nSolution %d:\n&quot;, solutionCount);
+    for(i = 0; i &lt; n; i++)
+    {
+        for(j = 0; j &lt; n; j++)
+        {
+            if(board[i] == j)
+            printf(&quot;Q &quot;);
+            else
+            printf(&quot;. &quot;);
+        }
+        printf(&quot;\n&quot;);
+    }
+}
+// Solve using backtracking
+void solveNQueen(int row)
+{
+    if(row == n)
+    {
+        printSolution();
+        return;
+    }
+    int col;
+    for(col = 0; col &lt; n; col++)
+    {
+        if(isSafe(row, col))
+        {
+            board[row] = col;
+            solveNQueen(row + 1);
+            // Backtrack (implicit, next iteration overwrites board[row])
+        }
+    }
+}
+int main()
+{
+    clock_t start, end;
+    double cpu_time_used;
+    printf(&quot;Enter number of queens (N): &quot;);
+    scanf(&quot;%d&quot;, &amp;n);
+    // Start timing
+    start = clock();
+    solveNQueen(0);
+    // End timing
+    end = clock();
+    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf(&quot;\nTotal solutions for %d-Queens = %d\n&quot;, n, solutionCount);
+    printf(&quot;\nTime Required = %f seconds\n&quot;, cpu_time_used);
+    return 0;
+}</pre></div>
+<h2>Sample output</h2>
+<p>This is a real run of the program above (the text after each prompt is what was typed). The time differs on every run.</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter number of queens (N): 4
+
+Solution 1:
+. Q . . 
+. . . Q 
+Q . . . 
+. . Q . 
+
+Solution 2:
+. . Q . 
+Q . . . 
+. . . Q 
+. Q . . 
+
+Total solutions for 4-Queens = 2
+
+Time Required = 0.000062 seconds</pre></div>
+<h2>Explanation (from the manual)</h2>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Concept</h3>
+<p>Given an N×N chessboard (e.g. 4×4), the goal is to place N queens on it so that no two queens attack each other. In chess, a queen can move in any direction — along the same row/column, or diagonally. So the condition is: no two queens may share the same row, the same column, or the same diagonal.</p>
+<p>This is solved using Backtracking — a try-and-undo approach:</p>
+<ol>
+<li>Try placing a queen in some safe column of the current row.</li>
+<li>If that position is safe, move to the next row and try placing a queen there too.</li>
+<li>If no column in a row turns out to be safe, backtrack — remove the queen from the previous row and try a different column there instead.</li>
+<li>Repeat until all N queens are placed safely (a solution is found), or every possibility has been exhausted.</li>
+</ol>
+<p>More than one solution can exist for a given N — the program finds and displays all valid solutions.</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Worked Example</h3>
+<div class="code"><button class="copy">Copy</button><pre>  For N=4, a 4×4 board has exactly 2 ways to place 4 queens so that none of them attack each
+  other:
+
+  Solution 1:
+  . Q . .
+  . . . Q
+  Q . . .
+  . . Q .
+
+  Solution 2:
+  . . Q .
+  Q . . .
+  . . . Q
+  . Q . .
+
+  Total solutions for 4-Queens = 2. (Checking both solutions confirms no two queens share a
+  row, column, or diagonal.)</pre></div>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Time Complexity</h3>
+<p>The worst-case time complexity of the N-Queens problem is roughly O(N!), since a great many combinations may need to be tried. Backtracking speeds this up significantly, because as soon as a position is found to be &quot;unsafe&quot;, that entire branch is abandoned immediately (without exploring it further) — saving a lot of unnecessary work.</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">What the Program Does</h3>
+<ol>
+<li>The user is asked how many queens to place (N).</li>
+<li>The program tries placing queens row by row, checking safety at each step (the process above).</li>
+<li>Every complete valid solution found is printed as a board (Q = queen, . = empty square).</li>
+<li>This process continues until all possible solutions have been found.</li>
+<li>The total number of solutions is printed at the end.</li>
+<li>The time taken (in seconds) is displayed.</li>
+</ol>
+<p>In short: place a queen in each row one at a time; if you get stuck (no safe column left), backtrack to the previous row&#x27;s queen and try a different column, until a solution is found.</p>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is the N-Queens problem?</p><p class="a">Place N queens on an N × N chessboard so that no two queens attack each other.</p></div>
+<div class="qa"><p class="q">What is backtracking?</p><p class="a">Building a solution step by step and going back (undoing the last choice) as soon as a choice cannot lead to a solution.</p></div>
+<div class="qa"><p class="q">When is it safe to place a queen?</p><p class="a">When no other queen is in the same column or on the same diagonal. One queen per row is already ensured by the program.</p></div>
+<div class="qa"><p class="q">What does the isSafe function check?</p><p class="a">It compares the new position with the queens already placed in earlier rows for the same column and for both diagonals.</p></div>
+<div class="qa"><p class="q">How many solutions are there for 4 and 8 queens?</p><p class="a">2 solutions for N = 4 and 92 for N = 8.</p></div>
+<div class="qa"><p class="q">Is there a solution for N = 2 or N = 3?</p><p class="a">No.</p></div>
+<div class="qa"><p class="q">What is the time complexity?</p><p class="a">About O(N!) in the worst case, though pruning reduces the work a lot in practice.</p></div>
+<div class="qa"><p class="q">How are the queens stored?</p><p class="a">In an array board[row] = col, so each row holds the column of its queen.</p></div>
+</main>
+<script>
+document.querySelectorAll('.code').forEach(function(b){
+var pre=b.querySelector('pre'),btn=b.querySelector('.copy'),f=b.getAttribute('data-file');
+btn.onclick=async function(){try{await navigator.clipboard.writeText(pre.innerText)}catch(e){var r=document.createRange();r.selectNodeContents(pre);var s=getSelection();s.removeAllRanges();s.addRange(r);document.execCommand('copy');s.removeAllRanges()}btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy'},1500)};
+var d=b.querySelector('.dl');
+if(d&&f){d.onclick=function(){var t=pre.innerText.replace(/\r?\n/g,'\r\n');var u=URL.createObjectURL(new Blob([t],{type:'text/plain'}));var a=document.createElement('a');a.href=u;a.download=f;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},1000)}}
+});
+</script></body></html>

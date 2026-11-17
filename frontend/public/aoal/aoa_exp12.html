@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AOA Exp 12: Matrix Chain Multiplication using Dynamic Programming</title>
+<style>
+:root{--bg:#f6f7f9;--ink:#1c2333;--mute:#5a6478;--line:#d8dce5;--acc:#1f4fd8;--code:#0f1b33;--codeink:#e6ecff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Georgia,serif}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+h1{font-size:1.9rem;line-height:1.2;margin:.2em 0}
+h2{font-size:1.2rem;margin:2em 0 .5em;border-bottom:2px solid var(--acc);padding-bottom:.2em}
+.meta{color:var(--mute);font-size:.95rem;margin:0}
+.aim{background:#fff;border-left:4px solid var(--acc);padding:12px 16px;margin:18px 0}
+.code{position:relative;margin:12px 0}
+pre{background:var(--code);color:var(--codeink);padding:16px;border-radius:6px;overflow-x:auto;font:14px/1.55 Consolas,Menlo,monospace;margin:0}
+button.copy,button.dl{position:absolute;top:8px;background:var(--acc);color:#fff;border:0;border-radius:4px;padding:5px 12px;font:14px sans-serif;cursor:pointer}
+button.copy{right:8px}
+button.dl{right:84px}
+.code pre{padding-top:44px}
+button:focus-visible{outline:3px solid #ffb703;outline-offset:2px}
+.qa{background:#fff;border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:6px;margin:10px 0;padding:10px 14px}
+.q{font-weight:bold;margin:0}
+.a{margin:.4em 0 0}
+li{margin:.3em 0}
+.note{background:#fff7e0;border:1px solid #ecd58a;border-radius:6px;padding:10px 14px}
+</style></head><body><main>
+<p class="meta">Analysis of Algorithms Lab</p>
+<h1>Experiment 12: Matrix Chain Multiplication using Dynamic Programming</h1>
+<div class="aim"><b>Aim:</b> Implement Matrix Chain Multiplication problem using Dynamic Programming.</div>
+<h2>Source code</h2>
+<p>This is the program from the lab manual, unchanged. Compile it with <code>gcc aoa_exp12.c -o exp12</code> and run <code>./exp12</code> (on Windows with MinGW, <code>exp12</code>).</p>
+<div class="code" data-file="aoa_exp12.c"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include &lt;stdio.h&gt;
+#include &lt;limits.h&gt;
+#include &lt;time.h&gt;
+int main()
+{
+    int n, i, j, k, L;
+    clock_t start, end;
+    double cpu_time_used;
+    printf(&quot;Enter number of matrices: &quot;);
+    scanf(&quot;%d&quot;, &amp;n);
+    int p[n + 1];
+    printf(&quot;Enter dimensions (p0 p1 ... p%d) such that matrix i has dimension p[i-1] x p[i]:\n&quot;, n);
+    for(i = 0; i &lt;= n; i++)
+    {
+        printf(&quot;p%d: &quot;, i);
+        scanf(&quot;%d&quot;, &amp;p[i]);
+    }
+    int dp[n + 1][n + 1];
+    int s[n + 1][n + 1];    // to store split points for parenthesization
+    // Start timing
+    start = clock();
+    // Cost is zero when multiplying one matrix
+    for(i = 1; i &lt;= n; i++)
+    dp[i][i] = 0;
+    // L is chain length
+    for(L = 2; L &lt;= n; L++)
+    {
+        for(i = 1; i &lt;= n - L + 1; i++)
+        {
+            j = i + L - 1;
+            dp[i][j] = INT_MAX;
+            for(k = i; k &lt; j; k++)
+            {
+                int cost = dp[i][k] + dp[k + 1][j] + p[i - 1] * p[k] * p[j];
+                if(cost &lt; dp[i][j])
+                {
+                    dp[i][j] = cost;
+                    s[i][j] = k;
+                }
+            }
+        }
+    }
+    // End timing
+    end = clock();
+    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf(&quot;\nMinimum number of multiplications = %d\n&quot;, dp[1][n]);
+    printf(&quot;\nTime Required = %f seconds\n&quot;, cpu_time_used);
+    return 0;
+}</pre></div>
+<h2>Sample output</h2>
+<p>This is a real run of the program above (the text after each prompt is what was typed). The time differs on every run.</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter number of matrices: 4
+Enter dimensions (p0 p1 ... p4) such that matrix i has dimension p[i-1] x p[i]:
+p0: 40
+p1: 20
+p2: 30
+p3: 10
+p4: 30
+
+Minimum number of multiplications = 26000
+
+Time Required = 0.000001 seconds</pre></div>
+<h2>Explanation (from the manual)</h2>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Concept</h3>
+<p>Given several matrices to multiply together, e.g. A×B×C×D, the final result is always the same regardless of how the brackets are arranged (e.g. (A×B)×C or A×(B×C)) — but the number of scalar multiplications required can differ hugely depending on the bracket order. Every matrix has a shape (rows × columns), and multiplying two matrices together requires a number of multiplications determined by these dimensions. The goal of this problem is to find the cheapest bracket order (fewest multiplications), without actually performing any of the multiplications.</p>
+<p>This is solved with Dynamic Programming: compute the optimal cost for small chain lengths first (2 matrices, then 3, then 4, and so on), and combine these results to compute the optimal cost for larger chains.</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Worked Example</h3>
+<div class="code"><button class="copy">Copy</button><pre>  6 matrices with dimensions p = [30, 35, 15, 5, 10, 20, 25], meaning:
+  Matrix 1: 30×35, Matrix 2: 35×15, Matrix 3: 15×5, Matrix 4: 5×10, Matrix 5: 10×20, Matrix
+  6: 20×25
+
+  The DP table is filled starting with small chains (pairs of matrices) and building up to
+  the full 6-matrix chain, checking at each step the best point to split the chain into two
+  parts to minimize total cost.
+
+  Result: Minimum number of multiplications = 15125
+
+  (A naive left-to-right bracketing order, e.g. ((((A×B)×C)×D)×E)×F, could require many times
+  more multiplications — the correct order in this example achieves the minimum of 15125.)</pre></div>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Time Complexity</h3>
+<p>Matrix Chain Multiplication DP has a time complexity of O(n³), where n is the number of matrices. A brute- force approach (trying every possible bracketing) would take exponential time, which becomes impractically slow for larger n — which is exactly why the DP approach matters here.</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">What the Program Does</h3>
+<ol>
+<li>The user enters how many matrices there are.</li>
+<li>The user enters their dimensions (p0, p1, ..., pn, where matrix i has shape p[i−1] × p[i]).</li>
+<li>The program builds a DP table computing minimum cost from small chains up to the full chain (the process above).</li>
+<li>The minimum number of multiplications is printed at the end.</li>
+<li>The time taken (in seconds) is displayed.</li>
+</ol>
+<p>In short: find the best cost for small matrix-chains first, then combine them to find the best cost for larger chains, until the full chain&#x27;s answer is found.</p>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is the Matrix Chain Multiplication problem?</p><p class="a">Given a chain of matrices, find the order of multiplication (parenthesization) that needs the fewest scalar multiplications.</p></div>
+<div class="qa"><p class="q">Why does the order matter?</p><p class="a">Matrix multiplication is associative, so the result is the same, but the number of operations changes a lot with the order.</p></div>
+<div class="qa"><p class="q">Write the recurrence.</p><p class="a">m[i][j] = minimum over k from i to j-1 of m[i][k] + m[k+1][j] + p[i-1]·p[k]·p[j], with m[i][i] = 0.</p></div>
+<div class="qa"><p class="q">What are the time and space complexities?</p><p class="a">O(n³) time and O(n²) space.</p></div>
+<div class="qa"><p class="q">What is the cost of multiplying a p×q matrix by a q×r matrix?</p><p class="a">p × q × r scalar multiplications.</p></div>
+<div class="qa"><p class="q">What does the program output for the dimensions 40 20 30 10 30?</p><p class="a">26000, the minimum number of scalar multiplications for 4 matrices.</p></div>
+<div class="qa"><p class="q">Does the program multiply the matrices?</p><p class="a">No. It only finds the minimum number of multiplications.</p></div>
+<div class="qa"><p class="q">How many ways are there to parenthesize n matrices?</p><p class="a">The (n-1)th Catalan number, which grows exponentially, so trying all of them is too slow.</p></div>
+</main>
+<script>
+document.querySelectorAll('.code').forEach(function(b){
+var pre=b.querySelector('pre'),btn=b.querySelector('.copy'),f=b.getAttribute('data-file');
+btn.onclick=async function(){try{await navigator.clipboard.writeText(pre.innerText)}catch(e){var r=document.createRange();r.selectNodeContents(pre);var s=getSelection();s.removeAllRanges();s.addRange(r);document.execCommand('copy');s.removeAllRanges()}btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy'},1500)};
+var d=b.querySelector('.dl');
+if(d&&f){d.onclick=function(){var t=pre.innerText.replace(/\r?\n/g,'\r\n');var u=URL.createObjectURL(new Blob([t],{type:'text/plain'}));var a=document.createElement('a');a.href=u;a.download=f;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},1000)}}
+});
+</script></body></html>

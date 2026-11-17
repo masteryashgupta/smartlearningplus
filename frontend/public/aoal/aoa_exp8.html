@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AOA Exp 8: Minimum Cost Spanning Tree using Prim&#x27;s Algorithm</title>
+<style>
+:root{--bg:#f6f7f9;--ink:#1c2333;--mute:#5a6478;--line:#d8dce5;--acc:#1f4fd8;--code:#0f1b33;--codeink:#e6ecff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Georgia,serif}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+h1{font-size:1.9rem;line-height:1.2;margin:.2em 0}
+h2{font-size:1.2rem;margin:2em 0 .5em;border-bottom:2px solid var(--acc);padding-bottom:.2em}
+.meta{color:var(--mute);font-size:.95rem;margin:0}
+.aim{background:#fff;border-left:4px solid var(--acc);padding:12px 16px;margin:18px 0}
+.code{position:relative;margin:12px 0}
+pre{background:var(--code);color:var(--codeink);padding:16px;border-radius:6px;overflow-x:auto;font:14px/1.55 Consolas,Menlo,monospace;margin:0}
+button.copy,button.dl{position:absolute;top:8px;background:var(--acc);color:#fff;border:0;border-radius:4px;padding:5px 12px;font:14px sans-serif;cursor:pointer}
+button.copy{right:8px}
+button.dl{right:84px}
+.code pre{padding-top:44px}
+button:focus-visible{outline:3px solid #ffb703;outline-offset:2px}
+.qa{background:#fff;border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:6px;margin:10px 0;padding:10px 14px}
+.q{font-weight:bold;margin:0}
+.a{margin:.4em 0 0}
+li{margin:.3em 0}
+.note{background:#fff7e0;border:1px solid #ecd58a;border-radius:6px;padding:10px 14px}
+</style></head><body><main>
+<p class="meta">Analysis of Algorithms Lab</p>
+<h1>Experiment 8: Minimum Cost Spanning Tree using Prim&#x27;s Algorithm</h1>
+<div class="aim"><b>Aim:</b> Find Minimum Cost Spanning Tree of a given undirected graph using Prim&#x27;s algorithm.</div>
+<h2>Source code</h2>
+<p>This is the program from the lab manual, unchanged. Compile it with <code>gcc aoa_exp8.c -o exp8</code> and run <code>./exp8</code> (on Windows with MinGW, <code>exp8</code>).</p>
+<div class="code" data-file="aoa_exp8.c"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;time.h&gt;
+#define INF 9999
+int main()
+{
+    int n, i, j;
+    clock_t start, end;
+    double cpu_time_used;
+    printf(&quot;Enter number of vertices: &quot;);
+    scanf(&quot;%d&quot;, &amp;n);
+    int cost[n][n];
+    printf(&quot;Enter the adjacency/cost matrix (enter %d for no edge):\n&quot;, INF);
+    for(i = 0; i &lt; n; i++)
+    {
+        for(j = 0; j &lt; n; j++)
+        {
+            printf(&quot;cost[%d][%d]: &quot;, i, j);
+            scanf(&quot;%d&quot;, &amp;cost[i][j]);
+        }
+    }
+    int visited[n];
+    for(i = 0; i &lt; n; i++)
+    visited[i] = 0;
+    int edgeCount = 0;
+    int totalCost = 0;
+    visited[0] = 1;
+    // Start timing
+    start = clock();
+    printf(&quot;\nEdges in Minimum Cost Spanning Tree (Prim&#x27;s Algorithm):\n&quot;);
+    while(edgeCount &lt; n - 1)
+    {
+        int min = INF, a = -1, b = -1;
+        for(i = 0; i &lt; n; i++)
+        {
+            if(visited[i])
+            {
+                for(j = 0; j &lt; n; j++)
+                {
+                    if(!visited[j] &amp;&amp; cost[i][j] != 0 &amp;&amp; cost[i][j] &lt; min)
+                    {
+                        min = cost[i][j];
+                        a = i;
+                        b = j;
+                    }
+                }
+            }
+        }
+        if(a != -1 &amp;&amp; b != -1)
+        {
+            printf(&quot;Edge %d: (%d -&gt; %d) cost = %d\n&quot;, edgeCount + 1, a, b, min);
+            totalCost += min;
+            visited[b] = 1;
+            edgeCount++;
+        }
+    }
+    // End timing
+    end = clock();
+    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf(&quot;\nMinimum Cost of Spanning Tree = %d\n&quot;, totalCost);
+    printf(&quot;\nTime Required = %f seconds\n&quot;, cpu_time_used);
+    return 0;
+}</pre></div>
+<h2>Sample output</h2>
+<p>This is a real run of the program above (the text after each prompt is what was typed). The time differs on every run.</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter number of vertices: 4
+Enter the adjacency/cost matrix (enter 9999 for no edge):
+cost[0][0]: 0
+cost[0][1]: 2
+cost[0][2]: 9999
+cost[0][3]: 6
+cost[1][0]: 2
+cost[1][1]: 0
+cost[1][2]: 3
+cost[1][3]: 8
+cost[2][0]: 9999
+cost[2][1]: 3
+cost[2][2]: 0
+cost[2][3]: 9999
+cost[3][0]: 6
+cost[3][1]: 8
+cost[3][2]: 9999
+cost[3][3]: 0
+
+Edges in Minimum Cost Spanning Tree (Prim&#x27;s Algorithm):
+Edge 1: (0 -&gt; 1) cost = 2
+Edge 2: (1 -&gt; 2) cost = 3
+Edge 3: (0 -&gt; 3) cost = 6
+
+Minimum Cost of Spanning Tree = 11
+
+Time Required = 0.000014 seconds</pre></div>
+<h2>Explanation (from the manual)</h2>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Concept</h3>
+<p>Consider a set of cities (&quot;vertices&quot;) connected by roads (&quot;edges&quot;), each road having its own cost. The goal is to connect all cities so that the total cost is as small as possible, every city remains reachable, and no cycles (loops) are formed. This final connected structure is called the Minimum Cost Spanning Tree (MST).</p>
+<p>Prim&#x27;s Algorithm idea: start from any one city (e.g. city 0). Then repeatedly find the cheapest road that connects the currently-connected group of cities to any new (not-yet-connected) city, and add that city to the group. Repeat until every city is connected. Prim&#x27;s Algorithm behaves like a &quot;growing tree&quot; — a single connected group keeps expanding, always choosing the cheapest next edge available.</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Worked Example</h3>
+<div class="code"><button class="copy">Copy</button><pre>  5 cities (0 to 4), with roads and their costs:
+  0-1 = 2, 0-3 = 6, 1-2 = 3, 1-3 = 8, 1-4 = 5, 2-4 = 7, 3-4 = 9
+  Start at city 0, connected group = {0}
+  Step 1: cheapest road out of {0} is 0-1 (cost=2). Group = {0, 1}
+  Step 2: cheapest road out of {0,1} is 1-2 (cost=3). Group = {0, 1, 2}
+  Step 3: cheapest road out of {0,1,2} is 1-4 (cost=5). Group = {0, 1, 2, 4}
+  Step 4: cheapest road out of {0,1,2,4} is 0-3 (cost=6). Group = {0, 1, 2, 3, 4} — all
+  cities connected!
+  Total minimum cost = 2+3+5+6 = 16</pre></div>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Time Complexity</h3>
+<p>In this simple adjacency-matrix implementation, Prim&#x27;s Algorithm takes O(n²) time, where n is the number of cities. Faster (priority-queue based) versions exist for very large graphs, but this simple version works well for small to medium-sized graphs.</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">What the Program Does</h3>
+<ol>
+<li>The user enters the number of vertices (cities).</li>
+<li>The user enters the full cost matrix (the cost between every pair of cities; 9999 indicates no direct road).</li>
+<li>Starting from city 0, the program repeatedly finds the cheapest edge leading out of the connected group and adds it to the MST (the process above).</li>
+<li>Each chosen edge is printed, along with its cost.</li>
+<li>The total minimum cost is printed at the end.</li>
+<li>The time taken (in seconds) is displayed.</li>
+</ol>
+<p>In short: start from one city, always grab the cheapest road leading to a new city, and repeat until every city is connected.</p>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is a spanning tree?</p><p class="a">A subgraph that connects all vertices of a graph with no cycle. It has V - 1 edges.</p></div>
+<div class="qa"><p class="q">What is a Minimum Cost Spanning Tree?</p><p class="a">The spanning tree whose total edge weight is the smallest.</p></div>
+<div class="qa"><p class="q">Explain Prim’s algorithm.</p><p class="a">Start from any vertex and repeatedly add the cheapest edge that joins a vertex in the tree to a vertex outside it, until all vertices are in the tree.</p></div>
+<div class="qa"><p class="q">What is the time complexity of Prim’s algorithm?</p><p class="a">O(V²) with an adjacency matrix, as in this program. It is O(E log V) with a heap.</p></div>
+<div class="qa"><p class="q">Why is 9999 entered in the cost matrix?</p><p class="a">It stands for infinity, meaning there is no edge between those two vertices.</p></div>
+<div class="qa"><p class="q">Compare Prim’s and Kruskal’s algorithms.</p><p class="a">Prim grows one tree vertex by vertex and suits dense graphs. Kruskal sorts the edges and joins components, and suits sparse graphs.</p></div>
+<div class="qa"><p class="q">How many edges does the tree have?</p><p class="a">V - 1, where V is the number of vertices. For example, 3 edges for 4 vertices.</p></div>
+<div class="qa"><p class="q">Is the minimum spanning tree always unique?</p><p class="a">No. It is unique only if all edge weights are different.</p></div>
+</main>
+<script>
+document.querySelectorAll('.code').forEach(function(b){
+var pre=b.querySelector('pre'),btn=b.querySelector('.copy'),f=b.getAttribute('data-file');
+btn.onclick=async function(){try{await navigator.clipboard.writeText(pre.innerText)}catch(e){var r=document.createRange();r.selectNodeContents(pre);var s=getSelection();s.removeAllRanges();s.addRange(r);document.execCommand('copy');s.removeAllRanges()}btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy'},1500)};
+var d=b.querySelector('.dl');
+if(d&&f){d.onclick=function(){var t=pre.innerText.replace(/\r?\n/g,'\r\n');var u=URL.createObjectURL(new Blob([t],{type:'text/plain'}));var a=document.createElement('a');a.href=u;a.download=f;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},1000)}}
+});
+</script></body></html>

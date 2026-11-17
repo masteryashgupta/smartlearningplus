@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AOA Exp 10: 0/1 Knapsack using Dynamic Programming</title>
+<style>
+:root{--bg:#f6f7f9;--ink:#1c2333;--mute:#5a6478;--line:#d8dce5;--acc:#1f4fd8;--code:#0f1b33;--codeink:#e6ecff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Georgia,serif}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+h1{font-size:1.9rem;line-height:1.2;margin:.2em 0}
+h2{font-size:1.2rem;margin:2em 0 .5em;border-bottom:2px solid var(--acc);padding-bottom:.2em}
+.meta{color:var(--mute);font-size:.95rem;margin:0}
+.aim{background:#fff;border-left:4px solid var(--acc);padding:12px 16px;margin:18px 0}
+.code{position:relative;margin:12px 0}
+pre{background:var(--code);color:var(--codeink);padding:16px;border-radius:6px;overflow-x:auto;font:14px/1.55 Consolas,Menlo,monospace;margin:0}
+button.copy,button.dl{position:absolute;top:8px;background:var(--acc);color:#fff;border:0;border-radius:4px;padding:5px 12px;font:14px sans-serif;cursor:pointer}
+button.copy{right:8px}
+button.dl{right:84px}
+.code pre{padding-top:44px}
+button:focus-visible{outline:3px solid #ffb703;outline-offset:2px}
+.qa{background:#fff;border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:6px;margin:10px 0;padding:10px 14px}
+.q{font-weight:bold;margin:0}
+.a{margin:.4em 0 0}
+li{margin:.3em 0}
+.note{background:#fff7e0;border:1px solid #ecd58a;border-radius:6px;padding:10px 14px}
+</style></head><body><main>
+<p class="meta">Analysis of Algorithms Lab</p>
+<h1>Experiment 10: 0/1 Knapsack using Dynamic Programming</h1>
+<div class="aim"><b>Aim:</b> Implement 0/1 Knapsack problem using Dynamic Programming.</div>
+<h2>Source code</h2>
+<p>This is the program from the lab manual, unchanged. Compile it with <code>gcc aoa_exp10.c -o exp10</code> and run <code>./exp10</code> (on Windows with MinGW, <code>exp10</code>).</p>
+<div class="code" data-file="aoa_exp10.c"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;time.h&gt;
+int max(int a, int b)
+{
+    return (a &gt; b) ? a : b;
+}
+int main()
+{
+    int n, capacity, i, w;
+    clock_t start, end;
+    double cpu_time_used;
+    printf(&quot;Enter number of items: &quot;);
+    scanf(&quot;%d&quot;, &amp;n);
+    int weight[n], profit[n];
+    printf(&quot;Enter weight and profit of each item:\n&quot;);
+    for(i = 0; i &lt; n; i++)
+    {
+        printf(&quot;Item %d weight: &quot;, i + 1);
+        scanf(&quot;%d&quot;, &amp;weight[i]);
+        printf(&quot;Item %d profit: &quot;, i + 1);
+        scanf(&quot;%d&quot;, &amp;profit[i]);
+    }
+    printf(&quot;Enter knapsack capacity: &quot;);
+    scanf(&quot;%d&quot;, &amp;capacity);
+    int dp[n + 1][capacity + 1];
+    // Start timing
+    start = clock();
+    // Build DP table bottom-up
+    for(i = 0; i &lt;= n; i++)
+    {
+        for(w = 0; w &lt;= capacity; w++)
+        {
+            if(i == 0 || w == 0)
+            dp[i][w] = 0;
+            else if(weight[i - 1] &lt;= w)
+            dp[i][w] = max(profit[i - 1] + dp[i - 1][w - weight[i - 1]], dp[i - 1][w]);
+            else
+            dp[i][w] = dp[i - 1][w];
+        }
+    }
+    // Trace back to find selected items
+    int res = dp[n][capacity];
+    w = capacity;
+    printf(&quot;\nItems selected (0/1 Knapsack - DP):\n&quot;);
+    for(i = n; i &gt; 0 &amp;&amp; res &gt; 0; i--)
+    {
+        if(res != dp[i - 1][w])
+        {
+            printf(&quot;Item (W=%d, P=%d) -&gt; Taken\n&quot;, weight[i - 1], profit[i - 1]);
+            res -= profit[i - 1];
+            w -= weight[i - 1];
+        }
+    }
+    // End timing
+    end = clock();
+    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf(&quot;\nMaximum Profit (0/1 Knapsack DP) = %d\n&quot;, dp[n][capacity]);
+    printf(&quot;\nTime Required = %f seconds\n&quot;, cpu_time_used);
+    return 0;
+}</pre></div>
+<h2>Sample output</h2>
+<p>This is a real run of the program above (the text after each prompt is what was typed). The time differs on every run.</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter number of items: 4
+Enter weight and profit of each item:
+Item 1 weight: 2
+Item 1 profit: 12
+Item 2 weight: 1
+Item 2 profit: 10
+Item 3 weight: 3
+Item 3 profit: 20
+Item 4 weight: 2
+Item 4 profit: 15
+Enter knapsack capacity: 5
+
+Items selected (0/1 Knapsack - DP):
+Item (W=2, P=15) -&gt; Taken
+Item (W=1, P=10) -&gt; Taken
+Item (W=2, P=12) -&gt; Taken
+
+Maximum Profit (0/1 Knapsack DP) = 37
+
+Time Required = 0.000012 seconds</pre></div>
+<h2>Explanation (from the manual)</h2>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Concept</h3>
+<p>This is similar to the Fractional Knapsack from Experiment 7 — a bag with a fixed capacity, items with weight and profit, and the goal of maximizing total profit. But this time there&#x27;s an important restriction: items cannot be broken. Either take an item completely (1), or don&#x27;t take it at all (0) — hence the name &quot;0/1 Knapsack&quot;.</p>
+<p>The Greedy method (used in Experiment 7) does not work reliably here, because &quot;take the best-ratio item first&quot; doesn&#x27;t always give the best possible answer when items can&#x27;t be split. So this problem is solved using Dynamic Programming (DP), which systematically stores all possibilities in a table to find the best answer.</p>
+<p>The DP idea: build a table where rows represent items and columns represent capacity (0 up to the maximum capacity). Each cell stores &quot;the maximum profit achievable using only these items, with this much capacity available&quot;. For every item, two choices are checked — include it, or exclude it — whichever gives more profit is stored in the table. The final cell holds the overall maximum profit.</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Worked Example</h3>
+<div class="code"><button class="copy">Copy</button><pre>  4 items:
+  Item 1: weight=1, profit=1
+  Item 2: weight=3, profit=4
+  Item 3: weight=4, profit=5
+  Item 4: weight=5, profit=7
+  Bag capacity = 7
+
+  The DP table checks, for every item: if its weight exceeds the remaining capacity, skip it
+  (keep the previous answer); otherwise compare &quot;profit if taken&quot; against &quot;profit if not
+  taken&quot; and keep whichever is larger.
+
+  The best combination found is: Item 2 (weight=3, profit=4) + Item 3 (weight=4, profit=5).
+  Total weight = 3+4 = 7 (exactly the capacity). Total profit = 4+5 = 9.
+
+  Maximum Profit = 9
+  (Note: the Greedy method might have chosen a different combination here since it&#x27;s ratio-
+  based, but DP always guarantees the truly optimal answer for the 0/1 case.)</pre></div>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Time Complexity</h3>
+<p>The time complexity of 0/1 Knapsack DP is O(n × W), where n is the number of items and W is the bag&#x27;s capacity. This can be slower than Greedy for very large capacities, but it always guarantees the optimal (correct) answer, whereas Greedy is only guaranteed optimal for the Fractional case.</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">What the Program Does</h3>
+<ol>
+<li>The user enters how many items there are, along with each item&#x27;s weight and profit.</li>
+<li>The user enters the bag&#x27;s capacity.</li>
+<li>The program builds a DP table bottom-up (from small sub-problems to larger ones, the process above).</li>
+<li>The table is then traced back to determine which items were actually chosen, marking them &quot;Taken&quot;.</li>
+<li>The maximum profit is printed at the end.</li>
+<li>The time taken (in seconds) is displayed.</li>
+</ol>
+<p>In short: for every item, check both &quot;take it&quot; and &quot;don&#x27;t take it&quot; in the table, and keep whichever gives more profit — items cannot be split.</p>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is the 0/1 Knapsack problem?</p><p class="a">Choose items, each taken whole or not at all, so that the total weight does not exceed the capacity and the total profit is maximum.</p></div>
+<div class="qa"><p class="q">Why is dynamic programming used?</p><p class="a">The problem has overlapping subproblems and optimal substructure, so storing sub-results in a table avoids repeated work.</p></div>
+<div class="qa"><p class="q">Write the recurrence.</p><p class="a">If weight[i] <= w: K[i][w] = max(profit[i] + K[i-1][w - weight[i]], K[i-1][w]). Otherwise K[i][w] = K[i-1][w].</p></div>
+<div class="qa"><p class="q">What is the time and space complexity?</p><p class="a">O(n × W) for both, where n is the number of items and W the capacity.</p></div>
+<div class="qa"><p class="q">Why is O(nW) called pseudo-polynomial?</p><p class="a">It depends on the value of W, not only on the number of bits needed to write W.</p></div>
+<div class="qa"><p class="q">How does the program find which items were taken?</p><p class="a">It walks back through the table from K[n][W]: if K[i][w] differs from K[i-1][w], item i was taken and its weight is subtracted.</p></div>
+<div class="qa"><p class="q">Compare 0/1 Knapsack with the Fractional Knapsack.</p><p class="a">Fractional is solved by the greedy method in O(n log n). 0/1 needs dynamic programming because greedy is not optimal.</p></div>
+<div class="qa"><p class="q">What is the answer for the sample input?</p><p class="a">Items (W=2, P=12), (W=1, P=10) and (W=2, P=15) fit in capacity 5, for a maximum profit of 37.</p></div>
+</main>
+<script>
+document.querySelectorAll('.code').forEach(function(b){
+var pre=b.querySelector('pre'),btn=b.querySelector('.copy'),f=b.getAttribute('data-file');
+btn.onclick=async function(){try{await navigator.clipboard.writeText(pre.innerText)}catch(e){var r=document.createRange();r.selectNodeContents(pre);var s=getSelection();s.removeAllRanges();s.addRange(r);document.execCommand('copy');s.removeAllRanges()}btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy'},1500)};
+var d=b.querySelector('.dl');
+if(d&&f){d.onclick=function(){var t=pre.innerText.replace(/\r?\n/g,'\r\n');var u=URL.createObjectURL(new Blob([t],{type:'text/plain'}));var a=document.createElement('a');a.href=u;a.download=f;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},1000)}}
+});
+</script></body></html>

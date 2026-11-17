@@ -1,0 +1,2071 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AOAL – All Experiments (Analysis of Algorithms Lab)</title>
+<style>
+:root{--bg:#f6f7f9;--ink:#1c2333;--mute:#5a6478;--line:#d8dce5;--acc:#1f4fd8;--code:#0f1b33;--codeink:#e6ecff;--ok:#22a861}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Georgia,serif}
+a{color:var(--acc);text-decoration:underline}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.95rem;background:#fff}
+th,td{border:1px solid var(--line);padding:9px 12px;text-align:left}
+th{background:var(--bg);font-weight:bold}
+/* Top nav */
+.topnav{position:sticky;top:0;z-index:100;background:#0f1b33;display:flex;align-items:center;gap:0;overflow-x:auto;padding:0 8px;scrollbar-width:none}
+.topnav::-webkit-scrollbar{display:none}
+.tab-btn{background:none;border:none;color:#99aabb;padding:12px 14px;font:600 13px 'Segoe UI',sans-serif;cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;transition:.15s}
+.tab-btn:hover{color:#fff}
+.tab-btn.active{color:#fff;border-bottom-color:var(--acc)}
+/* dl-bar */
+.dl-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 16px;margin:16px 18px;flex-wrap:wrap}
+/* main content */
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+h1{font-size:1.9rem;line-height:1.2;margin:.2em 0}
+h2{font-size:1.2rem;margin:2em 0 .5em;border-bottom:2px solid var(--acc);padding-bottom:.2em}
+.meta{color:var(--mute);font-size:.95rem;margin:0}
+.aim{background:#fff;border-left:4px solid var(--acc);padding:12px 16px;margin:18px 0}
+.code{position:relative;margin:12px 0}
+pre{background:var(--code);color:var(--codeink);padding:16px;border-radius:6px;overflow-x:auto;font:14px/1.55 Consolas,Menlo,monospace;margin:0;white-space:pre-wrap}
+button.copy,button.dl{position:absolute;top:8px;background:var(--acc);color:#fff;border:0;border-radius:4px;padding:5px 12px;font:14px sans-serif;cursor:pointer}
+button.copy{right:8px}
+button.dl{right:84px}
+.code pre{padding-top:44px}
+button:focus-visible{outline:3px solid #ffb703;outline-offset:2px}
+.qa{background:#fff;border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:6px;margin:10px 0;padding:10px 14px}
+.q{font-weight:bold;margin:0}
+.a{margin:.4em 0 0}
+li{margin:.3em 0}
+.note{background:#fff7e0;border:1px solid #ecd58a;border-radius:6px;padding:10px 14px}
+.exp{display:none}
+.exp.show{display:block}
+</style></head><body>
+<nav class="topnav">
+<button class="tab-btn" data-n="1" onclick="showExp(1)" id="tab1">Exp 1</button>
+<button class="tab-btn" data-n="2" onclick="showExp(2)" id="tab2">Exp 2</button>
+<button class="tab-btn" data-n="3" onclick="showExp(3)" id="tab3">Exp 3</button>
+<button class="tab-btn" data-n="4" onclick="showExp(4)" id="tab4">Exp 4</button>
+<button class="tab-btn" data-n="5" onclick="showExp(5)" id="tab5">Exp 5</button>
+<button class="tab-btn" data-n="6" onclick="showExp(6)" id="tab6">Exp 6</button>
+<button class="tab-btn" data-n="7" onclick="showExp(7)" id="tab7">Exp 7</button>
+<button class="tab-btn" data-n="8" onclick="showExp(8)" id="tab8">Exp 8</button>
+<button class="tab-btn" data-n="9" onclick="showExp(9)" id="tab9">Exp 9</button>
+<button class="tab-btn" data-n="10" onclick="showExp(10)" id="tab10">Exp 10</button>
+<button class="tab-btn" data-n="11" onclick="showExp(11)" id="tab11">Exp 11</button>
+<button class="tab-btn" data-n="12" onclick="showExp(12)" id="tab12">Exp 12</button>
+<button class="tab-btn" data-n="13" onclick="showExp(13)" id="tab13">Exp 13</button>
+<button class="tab-btn" data-n="14" onclick="showExp(14)" id="tab14">Exp 14</button>
+<button class="tab-btn" data-n="15" onclick="showExp(15)" id="tab15" style="color:#22a861;font-weight:700">⚡ Reference &amp; Guide</button>
+</nav>
+<div class="dl-bar">
+  <span style="font:600 13px 'Segoe UI',sans-serif;color:var(--mute);">📄 Analysis of Algorithms Lab (5CS4-23 / 5CS4-24) · All Experiments</span>
+  <a id="dl-btn" href="all.html" download="AOAL_All_Experiments.html" style="background:var(--acc);color:#fff;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">⬇ Download This File (.html)</a>
+  <button id="dl-master-btn" onclick="downloadMasterZip(this)" style="background:var(--ok);color:#fff;border:0;border-radius:6px;padding:6px 16px;font:700 13px 'Segoe UI',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">📦 Download Master Codes (.zip)</button>
+</div>
+<main>
+
+<div class="exp" id="exp1">
+<p class="meta">Analysis of Algorithms Lab</p>
+<h1>Experiment 1: Quick Sort</h1>
+<div class="aim"><b>Aim:</b> Sort a given set of elements using the Quick Sort method and determine the time required to sort the elements. The elements can be read from a file or can be generated using the random number generator.</div>
+<h2>Source code</h2>
+<p>This is the program from the lab manual, unchanged. Compile it with <code>gcc aoa_exp1.c -o exp1</code> and run <code>./exp1</code> (on Windows with MinGW, <code>exp1</code>).</p>
+<div class="code" data-file="aoa_exp1.c"><button class="dl">Download</button><button class="copy">Copy</button><pre>/* program to sort elements of an array using Quick Sort */
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;time.h&gt;
+// Function to swap two elements
+void swap(int *a, int *b)
+{
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+// Partition function
+int partition(int arr[], int low, int high)
+{
+    int pivot = arr[high];
+    int i = low - 1;
+    for (int j = low; j &lt; high; j++)
+    {
+        if (arr[j] &lt; pivot)
+        {
+            i++;
+            swap(&amp;arr[i], &amp;arr[j]);
+        }
+    }
+    swap(&amp;arr[i + 1], &amp;arr[high]);
+    return (i + 1);
+}
+// Quick Sort function
+void quickSort(int arr[], int low, int high)
+{
+    if (low &lt; high)
+    {
+        int pi = partition(arr, low, high);
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
+    }
+}
+// Display array
+void printArray(int arr[], int n)
+{
+    for (int i = 0; i &lt; n; i++)
+    printf(&quot;%d &quot;, arr[i]);
+    printf(&quot;\n&quot;);
+}
+int main()
+{
+    int n;
+    printf(&quot;Enter number of elements: &quot;);
+    scanf(&quot;%d&quot;, &amp;n);
+    int arr[n];
+    // Generate random numbers
+    srand(time(NULL));
+    for (int i = 0; i &lt; n; i++)
+    arr[i] = rand() % 1000;
+    printf(&quot;\nUnsorted Array:\n&quot;);
+    printArray(arr, n);
+    // Start timer
+    clock_t start = clock();
+    quickSort(arr, 0, n - 1);
+    // Stop timer
+    clock_t end = clock();
+    double time_taken = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf(&quot;\nSorted Array:\n&quot;);
+    printArray(arr, n);
+    printf(&quot;\nExecution Time = %lf seconds\n&quot;, time_taken);
+    return 0;
+}</pre></div>
+<h2>Sample output</h2>
+<p>This is a real run of the program above (the text after each prompt is what was typed). The numbers are random and the time differs on every run.</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter number of elements: 8
+
+Unsorted Array:
+906 338 555 409 639 638 771 60 
+
+Sorted Array:
+60 338 409 555 638 639 771 906 
+
+Execution Time = 0.000001 seconds</pre></div>
+<h2>Explanation (from the manual)</h2>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Concept</h3>
+<p>Quick Sort is a sorting algorithm based on the divide-and-conquer strategy. Given an array of random numbers, e.g. [10, 7, 8, 9, 1, 5] , the goal is to arrange them in ascending order.</p>
+<p>The idea is simple: choose one element as the pivot (usually the last element), and split the remaining elements into two groups:</p>
+<ul>
+<li>Elements smaller than the pivot → left side</li>
+<li>Elements larger than the pivot → right side</li>
+</ul>
+<p>After this step, the pivot lands in its correct final sorted position (everything to its left is smaller, everything to its right is larger). The same process is then applied recursively to the left group and the right group, and so on, until every group has only 0 or 1 element left (already sorted).</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Worked Example</h3>
+<div class="code"><button class="copy">Copy</button><pre>  [10, 7, 8, 9, 1, 5] , pivot = 5
+  Smaller values (1) go left, larger values (10, 7, 8, 9) go right:
+  [1] 5 [10, 7, 8, 9]
+  5 is now fixed in its correct place. The left group has only 1 element, already sorted. The
+  right group [10, 7, 8, 9] goes through the same process again:
+  pivot = 9 → [10, 7, 8] 9 []
+  Then on [10, 7, 8] : pivot = 8 → [7] 8 [10]
+  Putting it all together: [1, 5, 7, 8, 9, 10] — sorted!</pre></div>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Time Complexity</h3>
+<p>In most cases, Quick Sort is quite fast — O(n log n), meaning even large arrays sort quickly. However, in an unlucky case (e.g. the array is already sorted and the pivot always ends up being the smallest or largest element), it can slow down to O(n²), because each partition step separates off only one element at a time instead of splitting the array evenly.</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">What the Program Does</h3>
+<ol>
+<li>The user is asked how many numbers to sort.</li>
+<li>Random numbers (0–999) are generated and displayed as the &quot;Unsorted Array&quot;.</li>
+<li>Quick Sort runs using the process described above, while a timer is running.</li>
+<li>Once sorting is complete, the &quot;Sorted Array&quot; is printed.</li>
+<li>The time taken to sort (in seconds) is displayed.</li>
+</ol>
+<p>In short: pick a pivot, split into smaller/larger groups, and repeat until everything is sorted.</p>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is Quick Sort?</p><p class="a">A divide-and-conquer sorting algorithm. It picks a pivot, puts smaller elements on its left and larger ones on its right, then sorts the two sides the same way.</p></div>
+<div class="qa"><p class="q">What is a pivot, and which element is the pivot here?</p><p class="a">The element the array is split around. This program uses the last element, <code>arr[high]</code>.</p></div>
+<div class="qa"><p class="q">What does the partition function return?</p><p class="a">The final index of the pivot, <code>i + 1</code>, after the pivot has been placed in its correct sorted position.</p></div>
+<div class="qa"><p class="q">Give the best, average and worst case time of Quick Sort.</p><p class="a">Best and average O(n log n). Worst O(n²), when the pivot is always the smallest or largest element, for example on an already sorted array.</p></div>
+<div class="qa"><p class="q">How can the worst case be avoided?</p><p class="a">By choosing the pivot randomly or as the median of three elements instead of always taking the last one.</p></div>
+<div class="qa"><p class="q">Is Quick Sort stable? Is it in place?</p><p class="a">It is in place (only the recursion stack, about O(log n), is extra) but it is not stable.</p></div>
+<div class="qa"><p class="q">How does the program measure the time taken?</p><p class="a">It calls <code>clock()</code> before and after sorting and divides the difference by <code>CLOCKS_PER_SEC</code> to get seconds.</p></div>
+<div class="qa"><p class="q">Why is srand(time(NULL)) used?</p><p class="a">It seeds the random number generator with the current time so that different numbers are produced on every run.</p></div>
+<div class="qa"><p class="q">Compare Quick Sort and Merge Sort.</p><p class="a">Quick Sort is in place and usually faster in practice but has an O(n²) worst case. Merge Sort is always O(n log n) and stable but needs extra O(n) memory.</p></div>
+</div>
+
+<div class="exp" id="exp2">
+<p class="meta">Analysis of Algorithms Lab</p>
+<h1>Experiment 2: Merge Sort</h1>
+<div class="aim"><b>Aim:</b> Implement Merge Sort algorithm to sort a given set of elements and determine the time required to sort the elements. The elements can be read from a file or can be generated using the random number generator.</div>
+<h2>Source code</h2>
+<p>This is the program from the lab manual, unchanged. Compile it with <code>gcc aoa_exp2.c -o exp2</code> and run <code>./exp2</code> (on Windows with MinGW, <code>exp2</code>).</p>
+<div class="code" data-file="aoa_exp2.c"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;time.h&gt;
+// Function to merge two subarrays
+void merge(int arr[], int left, int mid, int right)
+{
+    int i, j, k;
+    int n1 = mid - left + 1;
+    int n2 = right - mid;
+    int L[n1], R[n2];
+    // Copy data to temporary arrays
+    for (i = 0; i &lt; n1; i++)
+    L[i] = arr[left + i];
+    for (j = 0; j &lt; n2; j++)
+    R[j] = arr[mid + 1 + j];
+    i = 0;
+    j = 0;
+    k = left;
+    // Merge the temporary arrays
+    while (i &lt; n1 &amp;&amp; j &lt; n2)
+    {
+        if (L[i] &lt;= R[j])
+        {
+            arr[k] = L[i];
+            i++;
+        }
+        else
+        {
+            arr[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+    // Copy remaining elements of L[]
+    while (i &lt; n1)
+    {
+        arr[k] = L[i];
+        i++;
+        k++;
+    }
+    // Copy remaining elements of R[]
+    while (j &lt; n2)
+    {
+        arr[k] = R[j];
+        j++;
+        k++;
+    }
+}
+// Merge Sort function
+void mergeSort(int arr[], int left, int right)
+{
+    if (left &lt; right)
+    {
+        int mid = left + (right - left) / 2;
+        mergeSort(arr, left, mid);
+        mergeSort(arr, mid + 1, right);
+        merge(arr, left, mid, right);
+    }
+}
+int main()
+{
+    int n, i;
+    clock_t start, end;
+    double cpu_time_used;
+    printf(&quot;Enter the number of elements: &quot;);
+    scanf(&quot;%d&quot;, &amp;n);
+    int arr[n];
+    // Generate random numbers
+    srand(time(NULL));
+    printf(&quot;\nGenerated Elements:\n&quot;);
+    for (i = 0; i &lt; n; i++)
+    {
+        arr[i] = rand() % 1000;
+        printf(&quot;%d &quot;, arr[i]);
+    }
+    // Start timing
+    start = clock();
+    mergeSort(arr, 0, n - 1);
+    // End timing
+    end = clock();
+    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf(&quot;\n\nSorted Elements:\n&quot;);
+    for (i = 0; i &lt; n; i++)
+    {
+        printf(&quot;%d &quot;, arr[i]);
+    }
+    printf(&quot;\n\nTime Required = %f seconds\n&quot;, cpu_time_used);
+    return 0;
+}</pre></div>
+<h2>Sample output</h2>
+<p>This is a real run of the program above (the text after each prompt is what was typed). The numbers are random and the time differs on every run.</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter the number of elements: 8
+
+Generated Elements:
+906 338 555 409 639 638 771 60 
+
+Sorted Elements:
+60 338 409 555 638 639 771 906 
+
+Time Required = 0.000003 seconds</pre></div>
+<h2>Explanation (from the manual)</h2>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Concept</h3>
+<p>Merge Sort also follows divide-and-conquer, but does not use a pivot. Instead, the array is repeatedly split in half (divide) until each piece contains only a single element (a single element is always &quot;sorted&quot; by definition). The small sorted pieces are then combined back together in sorted order (merge) — this merging step is where the real work happens.</p>
+<p>Two steps:</p>
+<ul>
+<li>Divide — keep splitting the array into halves</li>
+<li>Merge — combine sorted pieces into a larger sorted piece</li>
+</ul>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Worked Example</h3>
+<div class="code"><button class="copy">Copy</button><pre>  [38, 27, 43, 3, 9, 82, 10]
+  Divide: [38, 27, 43] and [3, 9, 82, 10]
+  Divide further: [38] [27, 43] and [3, 9] [82, 10]
+  Divide until single elements: [38] [27] [43] and [3] [9] [82] [10]
+  Now merge back in sorted order:  [27, 43]  (from [27] and [43]);  [3, 9]  and  [10, 82]  from
+  their pairs.
+  Merge one level up: [27, 38, 43] and [3, 9, 10, 82]
+  Final merge: [3, 9, 10, 27, 38, 43, 82] — sorted!
+
+  While merging, the smallest remaining element from each of the two groups is always
+  compared, and the smaller one is placed first into the result — that is how the fully
+  sorted array is built.</pre></div>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Time Complexity</h3>
+<p>Merge Sort always takes O(n log n) time, regardless of whether the input is already sorted, reverse sorted, or random — its performance stays consistent. This makes it more predictable than Quick Sort, which can degrade to O(n²) in the worst case. The trade-off is that Merge Sort needs extra memory for the temporary arrays used during merging, whereas Quick Sort can sort within the same array.</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">What the Program Does</h3>
+<ol>
+<li>The user is asked how many elements to sort.</li>
+<li>Random numbers (0–999) are generated and shown as &quot;Generated Elements&quot;.</li>
+<li>Merge Sort runs (the divide-and-merge process above), while a timer is running.</li>
+<li>Once complete, the &quot;Sorted Elements&quot; are printed.</li>
+<li>The time taken to sort (in seconds) is displayed.</li>
+</ol>
+<p>In short: keep splitting the array until only single elements remain, then merge them back together in sorted order.</p>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is Merge Sort?</p><p class="a">A divide-and-conquer algorithm that splits the array into halves, sorts each half recursively and then merges the two sorted halves.</p></div>
+<div class="qa"><p class="q">What is the time complexity of Merge Sort?</p><p class="a">O(n log n) in the best, average and worst cases, from the recurrence T(n) = 2T(n/2) + n.</p></div>
+<div class="qa"><p class="q">What is its space complexity?</p><p class="a">O(n), because the merge step uses temporary arrays.</p></div>
+<div class="qa"><p class="q">Is Merge Sort stable?</p><p class="a">Yes, if equal elements are taken from the left half first during the merge.</p></div>
+<div class="qa"><p class="q">What does the merge function do?</p><p class="a">It combines two already sorted parts into one sorted part by repeatedly copying the smaller of the two front elements.</p></div>
+<div class="qa"><p class="q">Why is Merge Sort good for linked lists and external sorting?</p><p class="a">It reads data sequentially and does not need random access, so it works well on lists and on files too large for memory.</p></div>
+<div class="qa"><p class="q">What is the main disadvantage of Merge Sort?</p><p class="a">It needs extra memory and is slower than in-place sorts like Quick Sort on small arrays.</p></div>
+<div class="qa"><p class="q">What are the two steps of Merge Sort?</p><p class="a">Divide the array into two halves (down to single elements), then merge the sorted halves back together.</p></div>
+</div>
+
+<div class="exp" id="exp3">
+<p class="meta">Analysis of Algorithms Lab</p>
+<h1>Experiment 3: Bubble Sort</h1>
+<div class="aim"><b>Aim:</b> Implement Bubble Sort algorithm to sort a given set of elements and determine the time required to sort the elements. The elements can be read from a file or can be generated using the random number generator.</div>
+<h2>Source code</h2>
+<p>This is the program from the lab manual, unchanged. Compile it with <code>gcc aoa_exp3.c -o exp3</code> and run <code>./exp3</code> (on Windows with MinGW, <code>exp3</code>).</p>
+<div class="code" data-file="aoa_exp3.c"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;time.h&gt;
+int main()
+{
+    int n, i, j, temp;
+    clock_t start, end;
+    double cpu_time_used;
+    printf(&quot;Enter the number of elements: &quot;);
+    scanf(&quot;%d&quot;, &amp;n);
+    int arr[n];
+    // Generate random numbers
+    srand(time(NULL));
+    printf(&quot;\nGenerated Elements:\n&quot;);
+    for(i = 0; i &lt; n; i++)
+    {
+        arr[i] = rand() % 1000;
+        printf(&quot;%d &quot;, arr[i]);
+    }
+    // Start timing
+    start = clock();
+    // Bubble Sort
+    for(i = 0; i &lt; n - 1; i++)
+    {
+        for(j = 0; j &lt; n - i - 1; j++)
+        {
+            if(arr[j] &gt; arr[j + 1])
+            {
+                temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+    // End timing
+    end = clock();
+    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf(&quot;\n\nSorted Elements:\n&quot;);
+    for(i = 0; i &lt; n; i++)
+    {
+        printf(&quot;%d &quot;, arr[i]);
+    }
+    printf(&quot;\n\nTime Required = %f seconds\n&quot;, cpu_time_used);
+    return 0;
+}</pre></div>
+<h2>Sample output</h2>
+<p>This is a real run of the program above (the text after each prompt is what was typed). The numbers are random and the time differs on every run.</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter the number of elements: 8
+
+Generated Elements:
+880 995 482 248 704 121 415 202 
+
+Sorted Elements:
+121 202 248 415 482 704 880 995 
+
+Time Required = 0.000001 seconds</pre></div>
+<h2>Explanation (from the manual)</h2>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Concept</h3>
+<p>Bubble Sort is the simplest sorting technique. It repeatedly walks through the array from left to right, comparing each pair of adjacent elements. If the left element is larger than the right one, they are swapped. Every full pass pushes the largest remaining element towards the end of the array — much like an air bubble rising to the surface of water, which is where the name comes from. This process repeats until no more swaps are needed, meaning the array is fully sorted.</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Worked Example</h3>
+<div class="code"><button class="copy">Copy</button><pre>  [5, 1, 4, 2, 8]
+  Pass 1 (compare left to right):
+  5,1 → swap → [1, 5, 4, 2, 8]
+  5,4 → swap → [1, 4, 5, 2, 8]
+  5,2 → swap → [1, 4, 2, 5, 8]
+  5,8 → no swap → [1, 4, 2, 5, 8] (8 was the largest, now fixed at the end)
+  Pass 2: 1,4 no swap; 4,2 → swap → [1, 2, 4, 5, 8]; 4,5 no swap (5 now fixed)
+  Pass 3: 1,2 no swap; 2,4 no swap (no swaps at all — array is sorted)
+  Final: [1, 2, 4, 5, 8] — sorted!</pre></div>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Time Complexity</h3>
+<p>Bubble Sort is easy to understand but slow — both the average and worst case take O(n²) time, because every element may need to be compared repeatedly with its neighbour. It is fine for small arrays, but for larger data sets, Quick Sort or Merge Sort are much faster choices.</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">What the Program Does</h3>
+<ol>
+<li>The user is asked how many elements to sort.</li>
+<li>Random numbers (0–999) are generated and shown as &quot;Generated Elements&quot;.</li>
+<li>Bubble Sort runs (the adjacent compare-and-swap process above), with a timer running.</li>
+<li>Once complete, the &quot;Sorted Elements&quot; are printed.</li>
+<li>The time taken to sort (in seconds) is displayed.</li>
+</ol>
+<p>In short: compare neighbouring elements, push the larger one forward (swap), and repeat until everything is sorted.</p>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is Bubble Sort?</p><p class="a">A simple sort that repeatedly compares adjacent elements and swaps them if they are in the wrong order, so the largest elements move to the end like bubbles.</p></div>
+<div class="qa"><p class="q">How many passes and comparisons does it need?</p><p class="a">At most n - 1 passes and n(n - 1)/2 comparisons in total.</p></div>
+<div class="qa"><p class="q">What is its time complexity?</p><p class="a">O(n²) in the average and worst cases. In this program there is no early-exit flag, so even the best case is O(n²). With a flag that stops when no swap happens, the best case becomes O(n).</p></div>
+<div class="qa"><p class="q">Is Bubble Sort stable and in place?</p><p class="a">Yes, both. Equal elements are never swapped, and only O(1) extra space is used.</p></div>
+<div class="qa"><p class="q">What is the space complexity?</p><p class="a">O(1) auxiliary space.</p></div>
+<div class="qa"><p class="q">How does Bubble Sort compare with Selection and Insertion Sort?</p><p class="a">All three are O(n²). Bubble Sort makes the most swaps, Selection Sort the fewest, and Insertion Sort is faster on nearly sorted data.</p></div>
+<div class="qa"><p class="q">When is Bubble Sort used?</p><p class="a">Mostly for teaching and for very small data sets, because it is simple but slow.</p></div>
+<div class="qa"><p class="q">After the first pass, where is the largest element?</p><p class="a">At the last position, which is its final sorted place.</p></div>
+</div>
+
+<div class="exp" id="exp4">
+<p class="meta">Analysis of Algorithms Lab</p>
+<h1>Experiment 4: Linear Search</h1>
+<div class="aim"><b>Aim:</b> Implement Linear Search algorithm to search a value from a given set of elements. The elements can be read from a file or can be generated using the random number generator.</div>
+<h2>Source code</h2>
+<p>This is the program from the lab manual, unchanged. Compile it with <code>gcc aoa_exp4.c -o exp4</code> and run <code>./exp4</code> (on Windows with MinGW, <code>exp4</code>).</p>
+<div class="code" data-file="aoa_exp4.c"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;time.h&gt;
+int main()
+{
+    int n, i, key, pos = -1;
+    clock_t start, end;
+    double cpu_time_used;
+    printf(&quot;Enter the number of elements: &quot;);
+    scanf(&quot;%d&quot;, &amp;n);
+    int arr[n];
+    // Generate random numbers
+    srand(time(NULL));
+    printf(&quot;\nGenerated Elements:\n&quot;);
+    for(i = 0; i &lt; n; i++)
+    {
+        arr[i] = rand() % 1000;
+        printf(&quot;%d &quot;, arr[i]);
+    }
+    printf(&quot;\n\nEnter the element to search: &quot;);
+    scanf(&quot;%d&quot;, &amp;key);
+    // Start timing
+    start = clock();
+    // Linear Search
+    for(i = 0; i &lt; n; i++)
+    {
+        if(arr[i] == key)
+        {
+            pos = i;
+            break;
+        }
+    }
+    // End timing
+    end = clock();
+    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+    if(pos != -1)
+    printf(&quot;\nElement %d found at position %d\n&quot;, key, pos + 1);
+    else
+    printf(&quot;\nElement %d not found in the array\n&quot;, key);
+    printf(&quot;\nTime Required = %f seconds\n&quot;, cpu_time_used);
+    return 0;
+}</pre></div>
+<h2>Sample output</h2>
+<p>This is a real run of the program above (the text after each prompt is what was typed). The numbers are random and the time differs on every run.</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter the number of elements: 8
+
+Generated Elements:
+880 995 482 248 704 121 415 202 
+
+Enter the element to search: 704
+
+Element 704 found at position 5
+
+Time Required = 0.000015 seconds</pre></div>
+<h2>Explanation (from the manual)</h2>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Concept</h3>
+<p>Linear Search is the simplest way to search for a value. Given an array, e.g. [70, 206, 592, 194, 912, 40] , we want to know whether a specific number (the &quot;key&quot;, e.g. 194) exists in it, and if so, at which position.</p>
+<p>The method: start from the beginning of the array and check each element one by one. As soon as the target value is found, stop and report its position. If the entire array is checked and the value is never found, report &quot;not found&quot;. It is called &quot;linear&quot; because it scans through the data in a straight line, one step at a time, without taking any shortcuts.</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Worked Example</h3>
+<div class="code"><button class="copy">Copy</button><pre>  Array: [70, 206, 592, 194, 912, 40] , searching for: 194
+  Step 1: index 0 → 70 (not a match)
+  Step 2: index 1 → 206 (not a match)
+  Step 3: index 2 → 592 (not a match)
+  Step 4: index 3 → 194 → found!
+  Result: &quot;Element 194 found at position 4&quot;
+
+  If we searched for 500 (which is not in the array), the program would check the entire
+  array and then report &quot;Element 500 not found in the array&quot;.</pre></div>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Time Complexity</h3>
+<p>Linear Search has a time complexity of O(n) — in the worst case (the element is at the end, or not present at all), the entire array must be checked. In the best case (the element is found immediately), it only takes O(1). It works fine for small arrays, but for large sorted data sets, Binary Search (the next experiment) is much faster.</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">What the Program Does</h3>
+<ol>
+<li>The user is asked how many elements are in the array.</li>
+<li>Random numbers (0–999) are generated and shown as &quot;Generated Elements&quot;.</li>
+<li>The user is asked which number to search for (the search key).</li>
+<li>A timer starts, and the array is scanned one element at a time (the process above).</li>
+<li>If found, its position is reported; otherwise &quot;not found&quot; is printed.</li>
+<li>The time taken to search (in seconds) is displayed.</li>
+</ol>
+<p>In short: check elements one by one from the start, and stop as soon as a match is found.</p>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is Linear Search?</p><p class="a">A search that checks the elements one by one from the start until the key is found or the array ends.</p></div>
+<div class="qa"><p class="q">What is its time complexity?</p><p class="a">Best case O(1) (key is first), average and worst case O(n).</p></div>
+<div class="qa"><p class="q">Does the array have to be sorted?</p><p class="a">No. Linear Search works on unsorted data.</p></div>
+<div class="qa"><p class="q">What are the advantages of Linear Search?</p><p class="a">It is simple, needs no sorting, and works on any list, even a linked list.</p></div>
+<div class="qa"><p class="q">What are its disadvantages?</p><p class="a">It is slow for large data because it may check every element.</p></div>
+<div class="qa"><p class="q">What is a sentinel linear search?</p><p class="a">A version that puts the key at the end of the array as a sentinel, so the loop needs only one comparison per element.</p></div>
+<div class="qa"><p class="q">Compare Linear Search and Binary Search.</p><p class="a">Linear is O(n) and works on unsorted data. Binary is O(log n) but needs sorted data.</p></div>
+<div class="qa"><p class="q">What does this program report if the key occurs twice?</p><p class="a">It stops at the first match, so only the first position is reported.</p></div>
+</div>
+
+<div class="exp" id="exp5">
+<p class="meta">Analysis of Algorithms Lab</p>
+<h1>Experiment 5: Binary Search</h1>
+<div class="aim"><b>Aim:</b> Implement Binary Search algorithm to search a value from a given set of elements. The elements can be read from a file or can be generated using the random number generator.</div>
+<h2>Source code</h2>
+<p>This is the program from the lab manual, unchanged. Compile it with <code>gcc aoa_exp5.c -o exp5</code> and run <code>./exp5</code> (on Windows with MinGW, <code>exp5</code>).</p>
+<div class="code" data-file="aoa_exp5.c"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;time.h&gt;
+// Function to sort array (needed before binary search)
+void sortArray(int arr[], int n)
+{
+    int i, j, temp;
+    for(i = 0; i &lt; n - 1; i++)
+    {
+        for(j = 0; j &lt; n - i - 1; j++)
+        {
+            if(arr[j] &gt; arr[j + 1])
+            {
+                temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+}
+// Binary Search function
+int binarySearch(int arr[], int n, int key)
+{
+    int low = 0, high = n - 1, mid;
+    while(low &lt;= high)
+    {
+        mid = low + (high - low) / 2;
+        if(arr[mid] == key)
+        return mid;
+        else if(arr[mid] &lt; key)
+        low = mid + 1;
+        else
+        high = mid - 1;
+    }
+    return -1;
+}
+int main()
+{
+    int n, i, key, pos;
+    clock_t start, end;
+    double cpu_time_used;
+    printf(&quot;Enter the number of elements: &quot;);
+    scanf(&quot;%d&quot;, &amp;n);
+    int arr[n];
+    // Generate random numbers
+    srand(time(NULL));
+    for(i = 0; i &lt; n; i++)
+    arr[i] = rand() % 1000;
+    // Sort the array first (Binary Search needs sorted data)
+    sortArray(arr, n);
+    printf(&quot;\nGenerated (Sorted) Elements:\n&quot;);
+    for(i = 0; i &lt; n; i++)
+    printf(&quot;%d &quot;, arr[i]);
+    printf(&quot;\n\nEnter the element to search: &quot;);
+    scanf(&quot;%d&quot;, &amp;key);
+    // Start timing
+    start = clock();
+    pos = binarySearch(arr, n, key);
+    // End timing
+    end = clock();
+    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+    if(pos != -1)
+    printf(&quot;\nElement %d found at position %d\n&quot;, key, pos + 1);
+    else
+    printf(&quot;\nElement %d not found in the array\n&quot;, key);
+    printf(&quot;\nTime Required = %f seconds\n&quot;, cpu_time_used);
+    return 0;
+}</pre></div>
+<h2>Sample output</h2>
+<p>This is a real run of the program above (the text after each prompt is what was typed). The numbers are random and the time differs on every run.</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter the number of elements: 8
+
+Generated (Sorted) Elements:
+199 257 407 479 666 820 865 917 
+
+Enter the element to search: 820
+
+Element 820 found at position 6
+
+Time Required = 0.000001 seconds</pre></div>
+<h2>Explanation (from the manual)</h2>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Concept</h3>
+<p>Binary Search is considerably faster than Linear Search — but it requires the array to already be sorted. Instead of scanning the whole array, it checks the middle element directly:</p>
+<p>If the middle element equals the target → found, done. If the target is smaller than the middle → it can only be in the left half, so the right half is discarded entirely. If the target is larger than the middle → it can only be in the right half, so the left half is discarded entirely.</p>
+<p>Each step throws away half of the remaining array, which is why this method is so fast even for large arrays.</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Worked Example</h3>
+<div class="code"><button class="copy">Copy</button><pre>  Array: [12, 166, 241, 740, 758, 881] (indices 0 to 5), searching for: 740
+  Step 1: low=0, high=5, mid=2 → array[2]=241. 740&gt;241, discard left half, low=3
+  Step 2: low=3, high=5, mid=4 → array[4]=758. 740&lt;758, discard right half, high=3
+  Step 3: low=3, high=3, mid=3 → array[3]=740 → match found!
+  Result: &quot;Element 740 found at position 4&quot; — found in just 3 steps, compared to 5 steps a
+  Linear Search would need starting from index 0.</pre></div>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Time Complexity</h3>
+<p>Binary Search has a time complexity of O(log n) — even with 1000 elements, the answer is found in roughly 10 steps, because half of the data is discarded at every step. This is far faster than Linear Search&#x27;s O(n), but remember the key condition: the array must ALWAYS be sorted first, otherwise Binary Search can give an incorrect result.</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">What the Program Does</h3>
+<ol>
+<li>The user is asked how many elements are in the array.</li>
+<li>Random numbers are generated and then sorted (Binary Search requires sorted data) — shown as &quot;Generated (Sorted) Elements&quot;.</li>
+<li>The user is asked which number to search for.</li>
+<li>A timer starts, and the search proceeds by repeatedly narrowing the low-high-mid range (the process above).</li>
+<li>If found, its position is reported; otherwise &quot;not found&quot; is printed.</li>
+<li>The time taken to search (in seconds) is displayed.</li>
+</ol>
+<p>In short: check the middle element, keep only the half where the target could be, and discard the other half — repeat until found.</p>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is Binary Search?</p><p class="a">A search on a sorted array that compares the key with the middle element and discards half of the array each time.</p></div>
+<div class="qa"><p class="q">What is the main requirement of Binary Search?</p><p class="a">The array must be sorted. On unsorted data the result is wrong.</p></div>
+<div class="qa"><p class="q">What is its time complexity?</p><p class="a">Worst and average O(log n), best O(1). About 10 comparisons are enough for 1000 elements.</p></div>
+<div class="qa"><p class="q">Why is mid written as low + (high - low) / 2?</p><p class="a">To avoid integer overflow that (low + high) / 2 could cause for very large indexes.</p></div>
+<div class="qa"><p class="q">What do low, high and mid mean?</p><p class="a">low and high are the ends of the part still being searched, and mid is its middle index.</p></div>
+<div class="qa"><p class="q">Recursive or iterative Binary Search: what is the difference?</p><p class="a">Both have O(log n) time. The iterative one uses O(1) space, the recursive one uses O(log n) stack space.</p></div>
+<div class="qa"><p class="q">Compare Binary Search and Linear Search.</p><p class="a">Binary is much faster on large data but needs sorting first. Linear needs no sorting.</p></div>
+<div class="qa"><p class="q">Why does the program sort the random numbers first?</p><p class="a">Because Binary Search only works on sorted data.</p></div>
+</div>
+
+<div class="exp" id="exp6">
+<p class="meta">Analysis of Algorithms Lab</p>
+<h1>Experiment 6: Strassen&#x27;s Matrix Multiplication</h1>
+<div class="aim"><b>Aim:</b> Compute two 2 by 2 matrix multiplication to find multiplication matrix using Strassen&#x27;s Matrix Multiplication.</div>
+<h2>Source code</h2>
+<p>This is the program from the lab manual, unchanged. Compile it with <code>gcc aoa_exp6.c -o exp6</code> and run <code>./exp6</code> (on Windows with MinGW, <code>exp6</code>).</p>
+<div class="code" data-file="aoa_exp6.c"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;time.h&gt;
+int main()
+{
+    int A[2][2], B[2][2], C[2][2];
+    int M1, M2, M3, M4, M5, M6, M7;
+    int i, j;
+    clock_t start, end;
+    double cpu_time_used;
+    printf(&quot;Enter elements of 2x2 Matrix A:\n&quot;);
+    for(i = 0; i &lt; 2; i++)
+    for(j = 0; j &lt; 2; j++)
+    scanf(&quot;%d&quot;, &amp;A[i][j]);
+    printf(&quot;Enter elements of 2x2 Matrix B:\n&quot;);
+    for(i = 0; i &lt; 2; i++)
+    for(j = 0; j &lt; 2; j++)
+    scanf(&quot;%d&quot;, &amp;B[i][j]);
+    // Start timing
+    start = clock();
+    // Strassen&#x27;s 7 multiplications
+    M1 = (A[0][0] + A[1][1]) * (B[0][0] + B[1][1]);
+    M2 = (A[1][0] + A[1][1]) * B[0][0];
+    M3 = A[0][0] * (B[0][1] - B[1][1]);
+    M4 = A[1][1] * (B[1][0] - B[0][0]);
+    M5 = (A[0][0] + A[0][1]) * B[1][1];
+    M6 = (A[1][0] - A[0][0]) * (B[0][0] + B[0][1]);
+    M7 = (A[0][1] - A[1][1]) * (B[1][0] + B[1][1]);
+    // Result matrix using M1..M7
+    C[0][0] = M1 + M4 - M5 + M7;
+    C[0][1] = M3 + M5;
+    C[1][0] = M2 + M4;
+    C[1][1] = M1 - M2 + M3 + M6;
+    // End timing
+    end = clock();
+    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf(&quot;\nMatrix A:\n&quot;);
+    for(i = 0; i &lt; 2; i++)
+    {
+        for(j = 0; j &lt; 2; j++)
+        printf(&quot;%d &quot;, A[i][j]);
+        printf(&quot;\n&quot;);
+    }
+    printf(&quot;\nMatrix B:\n&quot;);
+    for(i = 0; i &lt; 2; i++)
+    {
+        for(j = 0; j &lt; 2; j++)
+        printf(&quot;%d &quot;, B[i][j]);
+        printf(&quot;\n&quot;);
+    }
+    printf(&quot;\nResultant Matrix C (A x B) using Strassen&#x27;s Method:\n&quot;);
+    for(i = 0; i &lt; 2; i++)
+    {
+        for(j = 0; j &lt; 2; j++)
+        printf(&quot;%d &quot;, C[i][j]);
+        printf(&quot;\n&quot;);
+    }
+    printf(&quot;\nTime Required = %f seconds\n&quot;, cpu_time_used);
+    return 0;
+}</pre></div>
+<h2>Sample output</h2>
+<p>This is a real run of the program above (the text after each prompt is what was typed). The time differs on every run.</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter elements of 2x2 Matrix A:
+1
+2
+3
+4
+Enter elements of 2x2 Matrix B:
+5
+6
+7
+8
+
+Matrix A:
+1 2 
+3 4 
+
+Matrix B:
+5 6 
+7 8 
+
+Resultant Matrix C (A x B) using Strassen&#x27;s Method:
+19 22 
+43 50 
+
+Time Required = 0.000001 seconds</pre></div>
+<h2>Explanation (from the manual)</h2>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Concept</h3>
+<p>Given two 2×2 matrices A and B, the goal is to compute A×B. The conventional (&quot;school&quot;) method needs 8 multiplications (2 multiplications per output cell, across 4 cells). Strassen devised a clever technique that needs only 7 multiplications — one fewer. For a tiny 2×2 case the saving is not noticeable, but for very large matrices (e.g. 1000×1000, applied recursively as used in AI/ML systems), this technique meaningfully reduces computation time.</p>
+<p>The trick: combine elements of A and B into 7 &quot;helper values&quot; (M1 through M7), then obtain every cell of the result purely through addition/subtraction of these helper values — instead of multiplying separately for every output cell.</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Worked Example</h3>
+<div class="code"><button class="copy">Copy</button><pre>  A = [[1, 2], [3, 4]],  B = [[5, 6], [7, 8]]
+  M1 = (A00+A11)×(B00+B11) = (1+4)×(5+8) = 5×13 = 65
+  M2 = (A10+A11)×B00 = (3+4)×5 = 35
+  M3 = A00×(B01−B11) = 1×(6−8) = −2
+  M4 = A11×(B10−B00) = 4×(7−5) = 8
+  M5 = (A00+A01)×B11 = (1+2)×8 = 24
+  M6 = (A10−A00)×(B00+B01) = 2×11 = 22
+  M7 = (A01−A11)×(B10+B11) = −2×15 = −30
+
+  C00 = M1+M4−M5+M7 = 65+8−24−30 = 19
+  C01 = M3+M5 = −2+24 = 22
+  C10 = M2+M4 = 35+8 = 43
+  C11 = M1−M2+M3+M6 = 65−35−2+22 = 50
+
+  Result:  C  =  [[19,  22],  [43,  50]]  —  exactly  the  same  as  conventional  multiplication
+  (1×5+2×7=19, and so on), just computed with one fewer multiplication.</pre></div>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Time Complexity</h3>
+<p>Conventional matrix multiplication takes O(n³) for large matrices. Strassen&#x27;s method improves this to roughly O(n2.807). This difference is invisible on a tiny 2×2 matrix, but on very large matrices it saves real computation time.</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">What the Program Does</h3>
+<ol>
+<li>The user enters all elements of matrices A and B (2×2 each, 4 numbers per matrix).</li>
+<li>The program computes the seven M-values described above.</li>
+<li>The final result matrix C is built from those values.</li>
+<li>A, B, and the result C are all printed.</li>
+<li>The time taken (in seconds) is displayed.</li>
+</ol>
+<p>In short: compute 7 clever helper values (M1–M7), then combine them directly to get the result, without multiplying separately for each output cell.</p>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is Strassen’s Matrix Multiplication?</p><p class="a">A divide-and-conquer method that multiplies two matrices using 7 multiplications instead of 8 for a 2 × 2 block.</p></div>
+<div class="qa"><p class="q">What is its time complexity?</p><p class="a">About O(n^2.807) (n to the power log₂7), better than O(n³) of the ordinary method.</p></div>
+<div class="qa"><p class="q">Write the recurrence of Strassen’s algorithm.</p><p class="a">T(n) = 7T(n/2) + O(n²).</p></div>
+<div class="qa"><p class="q">What are the seven values M1 to M7?</p><p class="a">M1 = (A00+A11)(B00+B11), M2 = (A10+A11)B00, M3 = A00(B01−B11), M4 = A11(B10−B00), M5 = (A00+A01)B11, M6 = (A10−A00)(B00+B01), M7 = (A01−A11)(B10+B11).</p></div>
+<div class="qa"><p class="q">How is the result built from M1 to M7?</p><p class="a">C00 = M1+M4−M5+M7, C01 = M3+M5, C10 = M2+M4, C11 = M1−M2+M3+M6.</p></div>
+<div class="qa"><p class="q">Why is Strassen’s method not used for small matrices?</p><p class="a">It does more additions and has extra overhead, so it only pays off for large matrices.</p></div>
+<div class="qa"><p class="q">What if the matrix size is not a power of 2?</p><p class="a">The matrices are padded with zeros up to the next power of 2.</p></div>
+<div class="qa"><p class="q">Which design technique does it use?</p><p class="a">Divide and conquer.</p></div>
+</div>
+
+<div class="exp" id="exp7">
+<p class="meta">Analysis of Algorithms Lab</p>
+<h1>Experiment 7: Fractional Knapsack (Greedy Method)</h1>
+<div class="aim"><b>Aim:</b> Implement Knapsack problem using Greedy Method.</div>
+<h2>Source code</h2>
+<p>This is the program from the lab manual, unchanged. Compile it with <code>gcc aoa_exp7.c -o exp7</code> and run <code>./exp7</code> (on Windows with MinGW, <code>exp7</code>).</p>
+<div class="code" data-file="aoa_exp7.c"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;time.h&gt;
+struct Item
+{
+    int weight;
+    int profit;
+    double ratio;
+};
+// Function to sort items based on profit/weight ratio (descending)
+void sortItems(struct Item items[], int n)
+{
+    int i, j;
+    struct Item temp;
+    for(i = 0; i &lt; n - 1; i++)
+    {
+        for(j = 0; j &lt; n - i - 1; j++)
+        {
+            if(items[j].ratio &lt; items[j + 1].ratio)
+            {
+                temp = items[j];
+                items[j] = items[j + 1];
+                items[j + 1] = temp;
+            }
+        }
+    }
+}
+int main()
+{
+    int n, i;
+    int capacity;
+    clock_t start, end;
+    double cpu_time_used;
+    printf(&quot;Enter number of items: &quot;);
+    scanf(&quot;%d&quot;, &amp;n);
+    struct Item items[n];
+    printf(&quot;Enter weight and profit of each item:\n&quot;);
+    for(i = 0; i &lt; n; i++)
+    {
+        printf(&quot;Item %d weight: &quot;, i + 1);
+        scanf(&quot;%d&quot;, &amp;items[i].weight);
+        printf(&quot;Item %d profit: &quot;, i + 1);
+        scanf(&quot;%d&quot;, &amp;items[i].profit);
+        items[i].ratio = (double)items[i].profit / items[i].weight;
+    }
+    printf(&quot;Enter knapsack capacity: &quot;);
+    scanf(&quot;%d&quot;, &amp;capacity);
+    // Start timing
+    start = clock();
+    // Sort items by profit/weight ratio (Greedy choice)
+    sortItems(items, n);
+    double totalProfit = 0.0;
+    int remainingCapacity = capacity;
+    printf(&quot;\nItems selected (Greedy - by profit/weight ratio):\n&quot;);
+    for(i = 0; i &lt; n &amp;&amp; remainingCapacity &gt; 0; i++)
+    {
+        if(items[i].weight &lt;= remainingCapacity)
+        {
+            // Take the whole item
+            remainingCapacity -= items[i].weight;
+            totalProfit += items[i].profit;
+            printf(&quot;Item (W=%d, P=%d) -&gt; Fully taken\n&quot;, items[i].weight, items[i].profit);
+        }
+        else
+        {
+            // Take fraction of the item
+            double fraction = (double)remainingCapacity / items[i].weight;
+            totalProfit += items[i].profit * fraction;
+            printf(&quot;Item (W=%d, P=%d) -&gt; Fraction taken = %.2f\n&quot;, items[i].weight, items[i].profit, fraction);
+            remainingCapacity = 0;
+        }
+    }
+    // End timing
+    end = clock();
+    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf(&quot;\nMaximum Profit (Greedy Knapsack) = %.2f\n&quot;, totalProfit);
+    printf(&quot;\nTime Required = %f seconds\n&quot;, cpu_time_used);
+    return 0;
+}</pre></div>
+<h2>Sample output</h2>
+<p>This is a real run of the program above (the text after each prompt is what was typed). The time differs on every run.</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter number of items: 3
+Enter weight and profit of each item:
+Item 1 weight: 10
+Item 1 profit: 60
+Item 2 weight: 20
+Item 2 profit: 100
+Item 3 weight: 30
+Item 3 profit: 120
+Enter knapsack capacity: 50
+
+Items selected (Greedy - by profit/weight ratio):
+Item (W=10, P=60) -&gt; Fully taken
+Item (W=20, P=100) -&gt; Fully taken
+Item (W=30, P=120) -&gt; Fraction taken = 0.67
+
+Maximum Profit (Greedy Knapsack) = 240.00
+
+Time Required = 0.000022 seconds</pre></div>
+<h2>Explanation (from the manual)</h2>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Concept</h3>
+<p>A bag has a fixed weight capacity (e.g. 50 kg), and there are several items, each with its own weight and profit (value). The goal is to fill the bag with items so that total profit is as large as possible, without exceeding the weight limit.</p>
+<p>The Greedy idea is simple: always pick the item with the best &quot;value for its weight&quot; first. Compute a ratio for every item — profit ÷ weight. The item with the highest ratio is the &quot;best deal&quot;, so take it first (completely). Then take the item with the next-best ratio, and so on, until the bag is full.</p>
+<p>A special feature of this method: items can be broken into fractions! If the last item doesn&#x27;t fit completely, take only as much of it as fits — which is why this is also called the Fractional Knapsack.</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Worked Example</h3>
+<div class="code"><button class="copy">Copy</button><pre>  3 items:
+  Item 1: weight=10, profit=60 → ratio = 60/10 = 6.0
+  Item 2: weight=20, profit=100 → ratio = 100/20 = 5.0
+  Item 3: weight=30, profit=120 → ratio = 120/30 = 4.0
+  Bag capacity = 50
+
+  Take the best-ratio item first (Item 1, ratio=6.0): weight used=10, capacity left=40,
+  profit gained=60.
+  Next  best  (Item  2,  ratio=5.0):  weight  used=20,  capacity  left=20,  profit  gained=100
+  (total=160).
+  Next best (Item 3, ratio=4.0), but only 20 capacity remains and the item weighs 30: take
+  only a fraction — 20/30 = 0.67. Profit gained = 120×0.67 = 80 (total=240).
+  The bag is now full, and the total maximum profit = 240.</pre></div>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Time Complexity</h3>
+<p>Most of the time is spent sorting the items by ratio, which takes O(n log n). Filling the bag afterwards is a single O(n) pass. So the total time is O(n log n) — a fairly fast approach.</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">What the Program Does</h3>
+<ol>
+<li>The user enters how many items there are, along with each item&#x27;s weight and profit.</li>
+<li>The user enters the bag&#x27;s capacity.</li>
+<li>The program computes each item&#x27;s profit/weight ratio and sorts items best-ratio-first.</li>
+<li>Items are then placed into the bag one at a time — items that fit completely are marked &quot;Fully taken&quot;, and the item that doesn&#x27;t fully fit has its fraction marked &quot;Fraction taken&quot;.</li>
+<li>The maximum total profit is printed at the end.</li>
+<li>The time taken (in seconds) is displayed.</li>
+</ol>
+<p>In short: take the best value-for-weight item first, and if needed, take just a piece of the final item to fill the remaining capacity.</p>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is the Fractional Knapsack problem?</p><p class="a">Given items with weights and profits and a bag of limited capacity, choose items, taking fractions if needed, to get the maximum total profit.</p></div>
+<div class="qa"><p class="q">Which strategy does the program use?</p><p class="a">The greedy method: sort items by profit/weight ratio, highest first, and fill the bag in that order.</p></div>
+<div class="qa"><p class="q">What is the difference between fractional and 0/1 Knapsack?</p><p class="a">In the fractional problem an item can be split. In the 0/1 problem an item is taken completely or not at all.</p></div>
+<div class="qa"><p class="q">What is the time complexity?</p><p class="a">O(n log n), because of the sorting step. The filling step is O(n).</p></div>
+<div class="qa"><p class="q">Is the greedy method optimal here?</p><p class="a">Yes. For the fractional knapsack, taking the best ratio first always gives the maximum profit.</p></div>
+<div class="qa"><p class="q">Work out the sample: items (10, 60), (20, 100), (30, 120), capacity 50.</p><p class="a">Ratios are 6, 5, 4. Take items 1 and 2 fully (weight 30, profit 160) and 20/30 of item 3 (profit 80). Total profit 240.</p></div>
+<div class="qa"><p class="q">What is the greedy method?</p><p class="a">An approach that makes the locally best choice at every step, hoping to reach the global optimum.</p></div>
+<div class="qa"><p class="q">Why does the greedy method fail for 0/1 Knapsack?</p><p class="a">Because items cannot be split, the best-ratio choice can leave unused capacity, so a different combination may give more profit.</p></div>
+</div>
+
+<div class="exp" id="exp8">
+<p class="meta">Analysis of Algorithms Lab</p>
+<h1>Experiment 8: Minimum Cost Spanning Tree using Prim&#x27;s Algorithm</h1>
+<div class="aim"><b>Aim:</b> Find Minimum Cost Spanning Tree of a given undirected graph using Prim&#x27;s algorithm.</div>
+<h2>Source code</h2>
+<p>This is the program from the lab manual, unchanged. Compile it with <code>gcc aoa_exp8.c -o exp8</code> and run <code>./exp8</code> (on Windows with MinGW, <code>exp8</code>).</p>
+<div class="code" data-file="aoa_exp8.c"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;time.h&gt;
+#define INF 9999
+int main()
+{
+    int n, i, j;
+    clock_t start, end;
+    double cpu_time_used;
+    printf(&quot;Enter number of vertices: &quot;);
+    scanf(&quot;%d&quot;, &amp;n);
+    int cost[n][n];
+    printf(&quot;Enter the adjacency/cost matrix (enter %d for no edge):\n&quot;, INF);
+    for(i = 0; i &lt; n; i++)
+    {
+        for(j = 0; j &lt; n; j++)
+        {
+            printf(&quot;cost[%d][%d]: &quot;, i, j);
+            scanf(&quot;%d&quot;, &amp;cost[i][j]);
+        }
+    }
+    int visited[n];
+    for(i = 0; i &lt; n; i++)
+    visited[i] = 0;
+    int edgeCount = 0;
+    int totalCost = 0;
+    visited[0] = 1;
+    // Start timing
+    start = clock();
+    printf(&quot;\nEdges in Minimum Cost Spanning Tree (Prim&#x27;s Algorithm):\n&quot;);
+    while(edgeCount &lt; n - 1)
+    {
+        int min = INF, a = -1, b = -1;
+        for(i = 0; i &lt; n; i++)
+        {
+            if(visited[i])
+            {
+                for(j = 0; j &lt; n; j++)
+                {
+                    if(!visited[j] &amp;&amp; cost[i][j] != 0 &amp;&amp; cost[i][j] &lt; min)
+                    {
+                        min = cost[i][j];
+                        a = i;
+                        b = j;
+                    }
+                }
+            }
+        }
+        if(a != -1 &amp;&amp; b != -1)
+        {
+            printf(&quot;Edge %d: (%d -&gt; %d) cost = %d\n&quot;, edgeCount + 1, a, b, min);
+            totalCost += min;
+            visited[b] = 1;
+            edgeCount++;
+        }
+    }
+    // End timing
+    end = clock();
+    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf(&quot;\nMinimum Cost of Spanning Tree = %d\n&quot;, totalCost);
+    printf(&quot;\nTime Required = %f seconds\n&quot;, cpu_time_used);
+    return 0;
+}</pre></div>
+<h2>Sample output</h2>
+<p>This is a real run of the program above (the text after each prompt is what was typed). The time differs on every run.</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter number of vertices: 4
+Enter the adjacency/cost matrix (enter 9999 for no edge):
+cost[0][0]: 0
+cost[0][1]: 2
+cost[0][2]: 9999
+cost[0][3]: 6
+cost[1][0]: 2
+cost[1][1]: 0
+cost[1][2]: 3
+cost[1][3]: 8
+cost[2][0]: 9999
+cost[2][1]: 3
+cost[2][2]: 0
+cost[2][3]: 9999
+cost[3][0]: 6
+cost[3][1]: 8
+cost[3][2]: 9999
+cost[3][3]: 0
+
+Edges in Minimum Cost Spanning Tree (Prim&#x27;s Algorithm):
+Edge 1: (0 -&gt; 1) cost = 2
+Edge 2: (1 -&gt; 2) cost = 3
+Edge 3: (0 -&gt; 3) cost = 6
+
+Minimum Cost of Spanning Tree = 11
+
+Time Required = 0.000014 seconds</pre></div>
+<h2>Explanation (from the manual)</h2>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Concept</h3>
+<p>Consider a set of cities (&quot;vertices&quot;) connected by roads (&quot;edges&quot;), each road having its own cost. The goal is to connect all cities so that the total cost is as small as possible, every city remains reachable, and no cycles (loops) are formed. This final connected structure is called the Minimum Cost Spanning Tree (MST).</p>
+<p>Prim&#x27;s Algorithm idea: start from any one city (e.g. city 0). Then repeatedly find the cheapest road that connects the currently-connected group of cities to any new (not-yet-connected) city, and add that city to the group. Repeat until every city is connected. Prim&#x27;s Algorithm behaves like a &quot;growing tree&quot; — a single connected group keeps expanding, always choosing the cheapest next edge available.</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Worked Example</h3>
+<div class="code"><button class="copy">Copy</button><pre>  5 cities (0 to 4), with roads and their costs:
+  0-1 = 2, 0-3 = 6, 1-2 = 3, 1-3 = 8, 1-4 = 5, 2-4 = 7, 3-4 = 9
+  Start at city 0, connected group = {0}
+  Step 1: cheapest road out of {0} is 0-1 (cost=2). Group = {0, 1}
+  Step 2: cheapest road out of {0,1} is 1-2 (cost=3). Group = {0, 1, 2}
+  Step 3: cheapest road out of {0,1,2} is 1-4 (cost=5). Group = {0, 1, 2, 4}
+  Step 4: cheapest road out of {0,1,2,4} is 0-3 (cost=6). Group = {0, 1, 2, 3, 4} — all
+  cities connected!
+  Total minimum cost = 2+3+5+6 = 16</pre></div>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Time Complexity</h3>
+<p>In this simple adjacency-matrix implementation, Prim&#x27;s Algorithm takes O(n²) time, where n is the number of cities. Faster (priority-queue based) versions exist for very large graphs, but this simple version works well for small to medium-sized graphs.</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">What the Program Does</h3>
+<ol>
+<li>The user enters the number of vertices (cities).</li>
+<li>The user enters the full cost matrix (the cost between every pair of cities; 9999 indicates no direct road).</li>
+<li>Starting from city 0, the program repeatedly finds the cheapest edge leading out of the connected group and adds it to the MST (the process above).</li>
+<li>Each chosen edge is printed, along with its cost.</li>
+<li>The total minimum cost is printed at the end.</li>
+<li>The time taken (in seconds) is displayed.</li>
+</ol>
+<p>In short: start from one city, always grab the cheapest road leading to a new city, and repeat until every city is connected.</p>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is a spanning tree?</p><p class="a">A subgraph that connects all vertices of a graph with no cycle. It has V - 1 edges.</p></div>
+<div class="qa"><p class="q">What is a Minimum Cost Spanning Tree?</p><p class="a">The spanning tree whose total edge weight is the smallest.</p></div>
+<div class="qa"><p class="q">Explain Prim’s algorithm.</p><p class="a">Start from any vertex and repeatedly add the cheapest edge that joins a vertex in the tree to a vertex outside it, until all vertices are in the tree.</p></div>
+<div class="qa"><p class="q">What is the time complexity of Prim’s algorithm?</p><p class="a">O(V²) with an adjacency matrix, as in this program. It is O(E log V) with a heap.</p></div>
+<div class="qa"><p class="q">Why is 9999 entered in the cost matrix?</p><p class="a">It stands for infinity, meaning there is no edge between those two vertices.</p></div>
+<div class="qa"><p class="q">Compare Prim’s and Kruskal’s algorithms.</p><p class="a">Prim grows one tree vertex by vertex and suits dense graphs. Kruskal sorts the edges and joins components, and suits sparse graphs.</p></div>
+<div class="qa"><p class="q">How many edges does the tree have?</p><p class="a">V - 1, where V is the number of vertices. For example, 3 edges for 4 vertices.</p></div>
+<div class="qa"><p class="q">Is the minimum spanning tree always unique?</p><p class="a">No. It is unique only if all edge weights are different.</p></div>
+</div>
+
+<div class="exp" id="exp9">
+<p class="meta">Analysis of Algorithms Lab</p>
+<h1>Experiment 9: Minimum Cost Spanning Tree using Kruskal&#x27;s Algorithm</h1>
+<div class="aim"><b>Aim:</b> Find Minimum Cost Spanning Tree of a given undirected graph using Kruskal&#x27;s algorithm.</div>
+<h2>Source code</h2>
+<p>This is the program from the lab manual, unchanged. Compile it with <code>gcc aoa_exp9.c -o exp9</code> and run <code>./exp9</code> (on Windows with MinGW, <code>exp9</code>).</p>
+<div class="code" data-file="aoa_exp9.c"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;time.h&gt;
+struct Edge
+{
+    int u, v, weight;
+};
+int parent[100];
+// Find function with path compression
+int find(int i)
+{
+    if(parent[i] == i)
+    return i;
+    return parent[i] = find(parent[i]);
+}
+// Union function
+void unionSet(int a, int b)
+{
+    int rootA = find(a);
+    int rootB = find(b);
+    if(rootA != rootB)
+    parent[rootA] = rootB;
+}
+// Function to sort edges by weight (ascending)
+void sortEdges(struct Edge edges[], int e)
+{
+    int i, j;
+    struct Edge temp;
+    for(i = 0; i &lt; e - 1; i++)
+    {
+        for(j = 0; j &lt; e - i - 1; j++)
+        {
+            if(edges[j].weight &gt; edges[j + 1].weight)
+            {
+                temp = edges[j];
+                edges[j] = edges[j + 1];
+                edges[j + 1] = temp;
+            }
+        }
+    }
+}
+int main()
+{
+    int n, e, i;
+    clock_t start, end;
+    double cpu_time_used;
+    printf(&quot;Enter number of vertices: &quot;);
+    scanf(&quot;%d&quot;, &amp;n);
+    printf(&quot;Enter number of edges: &quot;);
+    scanf(&quot;%d&quot;, &amp;e);
+    struct Edge edges[e];
+    printf(&quot;Enter edges (u v weight):\n&quot;);
+    for(i = 0; i &lt; e; i++)
+    {
+        printf(&quot;Edge %d: &quot;, i + 1);
+        scanf(&quot;%d %d %d&quot;, &amp;edges[i].u, &amp;edges[i].v, &amp;edges[i].weight);
+    }
+    // Initialize parent array (Union-Find)
+    for(i = 0; i &lt; n; i++)
+    parent[i] = i;
+    // Start timing
+    start = clock();
+    // Sort edges by weight (Greedy choice)
+    sortEdges(edges, e);
+    int mstEdgeCount = 0;
+    int totalCost = 0;
+    printf(&quot;\nEdges in Minimum Cost Spanning Tree (Kruskal&#x27;s Algorithm):\n&quot;);
+    for(i = 0; i &lt; e &amp;&amp; mstEdgeCount &lt; n - 1; i++)
+    {
+        int rootU = find(edges[i].u);
+        int rootV = find(edges[i].v);
+        if(rootU != rootV)
+        {
+            printf(&quot;Edge %d: (%d -&gt; %d) cost = %d\n&quot;, mstEdgeCount + 1, edges[i].u, edges[i].v, edges[i].weight);
+            totalCost += edges[i].weight;
+            unionSet(rootU, rootV);
+            mstEdgeCount++;
+        }
+    }
+    // End timing
+    end = clock();
+    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf(&quot;\nMinimum Cost of Spanning Tree = %d\n&quot;, totalCost);
+    printf(&quot;\nTime Required = %f seconds\n&quot;, cpu_time_used);
+    return 0;
+}</pre></div>
+<h2>Sample output</h2>
+<p>This is a real run of the program above (the text after each prompt is what was typed). The time differs on every run.</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter number of vertices: 5
+Enter number of edges: 7
+Enter edges (u v weight):
+Edge 1: 1 2 2
+Edge 2: 1 4 6
+Edge 3: 2 3 3
+Edge 4: 2 4 8
+Edge 5: 2 5 5
+Edge 6: 3 5 7
+Edge 7: 4 5 9
+
+Edges in Minimum Cost Spanning Tree (Kruskal&#x27;s Algorithm):
+Edge 1: (1 -&gt; 2) cost = 2
+Edge 2: (2 -&gt; 3) cost = 3
+Edge 3: (2 -&gt; 5) cost = 5
+Edge 4: (1 -&gt; 4) cost = 6
+
+Minimum Cost of Spanning Tree = 16
+
+Time Required = 0.000017 seconds</pre></div>
+<h2>Explanation (from the manual)</h2>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Concept</h3>
+<p>Like Prim&#x27;s Algorithm, this also computes the Minimum Cost Spanning Tree (MST) — connecting all cities with the smallest possible total cost, keeping every city connected, without forming a cycle. However, Kruskal&#x27;s approach works differently.</p>
+<p>Prim&#x27;s grows one connected group step by step from a starting point. Kruskal&#x27;s instead takes all roads (edges), sorts them from cheapest to most expensive, and then picks edges one at a time starting with the cheapest. The only rule: if an edge would form a cycle (i.e., its two endpoints are already connected through previously chosen edges), skip it. Otherwise, take it — continue until (n−1) edges have been chosen (where n is the number of cities).</p>
+<p>Checking whether two cities are already connected uses a technique called Union-Find.</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Worked Example</h3>
+<div class="code"><button class="copy">Copy</button><pre>  5 cities (0 to 4), edges sorted cheapest to costliest:
+  0-1=2, 1-2=3, 1-4=5, 0-3=6, 1-3=8, 2-4=7, 3-4=9
+  Step 1: 0-1 (cost=2) → no cycle, take it. Connected: {0,1}
+  Step 2: 1-2 (cost=3) → no cycle, take it. Connected: {0,1,2}
+  Step 3: 1-4 (cost=5) → no cycle, take it. Connected: {0,1,2,4}
+  Step 4: 0-3 (cost=6) → no cycle, take it. Connected: {0,1,2,3,4} — all connected!
+  (If 1-3=8 had been tried next, it would be skipped, since 1 and 3 are already connected —
+  adding it would create a cycle.)
+
+  Total minimum cost = 2+3+5+6 = 16 — the same result Prim&#x27;s Algorithm found on this graph.
+
+  Both algorithms correctly find an MST; they simply take different paths to get there.</pre></div>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Time Complexity</h3>
+<p>Most of the time in Kruskal&#x27;s Algorithm is spent sorting the edges, which takes O(E log E), where E is the total number of edges. Kruskal&#x27;s tends to perform better than Prim&#x27;s when a graph has relatively few edges compared to vertices (a &quot;sparse&quot; graph).</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">What the Program Does</h3>
+<ol>
+<li>The user enters the number of vertices (cities) and edges (roads).</li>
+<li>The user enters every edge (its two endpoints and the cost between them).</li>
+<li>The program sorts all edges from cheapest to costliest.</li>
+<li>Edges are then taken one by one — kept if they don&#x27;t form a cycle, skipped otherwise (checked using the Union-Find technique).</li>
+<li>Each chosen edge is printed, along with its cost.</li>
+<li>The total minimum cost is printed at the end.</li>
+<li>The time taken (in seconds) is displayed.</li>
+</ol>
+<p>In short: sort all roads from cheapest to costliest, take them one at a time skipping any that would form a cycle, until every city is connected.</p>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">Explain Kruskal’s algorithm.</p><p class="a">Sort all edges by weight. Take them in increasing order and add an edge if it does not form a cycle, until V - 1 edges are chosen.</p></div>
+<div class="qa"><p class="q">How is a cycle detected in this program?</p><p class="a">With the disjoint set (union-find) functions <code>find</code> and a union step: an edge is added only if its two ends have different parents.</p></div>
+<div class="qa"><p class="q">What is the time complexity of Kruskal’s algorithm?</p><p class="a">O(E log E), which is dominated by sorting the edges.</p></div>
+<div class="qa"><p class="q">Which technique does it use?</p><p class="a">The greedy method.</p></div>
+<div class="qa"><p class="q">When is Kruskal better than Prim?</p><p class="a">For sparse graphs, where the number of edges is small.</p></div>
+<div class="qa"><p class="q">What does path compression do in find()?</p><p class="a">It makes every visited node point directly to the root (<code>parent[i] = find(parent[i])</code>), which speeds up later searches.</p></div>
+<div class="qa"><p class="q">What happens if the graph is not connected?</p><p class="a">The algorithm finds a minimum spanning forest, with fewer than V - 1 edges.</p></div>
+<div class="qa"><p class="q">How many edges does the tree have?</p><p class="a">V - 1, here 4 edges for 5 vertices.</p></div>
+</div>
+
+<div class="exp" id="exp10">
+<p class="meta">Analysis of Algorithms Lab</p>
+<h1>Experiment 10: 0/1 Knapsack using Dynamic Programming</h1>
+<div class="aim"><b>Aim:</b> Implement 0/1 Knapsack problem using Dynamic Programming.</div>
+<h2>Source code</h2>
+<p>This is the program from the lab manual, unchanged. Compile it with <code>gcc aoa_exp10.c -o exp10</code> and run <code>./exp10</code> (on Windows with MinGW, <code>exp10</code>).</p>
+<div class="code" data-file="aoa_exp10.c"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;time.h&gt;
+int max(int a, int b)
+{
+    return (a &gt; b) ? a : b;
+}
+int main()
+{
+    int n, capacity, i, w;
+    clock_t start, end;
+    double cpu_time_used;
+    printf(&quot;Enter number of items: &quot;);
+    scanf(&quot;%d&quot;, &amp;n);
+    int weight[n], profit[n];
+    printf(&quot;Enter weight and profit of each item:\n&quot;);
+    for(i = 0; i &lt; n; i++)
+    {
+        printf(&quot;Item %d weight: &quot;, i + 1);
+        scanf(&quot;%d&quot;, &amp;weight[i]);
+        printf(&quot;Item %d profit: &quot;, i + 1);
+        scanf(&quot;%d&quot;, &amp;profit[i]);
+    }
+    printf(&quot;Enter knapsack capacity: &quot;);
+    scanf(&quot;%d&quot;, &amp;capacity);
+    int dp[n + 1][capacity + 1];
+    // Start timing
+    start = clock();
+    // Build DP table bottom-up
+    for(i = 0; i &lt;= n; i++)
+    {
+        for(w = 0; w &lt;= capacity; w++)
+        {
+            if(i == 0 || w == 0)
+            dp[i][w] = 0;
+            else if(weight[i - 1] &lt;= w)
+            dp[i][w] = max(profit[i - 1] + dp[i - 1][w - weight[i - 1]], dp[i - 1][w]);
+            else
+            dp[i][w] = dp[i - 1][w];
+        }
+    }
+    // Trace back to find selected items
+    int res = dp[n][capacity];
+    w = capacity;
+    printf(&quot;\nItems selected (0/1 Knapsack - DP):\n&quot;);
+    for(i = n; i &gt; 0 &amp;&amp; res &gt; 0; i--)
+    {
+        if(res != dp[i - 1][w])
+        {
+            printf(&quot;Item (W=%d, P=%d) -&gt; Taken\n&quot;, weight[i - 1], profit[i - 1]);
+            res -= profit[i - 1];
+            w -= weight[i - 1];
+        }
+    }
+    // End timing
+    end = clock();
+    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf(&quot;\nMaximum Profit (0/1 Knapsack DP) = %d\n&quot;, dp[n][capacity]);
+    printf(&quot;\nTime Required = %f seconds\n&quot;, cpu_time_used);
+    return 0;
+}</pre></div>
+<h2>Sample output</h2>
+<p>This is a real run of the program above (the text after each prompt is what was typed). The time differs on every run.</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter number of items: 4
+Enter weight and profit of each item:
+Item 1 weight: 2
+Item 1 profit: 12
+Item 2 weight: 1
+Item 2 profit: 10
+Item 3 weight: 3
+Item 3 profit: 20
+Item 4 weight: 2
+Item 4 profit: 15
+Enter knapsack capacity: 5
+
+Items selected (0/1 Knapsack - DP):
+Item (W=2, P=15) -&gt; Taken
+Item (W=1, P=10) -&gt; Taken
+Item (W=2, P=12) -&gt; Taken
+
+Maximum Profit (0/1 Knapsack DP) = 37
+
+Time Required = 0.000012 seconds</pre></div>
+<h2>Explanation (from the manual)</h2>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Concept</h3>
+<p>This is similar to the Fractional Knapsack from Experiment 7 — a bag with a fixed capacity, items with weight and profit, and the goal of maximizing total profit. But this time there&#x27;s an important restriction: items cannot be broken. Either take an item completely (1), or don&#x27;t take it at all (0) — hence the name &quot;0/1 Knapsack&quot;.</p>
+<p>The Greedy method (used in Experiment 7) does not work reliably here, because &quot;take the best-ratio item first&quot; doesn&#x27;t always give the best possible answer when items can&#x27;t be split. So this problem is solved using Dynamic Programming (DP), which systematically stores all possibilities in a table to find the best answer.</p>
+<p>The DP idea: build a table where rows represent items and columns represent capacity (0 up to the maximum capacity). Each cell stores &quot;the maximum profit achievable using only these items, with this much capacity available&quot;. For every item, two choices are checked — include it, or exclude it — whichever gives more profit is stored in the table. The final cell holds the overall maximum profit.</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Worked Example</h3>
+<div class="code"><button class="copy">Copy</button><pre>  4 items:
+  Item 1: weight=1, profit=1
+  Item 2: weight=3, profit=4
+  Item 3: weight=4, profit=5
+  Item 4: weight=5, profit=7
+  Bag capacity = 7
+
+  The DP table checks, for every item: if its weight exceeds the remaining capacity, skip it
+  (keep the previous answer); otherwise compare &quot;profit if taken&quot; against &quot;profit if not
+  taken&quot; and keep whichever is larger.
+
+  The best combination found is: Item 2 (weight=3, profit=4) + Item 3 (weight=4, profit=5).
+  Total weight = 3+4 = 7 (exactly the capacity). Total profit = 4+5 = 9.
+
+  Maximum Profit = 9
+  (Note: the Greedy method might have chosen a different combination here since it&#x27;s ratio-
+  based, but DP always guarantees the truly optimal answer for the 0/1 case.)</pre></div>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Time Complexity</h3>
+<p>The time complexity of 0/1 Knapsack DP is O(n × W), where n is the number of items and W is the bag&#x27;s capacity. This can be slower than Greedy for very large capacities, but it always guarantees the optimal (correct) answer, whereas Greedy is only guaranteed optimal for the Fractional case.</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">What the Program Does</h3>
+<ol>
+<li>The user enters how many items there are, along with each item&#x27;s weight and profit.</li>
+<li>The user enters the bag&#x27;s capacity.</li>
+<li>The program builds a DP table bottom-up (from small sub-problems to larger ones, the process above).</li>
+<li>The table is then traced back to determine which items were actually chosen, marking them &quot;Taken&quot;.</li>
+<li>The maximum profit is printed at the end.</li>
+<li>The time taken (in seconds) is displayed.</li>
+</ol>
+<p>In short: for every item, check both &quot;take it&quot; and &quot;don&#x27;t take it&quot; in the table, and keep whichever gives more profit — items cannot be split.</p>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is the 0/1 Knapsack problem?</p><p class="a">Choose items, each taken whole or not at all, so that the total weight does not exceed the capacity and the total profit is maximum.</p></div>
+<div class="qa"><p class="q">Why is dynamic programming used?</p><p class="a">The problem has overlapping subproblems and optimal substructure, so storing sub-results in a table avoids repeated work.</p></div>
+<div class="qa"><p class="q">Write the recurrence.</p><p class="a">If weight[i] <= w: K[i][w] = max(profit[i] + K[i-1][w - weight[i]], K[i-1][w]). Otherwise K[i][w] = K[i-1][w].</p></div>
+<div class="qa"><p class="q">What is the time and space complexity?</p><p class="a">O(n × W) for both, where n is the number of items and W the capacity.</p></div>
+<div class="qa"><p class="q">Why is O(nW) called pseudo-polynomial?</p><p class="a">It depends on the value of W, not only on the number of bits needed to write W.</p></div>
+<div class="qa"><p class="q">How does the program find which items were taken?</p><p class="a">It walks back through the table from K[n][W]: if K[i][w] differs from K[i-1][w], item i was taken and its weight is subtracted.</p></div>
+<div class="qa"><p class="q">Compare 0/1 Knapsack with the Fractional Knapsack.</p><p class="a">Fractional is solved by the greedy method in O(n log n). 0/1 needs dynamic programming because greedy is not optimal.</p></div>
+<div class="qa"><p class="q">What is the answer for the sample input?</p><p class="a">Items (W=2, P=12), (W=1, P=10) and (W=2, P=15) fit in capacity 5, for a maximum profit of 37.</p></div>
+</div>
+
+<div class="exp" id="exp11">
+<p class="meta">Analysis of Algorithms Lab</p>
+<h1>Experiment 11: Longest Common Subsequence using Dynamic Programming</h1>
+<div class="aim"><b>Aim:</b> Implement Longest Common Subsequence problem using Dynamic Programming.</div>
+<h2>Source code</h2>
+<p>This is the program from the lab manual, unchanged. Compile it with <code>gcc aoa_exp11.c -o exp11</code> and run <code>./exp11</code> (on Windows with MinGW, <code>exp11</code>).</p>
+<div class="code" data-file="aoa_exp11.c"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;time.h&gt;
+int max(int a, int b)
+{
+    return (a &gt; b) ? a : b;
+}
+int main()
+{
+    char X[100], Y[100];
+    int m, n, i, j;
+    clock_t start, end;
+    double cpu_time_used;
+    printf(&quot;Enter first string: &quot;);
+    scanf(&quot;%s&quot;, X);
+    printf(&quot;Enter second string: &quot;);
+    scanf(&quot;%s&quot;, Y);
+    m = strlen(X);
+    n = strlen(Y);
+    int dp[m + 1][n + 1];
+    // Start timing
+    start = clock();
+    // Build DP table bottom-up
+    for(i = 0; i &lt;= m; i++)
+    {
+        for(j = 0; j &lt;= n; j++)
+        {
+            if(i == 0 || j == 0)
+            dp[i][j] = 0;
+            else if(X[i - 1] == Y[j - 1])
+            dp[i][j] = dp[i - 1][j - 1] + 1;
+            else
+            dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+        }
+    }
+    // Trace back to build the LCS string
+    int index = dp[m][n];
+    char lcs[index + 1];
+    lcs[index] = &#x27;\0&#x27;;
+    i = m;
+    j = n;
+    while(i &gt; 0 &amp;&amp; j &gt; 0)
+    {
+        if(X[i - 1] == Y[j - 1])
+        {
+            lcs[index - 1] = X[i - 1];
+            i--;
+            j--;
+            index--;
+        }
+        else if(dp[i - 1][j] &gt; dp[i][j - 1])
+        i--;
+        else
+        j--;
+    }
+    // End timing
+    end = clock();
+    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf(&quot;\nLength of Longest Common Subsequence = %d\n&quot;, dp[m][n]);
+    printf(&quot;Longest Common Subsequence = %s\n&quot;, lcs);
+    printf(&quot;\nTime Required = %f seconds\n&quot;, cpu_time_used);
+    return 0;
+}</pre></div>
+<h2>Sample output</h2>
+<p>This is a real run of the program above (the text after each prompt is what was typed). The time differs on every run.</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter first string: AGGTAB
+Enter second string: GXTXAYB
+
+Length of Longest Common Subsequence = 4
+Longest Common Subsequence = GTAB
+
+Time Required = 0.000002 seconds</pre></div>
+<h2>Explanation (from the manual)</h2>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Concept</h3>
+<p>Given two strings, e.g. &quot;AGGTAB&quot; and &quot;GXTXAYB&quot; , the goal is to find the longest common subsequence between them.</p>
+<p>A &quot;subsequence&quot; means: keeping the letters of a string in the same relative order, but allowed to skip some letters in between (the order itself must not change). For example, a subsequence of &quot;AGGTAB&quot; could be &quot;GTB&quot; (some letters skipped, but order preserved).</p>
+<p>A &quot;common subsequence&quot; is one that appears in both strings. We want the longest such subsequence.</p>
+<p>This is solved using Dynamic Programming: build a table comparing every character pair from both strings.</p>
+<p>If the current characters of both strings are the same → this character becomes part of the LCS, so add 1 to the previous diagonal answer. If they are different → check both possibilities (skip a character from one string, or from the other) and keep whichever gives the longer result.</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Worked Example</h3>
+<div class="code"><button class="copy">Copy</button><pre>  String X = &quot;AGGTAB&quot;
+  String Y = &quot;GXTXAYB&quot;
+
+  The DP table is filled character by character, and matching characters are collected in
+  order: G, T, A, B.
+
+  So LCS = &quot;GTAB&quot; (length = 4).
+
+  Checking: &quot;GTAB&quot; appears in the same order in both strings —
+  X = A-G-G-T-A-B (G, T, A, B appear in this order)
+  Y = G-X-T-X-A-Y-B (G, T, A, B appear in this order too, skipping X, X, Y)</pre></div>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Time Complexity</h3>
+<p>LCS has a time complexity of O(m × n), where m and n are the lengths of the two strings. Every character pair is checked exactly once in the table, which makes this approach far more efficient than brute force (generating and comparing every possible subsequence, which would be extremely slow).</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">What the Program Does</h3>
+<ol>
+<li>The user enters two strings.</li>
+<li>The program builds a DP table comparing characters of both strings (the match/no-match process above).</li>
+<li>The LCS length is read off the table, and the table is traced back to reconstruct the actual LCS string.</li>
+<li>Both the length and the actual LCS string are printed.</li>
+<li>The time taken (in seconds) is displayed.</li>
+</ol>
+<p>In short: compare characters of both strings, extend the LCS on a match, and pick the best possibility from the table on a mismatch.</p>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is the Longest Common Subsequence?</p><p class="a">The longest sequence that appears in both strings in the same order, but not necessarily next to each other.</p></div>
+<div class="qa"><p class="q">Subsequence vs substring?</p><p class="a">A substring is contiguous. A subsequence only keeps the order and can skip characters.</p></div>
+<div class="qa"><p class="q">Write the recurrence for LCS.</p><p class="a">If X[i] = Y[j]: L[i][j] = L[i-1][j-1] + 1. Otherwise L[i][j] = max(L[i-1][j], L[i][j-1]). The first row and column are 0.</p></div>
+<div class="qa"><p class="q">What is the time and space complexity?</p><p class="a">O(m × n) for both, for strings of lengths m and n.</p></div>
+<div class="qa"><p class="q">How is the LCS string printed?</p><p class="a">By moving back through the table from L[m][n]: a matching character is added and the move is diagonal, otherwise the move goes to the larger neighbour.</p></div>
+<div class="qa"><p class="q">Is the LCS unique?</p><p class="a">Not always. There can be several subsequences with the same maximum length.</p></div>
+<div class="qa"><p class="q">What is the LCS of AGGTAB and GXTXAYB?</p><p class="a">GTAB, of length 4.</p></div>
+<div class="qa"><p class="q">Where is LCS used?</p><p class="a">In file comparison (diff), DNA sequence comparison and version control.</p></div>
+</div>
+
+<div class="exp" id="exp12">
+<p class="meta">Analysis of Algorithms Lab</p>
+<h1>Experiment 12: Matrix Chain Multiplication using Dynamic Programming</h1>
+<div class="aim"><b>Aim:</b> Implement Matrix Chain Multiplication problem using Dynamic Programming.</div>
+<h2>Source code</h2>
+<p>This is the program from the lab manual, unchanged. Compile it with <code>gcc aoa_exp12.c -o exp12</code> and run <code>./exp12</code> (on Windows with MinGW, <code>exp12</code>).</p>
+<div class="code" data-file="aoa_exp12.c"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include &lt;stdio.h&gt;
+#include &lt;limits.h&gt;
+#include &lt;time.h&gt;
+int main()
+{
+    int n, i, j, k, L;
+    clock_t start, end;
+    double cpu_time_used;
+    printf(&quot;Enter number of matrices: &quot;);
+    scanf(&quot;%d&quot;, &amp;n);
+    int p[n + 1];
+    printf(&quot;Enter dimensions (p0 p1 ... p%d) such that matrix i has dimension p[i-1] x p[i]:\n&quot;, n);
+    for(i = 0; i &lt;= n; i++)
+    {
+        printf(&quot;p%d: &quot;, i);
+        scanf(&quot;%d&quot;, &amp;p[i]);
+    }
+    int dp[n + 1][n + 1];
+    int s[n + 1][n + 1];    // to store split points for parenthesization
+    // Start timing
+    start = clock();
+    // Cost is zero when multiplying one matrix
+    for(i = 1; i &lt;= n; i++)
+    dp[i][i] = 0;
+    // L is chain length
+    for(L = 2; L &lt;= n; L++)
+    {
+        for(i = 1; i &lt;= n - L + 1; i++)
+        {
+            j = i + L - 1;
+            dp[i][j] = INT_MAX;
+            for(k = i; k &lt; j; k++)
+            {
+                int cost = dp[i][k] + dp[k + 1][j] + p[i - 1] * p[k] * p[j];
+                if(cost &lt; dp[i][j])
+                {
+                    dp[i][j] = cost;
+                    s[i][j] = k;
+                }
+            }
+        }
+    }
+    // End timing
+    end = clock();
+    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf(&quot;\nMinimum number of multiplications = %d\n&quot;, dp[1][n]);
+    printf(&quot;\nTime Required = %f seconds\n&quot;, cpu_time_used);
+    return 0;
+}</pre></div>
+<h2>Sample output</h2>
+<p>This is a real run of the program above (the text after each prompt is what was typed). The time differs on every run.</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter number of matrices: 4
+Enter dimensions (p0 p1 ... p4) such that matrix i has dimension p[i-1] x p[i]:
+p0: 40
+p1: 20
+p2: 30
+p3: 10
+p4: 30
+
+Minimum number of multiplications = 26000
+
+Time Required = 0.000001 seconds</pre></div>
+<h2>Explanation (from the manual)</h2>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Concept</h3>
+<p>Given several matrices to multiply together, e.g. A×B×C×D, the final result is always the same regardless of how the brackets are arranged (e.g. (A×B)×C or A×(B×C)) — but the number of scalar multiplications required can differ hugely depending on the bracket order. Every matrix has a shape (rows × columns), and multiplying two matrices together requires a number of multiplications determined by these dimensions. The goal of this problem is to find the cheapest bracket order (fewest multiplications), without actually performing any of the multiplications.</p>
+<p>This is solved with Dynamic Programming: compute the optimal cost for small chain lengths first (2 matrices, then 3, then 4, and so on), and combine these results to compute the optimal cost for larger chains.</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Worked Example</h3>
+<div class="code"><button class="copy">Copy</button><pre>  6 matrices with dimensions p = [30, 35, 15, 5, 10, 20, 25], meaning:
+  Matrix 1: 30×35, Matrix 2: 35×15, Matrix 3: 15×5, Matrix 4: 5×10, Matrix 5: 10×20, Matrix
+  6: 20×25
+
+  The DP table is filled starting with small chains (pairs of matrices) and building up to
+  the full 6-matrix chain, checking at each step the best point to split the chain into two
+  parts to minimize total cost.
+
+  Result: Minimum number of multiplications = 15125
+
+  (A naive left-to-right bracketing order, e.g. ((((A×B)×C)×D)×E)×F, could require many times
+  more multiplications — the correct order in this example achieves the minimum of 15125.)</pre></div>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Time Complexity</h3>
+<p>Matrix Chain Multiplication DP has a time complexity of O(n³), where n is the number of matrices. A brute- force approach (trying every possible bracketing) would take exponential time, which becomes impractically slow for larger n — which is exactly why the DP approach matters here.</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">What the Program Does</h3>
+<ol>
+<li>The user enters how many matrices there are.</li>
+<li>The user enters their dimensions (p0, p1, ..., pn, where matrix i has shape p[i−1] × p[i]).</li>
+<li>The program builds a DP table computing minimum cost from small chains up to the full chain (the process above).</li>
+<li>The minimum number of multiplications is printed at the end.</li>
+<li>The time taken (in seconds) is displayed.</li>
+</ol>
+<p>In short: find the best cost for small matrix-chains first, then combine them to find the best cost for larger chains, until the full chain&#x27;s answer is found.</p>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is the Matrix Chain Multiplication problem?</p><p class="a">Given a chain of matrices, find the order of multiplication (parenthesization) that needs the fewest scalar multiplications.</p></div>
+<div class="qa"><p class="q">Why does the order matter?</p><p class="a">Matrix multiplication is associative, so the result is the same, but the number of operations changes a lot with the order.</p></div>
+<div class="qa"><p class="q">Write the recurrence.</p><p class="a">m[i][j] = minimum over k from i to j-1 of m[i][k] + m[k+1][j] + p[i-1]·p[k]·p[j], with m[i][i] = 0.</p></div>
+<div class="qa"><p class="q">What are the time and space complexities?</p><p class="a">O(n³) time and O(n²) space.</p></div>
+<div class="qa"><p class="q">What is the cost of multiplying a p×q matrix by a q×r matrix?</p><p class="a">p × q × r scalar multiplications.</p></div>
+<div class="qa"><p class="q">What does the program output for the dimensions 40 20 30 10 30?</p><p class="a">26000, the minimum number of scalar multiplications for 4 matrices.</p></div>
+<div class="qa"><p class="q">Does the program multiply the matrices?</p><p class="a">No. It only finds the minimum number of multiplications.</p></div>
+<div class="qa"><p class="q">How many ways are there to parenthesize n matrices?</p><p class="a">The (n-1)th Catalan number, which grows exponentially, so trying all of them is too slow.</p></div>
+</div>
+
+<div class="exp" id="exp13">
+<p class="meta">Analysis of Algorithms Lab</p>
+<h1>Experiment 13: N-Queen&#x27;s Problem using Backtracking</h1>
+<div class="aim"><b>Aim:</b> Implement N Queen&#x27;s problem using Back Tracking.</div>
+<h2>Source code</h2>
+<p>This is the program from the lab manual, unchanged. Compile it with <code>gcc aoa_exp13.c -o exp13</code> and run <code>./exp13</code> (on Windows with MinGW, <code>exp13</code>).</p>
+<div class="code" data-file="aoa_exp13.c"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;time.h&gt;
+int board[20];
+int n;
+int solutionCount = 0;
+// Check if it is safe to place a queen at board[row] = col
+int isSafe(int row, int col)
+{
+    int i;
+    for(i = 0; i &lt; row; i++)
+    {
+        if(board[i] == col || abs(board[i] - col) == abs(i - row))
+        return 0;
+    }
+    return 1;
+}
+// Print one solution
+void printSolution()
+{
+    int i, j;
+    solutionCount++;
+    printf(&quot;\nSolution %d:\n&quot;, solutionCount);
+    for(i = 0; i &lt; n; i++)
+    {
+        for(j = 0; j &lt; n; j++)
+        {
+            if(board[i] == j)
+            printf(&quot;Q &quot;);
+            else
+            printf(&quot;. &quot;);
+        }
+        printf(&quot;\n&quot;);
+    }
+}
+// Solve using backtracking
+void solveNQueen(int row)
+{
+    if(row == n)
+    {
+        printSolution();
+        return;
+    }
+    int col;
+    for(col = 0; col &lt; n; col++)
+    {
+        if(isSafe(row, col))
+        {
+            board[row] = col;
+            solveNQueen(row + 1);
+            // Backtrack (implicit, next iteration overwrites board[row])
+        }
+    }
+}
+int main()
+{
+    clock_t start, end;
+    double cpu_time_used;
+    printf(&quot;Enter number of queens (N): &quot;);
+    scanf(&quot;%d&quot;, &amp;n);
+    // Start timing
+    start = clock();
+    solveNQueen(0);
+    // End timing
+    end = clock();
+    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf(&quot;\nTotal solutions for %d-Queens = %d\n&quot;, n, solutionCount);
+    printf(&quot;\nTime Required = %f seconds\n&quot;, cpu_time_used);
+    return 0;
+}</pre></div>
+<h2>Sample output</h2>
+<p>This is a real run of the program above (the text after each prompt is what was typed). The time differs on every run.</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter number of queens (N): 4
+
+Solution 1:
+. Q . . 
+. . . Q 
+Q . . . 
+. . Q . 
+
+Solution 2:
+. . Q . 
+Q . . . 
+. . . Q 
+. Q . . 
+
+Total solutions for 4-Queens = 2
+
+Time Required = 0.000062 seconds</pre></div>
+<h2>Explanation (from the manual)</h2>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Concept</h3>
+<p>Given an N×N chessboard (e.g. 4×4), the goal is to place N queens on it so that no two queens attack each other. In chess, a queen can move in any direction — along the same row/column, or diagonally. So the condition is: no two queens may share the same row, the same column, or the same diagonal.</p>
+<p>This is solved using Backtracking — a try-and-undo approach:</p>
+<ol>
+<li>Try placing a queen in some safe column of the current row.</li>
+<li>If that position is safe, move to the next row and try placing a queen there too.</li>
+<li>If no column in a row turns out to be safe, backtrack — remove the queen from the previous row and try a different column there instead.</li>
+<li>Repeat until all N queens are placed safely (a solution is found), or every possibility has been exhausted.</li>
+</ol>
+<p>More than one solution can exist for a given N — the program finds and displays all valid solutions.</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Worked Example</h3>
+<div class="code"><button class="copy">Copy</button><pre>  For N=4, a 4×4 board has exactly 2 ways to place 4 queens so that none of them attack each
+  other:
+
+  Solution 1:
+  . Q . .
+  . . . Q
+  Q . . .
+  . . Q .
+
+  Solution 2:
+  . . Q .
+  Q . . .
+  . . . Q
+  . Q . .
+
+  Total solutions for 4-Queens = 2. (Checking both solutions confirms no two queens share a
+  row, column, or diagonal.)</pre></div>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Time Complexity</h3>
+<p>The worst-case time complexity of the N-Queens problem is roughly O(N!), since a great many combinations may need to be tried. Backtracking speeds this up significantly, because as soon as a position is found to be &quot;unsafe&quot;, that entire branch is abandoned immediately (without exploring it further) — saving a lot of unnecessary work.</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">What the Program Does</h3>
+<ol>
+<li>The user is asked how many queens to place (N).</li>
+<li>The program tries placing queens row by row, checking safety at each step (the process above).</li>
+<li>Every complete valid solution found is printed as a board (Q = queen, . = empty square).</li>
+<li>This process continues until all possible solutions have been found.</li>
+<li>The total number of solutions is printed at the end.</li>
+<li>The time taken (in seconds) is displayed.</li>
+</ol>
+<p>In short: place a queen in each row one at a time; if you get stuck (no safe column left), backtrack to the previous row&#x27;s queen and try a different column, until a solution is found.</p>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is the N-Queens problem?</p><p class="a">Place N queens on an N × N chessboard so that no two queens attack each other.</p></div>
+<div class="qa"><p class="q">What is backtracking?</p><p class="a">Building a solution step by step and going back (undoing the last choice) as soon as a choice cannot lead to a solution.</p></div>
+<div class="qa"><p class="q">When is it safe to place a queen?</p><p class="a">When no other queen is in the same column or on the same diagonal. One queen per row is already ensured by the program.</p></div>
+<div class="qa"><p class="q">What does the isSafe function check?</p><p class="a">It compares the new position with the queens already placed in earlier rows for the same column and for both diagonals.</p></div>
+<div class="qa"><p class="q">How many solutions are there for 4 and 8 queens?</p><p class="a">2 solutions for N = 4 and 92 for N = 8.</p></div>
+<div class="qa"><p class="q">Is there a solution for N = 2 or N = 3?</p><p class="a">No.</p></div>
+<div class="qa"><p class="q">What is the time complexity?</p><p class="a">About O(N!) in the worst case, though pruning reduces the work a lot in practice.</p></div>
+<div class="qa"><p class="q">How are the queens stored?</p><p class="a">In an array board[row] = col, so each row holds the column of its queen.</p></div>
+</div>
+
+<div class="exp" id="exp14">
+<p class="meta">Analysis of Algorithms Lab</p>
+<h1>Experiment 14: Naive String-Matching Algorithm</h1>
+<div class="aim"><b>Aim:</b> Implement Naive String-Matching Algorithm to match a pattern with the string.</div>
+<h2>Source code</h2>
+<p>This is the program from the lab manual, unchanged. Compile it with <code>gcc aoa_exp14.c -o exp14</code> and run <code>./exp14</code> (on Windows with MinGW, <code>exp14</code>).</p>
+<div class="code" data-file="aoa_exp14.c"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;time.h&gt;
+int main()
+{
+    char text[200], pattern[100];
+    int n, m, i, j, found = 0;
+    clock_t start, end;
+    double cpu_time_used;
+    printf(&quot;Enter the text string: &quot;);
+    scanf(&quot;%s&quot;, text);
+    printf(&quot;Enter the pattern to search: &quot;);
+    scanf(&quot;%s&quot;, pattern);
+    n = strlen(text);
+    m = strlen(pattern);
+    // Start timing
+    start = clock();
+    printf(&quot;\nMatching positions (Naive String Matching):\n&quot;);
+    // Slide the pattern over text one by one
+    for(i = 0; i &lt;= n - m; i++)
+    {
+        for(j = 0; j &lt; m; j++)
+        {
+            if(text[i + j] != pattern[j])
+            break;
+        }
+        if(j == m)
+        {
+            printf(&quot;Pattern found at index %d\n&quot;, i);
+            found = 1;
+        }
+    }
+    // End timing
+    end = clock();
+    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+    if(!found)
+    printf(&quot;Pattern not found in the text\n&quot;);
+    printf(&quot;\nTime Required = %f seconds\n&quot;, cpu_time_used);
+    return 0;
+}</pre></div>
+<h2>Sample output</h2>
+<p>This is a real run of the program above (the text after each prompt is what was typed). The time differs on every run.</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter the text string: ABABDABACDABABCABAB
+Enter the pattern to search: ABABCABAB
+
+Matching positions (Naive String Matching):
+Pattern found at index 10
+
+Time Required = 0.000012 seconds</pre></div>
+<h2>Explanation (from the manual)</h2>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Concept</h3>
+<p>Given a large text string, e.g. &quot;AABAACAADAABAABA&quot; , and a smaller pattern string to search for within it, e.g. &quot;AABA&quot; , the goal is to find every position where the pattern matches inside the text.</p>
+<p>The &quot;naive&quot; (i.e. straightforward, no clever tricks) approach: slide the pattern over the text one position at a time, and at each position check character-by-character whether the pattern matches that portion of the text.</p>
+<p>Process:</p>
+<ol>
+<li>Place the pattern at the start (index 0) of the text.</li>
+<li>Compare characters one by one — if all of them match, report a match at this position.</li>
+<li>If any mismatch occurs, stop comparing and slide the pattern one position forward.</li>
+<li>Repeat this until the end of the text is reached.</li>
+</ol>
+<p>It is called &quot;naive&quot; because it doesn&#x27;t use any smart shortcuts (like the KMP or Boyer–Moore algorithms do) — it simply tries every position directly.</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Worked Example</h3>
+<div class="code"><button class="copy">Copy</button><pre>  Text: &quot;AABAACAADAABAABA&quot;
+  Pattern: &quot;AABA&quot;
+
+  Index 0: text[0..3] = &quot;AABA&quot; → MATCH! (position 0)
+  Index 1: text[1..4] = &quot;ABAA&quot; → does not match &quot;AABA&quot;
+  Index 2: text[2..5] = &quot;BAAC&quot; → no match
+  … (continue checking every position) …
+  Index 9: text[9..12] = &quot;AABA&quot; → MATCH! (position 9)
+  Index 12: text[12..15] = &quot;AABA&quot; → MATCH! (position 12)
+
+  Result: Pattern &quot;AABA&quot; found at indices 0, 9, and 12.</pre></div>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Time Complexity</h3>
+<p>Naive String Matching has a worst-case time complexity of O(n × m), where n is the text length and m is the pattern length, since the entire pattern may need to be checked character-by-character at every position. This can be slow for large texts, which is why real-world applications (text editors, search engines) use smarter algorithms (KMP, Boyer–Moore, Rabin–Karp) that avoid repeated comparisons. Even so, the naive method is the easiest to understand and works perfectly fine for small texts.</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">What the Program Does</h3>
+<ol>
+<li>The user enters a text string and a pattern string.</li>
+<li>The program slides the pattern over every possible position in the text, checking character-by-character (the process above).</li>
+<li>Every position where the full pattern matches is printed.</li>
+<li>If no match is found anywhere, &quot;Pattern not found&quot; is printed.</li>
+<li>The time taken (in seconds) is displayed.</li>
+</ol>
+<p>In short: slide the pattern one position at a time over the text, compare character-by-character at each position, and report every position where it fully matches.</p>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is the Naive String-Matching algorithm?</p><p class="a">It slides the pattern over the text one position at a time and checks the pattern character by character at each position.</p></div>
+<div class="qa"><p class="q">What is its time complexity?</p><p class="a">Worst case O(m × (n - m + 1)), that is O(nm). Best case O(n) when the first character mismatches every time.</p></div>
+<div class="qa"><p class="q">When does the worst case happen?</p><p class="a">For example text AAAAAAAB and pattern AAAB, where almost all characters match before a mismatch.</p></div>
+<div class="qa"><p class="q">Name a faster string matching algorithm.</p><p class="a">KMP takes O(n + m). Rabin-Karp uses hashing and Boyer-Moore skips characters.</p></div>
+<div class="qa"><p class="q">What are n and m?</p><p class="a">n is the length of the text and m is the length of the pattern.</p></div>
+<div class="qa"><p class="q">How many shifts are checked?</p><p class="a">n - m + 1 positions.</p></div>
+<div class="qa"><p class="q">What does the program print for ABABDABACDABABCABAB and ABABCABAB?</p><p class="a">Pattern found at index 10 (positions start from 0).</p></div>
+<div class="qa"><p class="q">Can the pattern overlap itself in matches?</p><p class="a">Yes. The naive method checks every position, so overlapping matches are also found.</p></div>
+</div>
+
+<div class="exp" id="exp15">
+
+<p class="meta">Analysis of Algorithms Lab (5CS4-23 / 5CS4-24)</p>
+<h1>⚡ Algorithm Reference &amp; Compilation Guide</h1>
+<div class="aim"><b>Guide:</b> Complete reference table of all 14 experiments, time &amp; space complexities, design techniques, and GCC compilation commands.</div>
+
+<h2>How to compile and run</h2>
+<p>All programs are written in standard C99 and can be compiled using GCC on Windows (MinGW / MSYS2 / WSL) or Linux / macOS.</p>
+<div class="code"><button class="copy">Copy</button><pre># 1. Open Terminal or Command Prompt in the code directory
+# 2. Compile with GCC:
+gcc aoa_exp1.c -o exp1
+
+# 3. Run the executable:
+# On Windows (Command Prompt / PowerShell):
+exp1
+
+# On Linux / macOS / Git Bash:
+./exp1</pre></div>
+
+<h2>Algorithms complexity &amp; design paradigms (All 14 Experiments)</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Exp</th>
+      <th>Experiment / Algorithm</th>
+      <th>Design Technique</th>
+      <th>Time Complexity</th>
+      <th>Space Complexity</th>
+      <th>File</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><b>Exp 1</b></td>
+      <td>Quick Sort</td>
+      <td>Divide &amp; Conquer</td>
+      <td>Best/Avg: O(n log n)<br>Worst: O(n²)</td>
+      <td>O(log n)</td>
+      <td><code>aoa_exp1.c</code></td>
+    </tr>
+    <tr>
+      <td><b>Exp 2</b></td>
+      <td>Merge Sort</td>
+      <td>Divide &amp; Conquer</td>
+      <td>Best/Avg/Worst: O(n log n)</td>
+      <td>O(n)</td>
+      <td><code>aoa_exp2.c</code></td>
+    </tr>
+    <tr>
+      <td><b>Exp 3</b></td>
+      <td>Bubble Sort</td>
+      <td>Brute Force / Comparison</td>
+      <td>Best: O(n)<br>Worst: O(n²)</td>
+      <td>O(1)</td>
+      <td><code>aoa_exp3.c</code></td>
+    </tr>
+    <tr>
+      <td><b>Exp 4</b></td>
+      <td>Linear Search</td>
+      <td>Sequential Scan</td>
+      <td>Best: O(1)<br>Worst: O(n)</td>
+      <td>O(1)</td>
+      <td><code>aoa_exp4.c</code></td>
+    </tr>
+    <tr>
+      <td><b>Exp 5</b></td>
+      <td>Binary Search</td>
+      <td>Divide &amp; Conquer</td>
+      <td>Best: O(1)<br>Worst: O(log n)</td>
+      <td>O(1) iterative / O(log n) rec</td>
+      <td><code>aoa_exp5.c</code></td>
+    </tr>
+    <tr>
+      <td><b>Exp 6</b></td>
+      <td>Strassen's Matrix Multiplication</td>
+      <td>Divide &amp; Conquer</td>
+      <td>O(n^2.807) vs Standard O(n³)</td>
+      <td>O(n²)</td>
+      <td><code>aoa_exp6.c</code></td>
+    </tr>
+    <tr>
+      <td><b>Exp 7</b></td>
+      <td>Fractional Knapsack</td>
+      <td>Greedy Method</td>
+      <td>O(n log n) (sorting by ratio)</td>
+      <td>O(1) / O(n)</td>
+      <td><code>aoa_exp7.c</code></td>
+    </tr>
+    <tr>
+      <td><b>Exp 8</b></td>
+      <td>Prim's Minimum Spanning Tree</td>
+      <td>Greedy Method</td>
+      <td>O(V²) adj matrix / O(E log V) heap</td>
+      <td>O(V)</td>
+      <td><code>aoa_exp8.c</code></td>
+    </tr>
+    <tr>
+      <td><b>Exp 9</b></td>
+      <td>Kruskal's Minimum Spanning Tree</td>
+      <td>Greedy Method (Disjoint Set)</td>
+      <td>O(E log E) = O(E log V)</td>
+      <td>O(V + E)</td>
+      <td><code>aoa_exp9.c</code></td>
+    </tr>
+    <tr>
+      <td><b>Exp 10</b></td>
+      <td>0/1 Knapsack Problem</td>
+      <td>Dynamic Programming</td>
+      <td>O(n · W) (pseudo-polynomial)</td>
+      <td>O(n · W)</td>
+      <td><code>aoa_exp10.c</code></td>
+    </tr>
+    <tr>
+      <td><b>Exp 11</b></td>
+      <td>Longest Common Subsequence (LCS)</td>
+      <td>Dynamic Programming</td>
+      <td>O(m · n)</td>
+      <td>O(m · n)</td>
+      <td><code>aoa_exp11.c</code></td>
+    </tr>
+    <tr>
+      <td><b>Exp 12</b></td>
+      <td>Matrix Chain Multiplication (MCM)</td>
+      <td>Dynamic Programming</td>
+      <td>O(n³)</td>
+      <td>O(n²)</td>
+      <td><code>aoa_exp12.c</code></td>
+    </tr>
+    <tr>
+      <td><b>Exp 13</b></td>
+      <td>N-Queen's Problem</td>
+      <td>Backtracking</td>
+      <td>O(N!)</td>
+      <td>O(N)</td>
+      <td><code>aoa_exp13.c</code></td>
+    </tr>
+    <tr>
+      <td><b>Exp 14</b></td>
+      <td>Naive String Matching</td>
+      <td>Brute Force</td>
+      <td>Best: O(n)<br>Worst: O(m · (n - m + 1))</td>
+      <td>O(1)</td>
+      <td><code>aoa_exp14.c</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Summary of algorithm design strategies</h2>
+<ol>
+  <li><b>Divide and Conquer:</b> Breaks a problem into independent subproblems, solves them recursively, and combines the results (Quick Sort, Merge Sort, Binary Search, Strassen's).</li>
+  <li><b>Greedy Strategy:</b> Makes the locally optimal choice at each step with the hope of finding a global optimum (Fractional Knapsack, Prim's MST, Kruskal's MST).</li>
+  <li><b>Dynamic Programming:</b> Solves overlapping subproblems by storing their solutions in a table (memoization / tabulation) to avoid redundant computation (0/1 Knapsack, LCS, MCM).</li>
+  <li><b>Backtracking:</b> Builds candidates incrementally and abandons ("backtracks") a candidate as soon as it determines it cannot possibly lead to a valid solution (N-Queens).</li>
+  <li><b>Brute Force:</b> Exhaustively tries all possibilities without heuristic optimization (Bubble Sort, Linear Search, Naive String Matching).</li>
+</ol>
+
+</div>
+
+</main>
+<script>
+function showExp(n) {
+  document.querySelectorAll('.exp').forEach(function(el){ el.classList.remove('show'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  var target = document.getElementById('exp' + n);
+  if (target) target.classList.add('show');
+  var tab = document.getElementById('tab' + n);
+  if (tab) tab.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+function loadFromHash() {
+  var h = location.hash.replace('#','');
+  if (h === 'setup' || h === 'guide' || h === 'ref' || h === 'exp15') {
+    showExp(15);
+    return;
+  }
+  var n = parseInt(h.replace('exp','')) || 1;
+  if (n < 1 || n > 15) n = 1;
+  showExp(n);
+}
+window.addEventListener('hashchange', loadFromHash);
+loadFromHash();
+
+// Copy and Download buttons
+document.querySelectorAll('.code').forEach(function(b){
+  var pre = b.querySelector('pre'), btn = b.querySelector('.copy'), f = b.getAttribute('data-file');
+  if (!btn || !pre) return;
+  btn.onclick = async function(){
+    var text = pre.textContent || pre.innerText;
+    try{ await navigator.clipboard.writeText(text); }
+    catch(e){ var r=document.createRange();r.selectNodeContents(pre);var s=getSelection();s.removeAllRanges();s.addRange(r);document.execCommand('copy');s.removeAllRanges(); }
+    btn.textContent='Copied'; setTimeout(function(){btn.textContent='Copy';},1500);
+  };
+  var d = b.querySelector('.dl');
+  if (d && f) {
+    d.onclick = function(){
+      var text = pre.textContent || pre.innerText;
+      var t = text.replace(/\r?\n/g,'\r\n');
+      var u = URL.createObjectURL(new Blob([t],{type:'text/plain'}));
+      var a = document.createElement('a'); a.href=u; a.download=f;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function(){URL.revokeObjectURL(u);},1000);
+    };
+  }
+});
+
+function downloadMasterZip(btnEl){
+  var btn = btnEl || document.getElementById('dl-master-btn');
+  var origText = btn ? btn.innerHTML : '';
+  if (btn) { btn.innerHTML = '⏳ Downloading Master Codes…'; btn.style.pointerEvents='none'; }
+  var a = document.createElement('a');
+  a.href = 'AOAL_All_Experiments_Codes.zip';
+  a.download = 'AOAL_All_Experiments_Codes.zip';
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){ document.body.removeChild(a); }, 1000);
+  if (btn) {
+    setTimeout(function(){
+      btn.innerHTML = '✓ Master Codes Downloaded!';
+      setTimeout(function(){ btn.innerHTML = origText; btn.style.pointerEvents=''; }, 2500);
+    }, 500);
+  }
+}
+
+// Auto-download master zip when all.html is opened on web server
+(function(){
+  function triggerAutoDownload(){
+    if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
+      setTimeout(function(){ downloadMasterZip(); }, 600);
+    }
+  }
+  if (document.readyState === 'complete') { triggerAutoDownload(); }
+  else { window.addEventListener('load', triggerAutoDownload); }
+})();
+</script>
+</body></html>

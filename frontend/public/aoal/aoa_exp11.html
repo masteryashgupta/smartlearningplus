@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AOA Exp 11: Longest Common Subsequence using Dynamic Programming</title>
+<style>
+:root{--bg:#f6f7f9;--ink:#1c2333;--mute:#5a6478;--line:#d8dce5;--acc:#1f4fd8;--code:#0f1b33;--codeink:#e6ecff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Georgia,serif}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+h1{font-size:1.9rem;line-height:1.2;margin:.2em 0}
+h2{font-size:1.2rem;margin:2em 0 .5em;border-bottom:2px solid var(--acc);padding-bottom:.2em}
+.meta{color:var(--mute);font-size:.95rem;margin:0}
+.aim{background:#fff;border-left:4px solid var(--acc);padding:12px 16px;margin:18px 0}
+.code{position:relative;margin:12px 0}
+pre{background:var(--code);color:var(--codeink);padding:16px;border-radius:6px;overflow-x:auto;font:14px/1.55 Consolas,Menlo,monospace;margin:0}
+button.copy,button.dl{position:absolute;top:8px;background:var(--acc);color:#fff;border:0;border-radius:4px;padding:5px 12px;font:14px sans-serif;cursor:pointer}
+button.copy{right:8px}
+button.dl{right:84px}
+.code pre{padding-top:44px}
+button:focus-visible{outline:3px solid #ffb703;outline-offset:2px}
+.qa{background:#fff;border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:6px;margin:10px 0;padding:10px 14px}
+.q{font-weight:bold;margin:0}
+.a{margin:.4em 0 0}
+li{margin:.3em 0}
+.note{background:#fff7e0;border:1px solid #ecd58a;border-radius:6px;padding:10px 14px}
+</style></head><body><main>
+<p class="meta">Analysis of Algorithms Lab</p>
+<h1>Experiment 11: Longest Common Subsequence using Dynamic Programming</h1>
+<div class="aim"><b>Aim:</b> Implement Longest Common Subsequence problem using Dynamic Programming.</div>
+<h2>Source code</h2>
+<p>This is the program from the lab manual, unchanged. Compile it with <code>gcc aoa_exp11.c -o exp11</code> and run <code>./exp11</code> (on Windows with MinGW, <code>exp11</code>).</p>
+<div class="code" data-file="aoa_exp11.c"><button class="dl">Download</button><button class="copy">Copy</button><pre>#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;time.h&gt;
+int max(int a, int b)
+{
+    return (a &gt; b) ? a : b;
+}
+int main()
+{
+    char X[100], Y[100];
+    int m, n, i, j;
+    clock_t start, end;
+    double cpu_time_used;
+    printf(&quot;Enter first string: &quot;);
+    scanf(&quot;%s&quot;, X);
+    printf(&quot;Enter second string: &quot;);
+    scanf(&quot;%s&quot;, Y);
+    m = strlen(X);
+    n = strlen(Y);
+    int dp[m + 1][n + 1];
+    // Start timing
+    start = clock();
+    // Build DP table bottom-up
+    for(i = 0; i &lt;= m; i++)
+    {
+        for(j = 0; j &lt;= n; j++)
+        {
+            if(i == 0 || j == 0)
+            dp[i][j] = 0;
+            else if(X[i - 1] == Y[j - 1])
+            dp[i][j] = dp[i - 1][j - 1] + 1;
+            else
+            dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+        }
+    }
+    // Trace back to build the LCS string
+    int index = dp[m][n];
+    char lcs[index + 1];
+    lcs[index] = &#x27;\0&#x27;;
+    i = m;
+    j = n;
+    while(i &gt; 0 &amp;&amp; j &gt; 0)
+    {
+        if(X[i - 1] == Y[j - 1])
+        {
+            lcs[index - 1] = X[i - 1];
+            i--;
+            j--;
+            index--;
+        }
+        else if(dp[i - 1][j] &gt; dp[i][j - 1])
+        i--;
+        else
+        j--;
+    }
+    // End timing
+    end = clock();
+    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf(&quot;\nLength of Longest Common Subsequence = %d\n&quot;, dp[m][n]);
+    printf(&quot;Longest Common Subsequence = %s\n&quot;, lcs);
+    printf(&quot;\nTime Required = %f seconds\n&quot;, cpu_time_used);
+    return 0;
+}</pre></div>
+<h2>Sample output</h2>
+<p>This is a real run of the program above (the text after each prompt is what was typed). The time differs on every run.</p>
+<div class="code"><button class="copy">Copy</button><pre>Enter first string: AGGTAB
+Enter second string: GXTXAYB
+
+Length of Longest Common Subsequence = 4
+Longest Common Subsequence = GTAB
+
+Time Required = 0.000002 seconds</pre></div>
+<h2>Explanation (from the manual)</h2>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Concept</h3>
+<p>Given two strings, e.g. &quot;AGGTAB&quot; and &quot;GXTXAYB&quot; , the goal is to find the longest common subsequence between them.</p>
+<p>A &quot;subsequence&quot; means: keeping the letters of a string in the same relative order, but allowed to skip some letters in between (the order itself must not change). For example, a subsequence of &quot;AGGTAB&quot; could be &quot;GTB&quot; (some letters skipped, but order preserved).</p>
+<p>A &quot;common subsequence&quot; is one that appears in both strings. We want the longest such subsequence.</p>
+<p>This is solved using Dynamic Programming: build a table comparing every character pair from both strings.</p>
+<p>If the current characters of both strings are the same → this character becomes part of the LCS, so add 1 to the previous diagonal answer. If they are different → check both possibilities (skip a character from one string, or from the other) and keep whichever gives the longer result.</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Worked Example</h3>
+<div class="code"><button class="copy">Copy</button><pre>  String X = &quot;AGGTAB&quot;
+  String Y = &quot;GXTXAYB&quot;
+
+  The DP table is filled character by character, and matching characters are collected in
+  order: G, T, A, B.
+
+  So LCS = &quot;GTAB&quot; (length = 4).
+
+  Checking: &quot;GTAB&quot; appears in the same order in both strings —
+  X = A-G-G-T-A-B (G, T, A, B appear in this order)
+  Y = G-X-T-X-A-Y-B (G, T, A, B appear in this order too, skipping X, X, Y)</pre></div>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">Time Complexity</h3>
+<p>LCS has a time complexity of O(m × n), where m and n are the lengths of the two strings. Every character pair is checked exactly once in the table, which makes this approach far more efficient than brute force (generating and comparing every possible subsequence, which would be extremely slow).</p>
+<h3 style="margin:1.4em 0 .3em;font-size:1.05rem">What the Program Does</h3>
+<ol>
+<li>The user enters two strings.</li>
+<li>The program builds a DP table comparing characters of both strings (the match/no-match process above).</li>
+<li>The LCS length is read off the table, and the table is traced back to reconstruct the actual LCS string.</li>
+<li>Both the length and the actual LCS string are printed.</li>
+<li>The time taken (in seconds) is displayed.</li>
+</ol>
+<p>In short: compare characters of both strings, extend the LCS on a match, and pick the best possibility from the table on a mismatch.</p>
+<h2>Viva questions</h2>
+<div class="qa"><p class="q">What is the Longest Common Subsequence?</p><p class="a">The longest sequence that appears in both strings in the same order, but not necessarily next to each other.</p></div>
+<div class="qa"><p class="q">Subsequence vs substring?</p><p class="a">A substring is contiguous. A subsequence only keeps the order and can skip characters.</p></div>
+<div class="qa"><p class="q">Write the recurrence for LCS.</p><p class="a">If X[i] = Y[j]: L[i][j] = L[i-1][j-1] + 1. Otherwise L[i][j] = max(L[i-1][j], L[i][j-1]). The first row and column are 0.</p></div>
+<div class="qa"><p class="q">What is the time and space complexity?</p><p class="a">O(m × n) for both, for strings of lengths m and n.</p></div>
+<div class="qa"><p class="q">How is the LCS string printed?</p><p class="a">By moving back through the table from L[m][n]: a matching character is added and the move is diagonal, otherwise the move goes to the larger neighbour.</p></div>
+<div class="qa"><p class="q">Is the LCS unique?</p><p class="a">Not always. There can be several subsequences with the same maximum length.</p></div>
+<div class="qa"><p class="q">What is the LCS of AGGTAB and GXTXAYB?</p><p class="a">GTAB, of length 4.</p></div>
+<div class="qa"><p class="q">Where is LCS used?</p><p class="a">In file comparison (diff), DNA sequence comparison and version control.</p></div>
+</main>
+<script>
+document.querySelectorAll('.code').forEach(function(b){
+var pre=b.querySelector('pre'),btn=b.querySelector('.copy'),f=b.getAttribute('data-file');
+btn.onclick=async function(){try{await navigator.clipboard.writeText(pre.innerText)}catch(e){var r=document.createRange();r.selectNodeContents(pre);var s=getSelection();s.removeAllRanges();s.addRange(r);document.execCommand('copy');s.removeAllRanges()}btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy'},1500)};
+var d=b.querySelector('.dl');
+if(d&&f){d.onclick=function(){var t=pre.innerText.replace(/\r?\n/g,'\r\n');var u=URL.createObjectURL(new Blob([t],{type:'text/plain'}));var a=document.createElement('a');a.href=u;a.download=f;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},1000)}}
+});
+</script></body></html>
