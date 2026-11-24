@@ -607,17 +607,25 @@
         <h3 class="sub">2-Approximation Algorithm for Vertex Cover</h3>
         <div class="card">
           <div class="tag">Algorithm — APPROX-VERTEX-COVER</div>
-          <div class="formula" style="text-align:left;font-size:14px;line-height:2">
-            APPROX-VERTEX-COVER(G = (V, E)):<br>
-            &nbsp;&nbsp;C = ∅  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Cover set (initially empty)<br>
-            &nbsp;&nbsp;E' = E  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Copy of edge set<br>
-            &nbsp;&nbsp;while E' ≠ ∅ do<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;let (u, v) be any edge in E'<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;C = C ∪ {u, v}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Add both endpoints<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;Remove from E' all edges incident on u or v<br>
-            &nbsp;&nbsp;end while<br>
-            &nbsp;&nbsp;return C
-          </div>
+          <div class="formula">Algorithm: APPROX-VERTEX-COVER(G = (V, E))
+Input:  Undirected graph G with vertex set V and edge set E
+Output: Vertex cover C ⊆ V such that |C| &lt;= 2 · |OPT|
+
+APPROX-VERTEX-COVER(G = (V, E)):
+    C = ∅                                       // Initialize vertex cover as empty
+    E' = E                                      // Make a working copy of edge set E
+    
+    while E' ≠ ∅:
+        // Pick an arbitrary edge (u, v) from remaining edges
+        let (u, v) be any arbitrary edge in E'
+        
+        // Add BOTH endpoints of the chosen edge to cover set C
+        C = C ∪ {u, v}
+        
+        // Remove from E' all edges incident on either u or v
+        remove from E' every edge incident on u or v
+        
+    return C                                    // C is a 2-approximate vertex cover</div>
         </div>
 
         <div class="card example">
@@ -719,17 +727,22 @@
         <h3 class="sub">Greedy Approximation Algorithm for Set Cover</h3>
         <div class="card">
           <div class="tag">Algorithm — GREEDY-SET-COVER</div>
-          <div class="formula" style="text-align:left;font-size:14px;line-height:2">
-            GREEDY-SET-COVER(U, S):<br>
-            &nbsp;&nbsp;C = ∅  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Selected sets<br>
-            &nbsp;&nbsp;U' = U  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Remaining uncovered elements<br>
-            &nbsp;&nbsp;while U' ≠ ∅ do<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;Select Sᵢ ∈ S maximizing |Sᵢ ∩ U'|<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;C = C ∪ {Sᵢ}<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;U' = U' \ Sᵢ<br>
-            &nbsp;&nbsp;end while<br>
-            &nbsp;&nbsp;return C
-          </div>
+          <div class="formula">Algorithm: GREEDY-SET-COVER(U, S)
+Input:  Universe U of n elements, family of subsets S = {S₁, S₂, ..., S_m}
+Output: Cover family C ⊆ S covering all elements of U with |C| &lt;= O(ln n) · |OPT|
+
+GREEDY-SET-COVER(U, S):
+    C = ∅                                       // Collection of selected subsets
+    U' = U                                      // Set of remaining uncovered elements
+    
+    while U' ≠ ∅:
+        // Greedily select the subset that covers the maximum uncovered elements
+        select subset Sᵢ ∈ S that maximizes |Sᵢ ∩ U'|
+        
+        C = C ∪ {Sᵢ}                            // Add subset Sᵢ to the solution
+        U' = U' \ Sᵢ                            // Remove covered elements from U'
+        
+    return C                                    // Return approximate set cover</div>
         </div>
 
         <div class="card example">

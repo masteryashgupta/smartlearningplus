@@ -400,6 +400,9 @@ h3.sub { font-size: 16px; color: var(--accent2); margin-top: 24px; margin-bottom
   border-radius: var(--radius-sm); padding: 16px;
   font-family: 'JetBrains Mono', monospace; color: var(--accent);
   margin: 14px 0; overflow-x: auto; font-size: 14px; line-height: 1.8;
+  white-space: pre-wrap;
+  word-break: break-word;
+  tab-size: 4;
 }
 .formula .label {
   font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px;

@@ -215,16 +215,28 @@ where: F[i][k] = flow between facility i and facility k
 
 <h3 class="sub">Algorithm (Karger's Contraction Algorithm)</h3>
 <div class="card">
-  <div class="formula">KargerMinCut(G):
-  while G has more than 2 vertices:
-      pick a random edge (u, v) from G
-      contract u and v into a single super-vertex
-        (remove resulting self-loops; keep parallel/multi-edges)
-  return the count of edges between the final 2 super-vertices
-        as the candidate min-cut
+  <div class="formula">Algorithm: KargerMinCut(G = (V, E))
+Input:  Connected multigraph G with vertices V and edges E
+Output: Candidate minimum cut (number of crossing edges)
 
-Repeat the whole process many times (e.g., O(n&sup2; log n) times)
-and return the smallest cut found across all runs.</div>
+KargerMinCut(G):
+    while |V| &gt; 2:
+        // 1. Pick an edge uniformly at random
+        choose e = (u, v) ∈ E uniformly at random
+        
+        // 2. Contract vertices u and v into a single super-vertex
+        contract(u, v):
+            - Merge vertex u and vertex v into a new super-vertex
+            - Delete any resulting self-loops (edges between u and v)
+            - Keep all parallel (multi-)edges between {u, v} and other vertices
+            
+    // Exactly 2 super-vertices remain
+    return cut_size = |E|                       // Number of surviving crossing edges
+
+
+// Outer Amplification Loop (Boost Success Probability to 1 - 1/n):
+Repeat KargerMinCut(G) for N = O(n&sup2; · log n) independent iterations
+Return the minimum cut_size observed across all N iterations</div>
 </div>
 
 <h3 class="sub">Success Probability &amp; Complexity</h3>
@@ -254,13 +266,28 @@ Single run time: O(n&sup2;);  with repetitions: O(n&#x2074; log n)</div>
 
 <h3 class="sub">Algorithm</h3>
 <div class="card">
-  <div class="formula">Randomized2SAT(formula, n):
-  assign random TRUE/FALSE to each of the n variables
-  repeat up to O(n&sup2;) times:
-      if all clauses are satisfied: return "SATISFIABLE", assignment
-      pick any currently UNSATISFIED clause
-      randomly flip the value of ONE of its 2 variables
-  return "UNSATISFIABLE" (with high confidence, if loop exhausted)</div>
+  <div class="formula">Algorithm: Randomized2SAT(formula, n)
+Input:  2-CNF formula with m clauses over n boolean variables
+Output: "SATISFIABLE" with truth assignment, or "UNSATISFIABLE"
+
+Randomized2SAT(formula, n):
+    // 1. Initial random assignment
+    for each variable xᵢ (i = 1 to n):
+        xᵢ = random( {TRUE, FALSE} )
+        
+    // 2. Local random-walk search (up to 2·n² steps)
+    repeat up to 2 · n&sup2; times:
+        if all clauses in formula evaluate to TRUE:
+            return "SATISFIABLE", current_assignment
+            
+        // Arbitrarily pick an unsatisfied clause C = (l₁ ∨ l₂)
+        pick any currently UNSATISFIED clause C
+        
+        // Randomly pick one of its 2 literals and flip its boolean value
+        flip_variable = randomChoice( {var(l₁), var(l₂)} )
+        flip_variable = NOT(flip_variable)
+        
+    return "UNSATISFIABLE"                      // High confidence (error prob &lt;= 1/2ⁿ)</div>
   <p>This works because flipping a variable from an unsatisfied clause moves the current assignment, in expectation, one step closer (in Hamming distance) to a true satisfying assignment — modeled as a random walk on a line, which is known to converge in O(n&sup2;) expected steps.</p>
 </div>
 

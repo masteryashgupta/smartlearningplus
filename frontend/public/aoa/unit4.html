@@ -96,14 +96,37 @@
 
 <h3 class="sub">B&amp;B Approach for TSP</h3>
 <div class="card">
-  <div class="formula">1. Compute initial lower bound for the root (sum of 2 minimum edges
-   from each city / 2, rounded up)
-2. Build a state-space tree: each node = partial tour (subset of edges fixed)
-3. For each child node, compute its reduced-cost lower bound
-4. Use a priority queue (least-bound-first) to expand the most promising node
-5. Prune (discard) any node whose bound >= current best complete tour cost
-6. Update "best tour" whenever a cheaper complete tour is found
-7. Continue until all live nodes are pruned or expanded</div>
+  <div class="formula">Algorithm: BranchAndBoundTSP(CostMatrix, n)
+Input:  Cost matrix C[1..n][1..n] for n cities
+Output: Minimum cost valid tour visiting every city exactly once
+
+BranchAndBoundTSP(CostMatrix, n):
+    1. Compute initial lower bound LB for the root node:
+           LB = ⌈ ( Σ (sum of 2 smallest outgoing edge costs for each city i) ) / 2 ⌉
+           
+    2. Initialize Priority Queue PQ with root node (empty tour, bound = LB)
+       best_cost = ∞
+       best_tour = NULL
+       
+    3. while PQ is not empty:
+           node = PQ.extractMin()               // Least-Cost Branch &amp; Bound (LCBB)
+           
+           if node.bound &gt;= best_cost:
+               continue                         // PRUNE: Branch cannot improve best tour
+               
+           if node is a leaf (complete tour of all n cities):
+               if node.cost &lt; best_cost:
+                   best_cost = node.cost
+                   best_tour = node.tour
+           else:
+               for each unvisited city v:
+                   child = createChildNode(node, v)
+                   child.bound = computeReducedCostBound(child)
+                   
+                   if child.bound &lt; best_cost:
+                       PQ.insert(child)         // Enqueue viable branch
+                       
+    4. return best_tour, best_cost</div>
 </div>
 
 <div class="card example">
@@ -151,14 +174,25 @@ Lower Bound = ( Σ (sum of 2 smallest edges for each city) ) / 2  [rounded up]</
 
 <h3 class="sub">General Backtracking Algorithm</h3>
 <div class="card">
-  <div class="formula">Backtrack(partial_solution):
-  if partial_solution is a complete valid solution:
-      record/output it; return
-  for each candidate choice c (extending partial_solution):
-      if c satisfies the constraints (is "safe"):
-          add c to partial_solution
-          Backtrack(partial_solution)        // recurse
-          remove c from partial_solution     // BACKTRACK (undo choice)</div>
+  <div class="formula">Algorithm: Backtrack(partial_solution)
+Input:  Partial solution vector (x[1], x[2], ..., x[k])
+Output: All valid complete solutions
+
+Backtrack(partial_solution):
+    if isCompleteSolution(partial_solution):
+        recordSolution(partial_solution)
+        return
+        
+    for each candidate choice c in getCandidates(partial_solution):
+        if isSafe(candidate c, partial_solution):
+            // 1. Make choice
+            add c to partial_solution
+            
+            // 2. Recurse to next decision level
+            Backtrack(partial_solution)
+            
+            // 3. BACKTRACK (Undo choice to try next candidate)
+            remove c from partial_solution</div>
 </div>
 
 <!-- 4.5 N-QUEENS -->
@@ -176,19 +210,32 @@ Lower Bound = ( Σ (sum of 2 smallest edges for each city) ) / 2  [rounded up]</
 
 <h3 class="sub">Algorithm</h3>
 <div class="card">
-  <div class="formula">NQueens(board, row, n):
-  if row == n:
-      print/record solution; return true (if only one solution needed)
-  for col = 0 to n-1:
-      if isSafe(board, row, col):
-          place queen at (row, col)
-          if NQueens(board, row+1, n): return true
-          remove queen at (row, col)     // backtrack
-  return false
+  <div class="formula">Algorithm: NQueens(board, row, n)
+Input:  Chessboard representation, current row index, total queens n
+Output: Returns true if a valid placement exists, and prints the board
 
-isSafe(board, row, col):
-  Check column above is free, and both upper-left and
-  upper-right diagonals are free of any previously placed queen</div>
+NQueens(board, row, n):
+    if row == n:
+        printSolution(board)
+        return true                             // All n queens placed safely
+        
+    for col = 0 to n - 1:
+        if isSafe(board, row, col, n):
+            placeQueen(board, row, col)
+            
+            if NQueens(board, row + 1, n) == true:
+                return true                     // Solution found down this branch
+                
+            removeQueen(board, row, col)        // BACKTRACK: undo placement
+            
+    return false                                // No safe column in this row
+
+
+isSafe(board, row, col, n):
+    1. Check column above:   no queen in board[0..row-1][col]
+    2. Check upper-left diag: no queen in board[row-i][col-i] for i &gt; 0
+    3. Check upper-right diag: no queen in board[row-i][col+i] for i &gt; 0
+    return true if all 3 checks pass, else false</div>
 </div>
 
 <div class="svgbox">
@@ -252,10 +299,23 @@ isSafe(board, row, col):
 
 <h3 class="sub">Algorithm</h3>
 <div class="card">
-  <div class="formula">NaiveSearch(T, P):           // n = len(T), m = len(P)
-  for s = 0 to n-m:
-      if T[s..s+m-1] == P[0..m-1]:
-          print "Pattern found at shift s"</div>
+  <div class="formula">Algorithm: NaiveStringMatcher(T, P)
+Input:  Text string T[0..n-1], Pattern string P[0..m-1] (m &lt;= n)
+Output: All valid shift positions where P occurs in T
+
+NaiveStringMatcher(T, P):
+    n = length(T)
+    m = length(P)
+    
+    for s = 0 to n - m:                         // Check every possible shift
+        match = true
+        for j = 0 to m - 1:
+            if P[j] != T[s + j]:
+                match = false
+                break                           // Mismatch, shift pattern right
+                
+        if match == true:
+            print "Pattern found at shift", s</div>
 </div>
 
 <h3 class="sub">Complexity</h3>
@@ -292,13 +352,35 @@ where d = number of characters in alphabet (e.g., 256), q = a large prime</div>
 
 <h3 class="sub">Algorithm</h3>
 <div class="card">
-  <div class="formula">RabinKarp(T, P, d, q):
-  compute hash(P) and hash(T[0..m-1])
-  for s = 0 to n-m:
-      if hash(T window) == hash(P):
-          verify by direct character comparison (avoid false positive)
-          if match: print "Pattern found at shift s"
-      if s < n-m: roll the hash to next window in O(1)</div>
+  <div class="formula">Algorithm: RabinKarpMatcher(T, P, d, q)
+Input:  Text T[0..n-1], Pattern P[0..m-1], alphabet size d, prime modulus q
+Output: All valid shift positions where P occurs in T
+
+RabinKarpMatcher(T, P, d, q):
+    n = length(T)
+    m = length(P)
+    h = (d^(m - 1)) mod q
+    p = 0                                       // Hash value for pattern P
+    t0 = 0                                      // Hash value for first text window
+    
+    // 1. Preprocessing: compute initial hashes in O(m)
+    for i = 0 to m - 1:
+        p  = (d * p  + P[i]) mod q
+        t0 = (d * t0 + T[i]) mod q
+        
+    t = t0
+    // 2. Matching loop in O(n) average
+    for s = 0 to n - m:
+        if p == t:
+            // Hash match: verify characters to rule out spurious hits
+            if T[s .. s + m - 1] == P[0 .. m - 1]:
+                print "Pattern found at shift", s
+                
+        // 3. Rolling hash update for next window T[s+1 .. s+m] in O(1)
+        if s &lt; n - m:
+            t = (d * (t - T[s] * h) + T[s + m]) mod q
+            if t &lt; 0:
+                t = t + q                       // Ensure non-negative modulo</div>
 </div>
 
 <div class="card example">
@@ -331,15 +413,26 @@ where d = number of characters in alphabet (e.g., 256), q = a large prime</div>
 
 <h3 class="sub">Computing the Prefix (Failure) Function π</h3>
 <div class="card">
-  <div class="formula">ComputePrefixFunction(P):     // m = len(P)
-  π[0] = 0;  k = 0
-  for q = 1 to m-1:
-      while k > 0 and P[k] != P[q]:
-          k = π[k-1]
-      if P[k] == P[q]:
-          k = k+1
-      π[q] = k
-  return π</div>
+  <div class="formula">Algorithm: ComputePrefixFunction(P)
+Input:  Pattern string P[0..m-1]
+Output: Array π[0..m-1] (longest proper prefix of P[0..q] that is also a suffix)
+
+ComputePrefixFunction(P):
+    m = length(P)
+    let π[0..m-1] be a new array
+    π[0] = 0
+    k = 0                                       // Length of matching prefix
+    
+    for q = 1 to m - 1:
+        while k &gt; 0 and P[k] != P[q]:
+            k = π[k - 1]                        // Fall back via failure function
+            
+        if P[k] == P[q]:
+            k = k + 1                           // Character matches, extend prefix
+            
+        π[q] = k
+        
+    return π</div>
 </div>
 
 <div class="card example">
@@ -353,17 +446,26 @@ where d = number of characters in alphabet (e.g., 256), q = a large prime</div>
 
 <h3 class="sub">KMP Matching Algorithm</h3>
 <div class="card">
-  <div class="formula">KMPMatcher(T, P):     // n = len(T), m = len(P)
-  π = ComputePrefixFunction(P)
-  q = 0    // number of characters matched so far
-  for i = 0 to n-1:
-      while q > 0 and P[q] != T[i]:
-          q = π[q-1]            // use failure fn to fall back smartly
-      if P[q] == T[i]:
-          q = q+1
-      if q == m:                 // entire pattern matched
-          print "Pattern found ending at index i"
-          q = π[q-1]</div>
+  <div class="formula">Algorithm: KMPMatcher(T, P)
+Input:  Text string T[0..n-1], Pattern string P[0..m-1]
+Output: Starting index shifts where pattern P occurs in text T
+
+KMPMatcher(T, P):
+    n = length(T)
+    m = length(P)
+    π = ComputePrefixFunction(P)                // Preprocessing in O(m)
+    q = 0                                       // Number of characters matched
+    
+    for i = 0 to n - 1:
+        while q &gt; 0 and P[q] != T[i]:
+            q = π[q - 1]                        // Fall back smartly without backtracking i
+            
+        if P[q] == T[i]:
+            q = q + 1                           // Next character matched
+            
+        if q == m:
+            print "Pattern found at shift", i - m + 1
+            q = π[q - 1]                        // Prepare for next potential match</div>
 </div>
 
 <h3 class="sub">Complexity</h3>

@@ -174,11 +174,30 @@
 
 <h3 class="sub">Algorithm</h3>
 <div class="card">
-  <div class="formula">1. Compute ratio[i] = profit[i] / weight[i] for every item
-2. Sort items in decreasing order of ratio
-3. For each item (in sorted order):
-     if weight[i] <= remaining capacity: take it fully
-     else: take fraction = remaining_capacity / weight[i]; STOP</div>
+  <div class="formula">Algorithm: FractionalKnapsack(W, items, n)
+Input:  Knapsack capacity W, item weights weight[1..n], profits profit[1..n]
+Output: Maximum total profit obtained
+
+FractionalKnapsack(W, items, n):
+    1. For each item i = 1 to n:
+           ratio[i] = profit[i] / weight[i]
+           
+    2. Sort all n items in descending order of ratio[i]:
+           ratio[1] &gt;= ratio[2] &gt;= ... &gt;= ratio[n]
+           
+    3. current_weight = 0
+       total_profit   = 0.0
+       
+    4. For each item i (in sorted order):
+           if current_weight + weight[i] &lt;= W:
+               current_weight = current_weight + weight[i]
+               total_profit   = total_profit + profit[i]
+           else:
+               remaining_capacity = W - current_weight
+               total_profit = total_profit + profit[i] * (remaining_capacity / weight[i])
+               break                    // Knapsack is completely full
+               
+    5. return total_profit</div>
 </div>
 
 <h3 class="sub">🖥️ Step-by-Step Simulation</h3>
@@ -218,12 +237,30 @@
 
 <h3 class="sub">Algorithm</h3>
 <div class="card">
-  <div class="formula">1. Sort all jobs in decreasing order of profit
-2. Let max deadline = d_max; create d_max empty time slots
-3. For each job (in sorted order):
-     Find the latest free slot available before (or at) its deadline
-     If found: place job in that slot
-     Else: reject the job</div>
+  <div class="formula">Algorithm: JobSequencingWithDeadlines(Jobs, n)
+Input:  Set of n jobs with profits profit[1..n] and deadlines deadline[1..n]
+Output: Scheduled job slots and maximum total profit
+
+JobSequencingWithDeadlines(Jobs, n):
+    1. Sort all jobs in descending order of profit:
+           profit[1] &gt;= profit[2] &gt;= ... &gt;= profit[n]
+           
+    2. Find maximum deadline:
+           d_max = max(deadline[1], deadline[2], ..., deadline[n])
+           
+    3. Initialize time slots:
+           slot[1..d_max] = EMPTY
+           total_profit   = 0
+           
+    4. For i = 1 to n:
+           // Search backwards for the latest free slot before or at job's deadline
+           for k = min(d_max, deadline[i]) down to 1:
+               if slot[k] == EMPTY:
+                   slot[k] = job[i]             // Assign job i to slot k
+                   total_profit = total_profit + profit[i]
+                   break
+                   
+    5. return slot[1..d_max], total_profit</div>
 </div>
 
 <div class="svgbox">
@@ -297,12 +334,27 @@
 
 <h3 class="sub">Algorithm</h3>
 <div class="card">
-  <div class="formula">1. Put all file sizes into a min-priority-queue (min-heap)
-2. While more than 1 file remains:
-     Extract the two smallest files, x and y
-     Merge them: new file size = x + y; cost += (x+y)
-     Insert merged file size back into the heap
-3. Total cost = sum of all merge costs (weighted path length)</div>
+  <div class="formula">Algorithm: OptimalMergePatterns(files, n)
+Input:  Array file_sizes[1..n]
+Output: Minimum total merge cost
+
+OptimalMergePatterns(files, n):
+    1. Insert all n file sizes into a Min-Priority-Queue (Min-Heap) H
+    
+    2. total_cost = 0
+    
+    3. while H.size() &gt; 1:
+           // Greedily extract the two smallest files
+           x = H.extractMin()
+           y = H.extractMin()
+           
+           merged_size = x + y
+           total_cost  = total_cost + merged_size
+           
+           // Insert the merged file back into the heap
+           H.insert(merged_size)
+           
+    4. return total_cost                        // Total weighted record movements</div>
 </div>
 
 <h3 class="sub">🖥️ Step-by-Step Simulation (Min-Heap Trace)</h3>
@@ -362,24 +414,57 @@
 
 <h3 class="sub">Prim's Algorithm</h3>
 <div class="card">
-  <div class="formula">1. Start with any single vertex in the MST set
-2. Repeat (n-1) times:
-     Find the minimum-weight edge connecting a vertex INSIDE the MST set
-     to a vertex OUTSIDE the MST set
-     Add that edge and the new vertex to the MST set
-3. Stop when all vertices are included</div>
+  <div class="formula">Algorithm: PrimMST(G = (V, E))
+Input:  Connected, weighted undirected graph G with vertices V and edges E
+Output: Set of edges forming Minimum Spanning Tree (MST)
+
+PrimMST(G = (V, E)):
+    1. For each vertex v ∈ V:
+           key[v]    = ∞
+           parent[v] = NULL
+           
+    2. Select an arbitrary start vertex s ∈ V:
+           key[s] = 0
+           
+    3. Initialize Min-Priority-Queue Q containing all vertices V keyed by key[v]
+    
+    4. while Q is not empty:
+           u = Q.extractMin()                  // Vertex with minimum key
+           
+           for each neighbor v of u:
+               weight = edge_weight(u, v)
+               if v ∈ Q and weight &lt; key[v]:
+                   parent[v] = u
+                   key[v]    = weight
+                   Q.decreaseKey(v, weight)
+                   
+    5. return MST edges: {(parent[v], v) for all v ≠ s}</div>
   <p>Implemented efficiently using a min-priority-queue; grows the tree vertex by vertex.</p>
 </div>
 
 <h3 class="sub">Kruskal's Algorithm</h3>
 <div class="card">
-  <div class="formula">1. Sort all edges of the graph in increasing order of weight
-2. Initialize each vertex as its own separate set (Union-Find / Disjoint Set)
-3. For each edge (u,v) in sorted order:
-     if find(u) != find(v):     // doesn't form a cycle
-         add edge to MST
-         union(u, v)
-4. Stop when MST has (n-1) edges</div>
+  <div class="formula">Algorithm: KruskalMST(G = (V, E))
+Input:  Connected, weighted undirected graph G with vertices V and edges E
+Output: Set of edges forming Minimum Spanning Tree (MST)
+
+KruskalMST(G = (V, E)):
+    1. MST = ∅                                 // Initialize empty edge set
+    
+    2. For each vertex v ∈ V:
+           MakeSet(v)                          // Disjoint Set initialization
+           
+    3. Sort all edges E in non-decreasing order of weight:
+           w(e₁) &lt;= w(e₂) &lt;= ... &lt;= w(e_m)
+           
+    4. For each edge (u, v) ∈ E in sorted order:
+           if FindSet(u) ≠ FindSet(v):         // If u and v belong to different components (no cycle)
+               MST = MST ∪ {(u, v)}
+               Union(u, v)
+               if |MST| == |V| - 1:
+                   break                       // MST is complete with (V - 1) edges
+                   
+    5. return MST</div>
   <p>Uses the <strong>Union-Find (Disjoint Set)</strong> data structure to efficiently detect cycles; grows the forest edge by edge.</p>
 </div>
 
@@ -534,10 +619,18 @@ Total MST weight = 4+8+2+4+6 = <strong>24</strong>  (same weight as Kruskal's, c
 
 <h3 class="sub">DP Recurrence</h3>
 <div class="card">
-  <div class="formula">m[i][i] = 0   (single matrix, no multiplication needed)
-m[i][j] = min over k (i<=k<j) of:
-   { m[i][k] + m[k+1][j] + p[i-1]*p[k]*p[j] }
-where matrix Ai has dimensions p[i-1] × p[i]</div>
+  <div class="formula">DP Recurrence for Matrix Chain Multiplication:
+
+Base Case:
+    m[i][i] = 0                                (single matrix, 0 scalar multiplications)
+
+Recursive Formula (for 1 &lt;= i &lt; j &lt;= n):
+    m[i][j] = min { m[i][k] + m[k+1][j] + p[i-1] * p[k] * p[j] }
+              i &lt;= k &lt; j
+
+Where:
+    p[i-1] × p[i] = dimensions of matrix Aᵢ
+    k is the optimal split point between matrix k and matrix k+1</div>
 </div>
 
 <h3 class="sub">🖥️ Full Worked Example — 4 Matrices</h3>
@@ -594,9 +687,17 @@ Minimum cost = 18000, achieved by parenthesization (A1A2)A3</div>
 
 <h3 class="sub">DP Recurrence</h3>
 <div class="card">
-  <div class="formula">dp[i][0] = dp[0][j] = 0   (base case: empty string)
-if X[i] == Y[j]:  dp[i][j] = dp[i-1][j-1] + 1
-else:             dp[i][j] = max(dp[i-1][j], dp[i][j-1])</div>
+  <div class="formula">DP Recurrence for Longest Common Subsequence (LCS):
+
+Base Cases:
+    dp[i][0] = 0   for all 0 &lt;= i &lt;= m         (string Y is empty)
+    dp[0][j] = 0   for all 0 &lt;= j &lt;= n         (string X is empty)
+
+Recurrence Formula (for 1 &lt;= i &lt;= m, 1 &lt;= j &lt;= n):
+    if X[i-1] == Y[j-1]:
+        dp[i][j] = dp[i-1][j-1] + 1            // Character match: extend LCS by 1
+    else:
+        dp[i][j] = max( dp[i-1][j], dp[i][j-1] ) // Character mismatch: carry over best</div>
 </div>
 
 <h3 class="sub">🖥️ Full DP Table — Step-by-Step Fill</h3>
@@ -636,9 +737,20 @@ else:             dp[i][j] = max(dp[i-1][j], dp[i][j-1])</div>
 
 <h3 class="sub">DP Recurrence</h3>
 <div class="card">
-  <div class="formula">dp[0][w] = 0 for all w   (no items = 0 profit)
-dp[i][w] = dp[i-1][w]                                    if weight[i] > w
-dp[i][w] = max( dp[i-1][w],  profit[i] + dp[i-1][w-weight[i]] )   otherwise</div>
+  <div class="formula">DP Recurrence for 0/1 Knapsack:
+
+Base Cases:
+    dp[0][w] = 0   for all 0 &lt;= w &lt;= W         (no items available)
+    dp[i][0] = 0   for all 0 &lt;= i &lt;= n         (knapsack capacity is 0)
+
+Recurrence Formula (for item i with weight[i-1] and profit[i-1]):
+    if weight[i-1] &gt; w:
+        dp[i][w] = dp[i-1][w]                  // Item i does not fit, must exclude
+    else:
+        dp[i][w] = max(
+            dp[i-1][w],                         // Option 1: Exclude item i
+            profit[i-1] + dp[i-1][w - weight[i-1]] // Option 2: Include item i
+        )</div>
 </div>
 
 <div class="svgbox">
