@@ -62,12 +62,12 @@
 
 <div class="card def">
   <div class="tag">&#x1F4D6; Definition</div>
-  <p style="margin-top:8px;"><strong>Cyclic Code</strong> is a special subclass of linear block codes where every cyclic shift of a valid codeword produces another valid codeword in the same code. If c = (c&#x2080;, c&#x2081;, ..., c&#x2099;&#x208B;&#x2081;) is a codeword, then (c&#x2099;&#x208B;&#x2081;, c&#x2080;, c&#x2081;, ..., c&#x2099;&#x208B;&#x2082;) is also a valid codeword.</p>
+  <p style="margin-top:8px;"><strong>Cyclic Code</strong> is a special subclass of linear block codes where every cyclic shift of a valid codeword produces another valid codeword in the same code. Written MSB-first as $c = (c_{n-1}, c_{n-2}, \dots, c_1, c_0)$ with polynomial $c(x) = c_{n-1}x^{n-1} + c_{n-2}x^{n-2} + \dots + c_1 x + c_0$: if $(c_{n-1}, c_{n-2}, \dots, c_0)$ is a codeword, then the left shift $(c_{n-2}, \dots, c_0, c_{n-1})$ is also a codeword, which equals $x \cdot c(x) \bmod (x^n + 1)$.</p>
 </div>
 
 <div class="hin">
   <div class="tag">&#x1F5E3; Hinglish Explanation</div>
-  <p style="margin-top:6px;">Socho ek circle mein balls rakhi hain. Ek shift karo toh wahi arrangement phir valid hai! Cyclic code mein kisi bhi codeword ko left ya right shift karo, result bhi same code ka valid member hoga. Isliye inhe <strong>polynomial algebra</strong> se describe karna bahut easy hota hai aur hardware (shift register) se implement karna fast hota hai!</p>
+  <p style="margin-top:6px;">Cyclic code mein bits hamesha MSB-first likhe jaate hain: $c = (c_{n-1}\ c_{n-2}\ \dots\ c_0)$. Agar $(c_{n-1}\ c_{n-2}\ \dots\ c_0)$ ek valid codeword hai, toh uska left cyclic shift $(c_{n-2}\ \dots\ c_0\ c_{n-1})$ — jo polynomial algebra mein $x \cdot c(x) \bmod (x^n + 1)$ ke barabar hota hai — bhi usi code ka ek valid codeword hoga! Isliye cyclic codes ko polynomial algebra se describe karna bohot easy hota hai aur hardware (shift register) se implement karna super fast hota hai!</p>
 </div>
 
 <div class="card example">
@@ -98,9 +98,13 @@ Left Shift 6: 0 1 0 1 1 0 0  (= x⁵ + x³ + x²)
 
 <h3 class="sub">Polynomial Representation of Codewords (MSB First) <span class="imp h">MUST KNOW</span></h3>
 <div class="card def">
-  <p>Under the standard MSB-first convention, any n-bit codeword c = (c&#x2099;&#x208B;&#x2081;, c&#x2099;&#x208B;&#x2082;, ..., c&#x2081;, c&#x2080;) corresponds to:</p>
-  <div class="formula">c(x) = c&#x2099;&#x208B;&#x2081;x&#x207F;&#x207B;&#xB9; + c&#x2099;&#x208B;&#x2082;x&#x207F;&#x207B;&#xB2; + ... + c&#x2081;x + c&#x2080;</div>
-  <p>The leftmost bit is the coefficient of the highest power of x ($x^{n-1}$). Each coefficient $c_i \in 	ext{GF}(2) = \{0, 1\}$. All arithmetic is mod 2 (XOR).</p>
+  <p>Under the standard MSB-first convention, any n-bit codeword $c = (c_{n-1}, c_{n-2}, \dots, c_1, c_0)$ corresponds to:</p>
+  <div class="formula">c(x) = c_{n-1}x^{n-1} + c_{n-2}x^{n-2} + ... + c_1 x + c_0</div>
+  <p>The leftmost bit is the coefficient of the highest power of x ($x^{n-1}$). Each coefficient $c_i \in \text{GF}(2) = \{0, 1\}$. All arithmetic is mod 2 (XOR).</p>
+</div>
+
+<div class="card note" style="border-left:4px solid var(--accent); margin-top:12px; margin-bottom:12px;">
+  <p><strong>Note on Bit Order &amp; Positions:</strong> Bits are always written highest power first (left to right = $x^{n-1}$ down to $x^0$). Position $i$ in the syndrome table means the coefficient of $x^i$, counted from the RIGHT starting at 0.</p>
 </div>
 
 <div class="card example">
@@ -584,7 +588,7 @@ Verify: (x&#xB3;+x+1)(x&#x2074;+x&#xB2;+x+1) = x&#x2077;+1 &#x2713;
 
 <div class="card example">
   <div class="tag">&#x1F4A1; Encoder Trace: g(x)=x³+x+1, m=1101 (k=4)</div>
-  <p style="margin-top:6px;"><strong>LFSR State Update Rules:</strong> Feedback $f = 	ext{input} \oplus D_2$; &nbsp; $D_0' = f$; &nbsp; $D_1' = D_0 \oplus f$; &nbsp; $D_2' = D_1$. Start state: $[D_2, D_1, D_0] = [0, 0, 0]$.</p>
+  <p style="margin-top:6px;"><strong>LFSR State Update Rules:</strong> Feedback $f = \text{input} \oplus D_2$; &nbsp; $D_0' = f$; &nbsp; $D_1' = D_0 \oplus f$; &nbsp; $D_2' = D_1$. Start state: $[D_2, D_1, D_0] = [0, 0, 0]$.</p>
   <div class="formula" style="font-size:12px;">
 Clk | In (mᵢ) | Feedback f | D₂' D₁' D₀' (new state) | Channel Out (Phase 1)
  1  |    1    |     1      |  0   1   1             |         1
@@ -810,7 +814,7 @@ Decoded message = first 4 bits = 1101. ✓
 
   <div class="qa">
     <div class="q">Q1. Define cyclic code and state its fundamental property.</div>
-    <div class="a">A <strong>cyclic code</strong> is a linear block code where every cyclic shift of a codeword is also a valid codeword. If (c&#x2080;,c&#x2081;,...,c&#x2099;&#x208B;&#x2081;) is a codeword, then (c&#x2099;&#x208B;&#x2081;,c&#x2080;,...,c&#x2099;&#x208B;&#x2082;) is also a codeword. In polynomial form: if c(x) is a codeword, then x&#xB7;c(x) mod(x&#x207F;+1) is also a codeword.</div>
+    <div class="a">A <strong>cyclic code</strong> is a linear block code where every cyclic shift of a valid codeword produces another valid codeword. Written MSB-first as $c = (c_{n-1}, c_{n-2}, \dots, c_0)$ with $c(x) = c_{n-1}x^{n-1} + \dots + c_1 x + c_0$: if $(c_{n-1}, c_{n-2}, \dots, c_0)$ is a codeword, then its cyclic left shift $(c_{n-2}, \dots, c_0, c_{n-1})$ is also a codeword, which equals $x \cdot c(x) \bmod (x^n + 1)$. In polynomial form: if $c(x)$ is a valid codeword, then $x \cdot c(x) \bmod (x^n + 1)$ is also a valid codeword.</div>
   </div>
 
   <div class="qa">
