@@ -242,15 +242,27 @@
   </div>
 
   <div class="card example">
-    <span class="tag">Full Worked Example 2 — a case where Shannon-Fano is sub-optimal vs Huffman</span>
-    <p>Symbols: A(0.35), B(0.30), C(0.20), D(0.15). Compare Shannon-Fano and Huffman.</p>
-    <p><b>Shannon-Fano splits:</b><br>
-    Split 1: {A(0.35),B(0.30)}=0.65 | {C(0.20),D(0.15)}=0.35 → upper=0, lower=1 (closest split — 0.65/0.35 is the best available two-way split here)<br>
-    Split 2 (within upper): {A(0.35)}|{B(0.30)} → A=00, B=01<br>
-    Split 3 (within lower): {C(0.20)}|{D(0.15)} → C=10, D=11</p>
-    <p>Shannon-Fano lengths: A=2,B=2,C=2,D=2 → L<sub>avg</sub>(SF) = 0.35(2)+0.30(2)+0.20(2)+0.15(2) = <b>2.0 bits/symbol</b></p>
-    <p><b>Huffman on the same set:</b> combine C(0.20)+D(0.15)→CD(0.35); now A(0.35),B(0.30),CD(0.35) → combine B(0.30)+CD(0.35)→BCD(0.65); combine A(0.35)+BCD(0.65)→root. Codes: A=0 (len1), B=10 (len2), C=110 (len3), D=111 (len3).</p>
-    <p>Huffman L<sub>avg</sub> = 0.35(1)+0.30(2)+0.20(3)+0.15(3) = 0.35+0.60+0.60+0.45 = <b>2.00 bits/symbol</b> — here they tie again, but this pair of examples is the standard way examiners show that Huffman's <i>guarantee</i> of optimality is stronger even when the numeric answer for a specific case matches. In distributions that are less "balanced" (try A=0.5,B=0.25,C=0.125,D=0.125), Shannon-Fano's greedy top split can lock in a worse tree than Huffman's bottom-up merge — always mention this guarantee vs coincidence distinction in theory answers.</p>
+    <span class="tag">Full Worked Example 2 — Demonstrating Shannon-Fano Sub-optimality vs Huffman</span>
+    <p>Symbols: A(0.35), B(0.17), C(0.17), D(0.16), E(0.15). Compare Shannon-Fano and Huffman coding.</p>
+    
+    <p><strong>Shannon-Fano Coding (Top-Down Recursive Partitioning):</strong><br>
+    • <b>Split 1:</b> Partition into two subsets with sums as close as possible:<br>
+    &nbsp;&nbsp;{A(0.35), B(0.17)} = 0.52 (assign '0') &nbsp;|&nbsp; {C(0.17), D(0.16), E(0.15)} = 0.48 (assign '1') &nbsp;[diff = 0.04, best split]<br>
+    • <b>Split 2 (within upper {A, B}):</b> {A(0.35)} → <code>00</code> &nbsp;|&nbsp; {B(0.17)} → <code>01</code><br>
+    • <b>Split 3 (within lower {C, D, E}):</b> {C(0.17)} = 0.17 → <code>10</code> &nbsp;|&nbsp; {D(0.16), E(0.15)} = 0.31 (starts with <code>11</code>)<br>
+    • <b>Split 4:</b> {D(0.16)} → <code>110</code> &nbsp;|&nbsp; {E(0.15)} → <code>111</code><br>
+    Codeword lengths: A: 2, B: 2, C: 2, D: 3, E: 3<br>
+    <b>L<sub>avg</sub>(SF)</b> = 0.35(2) + 0.17(2) + 0.17(2) + 0.16(3) + 0.15(3) = 0.70 + 0.34 + 0.34 + 0.48 + 0.45 = <b>2.31 bits/symbol</b></p>
+
+    <p><strong>Huffman Coding (Bottom-Up Optimal Merging):</strong><br>
+    • Merge D(0.16) + E(0.15) → DE(0.31)<br>
+    • Remaining: A(0.35), BC candidates: merge B(0.17) + C(0.17) → BC(0.34)<br>
+    • Remaining: DE(0.31), BC(0.34), A(0.35) → merge two lowest: DE(0.31) + BC(0.34) → BCDE(0.65)<br>
+    • Merge A(0.35) + BCDE(0.65) → Root(1.0)<br>
+    Resulting codewords: A = <code>0</code> (len 1); B = <code>110</code> (len 3); C = <code>111</code> (len 3); D = <code>100</code> (len 3); E = <code>101</code> (len 3)<br>
+    <b>L<sub>avg</sub>(Huffman)</b> = 0.35(1) + 0.17(3) + 0.17(3) + 0.16(3) + 0.15(3) = 0.35 + 0.65(3) = 0.35 + 1.95 = <b>2.30 bits/symbol</b></p>
+
+    <p><strong>Conclusion:</strong> <b>L<sub>avg</sub>(Huffman) = 2.30 &lt; L<sub>avg</sub>(SF) = 2.31 bits/symbol</b>. This clearly proves that Shannon-Fano's greedy top-down partitioning can be strictly sub-optimal, whereas Huffman's bottom-up merging is provably optimal. (Note: On dyadic distributions like {0.5, 0.25, 0.125, 0.125}, both methods achieve 100% efficiency and tie with L<sub>avg</sub> = H(X) = 1.75 bits/symbol).</p>
   </div>
 
   <h3 class="sub">Huffman vs Shannon-Fano <span class="imp h">High ⭐⭐⭐⭐ — very frequently asked difference question</span></h3>

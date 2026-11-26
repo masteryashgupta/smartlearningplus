@@ -72,17 +72,17 @@
 
 <div class="card example">
   <div class="tag">&#x1F4A1; Example: Cyclic Property</div>
-  <p style="margin-top:8px;">In (7,4) cyclic code, if <strong>1011000</strong> is a codeword, then ALL cyclic shifts are also valid codewords:</p>
+  <p style="margin-top:8px;">In (7,4) cyclic code with $g(x) = x^3+x+1$, if <strong>1011000</strong> is a codeword ($c(x) = x^6 + x^4 + x^3 = x^3 \cdot g(x)$), then ALL cyclic shifts are also valid codewords:</p>
   <div class="formula">
-Original:  1 0 1 1 0 0 0
-Shift 1:   0 1 0 1 1 0 0
-Shift 2:   0 0 1 0 1 1 0
-Shift 3:   0 0 0 1 0 1 1
-Shift 4:   1 0 0 0 1 0 1
-Shift 5:   1 1 0 0 0 1 0
-Shift 6:   0 1 1 0 0 0 1
+Original:     1 0 1 1 0 0 0  (= x⁶ + x⁴ + x³)
+Left Shift 1: 0 1 1 0 0 0 1  (= x⁵ + x⁴ + 1)
+Left Shift 2: 1 1 0 0 0 1 0  (= x⁶ + x⁵ + x)
+Left Shift 3: 1 0 0 0 1 0 1  (= x⁶ + x² + 1)
+Left Shift 4: 0 0 0 1 0 1 1  (= x³ + x + 1 = g(x))
+Left Shift 5: 0 0 1 0 1 1 0  (= x⁴ + x² + x)
+Left Shift 6: 0 1 0 1 1 0 0  (= x⁵ + x³ + x²)
   </div>
-  <p style="color:var(--accent);">All 7 cyclic shifts are valid codewords! &#x2713;</p>
+  <p style="color:var(--accent);">All 7 cyclic shifts are multiples of g(x) and therefore valid codewords! &#x2713;</p>
 </div>
 
 <h3 class="sub">Key Advantages of Cyclic Codes</h3>
@@ -96,17 +96,18 @@ Shift 6:   0 1 1 0 0 0 1
   </ul>
 </div>
 
-<h3 class="sub">Polynomial Representation of Codewords <span class="imp h">MUST KNOW</span></h3>
+<h3 class="sub">Polynomial Representation of Codewords (MSB First) <span class="imp h">MUST KNOW</span></h3>
 <div class="card def">
-  <p>Any n-bit codeword c = (c&#x2080;, c&#x2081;, ..., c&#x2099;&#x208B;&#x2081;) is represented as:</p>
-  <div class="formula">c(x) = c&#x2080; + c&#x2081;x + c&#x2082;x&#xB2; + ... + c&#x2099;&#x208B;&#x2081;x&#x207F;&#x207B;&#xB9;</div>
-  <p>Each coefficient c&#x1D35; is from GF(2) = {0, 1}. All arithmetic is mod 2 (XOR).</p>
+  <p>Under the standard MSB-first convention, any n-bit codeword c = (c&#x2099;&#x208B;&#x2081;, c&#x2099;&#x208B;&#x2082;, ..., c&#x2081;, c&#x2080;) corresponds to:</p>
+  <div class="formula">c(x) = c&#x2099;&#x208B;&#x2081;x&#x207F;&#x207B;&#xB9; + c&#x2099;&#x208B;&#x2082;x&#x207F;&#x207B;&#xB2; + ... + c&#x2081;x + c&#x2080;</div>
+  <p>The leftmost bit is the coefficient of the highest power of x ($x^{n-1}$). Each coefficient $c_i \in 	ext{GF}(2) = \{0, 1\}$. All arithmetic is mod 2 (XOR).</p>
 </div>
 
 <div class="card example">
   <div class="tag">&#x1F4A1; Codeword to Polynomial</div>
-  <p style="margin-top:6px;">Codeword: <strong>1 0 1 1 0 0 0</strong> (n=7)</p>
-  <div class="formula">c(x) = 1 + 0x + 1x&#xB2; + 1x&#xB3; + 0x&#x2074; + 0x&#x2075; + 0x&#x2076; = 1 + x&#xB2; + x&#xB3;</div>
+  <p style="margin-top:6px;">Codeword: <strong>1 0 1 1 0 0 0</strong> (n=7, MSB on left)</p>
+  <div class="formula">c(x) = 1·x⁶ + 0·x⁵ + 1·x⁴ + 1·x³ + 0·x² + 0·x + 0 = x⁶ + x⁴ + x³</div>
+  <p style="margin-top:6px;">Notice that $c(x) = x^3(x^3 + x + 1) = x^3 \cdot g(x)$, which is an exact multiple of $g(x) = x^3+x+1$ and therefore a valid codeword!</p>
 </div>
 
 <!-- 5.2 CODE ALGEBRA -->
@@ -390,7 +391,7 @@ Codeword: 1111111
 
 <h3 class="sub">Systematic Encoding &#x2014; Complete Procedure <span class="imp h">10-MARK CRITICAL</span></h3>
 <div class="card def">
-  <p>Systematic codeword = [parity bits | message bits]. Message bits appear unchanged!</p>
+  <p>Systematic codeword = [message bits | parity bits]. Message bits appear unchanged!</p>
   <div class="formula">
 Step 1: Shift:    T(x) = x&#x207F;&#x207B;&#x1D37; &#xB7; m(x)
 Step 2: Divide:   T(x) = q(x)&#xB7;g(x) + r(x)   [r(x) = remainder = parity]
@@ -400,28 +401,28 @@ Step 3: Codeword: c(x) = T(x) + r(x) = x&#x207F;&#x207B;&#x1D37;&#xB7;m(x) + r(x
 </div>
 
 <div class="card example">
-  <div class="tag">&#x1F4A1; Systematic Encoding: (7,4) code, g(x)=x&#xB3;+x+1</div>
+  <div class="tag">&#x1F4A1; Systematic Encoding: (7,4) code, g(x)=x³+x+1</div>
   
-  <p><strong>Example 1: m=1101 =&gt; m(x)=x&#xB3;+x&#xB2;+1</strong></p>
+  <p><strong>Example 1: m = 1101 ⇒ m(x) = x³ + x² + 1</strong></p>
   <div class="formula" style="font-size:12px;">
-T(x) = x&#xB3;(x&#xB3;+x&#xB2;+1) = x&#x2076;+x&#x2075;+x&#xB3;
-Divide by x&#xB3;+x+1:
-  x&#x2076;/x&#xB3;=x&#xB3;: sub x&#x2076;+x&#x2074;+x&#xB3;, rem=x&#x2075;+x&#x2074;
-  x&#x2075;/x&#xB3;=x&#xB2;: sub x&#x2075;+x&#xB3;+x&#xB2;, rem=x&#x2074;+x&#xB3;+x&#xB2;
-  x&#x2074;/x&#xB3;=x:  sub x&#x2074;+x&#xB2;+x,    rem=x&#xB3;+x
-  x&#xB3;/x&#xB3;=1:  sub x&#xB3;+x+1,     rem=1
-r(x)=1 =&gt; parity=001
-Codeword: <strong>001 1101</strong>
+T(x) = x³(x³+x²+1) = x⁶ + x⁵ + x³
+Divide by x³+x+1:
+  x⁶/x³ = x³:  sub x⁶+x⁴+x³,      rem = x⁵+x⁴
+  x⁵/x³ = x²:  sub x⁵+x³+x²,      rem = x⁴+x³+x²
+  x⁴/x³ = x:   sub x⁴+x²+x,       rem = x³+x
+  x³/x³ = 1:   sub x³+x+1,        rem = 1
+r(x) = 1 ⇒ parity bits = 001
+Codeword: [message | parity] = <strong>1101 001</strong> (= 1101001)
   </div>
   
-  <p style="margin-top:12px;"><strong>Example 2: m=1010 =&gt; m(x)=x&#xB3;+x</strong></p>
+  <p style="margin-top:12px;"><strong>Example 2: m = 1010 ⇒ m(x) = x³ + x</strong></p>
   <div class="formula" style="font-size:12px;">
-T(x) = x&#xB3;(x&#xB3;+x) = x&#x2076;+x&#x2074;
-Divide by x&#xB3;+x+1:
-  x&#x2076;/x&#xB3;=x&#xB3;: sub x&#x2076;+x&#x2074;+x&#xB3;, rem=x&#xB3;
-  x&#xB3;/x&#xB3;=1:  sub x&#xB3;+x+1,     rem=x+1
-r(x)=x+1 =&gt; parity=011
-Codeword: <strong>011 1010</strong>
+T(x) = x³(x³+x) = x⁶ + x⁴
+Divide by x³+x+1:
+  x⁶/x³ = x³:  sub x⁶+x⁴+x³,      rem = x³
+  x³/x³ = 1:   sub x³+x+1,        rem = x+1
+r(x) = x+1 ⇒ parity bits = 011
+Codeword: [message | parity] = <strong>1010 011</strong> (= 1010011)
   </div>
 </div>
 
@@ -447,7 +448,7 @@ Codeword: <strong>011 1010</strong>
   <text x="455" y="44" fill="#8aa0ad" font-size="9">+r(x)</text>
   <rect x="474" y="30" width="196" height="40" rx="5" fill="#021a14" stroke="#4ade80" stroke-width="1.5"/>
   <text x="572" y="48" fill="#d7e1e8" font-size="10" text-anchor="middle">Codeword c(x)</text>
-  <text x="572" y="62" fill="#4ade80" font-size="9" text-anchor="middle">[parity r | message m] = n bits</text>
+  <text x="572" y="62" fill="#4ade80" font-size="9" text-anchor="middle">[message m | parity r] = n bits</text>
   <text x="340" y="112" fill="#8aa0ad" font-size="9" text-anchor="middle">Verify: c(x) mod g(x) = 0 always &#x2713; | Hardware: LFSR encoder (Phase 1: k clocks message, Phase 2: n-k clocks parity)</text>
 </svg>
 <p class="cap">Fig 5.1 &#x2014; Systematic Cyclic Encoding Process</p>
@@ -494,7 +495,7 @@ Verify: (x&#xB3;+x+1)(x&#x2074;+x&#xB2;+x+1) = x&#x2077;+1 &#x2713;
     <tr><td>Degree</td><td>n-k (parity bits)</td><td>k (message bits)</td></tr>
     <tr><td>Role</td><td>Creates codewords</td><td>Validates codewords</td></tr>
     <tr><td>Relationship</td><td>g(x) | (x&#x207F;+1)</td><td>h(x) = (x&#x207F;+1)/g(x)</td></tr>
-    <tr><td>Product</td><td colspan="2">g(x) &#xB7; h(x) = x&#x207F;+1</td></tr>
+    <tr><td>Product</td><td colspan="2" style="text-align:center; font-weight:700; color:var(--accent);">g(x) · h(x) = xⁿ + 1</td></tr>
     <tr><td>Matrix</td><td>G: k&#xD7;n generator matrix</td><td>H: (n-k)&#xD7;n parity check matrix</td></tr>
     <tr><td>Valid codeword</td><td>c(x) mod g(x) = 0</td><td>c(x)&#xB7;h(x) mod(x&#x207F;+1) = 0</td></tr>
   </table>
@@ -582,21 +583,18 @@ Verify: (x&#xB3;+x+1)(x&#x2074;+x&#xB2;+x+1) = x&#x2077;+1 &#x2713;
 </div>
 
 <div class="card example">
-  <div class="tag">&#x1F4A1; Encoder Trace: g(x)=x&#xB3;+x+1, m=1101 (k=4)</div>
-  <p style="margin-top:6px;">LFSR: Next state: D&#x2082;=D&#x2081;, D&#x2081;=D&#x2080;&#x2295;feedback, D&#x2080;=input&#x2295;feedback (where feedback=D&#x2082; output)</p>
+  <div class="tag">&#x1F4A1; Encoder Trace: g(x)=x³+x+1, m=1101 (k=4)</div>
+  <p style="margin-top:6px;"><strong>LFSR State Update Rules:</strong> Feedback $f = 	ext{input} \oplus D_2$; &nbsp; $D_0' = f$; &nbsp; $D_1' = D_0 \oplus f$; &nbsp; $D_2' = D_1$. Start state: $[D_2, D_1, D_0] = [0, 0, 0]$.</p>
   <div class="formula" style="font-size:12px;">
-Init: [D&#x2082;,D&#x2081;,D&#x2080;]=[0,0,0]
-Clk| In(m&#x1D35;)| Feedback | D&#x2082; D&#x2081; D&#x2080; (new) | Out(Ph1)
- 1 |   1    |    0    |  0   0   1     |   1
- 2 |   1    |    0    |  0   1   1     |   1
- 3 |   0    |    0    |  1   1   0     |   0
- 4 |   1    |    1    |  1   0   0     |   1
-[Registers: 1,0,0 =&gt; check: systematic encode via division gave 001]
+Clk | In (mᵢ) | Feedback f | D₂' D₁' D₀' (new state) | Channel Out (Phase 1)
+ 1  |    1    |     1      |  0   1   1             |         1
+ 2  |    1    |     1      |  1   0   1             |         1
+ 3  |    0    |     1      |  0   0   1             |         0
+ 4  |    1    |     1      |  0   0   1             |         1
 
-Note: Actual trace depends on exact LFSR wiring. 
-The parity bits = r(x) = x&#xB3;m(x) mod g(x).
-For m=1101: computed earlier = parity 001.
-Codeword = 1101 001
+Final registers [D₂ D₁ D₀] = [0 0 1], which is the remainder r(x) = 1 (parity 001).
+Phase 2 shifts out the register contents (0, 0, 1) as parity bits.
+Complete systematic codeword: [message | parity] = 1101 001 (= 1101001). ✓
   </div>
 </div>
 
@@ -645,7 +643,7 @@ S(x) = r(x) mod g(x)
   <text x="441" y="72" fill="#4ade80" font-size="8">YES</text>
   <rect x="460" y="60" width="115" height="36" rx="5" fill="#021a14" stroke="#4ade80" stroke-width="1.5"/>
   <text x="517" y="76" fill="#4ade80" font-size="10" text-anchor="middle">No Error &#x2713;</text>
-  <text x="517" y="90" fill="#4ade80" font-size="8" text-anchor="middle">Output last k bits</text>
+  <text x="517" y="90" fill="#4ade80" font-size="8" text-anchor="middle">Output first k bits</text>
   <!-- No path -->
   <line x1="370" y1="96" x2="370" y2="128" stroke="#ff6b6b" stroke-width="1.5" marker-end="url(#adm2)"/>
   <text x="378" y="120" fill="#ff6b6b" font-size="8">NO</text>
@@ -677,19 +675,31 @@ S(x) = r(x) mod g(x)
 
 <div class="card example">
   <div class="tag">&#x1F4A1; Complete Decoding Example</div>
-  <p style="margin-top:8px;"><strong>Sent: 0011101 | Error at bit 4 | Received: 0001101</strong></p>
-  <p>r(x) = 1 + x&#xB2; + x&#xB3; (bits at positions 0,2,3)</p>
+  <p style="margin-top:8px;"><em>Note on Position Indexing:</em> "Position $i$" means the power $x^i$, counted from the right starting at 0 (bit 0 is coefficient of $x^0$, bit 6 is coefficient of $x^6$).</p>
+  <p><strong>Transmitted:</strong> c = 1101001 (message m = 1101, codeword $c(x) = x^6 + x^5 + x^3 + 1$)</p>
+  <p><strong>Error Introduced:</strong> 1-bit error at position 4 ($e(x) = x^4$) → Received r = 1111001</p>
+  <p>Received polynomial: $r(x) = x^6 + x^5 + x^4 + x^3 + 1$</p>
   <div class="formula" style="font-size:12px;">
-Divide r(x)=1+x&#xB2;+x&#xB3; by g(x)=x&#xB3;+x+1:
-  x&#xB3;/x&#xB3;=1: sub x&#xB3;+x+1, rem=x&#xB2;+x+1
-  deg(x&#xB2;+x+1)=2 &lt; 3 =&gt; STOP
-  S(x)=x&#xB2;+x+1 =&gt; syndrome=111
+Compute Syndrome S(x) = r(x) mod g(x) using g(x) = x³ + x + 1:
+Reduce each power modulo g(x):
+  x³ ≡ x + 1
+  x⁴ = x(x³) ≡ x(x+1) = x² + x
+  x⁵ = x(x⁴) ≡ x(x²+x) = x³ + x² ≡ (x+1) + x² = x² + x + 1
+  x⁶ = x(x⁵) ≡ x(x²+x+1) = x³ + x² + x ≡ (x+1) + x² + x = x² + 1
+  1 ≡ 1
 
-From table: syndrome 111 = error at position 5... 
-[Let me recalculate: r=0001101 means positions 0,2,3,6 have... actually 0001101 reading LSB first: r&#x2080;=1,r&#x2081;=0,r&#x2082;=1,r&#x2083;=1,r&#x2084;=0,r&#x2085;=0,r&#x2086;=0]
+Sum all terms (modulo 2):
+  r(x) mod g(x) = (x²+1) + (x²+x+1) + (x²+x) + (x+1) + 1
+               = (1+1+1)x² + (1+1+1)x + (1+1+1+1)
+               = x² + x
+Syndrome S(x) = x² + x → Syndrome bits (s₂s₁s₀) = 110.
 
-For exam: Always compute S(x)=r(x) mod g(x), then look up table.
-If S=110: error at position 4. Flip bit 4 to correct. &#x2713;
+From Single Error Syndrome Table:
+  Syndrome 110 corresponds to error position 4 (power x⁴).
+Correction:
+  Flip bit 4 (the x⁴ bit) in received r = 1111001:
+  11<u>1</u>1001 → 1101001 = c ✓
+Decoded message = first 4 bits = 1101. ✓
   </div>
 </div>
 
@@ -728,7 +738,7 @@ If S=110: error at position 4. Flip bit 4 to correct. &#x2713;
     <tr><th>Feature</th><th>Systematic</th><th>Non-Systematic</th></tr>
     <tr><td>Message in codeword</td><td>&#x2705; Directly visible</td><td>&#x274C; Hidden</td></tr>
     <tr><td>Formula</td><td>c(x)=x&#x207F;&#x207B;&#x1D37;m(x)+r(x)</td><td>c(x)=m(x)&#xB7;g(x)</td></tr>
-    <tr><td>Decoding</td><td>Easy (extract last k bits)</td><td>Complex (full decoding)</td></tr>
+    <tr><td>Decoding</td><td>Easy (extract first k bits)</td><td>Complex (full decoding)</td></tr>
     <tr><td>Practical use</td><td>Most common</td><td>Special cases</td></tr>
   </table>
 </div>
@@ -892,14 +902,29 @@ If S=110: error at position 4. Flip bit 4 to correct. &#x2713;
       <strong>Step 2: g(x)</strong> = degree-3 factor: g(x) = x&#xB3;+x+1<br><br>
       <strong>Step 3: h(x)</strong> = (x&#x2077;+1)/g(x) = (x+1)(x&#xB3;+x&#xB2;+1) = x&#x2074;+x&#xB2;+x+1<br>
       Verify: deg[h(x)]=4=k &#x2713;, g&#xB7;h=x&#x2077;+1 &#x2713;<br><br>
-      <strong>Step 4: Generator Matrix G (k&#xD7;n = 4&#xD7;7):</strong><br>
-      Rows = cyclic shifts of g(x) vector (0001011 for x&#xB3;+x+1 reading x&#x2076; to x&#xB0;):<br>
-      g(x): degree 3 =&gt; 0001011<br>
-      G = | 1 0 1 1 0 0 0 | (xg shift)<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;| 0 1 0 1 1 0 0 | (x&#xB2;g shift)<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;| 0 0 1 0 1 1 0 | (x&#xB3;g shift... use systematic form)<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;| 0 0 0 1 0 1 1 | (g)<br>
-      (Systematic form after row operations)
+      <strong>Step 4: Generator Matrix G (k × n = 4 × 7):</strong><br><br>
+      <strong>Non-systematic G</strong> (rows are shifts of g(x) = x³+x+1, MSB-first):<br>
+      <div class="formula">
+        x³·g(x) = x⁶ + x⁴ + x³ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ [ 1 0 1 1 0 0 0 ]<br>
+        x²·g(x) = x⁵ + x³ + x² &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ [ 0 1 0 1 1 0 0 ]<br>
+        x·g(x)  = x⁴ + x² + x  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ [ 0 0 1 0 1 1 0 ]<br>
+        g(x)    = x³ + x + 1   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ [ 0 0 0 1 0 1 1 ]
+      </div>
+      <br>
+      <strong>Systematic G</strong> ($G_{\text{sys}} = [I_4 | P]$):<br>
+      Constructed from $x^i + (x^i \bmod g(x))$ for $i = 6, 5, 4, 3$:<br>
+      • $i=6: x^6 \bmod g(x) = x^2+1 \rightarrow [1\ 0\ 0\ 0\ 1\ 0\ 1]$<br>
+      • $i=5: x^5 \bmod g(x) = x^2+x+1 \rightarrow [0\ 1\ 0\ 0\ 1\ 1\ 1]$<br>
+      • $i=4: x^4 \bmod g(x) = x^2+x \rightarrow [0\ 0\ 1\ 0\ 1\ 1\ 0]$<br>
+      • $i=3: x^3 \bmod g(x) = x+1 \rightarrow [0\ 0\ 0\ 1\ 0\ 1\ 1]$<br>
+      <div class="formula">
+        G_sys =<br>
+        ⎡ 1 0 0 0 | 1 0 1 ⎤<br>
+        ⎢ 0 1 0 0 | 1 1 1 ⎥<br>
+        ⎢ 0 0 1 0 | 1 1 0 ⎥<br>
+        ⎣ 0 0 0 1 | 0 1 1 ⎦
+      </div>
+      <em>Verification:</em> For message $m = 1101$, $c = \text{row}_1 \oplus \text{row}_2 \oplus \text{row}_4 = [1\ 1\ 0\ 1\ 0\ 0\ 1]$, matching Section 5.5! ✓
     </div>
   </div>
 
@@ -918,7 +943,7 @@ If S=110: error at position 4. Flip bit 4 to correct. &#x2713;
       x&#x2074;/x&#xB3;=x: sub x&#x2074;+x&#xB3;+x, rem=x&#xB3;+x&#xB2;+x<br>
       x&#xB3;/x&#xB3;=1: sub x&#xB3;+x&#xB2;+1, rem=x+1<br>
       r(x)=x+1 =&gt; parity bits = 011<br><br>
-      <strong>Codeword c = 011 1001</strong> (parity=011, message=1001)<br>
+      <strong>Codeword c = 1001 011</strong> (= 1001011, message=1001, parity=011)<br>
       Verify: c(x) mod g(x) = 0 &#x2713;
     </div>
   </div>
@@ -946,7 +971,7 @@ If S=110: error at position 4. Flip bit 4 to correct. &#x2713;
       <strong>Operation:</strong><br>
       1. Load received r into n-bit buffer AND feed into syndrome LFSR simultaneously<br>
       2. After n clocks: LFSR = S(x) = r(x) mod g(x)<br>
-      3. Decision: S(x)=0 &#x2192; no error, output last k bits. S(x)&#x2260;0 &#x2192; error, apply Meggitt.<br><br>
+      3. Decision: S(x)=0 &#x2192; no error, output first k bits. S(x)&#x2260;0 &#x2192; error, apply Meggitt.<br><br>
       
       <strong>PART C &#x2014; SYNDROME &amp; MEGGITT DECODER:</strong><br><br>
       r(x) = c(x)+e(x) &#x2192; S(x)=e(x) mod g(x) [syndrome = function of error only!]<br><br>
@@ -1007,20 +1032,26 @@ If S=110: error at position 4. Flip bit 4 to correct. &#x2713;
       <strong>Systematic Encoding: c(x)=x&#x207F;&#x207B;&#x1D37;m(x) + [x&#x207F;&#x207B;&#x1D37;m(x) mod g(x)]</strong><br><br>
       
       <strong>Three Encoding Examples (n=7,k=4,g(x)=x&#xB3;+x+1):</strong><br><br>
-      <strong>1. m=1100 &#x2192; m(x)=x&#xB3;+x&#xB2;:</strong><br>
-      T(x)=x&#xB3;(x&#xB3;+x&#xB2;)=x&#x2076;+x&#x2075;<br>
-      Divide: x&#x2076;/x&#xB3;=x&#xB3;&#x2192;rem=x&#x2075;+x&#x2074;; x&#x2075;/x&#xB3;=x&#xB2;&#x2192;rem=x&#x2074;+x&#xB3;+x&#xB2;; x&#x2074;/x&#xB3;=x&#x2192;rem=x&#xB3;+x; x&#xB3;/x&#xB3;=1&#x2192;rem=1<br>
-      r(x)=1&#x2192;parity=001. <strong>Codeword: 001 1100</strong><br><br>
+      <strong>1. m = 1100 → m(x) = x³ + x²:</strong><br>
+      $T(x) = x^3(x^3+x^2) = x^6 + x^5$<br>
+      Divide by $g(x) = x^3+x+1$:<br>
+      • $x^6/x^3 = x^3$: subtract $x^3(x^3+x+1) = x^6+x^4+x^3 \rightarrow \text{remainder } = x^5+x^4+x^3$<br>
+      • $x^5/x^3 = x^2$: subtract $x^2(x^3+x+1) = x^5+x^3+x^2 \rightarrow \text{remainder } = x^4+x^2$<br>
+      • $x^4/x^3 = x$: subtract $x(x^3+x+1) = x^4+x^2+x \rightarrow \text{remainder } = x$<br>
+      • $\text{deg}(x) < 3 \rightarrow$ stop. $r(x) = x \rightarrow$ parity bits = 010.<br>
+      <strong>Codeword: 1100 010 (= 1100010)</strong><br><br>
       
-      <strong>2. m=1010 &#x2192; m(x)=x&#xB3;+x:</strong><br>
-      T(x)=x&#xB3;(x&#xB3;+x)=x&#x2076;+x&#x2074;<br>
-      Divide: x&#x2076;/x&#xB3;=x&#xB3;&#x2192;sub x&#x2076;+x&#x2074;+x&#xB3;,rem=x&#xB3;; x&#xB3;/x&#xB3;=1&#x2192;sub x&#xB3;+x+1,rem=x+1<br>
-      r(x)=x+1&#x2192;parity=011. <strong>Codeword: 011 1010</strong><br><br>
+      <strong>2. m = 1010 → m(x) = x³ + x:</strong><br>
+      $T(x) = x^3(x^3+x) = x^6 + x^4$<br>
+      Divide: $x^6/x^3 = x^3 \rightarrow \text{sub } x^6+x^4+x^3, \text{rem } = x^3$; $x^3/x^3 = 1 \rightarrow \text{sub } x^3+x+1, \text{rem } = x+1$<br>
+      $r(x) = x+1 \rightarrow$ parity bits = 011.<br>
+      <strong>Codeword: 1010 011 (= 1010011)</strong><br><br>
       
-      <strong>3. m=0011 &#x2192; m(x)=x+1:</strong><br>
-      T(x)=x&#xB3;(x+1)=x&#x2074;+x&#xB3;<br>
-      Divide: x&#x2074;/x&#xB3;=x&#x2192;sub x&#x2074;+x&#xB2;+x,rem=x&#xB3;+x&#xB2;+x; x&#xB3;/x&#xB3;=1&#x2192;sub x&#xB3;+x+1,rem=x&#xB2;+1<br>
-      r(x)=x&#xB2;+1&#x2192;parity=101. <strong>Codeword: 101 0011</strong><br><br>
+      <strong>3. m = 0011 → m(x) = x + 1:</strong><br>
+      $T(x) = x^3(x+1) = x^4 + x^3$<br>
+      Divide: $x^4/x^3 = x \rightarrow \text{sub } x^4+x^2+x, \text{rem } = x^3+x^2+x$; $x^3/x^3 = 1 \rightarrow \text{sub } x^3+x+1, \text{rem } = x^2+1$<br>
+      $r(x) = x^2+1 \rightarrow$ parity bits = 101.<br>
+      <strong>Codeword: 0011 101 (= 0011101)</strong><br><br>
       
       All verified: c(x) mod g(x) = 0 &#x2713;
     </div>

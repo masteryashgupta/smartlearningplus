@@ -38,7 +38,7 @@
     <div class="badges">
       <span class="badge b-red">⚠ HIGH PRIORITY UNIT</span>
       <span class="badge b-gold">⭐ 5 &amp; 10 Mark Questions</span>
-      <span class="badge b-teal">✦ 6 Hours Weightage</span>
+      <span class="badge b-teal">✦ 5 Hours Weightage</span>
     </div>
   </div>
 
@@ -120,7 +120,7 @@
 
   <div class="card example">
     <div class="tag">Simple Example</div>
-    <p>Original message: <code>1011</code> (4 bits) → After encoding (Hamming 7,4): <code>0110011</code> (7 bits). The extra 3 bits are parity bits (at positions 1, 2, 4) that help detect &amp; correct 1-bit errors. Yeh extra bits hain <strong>redundant bits</strong> ya <strong>parity bits</strong>.</p>
+    <p>Original message: <code>1011</code> (4 bits) → After encoding (Hamming 7,4): <code>1011100</code> (7 bits). The extra 3 bits are parity (redundant) bits that help detect &amp; correct 1-bit errors. Yeh extra bits hain <strong>redundant bits</strong> ya <strong>parity bits</strong>.</p>
   </div>
 
   <hr class="sep">
@@ -466,6 +466,18 @@
     <span class="imp h">HIGH</span>
   </h2>
 
+    <div class="card note" style="border-left:4px solid var(--accent); margin-bottom:16px;">
+    <div class="tag">💡 Clarity Note: Two Different (7,4) Hamming Codes</div>
+    <p>Section 04 presents the classic <strong>position-ordered Hamming code</strong> (parity at positions 1, 2, 4; message <code>1011</code> encodes to <code>0110011</code>). Section 06 presents the <strong>systematic matrix form</strong> with $G = [I_4 | P]$ (message <code>1011</code> encodes to <code>1011100</code>). These are two different but equivalent (7,4) Hamming codes, and their parity equations differ:</p>
+    <div class="formula" style="font-size:13px;">
+      For systematic G = [I₄ | P]:<br>
+      p₁ = m₁ ⊕ m₃ ⊕ m₄ &nbsp;&nbsp;(row 1 of Pᵀ = [1 0 1 1])<br>
+      p₂ = m₁ ⊕ m₂ ⊕ m₃ &nbsp;&nbsp;(row 2 of Pᵀ = [1 1 1 0])<br>
+      p₃ = m₂ ⊕ m₃ ⊕ m₄ &nbsp;&nbsp;(row 3 of Pᵀ = [0 1 1 1])
+    </div>
+    <p>The rows of P (110, 011, 111, 101) are the four 3-bit patterns with at least two 1s; together with $I_3$ in $H = [P^T | I_3]$, they make all 7 columns of H distinct and non-zero, which guarantees $d_{min} = 3$.</p>
+  </div>
+
   <div class="card def">
     <div class="tag">Generator Matrix G</div>
     <p>The <strong>Generator Matrix G</strong> is a <em>k × n</em> matrix whose rows form a basis for the code. Every codeword c is a linear combination of rows of G:</p>
@@ -526,8 +538,8 @@
       &nbsp;&nbsp;⎢ 0 0 1 0 1 1 1 ⎥<br>
       &nbsp;&nbsp;⎣ 0 0 0 1 1 0 1 ⎦<br><br>
       = 1×(row1) ⊕ 0×(row2) ⊕ 1×(row3) ⊕ 1×(row4)<br>
-      = [1001110] ⊕ [0000000] ⊕ [0010111] ⊕ [0001101]<br>
-      = [1 0 1 1 0 1 0] &nbsp;&nbsp;&nbsp;← valid codeword!
+      = [1000110] ⊕ [0000000] ⊕ [0010111] ⊕ [0001101]<br>
+      = [1 0 1 1 1 0 0] &nbsp;&nbsp;&nbsp;← valid codeword! (message 1011, parity 100)
     </div>
     <div class="hin" style="margin-top:10px;">
       <div class="tag">🇮🇳</div>
@@ -616,14 +628,20 @@
       &nbsp;⎢ 1 1 1 0 | 0 1 0 ⎥<br>
       &nbsp;⎣ 0 1 1 1 | 0 0 1 ⎦
     </div>
-    <p style="margin-top:10px;"><strong>Verify codeword c = [1 0 1 1 0 1 0]:</strong></p>
+    <p style="margin-top:10px;"><strong>Verify codeword c = [1 0 1 1 1 0 0]:</strong></p>
     <div class="formula">
-      H · cᵀ = [Hrow1·c, Hrow2·c, Hrow3·c]<br>
-      Row1: 1·1+0·0+1·1+1·1+1·0+0·1+0·0 = 1+0+1+1+0+0+0 = 3 mod 2 = 1... 
+      H · cᵀ = [Hrow1·c, Hrow2·c, Hrow3·c]ᵀ<br>
+      Row1 (1011100 · c): 1·1 + 0·0 + 1·1 + 1·1 + 1·1 + 0·0 + 0·0 = 4 ≡ 0 (mod 2)<br>
+      Row2 (1110010 · c): 1·1 + 1·0 + 1·1 + 0·1 + 0·1 + 1·0 + 0·0 = 2 ≡ 0 (mod 2)<br>
+      Row3 (0111001 · c): 0·1 + 1·0 + 1·1 + 1·1 + 0·1 + 0·0 + 1·0 = 2 ≡ 0 (mod 2)<br>
+      H · cᵀ = [0 0 0]ᵀ, so c is a valid codeword! ✓
     </div>
     <div class="card tip" style="margin-top:8px;">
-      <div class="tag">Note</div>
-      <p>Verification that G·Hᵀ = 0 is the key property — always check this!</p>
+      <div class="tag">Orthogonality Check (G · Hᵀ = 0)</div>
+      <p>Each row of G overlaps each row of H in an even number of 1-positions (all dot products are 0 mod 2):<br>
+      • G rows have 1s at: g₁ {1,5,6}, g₂ {2,6,7}, g₃ {3,5,6,7}, g₄ {4,5,7}<br>
+      • H rows have 1s at: h₁ {1,3,4,5}, h₂ {1,2,3,6}, h₃ {2,3,4,7}<br>
+      All 12 pairwise overlaps contain either 0 or 2 common 1-positions (e.g., |g₁ ∩ h₁| = |{1,5}| = 2 ≡ 0 mod 2), proving G · Hᵀ = 0.</p>
     </div>
   </div>
 
@@ -639,7 +657,7 @@
     <p>The <strong>syndrome</strong> S is computed from the received vector r (which may contain errors):</p>
     <div class="formula">S = H · rᵀ  (r × 1 vector)</div>
     <ul style="margin-top:10px;">
-      <li>If S = 0 → No error detected (or even number of errors — undetectable)</li>
+      <li>If S = 0 → No error detected (or an error pattern that equals a valid codeword — undetectable)</li>
       <li>If S ≠ 0 → Error detected; S identifies the error pattern</li>
     </ul>
   </div>
@@ -688,7 +706,7 @@
     <p class="cap">Fig 6: Syndrome Decoding Flow</p>
   </div>
 
-  <h3 class="sub">Syndrome Table (Error Lookup) for (7,4) Hamming Code</h3>
+  <h3 class="sub">Syndrome table for the position-ordered Hamming code of Section 04 (H columns = binary 1 to 7)</h3>
   <table>
     <tr><th>Syndrome S (binary)</th><th>Error Position</th><th>Error Vector e</th></tr>
     <tr><td>000</td><td>No error</td><td>0000000</td></tr>
@@ -701,26 +719,48 @@
     <tr><td class="hi">111</td><td class="hi">Position 7</td><td>0000001</td></tr>
   </table>
 
+  <h3 class="sub">Syndrome Table for Systematic Form H = [Pᵀ | I₃] of Section 07 (Syndrome = Matching Column of H)</h3>
+  <table>
+    <tr><th>Syndrome S (s₁ s₂ s₃)</th><th>Matching Column in H</th><th>Error Position</th><th>Error Vector e</th></tr>
+    <tr><td>000</td><td>None</td><td>No error</td><td>0000000</td></tr>
+    <tr><td class="hi">110</td><td>Column 1</td><td class="hi">Position 1</td><td>1000000</td></tr>
+    <tr><td class="hi">011</td><td>Column 2</td><td class="hi">Position 2</td><td>0100000</td></tr>
+    <tr><td class="hi">111</td><td>Column 3</td><td class="hi">Position 3</td><td>0010000</td></tr>
+    <tr><td class="hi">101</td><td>Column 4</td><td class="hi">Position 4</td><td>0001000</td></tr>
+    <tr><td class="hi">100</td><td>Column 5</td><td class="hi">Position 5</td><td>0000100</td></tr>
+    <tr><td class="hi">010</td><td>Column 6</td><td class="hi">Position 6</td><td>0000010</td></tr>
+    <tr><td class="hi">001</td><td>Column 7</td><td class="hi">Position 7</td><td>0000001</td></tr>
+  </table>
+
+  <div class="card note">
+    <p><strong>Matching Rule:</strong> For systematic parity-check matrix $H = [P^T | I_r]$, match the syndrome vector against the <strong>columns of H</strong>. Reading the syndrome directly as a binary decimal position (e.g. $101_2 = 5$) works <strong>only</strong> for the position-ordered Hamming code of Section 04 where columns of H are arranged as binary 1 to 7.</p>
+  </div>
+
   <div class="hin">
     <div class="tag">🇮🇳 Hinglish</div>
-    (7,4) Hamming code mein syndrome ek 3-bit number hai. Yeh number directly error ki position batata hai! Syndrome = 101₂ = 5 → position 5 mein error. Received bit ko flip karo — corrected codeword mil gaya!
+    Dhyan rakhein: Syndrome ko directly binary-to-decimal padhna (jaise 101₂ = 5) sirf tab kaam karta hai jab H ke columns 1 se 7 binary order mein hon (Section 04). Systematic form $H = [P^T | I_3]$ ke liye syndrome ko H ke <strong>columns se match</strong> karo — jo column match ho, wahi error position hai!
   </div>
 
   <div class="card example">
-    <div class="tag">Full Decoding Example</div>
-    <p><strong>Transmitted:</strong> c = 1011010</p>
-    <p><strong>Received (with error at position 3):</strong> r = 1001010</p>
-    <p style="margin-top:10px;"><strong>Step 1: Compute Syndrome</strong></p>
+    <div class="tag">Full Decoding Example (Systematic Code)</div>
+    <p><strong>Transmitted:</strong> c = 1011100</p>
+    <p><strong>Received (with error at position 3):</strong> r = 1001100</p>
+    <p style="margin-top:10px;"><strong>Step 1: Compute Syndrome S = H · rᵀ</strong></p>
     <div class="formula">
-      S = H · rᵀ<br>
-      Using H matrix, compute each row × r (mod-2):<br>
-      S = [0, 1, 1] = 011₂ = 3
+      r = [1 0 0 1 1 0 0]<br>
+      Row1 (1011100 · r): 1·1 + 0·0 + 1·0 + 1·1 + 1·1 + 0·0 + 0·0 = 3 ≡ 1 (mod 2)<br>
+      Row2 (1110010 · r): 1·1 + 1·0 + 1·0 + 0·1 + 0·1 + 1·0 + 0·0 = 1 ≡ 1 (mod 2)<br>
+      Row3 (0111001 · r): 0·1 + 1·0 + 1·0 + 1·1 + 0·1 + 0·0 + 1·0 = 1 ≡ 1 (mod 2)<br>
+      S = [1 1 1]ᵀ
     </div>
-    <p><strong>Step 2: Look up syndrome table</strong> → Syndrome 011 → Error at position 3</p>
-    <p><strong>Step 3: Correct</strong> → Flip bit 3 in received: 100<u>1</u>010 → 1011010 ✓</p>
+    <p><strong>Step 2: Match Syndrome to Column of H:</strong></p>
+    <p>Syndrome S = [1 1 1]ᵀ equals <strong>Column 3 of H</strong> → Error is at position 3.</p>
+    <p><strong>Step 3: Correct &amp; Extract Message:</strong></p>
+    <p>Flip bit 3 in received vector: 10<u>0</u>1100 → <strong>1011100</strong> = c ✓</p>
+    <p>Decoded message = first 4 bits = <strong>1011</strong> ✓</p>
     <div class="hin" style="margin-top:10px;">
-      <div class="tag">🇮🇳</div>
-      Syndrome = 011 = 3 (decimal) → position 3 mein galti hai → received vector ka bit 3 flip karo → original codeword wapas mil gaya!
+      <div class="tag">🇮🇳 Hinglish</div>
+      Syndrome S = [1 1 1]ᵀ mila, jo H matrix ke Column 3 se exact match karta hai. Iska matlab position 3 corrupt hui hai. Position 3 ke bit ko flip kiya (0 → 1) toh original codeword 1011100 wapas mil gaya! Message = pehle 4 bits = 1011.
     </div>
   </div>
 
@@ -845,36 +885,37 @@
       &nbsp;g₃ = [ 0 0 0 1 1 1 ]
     </div>
 
-    <p style="margin-top:12px;"><strong>Step 3:</strong> Column 3 — g₁ and g₂ both have 1 in col 3, but g₃ has 0. Need 1 in col 3 of row 3.</p>
-    <p>Swap g₃ with a row that has 1 in col 3 — but g₃ has 0 in col 3. Let's swap g₃ and check col 4 instead — column 3 has 1 in rows 1 and 2. Bring g₃ to pivot position by noting col 4 is next candidate for pivot.</p>
-    <p>Swap columns 3 and 4 (track reordering):</p>
+    <p style="margin-top:12px;"><strong>Step 3:</strong> Column 3 — g₁ and g₂ both have 1 in col 3, but g₃ has 0. Row operations alone cannot form I₃ because the first 3 columns of the original G are linearly dependent (col 1 ⊕ col 2 = col 3, since [1,0,1] ⊕ [1,1,0] = [0,1,1]). Therefore, a column swap is required.</p>
+    <p>Swap column 3 and column 4 (track reordering: bit positions become 1, 2, 4, 3, 5, 6):</p>
     <div class="formula">
-      &nbsp;g₁ = [ 1 0 | 0 1 | 1 1 ]  (swapped cols 3,4)<br>
-      &nbsp;g₂ = [ 0 1 | 0 1 | 0 1 ]<br>
-      &nbsp;g₃ = [ 0 0 | 1 0 | 1 1 ]
+      &nbsp;g₁ = [ 1 0 0 1 1 1 ] &nbsp;(cols 3 &amp; 4 swapped)<br>
+      &nbsp;g₂ = [ 0 1 0 1 0 1 ]<br>
+      &nbsp;g₃ = [ 0 0 1 0 1 1 ]
     </div>
-    <p>Now col 3: g₃ has 1 → eliminate from g₁ (0 already), g₂ (0 already). Good.</p>
-    <p>Eliminate col 3 from g₁: g₁ has 0 in col 3 — no action. g₂ has 0 — no action.</p>
-    <p style="margin-top:8px;"><strong>Final Systematic G (after col swap, message order 1,2,4,3):</strong></p>
+    <p>Now col 3 has pivot 1 in g₃, and 0 in g₁ and g₂. The first 3 columns form I₃!</p>
+    <p style="margin-top:8px;"><strong>Final Systematic G (after swapping columns 3 and 4):</strong></p>
     <div class="formula">
       G_sys = [ I₃ | P ] =<br>
-      &nbsp;⎡ 1 0 0 | 1 1 1 ⎤ &nbsp;← Row g₁ rearranged<br>
-      &nbsp;⎢ 0 1 0 | 0 1 1 ⎥<br>
-      &nbsp;⎣ 0 0 1 | 1 1 0 ⎦
+      &nbsp;⎡ 1 0 0 | 1 1 1 ⎤<br>
+      &nbsp;⎢ 0 1 0 | 1 0 1 ⎥<br>
+      &nbsp;⎣ 0 0 1 | 0 1 1 ⎦
     </div>
     <p style="margin-top:10px;"><strong>Parity matrix P extracted:</strong></p>
     <div class="formula">
       P =<br>
       &nbsp;⎡ 1 1 1 ⎤<br>
-      &nbsp;⎢ 0 1 1 ⎥<br>
-      &nbsp;⎣ 1 1 0 ⎦
+      &nbsp;⎢ 1 0 1 ⎥<br>
+      &nbsp;⎣ 0 1 1 ⎦
     </div>
-    <p><strong>H = [Pᵀ | I₃]:</strong></p>
+    <p><strong>Parity Check Matrix H = [Pᵀ | I₃]:</strong></p>
     <div class="formula">
       H =<br>
-      &nbsp;⎡ 1 0 1 | 1 0 0 ⎤<br>
-      &nbsp;⎢ 1 1 1 | 0 1 0 ⎥<br>
-      &nbsp;⎣ 1 1 0 | 0 0 1 ⎦
+      &nbsp;⎡ 1 1 0 | 1 0 0 ⎤<br>
+      &nbsp;⎢ 1 0 1 | 0 1 0 ⎥<br>
+      &nbsp;⎣ 1 1 1 | 0 0 1 ⎦
+    </div>
+    <div class="card note" style="margin-top:10px;">
+      <p><strong>Note on Equivalence:</strong> Row operations alone cannot produce I₃ here because columns 1, 2, 3 of original G are linearly dependent (110 ⊕ 011 = 101). A column swap (3 and 4) is necessary. The swap reorders the bit positions, so the resulting code is <em>equivalent</em> (identical $n, k, d_{min}$) to the original code, but not identical in bit order.</p>
     </div>
     <div class="hin" style="margin-top:12px;">
       <div class="tag">🇮🇳 Summary</div>
@@ -1131,7 +1172,7 @@
           <li>Flip the bit at error position → corrected codeword ĉ = r ⊕ e</li>
         </ol>
 
-        <p><strong>For (7,4) Hamming:</strong> 3-bit syndrome S directly gives decimal position of error (e.g., S=101=5 → bit 5 is in error).</p>
+        <p><strong>For (7,4) Hamming:</strong> Match S to a column of H; for example, S = [1 0 0]ᵀ equals Column 5 of H, so bit 5 is in error. (Reading syndrome directly as a decimal position applies only to the position-ordered Hamming parity-check matrix of Section 04).</p>
       </div>
     </div>
 
@@ -1237,12 +1278,13 @@
         <p>Compute Syndrome S = H · rᵀ (mod-2):</p>
         <div class="formula">
           r = [1 0 1 1 0 0 0]<br>
-          S₁ = 1·1+0·0+1·1+1·1+0·1+0·0+0·0 = 1+0+1+1+0+0+0 = 3 mod 2 = 1<br>
-          S₂ = 1·1+0·1+1·1+1·0+0·0+0·1+0·0 = 1+0+1+0+0+0+0 = 2 mod 2 = 0<br>
-          S₃ = 0·1+1·0+1·1+1·1+0·0+0·0+0·1 = 0+0+1+1+0+0+0 = 2 mod 2 = 0... 
+          S₁ = 1·1 + 0·0 + 1·1 + 1·1 + 1·0 + 0·0 + 0·0 = 3 ≡ 1 (mod 2)<br>
+          S₂ = 1·1 + 1·0 + 1·1 + 0·1 + 0·0 + 1·0 + 0·0 = 2 ≡ 0 (mod 2)<br>
+          S₃ = 0·1 + 1·0 + 1·1 + 1·1 + 0·0 + 0·0 + 1·0 = 2 ≡ 0 (mod 2)<br>
+          S = [1 0 0]ᵀ
         </div>
-        <p>S = [1,0,1] = 101₂ = 5 → Error at bit position 5</p>
-        <p>Flip bit 5: r = 1011<u>0</u>00 → corrected = 1011100 = c ✓</p>
+        <p>S = [1 0 0]ᵀ matches <strong>Column 5 of H</strong> (NOT 101) → Error at bit position 5.</p>
+        <p>Flip bit 5: r = 1011<u>0</u>00 → corrected = <strong>1011100</strong> = c ✓</p>
         <p><strong>Decoded message = first 4 bits = 1011 ✓</strong></p>
       </div>
     </div>
@@ -1420,22 +1462,18 @@
 
         <p><strong>Parity Check Matrix H = [Pᵀ | I₃]:</strong></p>
         <div class="formula">
-          Pᵀ = ⎡1 1 0⎤ᵀ = ⎡1 1 0⎤<br>
-               ⎢1 0 1⎥     ⎢1 0 1⎥ → wait, transpose properly:<br>
-               ⎣0 1 1⎦<br><br>
-          P columns become rows in Pᵀ:<br>
-          Pᵀ = ⎡1 1 0⎤<br>
-               ⎢1 0 1⎥<br>
-               ⎣0 1 1⎦<br><br>
+          Pᵀ = ⎡ 1 1 0 ⎤<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⎢ 1 0 1 ⎥<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⎣ 0 1 1 ⎦<br><br>
           H = [Pᵀ | I₃] =<br>
-          ⎡1 1 0 | 1 0 0⎤<br>
-          ⎢1 0 1 | 0 1 0⎥<br>
-          ⎣0 1 1 | 0 0 1⎦
+          &nbsp;⎡ 1 1 0 | 1 0 0 ⎤<br>
+          &nbsp;⎢ 1 0 1 | 0 1 0 ⎥<br>
+          &nbsp;⎣ 0 1 1 | 0 0 1 ⎦
         </div>
 
-        <p><strong>Verification G·Hᵀ = 0:</strong> (Students should verify row by row = all zero mod-2)</p>
+        <p><strong>Verification G·Hᵀ = 0:</strong> (All pairwise inner products between rows of G and rows of H are zero modulo 2: e.g. 1·1 + 1·1 = 0 mod 2)</p>
 
-        <p><strong>Error Scenario:</strong> Transmitted c = 110011, error at bit 4, received r = 1100<u>1</u>1 → r = 110111</p>
+        <p><strong>Error Scenario:</strong> Transmitted c = 110011, error at bit 4, received r = 110111</p>
 
         <p><strong>Syndrome S = H · rᵀ:</strong></p>
         <div class="formula">
